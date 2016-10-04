@@ -27,11 +27,11 @@ android {
         }
     }
 
-	lintOptions {
-	    // Disable lint warnings about app indexing, and about non-latest tools versions
-		// TODO consider re-enabling app indexing before publishing your application.
-	    disable 'GoogleAppIndexingWarning', 'GradleDependency'
-	}
+    lintOptions {
+        // Disable lint warnings about app indexing, and about non-latest tools versions
+        // TODO consider re-enabling app indexing before publishing your application.
+        // disable 'GoogleAppIndexingWarning', 'GradleDependency'
+    }
 
     // Workaround for an Android Studio bug in the "Missing Return Statement" warning
     return void
@@ -39,6 +39,10 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
+
+//  Parse dependencies
+    compile 'com.parse:parse-android:1.13.1'
+    compile 'com.parse.bolts:bolts-android:1.4.0'
 
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
