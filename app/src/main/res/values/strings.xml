@@ -3,4 +3,15 @@
     <string name="imgViewID">image__view_description</string>
     <string name="title_texte">title text</string>
     <string name="description_text">description text</string>
+    <string name="types_of_house">Types of house:</string>
+    <string name="cities">Cities</string>
+    <string name="number_of_rooms">Number of rooms</string>
+    <string name="price">Price:</string>
+    <string name="surface">Surface:</string>
+    <string name="filter">filter</string>
+    <array name="typeOfHouses">
+        <item>All</item>
+        <item>House</item>
+        <item>Apartment</item>
+    </array>
 </resources>
