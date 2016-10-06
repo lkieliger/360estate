@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
-                    android:id="@+id/email"
+                    android:id="@+id/registration_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/registration_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
@@ -71,21 +71,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
-                    android:id="@+id/passwordBis"
+                    android:id="@+id/registration_password_bis"
                     android:inputType="textPassword"
                     android:singleLine="true" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            </android.support.design.widget.TextInputLayout>
 
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/prompt_phone_number"
-                        android:id="@+id/phone"
-                        android:inputType="phone" />
-                </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_phone_number"
+                    android:id="@+id/registration_phone"
+                    android:inputType="phone" />
             </android.support.design.widget.TextInputLayout>
 
             <Button
@@ -94,8 +95,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
-                android:textStyle="bold" />
+                android:text="@string/action_register"
+                android:textStyle="bold"
+                android:onClick="attemptRegistration" />
 
         </LinearLayout>
     </ScrollView>
