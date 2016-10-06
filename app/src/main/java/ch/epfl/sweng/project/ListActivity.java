@@ -2,13 +2,15 @@ package ch.epfl.sweng.project;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.parse.ParseObject;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +31,20 @@ public class ListActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.houseList);
 
         // Defined Array values to show in ListView
+        final List<Item> values = new ArrayList<Item>();
 
-        List<Item> values = new ArrayList<Item>();
+        ParseQuery<Item> query = ParseQuery.getQuery("Item");
+        query.findInBackground(new FindCallback<Item>() {
+            public void done(List<Item> objects, ParseException e) {
+                if (e == null) {
+                    Log.d("score", "Retrieved " + objects.size() + " house items");
+                    values.addAll(objects);
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
+            }
+        });
+
         Item i1 = new Item();
         i1.setForTest();
         values.add(i1);
