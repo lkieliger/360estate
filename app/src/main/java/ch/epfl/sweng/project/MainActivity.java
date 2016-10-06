@@ -1,7 +1,12 @@
 package ch.epfl.sweng.project;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.parse.ParseObject;
+
+import ch.epfl.sweng.project.list.Item;
 
 /**
  * Your app's main activity.
@@ -17,5 +22,8 @@ public final class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ParseObject.registerSubclass(Item.class);
+        Intent intent = new Intent(this, ListActivity.class);
+        startActivity(intent);
     }
 }
