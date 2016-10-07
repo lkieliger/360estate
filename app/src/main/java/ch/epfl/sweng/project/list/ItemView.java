@@ -16,8 +16,8 @@ public class ItemView extends RelativeLayout {
     private ImageView img;
     //private ImageView mImageView;
 
-    public ItemView(Context context, AttributeSet attrs/*, int defStyle*/) {
-        super(context, attrs/*, defStyle*/);
+    public ItemView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.children, this, true);
         setupChildren();
     }
