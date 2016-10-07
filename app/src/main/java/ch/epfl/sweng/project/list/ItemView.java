@@ -10,10 +10,6 @@ import android.widget.TextView;
 
 import ch.epfl.sweng.project.R;
 
-/**
- * Created by Isaac on 30.09.2016.
- */
-
 public class ItemView extends RelativeLayout {
     private TextView locationSurfaceRooms;
     private TextView priceType;
@@ -40,8 +36,9 @@ public class ItemView extends RelativeLayout {
     }
 
     public void setItem(Item item) {
-        locationSurfaceRooms.setText(item.getLocation()+", "+item.getSurface()+" m^2, "+item.getRooms()+" pieces");
-        priceType.setText(""+item.getPrice()+" CHF"/*+","+item.getType().getDescription()*/);
+        locationSurfaceRooms.setText(item.getLocation() + ", " + item.getSurface() + " m\u00B2, " +
+                item.getRooms() + " " + getContext().getString(R.string.rooms));
+        priceType.setText("" + item.getPrice() + " CHF"/*+","+item.getType().getDescription()*/);
         img.setImageResource(R.mipmap.chaton);
     }
 }

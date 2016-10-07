@@ -3,4 +3,5 @@
     <string name="imgViewID">image__view_description</string>
     <string name="title_texte">title text</string>
     <string name="description_text">description text</string>
+    <string name="rooms">rooms</string>
 </resources>
