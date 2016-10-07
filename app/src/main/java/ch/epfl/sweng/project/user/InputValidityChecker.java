@@ -4,12 +4,22 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
 
 final class InputValidityChecker {
 
     private static final String TAG = "ValidityChecker";
+
+    /*
+    Regex used to validate the email field.
+    Source : http://stackoverflow.com/questions/8204680/java-regex-email#answer-8204716
+     */
+    private static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     private InputValidityChecker(){
 
@@ -46,7 +56,8 @@ final class InputValidityChecker {
      * @return true if the email is valid
      */
     static boolean emailIsValid(String email, Context context){
-        boolean emailCheck = email.contains("@");
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(email);
+        boolean emailCheck = matcher.find();
 
         if(BuildConfig.DEBUG){
             Log.d(TAG, "Email validity check returned "+ emailCheck);
@@ -61,6 +72,13 @@ final class InputValidityChecker {
         }
 
         return emailCheck;
+    }
+
+
+
+    public static boolean validate(String emailStr) {
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
+        return matcher.find();
     }
 
     /**
