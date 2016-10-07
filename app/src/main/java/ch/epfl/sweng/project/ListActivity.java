@@ -14,10 +14,8 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import ch.epfl.sweng.project.list.Item;
 import ch.epfl.sweng.project.list.ItemAdapter;
 
@@ -72,9 +70,7 @@ public class ListActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         "MIIIIIAAAAAAOUUUUUUUUU", Toast.LENGTH_LONG)
                         .show();
-
             }
-
         });
     }
 

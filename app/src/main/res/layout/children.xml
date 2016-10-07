@@ -17,16 +17,18 @@
         android:id="@+id/location_surface_rooms"
         android:layout_width="wrap_content"
         android:layout_marginTop="12dp"
+        android:layout_marginLeft="10dp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/miniature"
         android:text="@string/title_texte"
         />
     <TextView
         android:id="@+id/price_type"
-        android:layout_width="172dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/location_surface_rooms"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/miniature"
         android:text="@string/description_text"
         />

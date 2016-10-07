@@ -15,4 +15,7 @@
         <item>House</item>
         <item>Apartment</item>
     </array>
+    <string name="appartment">Appartement</string>
+    <string name="house">House</string>
+    <string name="building">Building</string>
 </resources>
