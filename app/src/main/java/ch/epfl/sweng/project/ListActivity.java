@@ -145,7 +145,7 @@ public class ListActivity extends AppCompatActivity {
         textView.setAdapter(adapter);
 
         showSeekBar(popupLayout,R.id.seekBarPrice,R.id.ShowPrice,MIN_VALUE_PRICE,MAX_VALUE_PRICE,"Chf");
-        showSeekBar(popupLayout,R.id.seekBarSurface,R.id.ShowSurface,MIN_VALUE_SURFACE,MAX_VALUE_SURFACE,"m^2");
+        showSeekBar(popupLayout,R.id.seekBarSurface,R.id.ShowSurface,MIN_VALUE_SURFACE,MAX_VALUE_SURFACE,"m\u00B2");
 
     }
 
