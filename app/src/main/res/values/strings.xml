@@ -4,4 +4,7 @@
     <string name="title_texte">title text</string>
     <string name="description_text">description text</string>
     <string name="rooms">rooms</string>
+    <string name="appartment">Appartement</string>
+    <string name="house">House</string>
+    <string name="building">Building</string>
 </resources>

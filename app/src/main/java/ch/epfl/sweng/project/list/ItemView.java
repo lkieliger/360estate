@@ -10,6 +10,11 @@ import android.widget.TextView;
 
 import ch.epfl.sweng.project.R;
 
+/**
+ * Isaac Leimgruber
+ * SCIPER 236908
+ */
+
 public class ItemView extends RelativeLayout {
     private TextView locationSurfaceRooms;
     private TextView priceType;
@@ -30,15 +35,14 @@ public class ItemView extends RelativeLayout {
     }
 
     public static ItemView inflate(ViewGroup parent) {
-        ItemView itemView = (ItemView) LayoutInflater.from(parent.getContext())
+        return (ItemView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_view, parent, false);
-        return itemView;
     }
 
     public void setItem(Item item) {
-        locationSurfaceRooms.setText(item.getLocation() + ", " + item.getSurface() + " m\u00B2, " +
+        locationSurfaceRooms.setText(item.getLocation() + ", " + item.printSurface() + " m\u00B2, " +
                 item.getRooms() + " " + getContext().getString(R.string.rooms));
-        priceType.setText("" + item.getPrice() + " CHF"/*+","+item.getType().getDescription()*/);
+        priceType.setText("" + item.printPrice() + " CHF"+", "+item.getType().getDescription());
         img.setImageResource(R.mipmap.chaton);
     }
 }
