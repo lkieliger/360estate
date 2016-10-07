@@ -1,5 +1,6 @@
-package ch.epfl.sweng.project;
+package ch.epfl.sweng.project.user;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,6 +10,10 @@ import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
+
+import ch.epfl.sweng.project.R;
+
+import static ch.epfl.sweng.project.user.InputValidityChecker.*;
 
 /**
  * A login screen that offers login via email/password.
@@ -21,6 +26,7 @@ public class RegisterActivity extends AppCompatActivity{
     private TextView mPassword;
     private TextView mPasswordBis;
     private TextView mPhoneNumber;
+    private Context mAppContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity{
         mPassword = (TextView) findViewById(R.id.registration_password);
         mPasswordBis = (TextView) findViewById(R.id.registration_password_bis);
         mPhoneNumber = (TextView) findViewById(R.id.registration_phone);
+        mAppContext = getApplicationContext();
     }
 
 
@@ -54,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity{
                 if(e == null){
                     Toast popMsg = Toast.makeText(
                             getApplicationContext(),
-                            getResources().getText(R.string.info_registration_successful),
+                            getResources().getString(R.string.info_registration_successful),
                             Toast.LENGTH_SHORT);
                     popMsg.show();
 
@@ -62,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity{
                 } else {
                     Toast popMsg = Toast.makeText(
                             getApplicationContext(),
-                            getResources().getText(R.string.error_registration_unsuccessful),
+                            getResources().getString(R.string.error_registration_unsuccessful),
                             Toast.LENGTH_LONG);
                     popMsg.show();
 
@@ -82,76 +89,15 @@ public class RegisterActivity extends AppCompatActivity{
      */
     private boolean userDataIsValid(){
 
-        mEmail.setError(null);
-        mPassword.setError(null);
-        mPasswordBis.setError(null);
-        mPhoneNumber.setError(null);
-
-        return emailIsValid()&&
-                passwordIsValid() &&
-                fieldsAreFilled() &&
-                passwordMatches();
+        return emailIsValid(mEmail.getText().toString(), mAppContext)
+                && passwordIsValid(mPassword.getText().toString(), mAppContext)
+                && passwordMatches(mPassword.getText().toString(),
+                        mPasswordBis.getText().toString(),
+                        mAppContext)
+                && fieldsAreFilled();
     }
 
-    /**
-     * This method checks user password for validity. It should satisfy:
-     *  - At least 4 chars..
-     *
-     * @return true if the password is valid
-     */
-    private boolean passwordIsValid(){
-        boolean passLen = mPassword.getText().length() > 4;
 
-        Log.d(TAG, "Password length check returned "+passLen);
-
-        if(!passLen){
-            Toast popMsg = Toast.makeText(
-                    getApplicationContext(),
-                    getResources().getText(R.string.error_invalid_password),
-                    Toast.LENGTH_SHORT);
-            popMsg.show();
-        }
-
-        return passLen;
-    }
-
-    /**
-     * This method checks user email for validity. It should satisfy:
-     *  - At least a @
-     *
-     * @return true if the email is valid
-     */
-    private boolean emailIsValid(){
-        boolean emailCheck = mEmail.getText().toString().contains("@");
-
-        Log.d(TAG, "Email validity check returned "+ emailCheck);
-
-        if(!emailCheck){
-            mEmail.setError(getResources().getString(R.string.error_invalid_email));
-        }
-
-        return emailCheck;
-    }
-
-    /**
-     * @return true if the user entered twice the same password
-     */
-    private boolean passwordMatches(){
-        boolean match = mPassword.getText().toString().equals(
-                mPasswordBis.getText().toString());
-
-        Log.d(TAG, "Result of password matching was: "+match);
-
-        if(!match){
-            Toast popMsg = Toast.makeText(
-                    getApplicationContext(),
-                    getResources().getText(R.string.error_unmatching_passwords),
-                    Toast.LENGTH_SHORT);
-            popMsg.show();
-        }
-
-        return match;
-    }
 
     /**
      * This method determines which fields should be filled for the registration
