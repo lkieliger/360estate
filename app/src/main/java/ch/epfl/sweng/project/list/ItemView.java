@@ -11,7 +11,8 @@ import android.widget.TextView;
 import ch.epfl.sweng.project.R;
 
 /**
- * Created by Isaac on 30.09.2016.
+ * Isaac Leimgruber
+ * SCIPER 236908
  */
 
 public class ItemView extends RelativeLayout {
@@ -20,8 +21,8 @@ public class ItemView extends RelativeLayout {
     private ImageView img;
     //private ImageView mImageView;
 
-    public ItemView(Context context, AttributeSet attrs/*, int defStyle*/) {
-        super(context, attrs/*, defStyle*/);
+    public ItemView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.children, this, true);
         setupChildren();
     }
@@ -34,14 +35,14 @@ public class ItemView extends RelativeLayout {
     }
 
     public static ItemView inflate(ViewGroup parent) {
-        ItemView itemView = (ItemView) LayoutInflater.from(parent.getContext())
+        return (ItemView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_view, parent, false);
-        return itemView;
     }
 
     public void setItem(Item item) {
-        locationSurfaceRooms.setText(item.getLocation()+", "+item.getSurface()+" m^2, "+item.getRooms()+" pieces");
-        priceType.setText(""+item.getPrice()+" CHF"/*+","+item.getType().getDescription()*/);
+        locationSurfaceRooms.setText(item.getLocation() + ", " + item.printSurface() + " m\u00B2, " +
+                item.getRooms() + " " + getContext().getString(R.string.rooms));
+        priceType.setText("" + item.printPrice() + " CHF"+", "+item.getType().getDescription());
         img.setImageResource(R.mipmap.chaton);
     }
 }

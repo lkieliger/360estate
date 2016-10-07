@@ -1,42 +1,47 @@
 package ch.epfl.sweng.project.list;
-// Armor.java
-import android.media.Image;
 
-import com.parse.ParseFile;
+import android.content.Context;
+
 import com.parse.ParseObject;
 import com.parse.ParseClassName;
+
+import ch.epfl.sweng.project.MainActivity;
+import ch.epfl.sweng.project.R;
 /**
- * Created by Isaac on 30.09.2016.
+ * Isaac Leimgruber
+ * SCIPER 236908
  */
 
 @ParseClassName("Item")
-public class Item extends ParseObject{
-    public enum House_type{
-        APPART("appartement"), HOUSE("house"), BUILDING("Building");
+public class Item extends ParseObject {
+
+    public enum HouseType {
+        APPARTEMENT(getString(R.string.appartment)), HOUSE(getString(R.string.house)),
+        BUILDING(getString(R.string.building));
+
         private final String description;
-        private House_type(String descr){
-            description = descr;
+
+        HouseType(String d) {
+            description = d;
         }
-        public String getDescription(){
+
+        public String getDescription() {
             return description;
         }
+    }
 
-    } //TODO:edit to more precisions
-    //default constructor necessary for parse subclass
-    public Item(){}
+    //default constructor necessary for Parse subclass
+    public Item() {
+    }
 
-
-
-    //TODO: Call ParseObject.registerSubclass(YourClass.class)
-    //TODO: in your Application constructor before calling Parse.initialize().
     private int price;
     private String location;
-    private House_type type;
+    private HouseType type;
     private double rooms;
     private int surface;
     //private final ParseFile img; TODO:add image
 
-    public Item(int price, String location, House_type type, double rooms, int surface){
+    public Item(int price, String location, HouseType type, double rooms, int surface) {
         this.price = price;
         this.location = location;
         this.type = type;
@@ -53,8 +58,8 @@ public class Item extends ParseObject{
         put("location", location);
     }
 
-    public void setType(House_type type) {
-        put("type", type);
+    public void setType(HouseType type) {
+        put("type", type.ordinal());
     }
 
     public void setRooms(double rooms) {
@@ -64,38 +69,45 @@ public class Item extends ParseObject{
     public void setSurface(int surface) {
         put("surface", surface);
     }
-    public void setForTest(){
-        setPrice(1050000);
-        setLocation("Lausanne VD");
-        setRooms(4.5);
-        setSurface(200);
-        //setType(House_type.House);
-    }
 
-    private String format_price(int price, int acc){
-        if(price > 9){
-            return format_price(price/10, (acc+1)%3)+(acc==2?"'":"")+price%10;
-        }
-        else return ""+price;
+    private String formatRooms(double rooms){
+        if(rooms%1 < 0.4) return (int) rooms + "";
+        else return (int)rooms +"\u00BD";
     }
-    public Object getType() {
-        return get("type");
+    private String formatInts(int price, int acc) {
+        if (price > 9) {
+            return formatInts(price / 10, (acc + 1) % 3) + (acc == 2 ? "'" : "") + price % 10;
+        } else return "" + price;
+    }
+    public HouseType getType() {
+        return HouseType.values()[getInt("type")];
     }
 
     public String getLocation() {
         return getString("location");
     }
 
-    public Double getRooms() {
-        return getDouble("rooms");
+    public String getRooms() {
+        return formatRooms(getDouble("rooms"));
     }
 
     public int getSurface() {
         return getInt("surface");
     }
 
-    public String getPrice(){
-        return format_price(getInt("price"),0);
+    public int getPrice() {
+        return getInt("price");
     }
 
+    public String printSurface(){
+        return formatInts(getSurface(),0);
+    }
+
+    public String printPrice(){
+        return formatInts(getPrice(),0);
+    }
+
+    private static String getString(int resId){
+        return MainActivity.getContext().getString(resId);
+    }
 }

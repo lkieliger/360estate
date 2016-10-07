@@ -1,5 +1,6 @@
 package ch.epfl.sweng.project;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,7 +17,9 @@ import ch.epfl.sweng.project.user.LoginActivity;
 public final class MainActivity extends AppCompatActivity {
     public static final String NAME_KEY = "name";
     public static final String APP_ID = "360ESTATE";
-    private boolean parseNotInitialized = true;
+    private static boolean parseNotInitialized = true;
+
+    private static Context mContext;
 
     public static int add(final int a, final int b) {
         return a + b;
@@ -26,6 +29,8 @@ public final class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mContext = this;
 
         if (parseNotInitialized) {
             //Initialize connection with the parse server
@@ -42,4 +47,9 @@ public final class MainActivity extends AppCompatActivity {
 
         startActivity(intent);
     }
+
+    public static Context getContext(){
+        return mContext;
+    }
+
 }

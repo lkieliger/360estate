@@ -32,4 +32,8 @@
         sure you have access to the network and try again</string>
     <string name="info_registration_successful">Registration was successful, you may log in</string>
     <string name="title_activity_register">Register</string>
+    <string name="rooms">rooms</string>
+    <string name="appartment">Appartement</string>
+    <string name="house">House</string>
+    <string name="building">Building</string>
 </resources>
