@@ -11,6 +11,9 @@ import android.widget.Toast;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import java.util.Arrays;
+
+import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
 
 import static ch.epfl.sweng.project.user.InputValidityChecker.*;
@@ -73,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity{
                             Toast.LENGTH_LONG);
                     popMsg.show();
 
-                    Log.e(TAG, e.getStackTrace().toString());
+                    Log.e(TAG, Arrays.toString(e.getStackTrace()));
                 }
             });
         }
@@ -111,7 +114,9 @@ public class RegisterActivity extends AppCompatActivity{
                 !mPassword.getText().toString().isEmpty() &&
                 !mPasswordBis.getText().toString().isEmpty();
 
-        Log.d(TAG, "Result of field checking was: "+ filled);
+        if(BuildConfig.DEBUG){
+            Log.d(TAG, "Result of field checking was: "+ filled);
+        }
 
         if(!filled){
             Toast popMsg = Toast.makeText(

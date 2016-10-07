@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.ListActivity;
 import ch.epfl.sweng.project.R;
 
@@ -91,7 +92,7 @@ public class LoginActivity extends AppCompatActivity{
      * This method checks whether the user input is correct. That is if
      * all TextEdits are filled with apropriate information
      *
-     * @return
+     * @return true if user data is valid
      */
     private boolean userDataIsValid(){
 
@@ -110,7 +111,9 @@ public class LoginActivity extends AppCompatActivity{
         boolean filled = !mEmail.getText().toString().isEmpty() &&
                 !mPassword.getText().toString().isEmpty() ;
 
-        Log.d(TAG, "Result of field checking was: "+ filled);
+        if(BuildConfig.DEBUG){
+            Log.d(TAG, "Result of field checking was: "+ filled);
+        }
 
         if(!filled){
             Toast popMsg = Toast.makeText(
