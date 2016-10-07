@@ -15,7 +15,7 @@ import ch.epfl.sweng.project.list.Item;
 public final class MainActivity extends AppCompatActivity {
     public static final String NAME_KEY = "name";
     public static final String APP_ID = "360ESTATE";
-    private boolean parseNotInitialized = true;
+    private static boolean parseNotInitialized = true;
 
     public static int add(final int a, final int b) {
         return a + b;
