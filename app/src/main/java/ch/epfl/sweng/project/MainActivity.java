@@ -6,9 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.parse.Parse;
-import com.parse.ParseObject;
 
-import ch.epfl.sweng.project.list.Item;
 import ch.epfl.sweng.project.user.LoginActivity;
 
 /**
@@ -35,6 +33,8 @@ public final class MainActivity extends AppCompatActivity {
         if (parseNotInitialized) {
             //Initialize connection with the parse server
             Parse.initialize(new Parse.Configuration.Builder(this)
+                    // The network interceptor is debug Parse queries
+                    //.addNetworkInterceptor(new ParseLogInterceptor())
                     .applicationId(APP_ID)
                     .server("http://vps-fra.astutus.org:1337/parse/")
                     .build()
@@ -42,7 +42,6 @@ public final class MainActivity extends AppCompatActivity {
             parseNotInitialized = false;
         }
 
-        ParseObject.registerSubclass(Item.class);
         Intent intent = new Intent(this, LoginActivity.class);
 
         startActivity(intent);

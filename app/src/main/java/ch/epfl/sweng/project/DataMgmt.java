@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.Collection;
@@ -18,6 +19,9 @@ final class DataMgmt {
     }
 
     static void getData(final Collection<Item> itemList, final ItemAdapter itemAdapter) {
+
+        ParseObject.registerSubclass(Item.class);
+
         ParseQuery<Item> query = ParseQuery.getQuery("Item");
         query.findInBackground(new FindCallback<Item>() {
             public void done(List<Item> objects, ParseException e) {
