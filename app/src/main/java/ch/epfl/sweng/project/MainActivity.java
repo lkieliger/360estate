@@ -9,6 +9,7 @@ import com.parse.Parse;
 import com.parse.ParseObject;
 
 import ch.epfl.sweng.project.list.Item;
+import ch.epfl.sweng.project.user.LoginActivity;
 
 /**
  * Your app's main activity.
@@ -42,7 +43,7 @@ public final class MainActivity extends AppCompatActivity {
         }
 
         ParseObject.registerSubclass(Item.class);
-        Intent intent = new Intent(this, ListActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
 
         startActivity(intent);
     }
