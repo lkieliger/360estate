@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.parse.Parse;
 import com.parse.ParseObject;
@@ -34,8 +35,10 @@ public final class MainActivity extends AppCompatActivity {
         if (parseNotInitialized) {
             //Initialize connection with the parse server
             Parse.initialize(new Parse.Configuration.Builder(this)
+                    // The network interceptor is debug Parse queries
+                    //.addNetworkInterceptor(new ParseLogInterceptor())
                     .applicationId(APP_ID)
-                    .server("http://vps-fra.astutus.org:1337/parse/")
+                    .server("https://360.astutus.org/parse/")
                     .build()
             );
             parseNotInitialized = false;

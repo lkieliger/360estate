@@ -1,16 +1,10 @@
 package ch.epfl.sweng.project.list;
 
-import android.content.Context;
-
-import com.parse.ParseObject;
 import com.parse.ParseClassName;
+import com.parse.ParseObject;
 
 import ch.epfl.sweng.project.MainActivity;
 import ch.epfl.sweng.project.R;
-/**
- * Isaac Leimgruber
- * SCIPER 236908
- */
 
 @ParseClassName("Item")
 public class Item extends ParseObject {
@@ -42,12 +36,11 @@ public class Item extends ParseObject {
     //private final ParseFile img; TODO:add image
 
     public Item(int price, String location, HouseType type, double rooms, int surface) {
-        this.price = price;
-        this.location = location;
-        this.type = type;
-        this.rooms = rooms;
-        this.surface = surface;
-
+        setPrice(price);
+        setLocation(location);
+        setType(type);
+        setRooms(rooms);
+        setSurface(surface);
     }
 
     public void setPrice(int price) {
