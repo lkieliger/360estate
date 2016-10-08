@@ -16,7 +16,8 @@ import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.ListActivity;
 import ch.epfl.sweng.project.R;
 
-import static ch.epfl.sweng.project.user.InputValidityChecker.*;
+import static ch.epfl.sweng.project.user.InputValidityChecker.emailIsValid;
+import static ch.epfl.sweng.project.user.InputValidityChecker.passwordIsValid;
 
 /**
  * A login screen that offers login via email/password.

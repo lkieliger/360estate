@@ -16,7 +16,9 @@ import java.util.Arrays;
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
 
-import static ch.epfl.sweng.project.user.InputValidityChecker.*;
+import static ch.epfl.sweng.project.user.InputValidityChecker.emailIsValid;
+import static ch.epfl.sweng.project.user.InputValidityChecker.passwordIsValid;
+import static ch.epfl.sweng.project.user.InputValidityChecker.passwordMatches;
 
 /**
  * A login screen that offers login via email/password.
