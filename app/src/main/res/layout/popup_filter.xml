@@ -3,6 +3,15 @@
               android:orientation="vertical" android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="@string/erase"
+        android:id="@+id/eraseButton"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,6 +51,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/number_of_rooms"
         android:inputType="number"
+        android:id="@+id/numberOfRooms"
         />
 
 
@@ -74,7 +84,7 @@
         android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ShowPrice"
+        android:id="@+id/showPrice"
         android:gravity="center"
         />
 
@@ -108,7 +118,7 @@
         android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ShowSurface"
+        android:id="@+id/showSurface"
         android:gravity="center"
         />
 

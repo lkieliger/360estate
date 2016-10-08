@@ -18,4 +18,5 @@
     <string name="appartment">Appartement</string>
     <string name="house">House</string>
     <string name="building">Building</string>
+    <string name="erase">Erase</string>
 </resources>

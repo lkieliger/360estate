@@ -4,7 +4,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,6 +12,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -89,23 +89,33 @@ public class ListActivity extends AppCompatActivity {
         final AlertDialog helpDialog = helpBuilder.create();
         helpDialog.show();
 
-        AutoCompleteTextView textView  = (AutoCompleteTextView) popupLayout.findViewById(R.id.autoCompleteTextView);
+        Spinner spinner = (Spinner) popupLayout.findViewById(R.id.spinner);
+        AutoCompleteTextView city  = (AutoCompleteTextView) popupLayout.findViewById(R.id.autoCompleteTextView);
+        TextView numberOfRooms = (TextView)popupLayout.findViewById(R.id.numberOfRooms);
+        SeekBar seekBarPrice = (SeekBar)popupLayout.findViewById(R.id.seekBarPrice);
+        SeekBar seekBarSurface = (SeekBar)popupLayout.findViewById(R.id.seekBarSurface);
+        TextView showPrice = (TextView)popupLayout.findViewById(R.id.showPrice);
+        TextView showSurface = (TextView)popupLayout.findViewById(R.id.showSurface);
+
+
         final String[] cities = new String[]{
                 "Geneve","Renens","Lausanne"
         };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, cities);
-        textView.setAdapter(adapter);
+        city.setAdapter(adapter);
 
-        showSeekBar(popupLayout,R.id.seekBarPrice,R.id.ShowPrice,MIN_VALUE_PRICE,MAX_VALUE_PRICE,"Chf");
-        showSeekBar(popupLayout,R.id.seekBarSurface,R.id.ShowSurface,MIN_VALUE_SURFACE,MAX_VALUE_SURFACE,"m\u00B2");
+        showSeekBar(seekBarPrice,showPrice,MIN_VALUE_PRICE,MAX_VALUE_PRICE,"Chf");
+        showSeekBar(seekBarSurface,showSurface,MIN_VALUE_SURFACE,MAX_VALUE_SURFACE,"m\u00B2");
+
+        Button eraseButton = (Button)popupLayout.findViewById(R.id.eraseButton);
+        eraseButton.setOnClickListener(new MyEraseButtonLister(spinner,city,numberOfRooms,showPrice,showSurface));
 
     }
 
-    private void showSeekBar(View view,int seekBarId,int textId, int minValue, int maxValue,String units){
-        SeekBar seekBar = (SeekBar)view.findViewById(seekBarId);
-        TextView text = (TextView)view.findViewById(textId);
-        SeekBar.OnSeekBarChangeListener seekBarListenerPrice   = new MyOnSeekBarChangeListener(
+    private void showSeekBar(SeekBar seekBar, TextView text, int minValue, int maxValue,String units){
+
+        SeekBar.OnSeekBarChangeListener seekBarListenerPrice = new MyOnSeekBarChangeListener(
                 text,minValue,maxValue,units);
         seekBar.setOnSeekBarChangeListener(seekBarListenerPrice);
     }

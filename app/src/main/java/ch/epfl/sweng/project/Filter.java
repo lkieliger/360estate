@@ -1,22 +1,27 @@
 package ch.epfl.sweng.project;
 
 
+import ch.epfl.sweng.project.list.Item;
+
 public class Filter {
 
     int price;
-    String Location;
-    // TODO : Type of building
-    int numberOfRooms;
+    String location;
+    Item.HouseType type;
+    int nbrOfRooms;
     int surface;
 
-    public Filter(int price, String location, int numberOfRooms, int surface) {
+    private Boolean isPriceFiltered;
+    private Boolean isLocationFiltered;
+    private Boolean isTypeFiltered;
+    private Boolean isNbrOfRoomsFiltered;
+    private Boolean isSurfaceFiltered;
+
+    public Filter(int price, String location, Item.HouseType type, int nbrOfRooms, int surface) {
         this.price = price;
-        Location = location;
-        this.numberOfRooms = numberOfRooms;
+        this.location = location;
+        this.type = type;
+        this.nbrOfRooms = nbrOfRooms;
         this.surface = surface;
     }
-
-
-
-
 }
