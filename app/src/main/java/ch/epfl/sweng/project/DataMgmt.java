@@ -17,12 +17,20 @@ final class DataMgmt {
     private DataMgmt() {
     }
 
-    static void getData(final Collection<Item> itemList, final ItemAdapter itemAdapter) {
-        ParseQuery<Item> query = ParseQuery.getQuery("Item");
+
+    static void getData(final Collection<Item> itemList, final ItemAdapter itemAdapter, Filter filter) {
+        ParseQuery<Item> query;
+        if(filter == null) {
+            query = ParseQuery.getQuery("Item");
+        }
+        else{
+            query = filter.filterQuery();
+        }
         query.findInBackground(new FindCallback<Item>() {
             public void done(List<Item> objects, ParseException e) {
                 if (e == null) {
                     Log.d("DataMgmt", "Retrieved " + objects.size() + " house items");
+                    itemList.clear();
                     itemList.addAll(objects);
                     itemAdapter.notifyDataSetChanged();
 

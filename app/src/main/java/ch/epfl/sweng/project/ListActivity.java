@@ -28,33 +28,38 @@ public class ListActivity extends AppCompatActivity {
     private static final int MAX_VALUE_SURFACE = 400;
 
 
-    ListView listView ;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        final List<Item> itemList = new ArrayList<>();
+        final ItemAdapter itemAdapter =  new ItemAdapter(this, itemList);
+        final Filter filter = null;
+
+        final ListView listView = (ListView) findViewById(R.id.houseList);
         Button popupButton = (Button)findViewById(R.id.filterButtonPopUp);
         popupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initPopUpFilter();
+                initPopUpFilter(itemList,itemAdapter,filter,listView);
             }
         });
 
         // Get ListView object from xml
-        final ListView listView = (ListView) findViewById(R.id.houseList);
+
 
         // Defined Array values to show in ListView
-        final List<Item> itemList = new ArrayList<>();
-        ItemAdapter itemAdapter = new ItemAdapter(this, itemList);
 
-        DataMgmt.getData(itemList, itemAdapter);
 
+
+        DataMgmt.getData(itemList, itemAdapter,filter);
         // Assign adapter to ListView
         listView.setAdapter(itemAdapter);
-
         // ListView Item Click Listener
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -75,7 +80,7 @@ public class ListActivity extends AppCompatActivity {
         });
     }
 
-    void initPopUpFilter(){
+    void initPopUpFilter(List<Item> itemList, ItemAdapter itemAdapter, Filter filter, ListView listView){
 
         final AlertDialog.Builder helpBuilder = new AlertDialog.Builder(this);
         helpBuilder.setTitle("");
@@ -97,6 +102,17 @@ public class ListActivity extends AppCompatActivity {
         TextView showPrice = (TextView)popupLayout.findViewById(R.id.showPrice);
         TextView showSurface = (TextView)popupLayout.findViewById(R.id.showSurface);
 
+        if (filter != null) {
+            spinner.setSelection(filter.getTypeSpinner().getSelectedItemPosition());
+            city.setText(filter.getCity().getText());
+            numberOfRooms.setText(filter.getNumberOfRooms().getText());
+            showPrice.setText(filter.getPrice().getText());
+            showSurface.setText(filter.getSurface().getText());
+            seekBarPrice.setProgress(filter.getSeekBarPrice().getProgress());
+            seekBarSurface.setProgress(filter.getSeekBarSurface().getProgress());
+        }
+
+        filter = new Filter(spinner,city,numberOfRooms,showPrice,showSurface,seekBarPrice,seekBarSurface);
 
         final String[] cities = new String[]{
                 "Geneve","Renens","Lausanne"
@@ -110,6 +126,9 @@ public class ListActivity extends AppCompatActivity {
 
         Button eraseButton = (Button)popupLayout.findViewById(R.id.eraseButton);
         eraseButton.setOnClickListener(new MyEraseButtonLister(spinner,city,numberOfRooms,showPrice,showSurface));
+
+        Button filterButton = (Button)popupLayout.findViewById(R.id.filterButton);
+        filterButton.setOnClickListener(new MyFilterButtonListener(helpDialog,filter,itemList,itemAdapter,listView));
 
     }
 

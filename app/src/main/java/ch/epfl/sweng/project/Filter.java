@@ -1,27 +1,99 @@
 package ch.epfl.sweng.project;
 
 
+import android.widget.AutoCompleteTextView;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.parse.ParseQuery;
+
 import ch.epfl.sweng.project.list.Item;
 
-public class Filter {
+class Filter {
 
-    int price;
-    String location;
-    Item.HouseType type;
-    int nbrOfRooms;
-    int surface;
 
-    private Boolean isPriceFiltered;
-    private Boolean isLocationFiltered;
-    private Boolean isTypeFiltered;
-    private Boolean isNbrOfRoomsFiltered;
-    private Boolean isSurfaceFiltered;
+    private static final double MIN_COEFF = 0.9;
+    private static final double MAX_COEFF = 1.1;
 
-    public Filter(int price, String location, Item.HouseType type, int nbrOfRooms, int surface) {
+    private Spinner typeSpinner;
+    private AutoCompleteTextView city;
+    private TextView numberOfRooms;
+    private TextView price;
+    private TextView surface;
+    private SeekBar seekBarPrice;
+    private SeekBar seekBarSurface;
+
+
+    Filter(Spinner typeSpinner, AutoCompleteTextView city, TextView numberOfRooms,
+           TextView price, TextView surface, SeekBar seekBarPrice, SeekBar seekBarSurface) {
+
+        this.typeSpinner = typeSpinner;
+        this.city = city;
+        this.numberOfRooms = numberOfRooms;
         this.price = price;
-        this.location = location;
-        this.type = type;
-        this.nbrOfRooms = nbrOfRooms;
         this.surface = surface;
+        this.seekBarPrice = seekBarPrice;
+        this.seekBarSurface = seekBarSurface;
+    }
+
+    ParseQuery<Item> filterQuery() {
+        ParseQuery<Item> query = ParseQuery.getQuery("Item");
+
+        Boolean isTypeFiltered;
+        Boolean isCityFiltered;
+        Boolean isNbrOfRoomsFiltered;
+        Boolean isPriceFiltered;
+        Boolean isSurfaceFiltered;
+
+        /*
+        if(isTypeFiltered || !typeSpinner.getSelectedItem().equals("All")){
+            query.whereEqualTo("type",typeSpinner.getSelectedItem());
+        }*/
+        isPriceFiltered = !price.getText().equals("");
+
+        if (isPriceFiltered) {
+            int temp = Integer.parseInt(price.getText().toString().split(" ")[0]);
+            query.whereLessThanOrEqualTo("price", temp * MIN_COEFF);
+            query.whereGreaterThanOrEqualTo("price", temp * MAX_COEFF);
+        }
+
+        isSurfaceFiltered = !surface.getText().equals("");
+
+        if (isSurfaceFiltered) {
+            int temp = Integer.parseInt(surface.getText().toString().split(" ")[0]);
+            query.whereLessThanOrEqualTo("surface", temp * MAX_COEFF);
+            query.whereGreaterThanOrEqualTo("surface", temp * MIN_COEFF);
+        }
+        return query;
+    }
+
+
+    TextView getSurface() {
+        return surface;
+    }
+
+    Spinner getTypeSpinner() {
+        return typeSpinner;
+    }
+
+    AutoCompleteTextView getCity() {
+        return city;
+    }
+
+    TextView getNumberOfRooms() {
+        return numberOfRooms;
+    }
+
+    TextView getPrice() {
+        return price;
+    }
+
+    SeekBar getSeekBarSurface() {
+        return seekBarSurface;
+    }
+
+    SeekBar getSeekBarPrice() {
+        return seekBarPrice;
     }
 }
