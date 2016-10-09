@@ -29,7 +29,7 @@ class MyFilterButtonListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        DataMgmt.getData(itemList, itemAdapter,filter);
+        DataMgmt.getData(itemList, itemAdapter, filter);
         listView.setAdapter(itemAdapter);
         alertDialog.dismiss();
     }

@@ -15,8 +15,10 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import ch.epfl.sweng.project.list.Item;
 import ch.epfl.sweng.project.list.ItemAdapter;
 
@@ -27,10 +29,7 @@ public class ListActivity extends AppCompatActivity {
     private static final int MIN_VALUE_SURFACE = 20;
     private static final int MAX_VALUE_SURFACE = 400;
 
-
-
-
-
+    private Filter filter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,26 +37,18 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
 
         final List<Item> itemList = new ArrayList<>();
-        final ItemAdapter itemAdapter =  new ItemAdapter(this, itemList);
-        final Filter filter = null;
+        final ItemAdapter itemAdapter = new ItemAdapter(this, itemList);
 
         final ListView listView = (ListView) findViewById(R.id.houseList);
-        Button popupButton = (Button)findViewById(R.id.filterButtonPopUp);
+        Button popupButton = (Button) findViewById(R.id.filterButtonPopUp);
         popupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initPopUpFilter(itemList,itemAdapter,filter,listView);
+                initPopUpFilter(itemList, itemAdapter, listView);
             }
         });
 
-        // Get ListView object from xml
-
-
-        // Defined Array values to show in ListView
-
-
-
-        DataMgmt.getData(itemList, itemAdapter,filter);
+        DataMgmt.getData(itemList, itemAdapter, filter);
         // Assign adapter to ListView
         listView.setAdapter(itemAdapter);
         // ListView Item Click Listener
@@ -68,11 +59,7 @@ public class ListActivity extends AppCompatActivity {
                                     int position, long id) {
 
                 // ListView Clicked item index
-
-                // ListView Clicked item value
                 Item itemValue = (Item) listView.getItemAtPosition(position);
-
-                // Show Alert
                 Toast.makeText(getApplicationContext(),
                         "MIIIIIAAAAAAOUUUUUUUUU", Toast.LENGTH_LONG)
                         .show();
@@ -80,29 +67,21 @@ public class ListActivity extends AppCompatActivity {
         });
     }
 
-    void initPopUpFilter(List<Item> itemList, ItemAdapter itemAdapter, Filter filter, ListView listView){
+    public void initPopUpFilter(List<Item> itemList, ItemAdapter itemAdapter, ListView listView) {
 
-        final AlertDialog.Builder helpBuilder = new AlertDialog.Builder(this);
-        helpBuilder.setTitle("");
 
-        LayoutInflater inflater = getLayoutInflater();
-
-        final ViewGroup nullParent = null;
-        final View popupLayout = inflater.inflate(R.layout.popup_filter,nullParent);
-        helpBuilder.setView(popupLayout);
-
-        final AlertDialog helpDialog = helpBuilder.create();
-        helpDialog.show();
+        View popupLayout = inflatePopUp();
+        AlertDialog helpDialog = createAlertDialog(popupLayout);
 
         Spinner spinner = (Spinner) popupLayout.findViewById(R.id.spinner);
-        AutoCompleteTextView city  = (AutoCompleteTextView) popupLayout.findViewById(R.id.autoCompleteTextView);
-        TextView numberOfRooms = (TextView)popupLayout.findViewById(R.id.numberOfRooms);
-        SeekBar seekBarPrice = (SeekBar)popupLayout.findViewById(R.id.seekBarPrice);
-        SeekBar seekBarSurface = (SeekBar)popupLayout.findViewById(R.id.seekBarSurface);
-        TextView showPrice = (TextView)popupLayout.findViewById(R.id.showPrice);
-        TextView showSurface = (TextView)popupLayout.findViewById(R.id.showSurface);
+        AutoCompleteTextView city = (AutoCompleteTextView) popupLayout.findViewById(R.id.autoCompleteTextView);
+        TextView numberOfRooms = (TextView) popupLayout.findViewById(R.id.numberOfRooms);
+        SeekBar seekBarPrice = (SeekBar) popupLayout.findViewById(R.id.seekBarPrice);
+        SeekBar seekBarSurface = (SeekBar) popupLayout.findViewById(R.id.seekBarSurface);
+        TextView showPrice = (TextView) popupLayout.findViewById(R.id.showPrice);
+        TextView showSurface = (TextView) popupLayout.findViewById(R.id.showSurface);
 
-        if (filter != null) {
+        if(filter != null){
             spinner.setSelection(filter.getTypeSpinner().getSelectedItemPosition());
             city.setText(filter.getCity().getText());
             numberOfRooms.setText(filter.getNumberOfRooms().getText());
@@ -112,30 +91,47 @@ public class ListActivity extends AppCompatActivity {
             seekBarSurface.setProgress(filter.getSeekBarSurface().getProgress());
         }
 
-        filter = new Filter(spinner,city,numberOfRooms,showPrice,showSurface,seekBarPrice,seekBarSurface);
+        filter = new Filter(spinner, city, numberOfRooms, showPrice, showSurface, seekBarPrice, seekBarSurface);
 
         final String[] cities = new String[]{
-                "Geneve","Renens","Lausanne"
+                "Geneve", "Renens", "Lausanne"
         };
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, cities);
         city.setAdapter(adapter);
 
-        showSeekBar(seekBarPrice,showPrice,MIN_VALUE_PRICE,MAX_VALUE_PRICE,"Chf");
-        showSeekBar(seekBarSurface,showSurface,MIN_VALUE_SURFACE,MAX_VALUE_SURFACE,"m\u00B2");
+        showSeekBar(seekBarPrice, showPrice, MIN_VALUE_PRICE, MAX_VALUE_PRICE, "Chf");
+        showSeekBar(seekBarSurface, showSurface, MIN_VALUE_SURFACE, MAX_VALUE_SURFACE, "m\u00B2");
 
-        Button eraseButton = (Button)popupLayout.findViewById(R.id.eraseButton);
-        eraseButton.setOnClickListener(new MyEraseButtonLister(spinner,city,numberOfRooms,showPrice,showSurface));
+        Button eraseButton = (Button) popupLayout.findViewById(R.id.eraseButton);
+        eraseButton.setOnClickListener(
+                new MyEraseButtonLister(spinner, city, numberOfRooms, showPrice, showSurface));
 
-        Button filterButton = (Button)popupLayout.findViewById(R.id.filterButton);
-        filterButton.setOnClickListener(new MyFilterButtonListener(helpDialog,filter,itemList,itemAdapter,listView));
-
+        Button filterButton = (Button) popupLayout.findViewById(R.id.filterButton);
+        filterButton.setOnClickListener(
+                new MyFilterButtonListener(helpDialog, filter, itemList, itemAdapter, listView));
     }
 
-    private void showSeekBar(SeekBar seekBar, TextView text, int minValue, int maxValue,String units){
+    private void showSeekBar(SeekBar seekBar, TextView text, int minValue, int maxValue, String units) {
 
         SeekBar.OnSeekBarChangeListener seekBarListenerPrice = new MyOnSeekBarChangeListener(
-                text,minValue,maxValue,units);
+                text, minValue, maxValue, units);
         seekBar.setOnSeekBarChangeListener(seekBarListenerPrice);
+    }
+
+    private View inflatePopUp(){
+        LayoutInflater inflater = getLayoutInflater();
+        final ViewGroup nullParent = null;
+        return inflater.inflate(R.layout.popup_filter, nullParent);
+    }
+
+    private AlertDialog createAlertDialog(View popupLayout) {
+        final AlertDialog.Builder helpBuilder = new AlertDialog.Builder(this);
+        helpBuilder.setTitle("");
+        helpBuilder.setView(popupLayout);
+        final AlertDialog helpDialog = helpBuilder.create();
+        helpDialog.show();
+        return helpDialog;
     }
 }

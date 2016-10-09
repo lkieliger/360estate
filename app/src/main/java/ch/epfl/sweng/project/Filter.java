@@ -24,7 +24,6 @@ class Filter {
     private SeekBar seekBarPrice;
     private SeekBar seekBarSurface;
 
-
     Filter(Spinner typeSpinner, AutoCompleteTextView city, TextView numberOfRooms,
            TextView price, TextView surface, SeekBar seekBarPrice, SeekBar seekBarSurface) {
 
@@ -50,7 +49,16 @@ class Filter {
         if(isTypeFiltered || !typeSpinner.getSelectedItem().equals("All")){
             query.whereEqualTo("type",typeSpinner.getSelectedItem());
         }*/
-        isPriceFiltered = !price.getText().equals("");
+
+
+        isNbrOfRoomsFiltered = !numberOfRooms.getText().toString().equals("");
+
+        if (isNbrOfRoomsFiltered) {
+            query.whereEqualTo("rooms", Integer.parseInt(numberOfRooms.getText().toString()));
+        }
+
+
+        isPriceFiltered = !price.getText().toString().equals("");
 
         if (isPriceFiltered) {
             int temp = Integer.parseInt(price.getText().toString().split(" ")[0]);
@@ -58,7 +66,7 @@ class Filter {
             query.whereGreaterThanOrEqualTo("price", temp * MAX_COEFF);
         }
 
-        isSurfaceFiltered = !surface.getText().equals("");
+        isSurfaceFiltered = !surface.getText().toString().equals("");
 
         if (isSurfaceFiltered) {
             int temp = Integer.parseInt(surface.getText().toString().split(" ")[0]);
@@ -68,14 +76,11 @@ class Filter {
         return query;
     }
 
-
     TextView getSurface() {
         return surface;
     }
 
-    Spinner getTypeSpinner() {
-        return typeSpinner;
-    }
+    Spinner getTypeSpinner() {return typeSpinner;}
 
     AutoCompleteTextView getCity() {
         return city;
