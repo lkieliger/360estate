@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 import java.util.Arrays;
 
@@ -23,7 +24,7 @@ import static ch.epfl.sweng.project.user.InputValidityChecker.passwordMatches;
 /**
  * A login screen that offers login via email/password.
  */
-public class RegisterActivity extends AppCompatActivity{
+public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";
 
@@ -52,9 +53,9 @@ public class RegisterActivity extends AppCompatActivity{
      *
      * @param view The view from which the event was generated
      */
-    public void attemptRegistration(View view){
+    public void attemptRegistration(View view) {
 
-        if(userDataIsValid()){
+        if (userDataIsValid()) {
             ParseUser newUser = new ParseUser();
             newUser.setUsername(mEmail.getText().toString());
             newUser.setEmail(mEmail.getText().toString());
@@ -62,23 +63,26 @@ public class RegisterActivity extends AppCompatActivity{
 
             newUser.put("phone", mPhoneNumber.getText().toString());
 
-            newUser.signUpInBackground((ParseException e) -> {
-                if(e == null){
-                    Toast popMsg = Toast.makeText(
-                            getApplicationContext(),
-                            getResources().getString(R.string.info_registration_successful),
-                            Toast.LENGTH_SHORT);
-                    popMsg.show();
+            newUser.signUpInBackground(new SignUpCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        Toast popMsg = Toast.makeText(
+                                getApplicationContext(),
+                                getResources().getString(R.string.info_registration_successful),
+                                Toast.LENGTH_SHORT);
+                        popMsg.show();
 
-                    finish();
-                } else {
-                    Toast popMsg = Toast.makeText(
-                            getApplicationContext(),
-                            getResources().getString(R.string.error_registration_unsuccessful),
-                            Toast.LENGTH_LONG);
-                    popMsg.show();
+                        finish();
+                    } else {
+                        Toast popMsg = Toast.makeText(
+                                getApplicationContext(),
+                                getResources().getString(R.string.error_registration_unsuccessful),
+                                Toast.LENGTH_LONG);
+                        popMsg.show();
 
-                    Log.e(TAG, Arrays.toString(e.getStackTrace()));
+                        Log.e(TAG, Arrays.toString(e.getStackTrace()));
+                    }
                 }
             });
         }
@@ -92,16 +96,15 @@ public class RegisterActivity extends AppCompatActivity{
      *
      * @return A boolean value indicating whether the data is valid or not
      */
-    private boolean userDataIsValid(){
+    private boolean userDataIsValid() {
 
         return emailIsValid(mEmail.getText().toString(), mAppContext)
                 && passwordIsValid(mPassword.getText().toString(), mAppContext)
                 && passwordMatches(mPassword.getText().toString(),
-                        mPasswordBis.getText().toString(),
-                        mAppContext)
+                mPasswordBis.getText().toString(),
+                mAppContext)
                 && fieldsAreFilled();
     }
-
 
 
     /**
@@ -110,17 +113,17 @@ public class RegisterActivity extends AppCompatActivity{
      *
      * @return true if all mandatory fields are filled with some input
      */
-    private boolean fieldsAreFilled(){
+    private boolean fieldsAreFilled() {
 
         boolean filled = !mEmail.getText().toString().isEmpty() &&
                 !mPassword.getText().toString().isEmpty() &&
                 !mPasswordBis.getText().toString().isEmpty();
 
-        if(BuildConfig.DEBUG){
-            Log.d(TAG, "Result of field checking was: "+ filled);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Result of field checking was: " + filled);
         }
 
-        if(!filled){
+        if (!filled) {
             Toast popMsg = Toast.makeText(
                     getApplicationContext(), R.string.error_empty_field, Toast.LENGTH_SHORT);
             popMsg.show();

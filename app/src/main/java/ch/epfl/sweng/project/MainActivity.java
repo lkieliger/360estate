@@ -46,7 +46,7 @@ public final class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public static Context getContext(){
+    public static Context getContext() {
         return mContext;
     }
 

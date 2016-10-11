@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
@@ -22,7 +23,7 @@ import static ch.epfl.sweng.project.user.InputValidityChecker.passwordIsValid;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
@@ -48,33 +49,36 @@ public class LoginActivity extends AppCompatActivity{
      *
      * @param view The view from which the event was generated
      */
-    public void attemptLogin(View view){
+    public void attemptLogin(View view) {
 
-        if(userDataIsValid()) {
+        if (userDataIsValid()) {
 
             ParseUser.logInInBackground(mEmail.getText().toString(),
                     mPassword.getText().toString(),
-                    (ParseUser user, ParseException e) -> {
-                if (user != null) {
-                    Toast popMsg = Toast.makeText(
-                            getApplicationContext(),
-                            getResources().getText(R.string.info_login_successful),
-                            Toast.LENGTH_SHORT);
-                    popMsg.show();
+                    new LogInCallback() {
+                        @Override
+                        public void done(ParseUser user, ParseException e) {
+                            if (user != null) {
+                                Toast popMsg = Toast.makeText(
+                                        getApplicationContext(),
+                                        getResources().getText(R.string.info_login_successful),
+                                        Toast.LENGTH_SHORT);
+                                popMsg.show();
 
-                    Intent intent = new Intent(this, ListActivity.class);
-                    startActivity(intent);
+                                Intent intent = new Intent(LoginActivity.this, ListActivity.class);
+                                startActivity(intent);
 
-                    finish();
+                                finish();
 
-                } else {
-                    Toast popMsg = Toast.makeText(
-                            getApplicationContext(),
-                            getResources().getText(R.string.error_login_unsuccessful),
-                            Toast.LENGTH_SHORT);
-                    popMsg.show();
-                }
-            });
+                            } else {
+                                Toast popMsg = Toast.makeText(
+                                        getApplicationContext(),
+                                        getResources().getText(R.string.error_login_unsuccessful),
+                                        Toast.LENGTH_SHORT);
+                                popMsg.show();
+                            }
+                        }
+                    });
         }
     }
 
@@ -84,7 +88,7 @@ public class LoginActivity extends AppCompatActivity{
      *
      * @param view The view from which the event was generated
      */
-    public void proceedToRegistration(View view){
+    public void proceedToRegistration(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
@@ -95,9 +99,9 @@ public class LoginActivity extends AppCompatActivity{
      *
      * @return true if user data is valid
      */
-    private boolean userDataIsValid(){
+    private boolean userDataIsValid() {
 
-        return emailIsValid(mEmail.getText().toString(), mAppContext)&&
+        return emailIsValid(mEmail.getText().toString(), mAppContext) &&
                 passwordIsValid(mPassword.getText().toString(), mAppContext);
     }
 
@@ -107,16 +111,16 @@ public class LoginActivity extends AppCompatActivity{
      *
      * @return true if all mandatory fields are filled with some input
      */
-    private boolean fieldsAreFilled(){
+    private boolean fieldsAreFilled() {
 
         boolean filled = !mEmail.getText().toString().isEmpty() &&
-                !mPassword.getText().toString().isEmpty() ;
+                !mPassword.getText().toString().isEmpty();
 
-        if(BuildConfig.DEBUG){
-            Log.d(TAG, "Result of field checking was: "+ filled);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Result of field checking was: " + filled);
         }
 
-        if(!filled){
+        if (!filled) {
             Toast popMsg = Toast.makeText(
                     getApplicationContext(), R.string.error_empty_field, Toast.LENGTH_SHORT);
             popMsg.show();
