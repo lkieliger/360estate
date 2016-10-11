@@ -9,22 +9,24 @@ import com.parse.ParseQuery;
 import java.util.Collection;
 import java.util.List;
 
+import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
 import ch.epfl.sweng.project.list.Item;
 import ch.epfl.sweng.project.list.ItemAdapter;
 
-final class DataMgmt {
+public final class DataMgmt {
 
     private DataMgmt() {
     }
 
 
-    static void getData(final Collection<Item> itemList, final ItemAdapter itemAdapter, Filter filter) {
+    public static void getData(
+            final Collection<Item> itemList, final ItemAdapter itemAdapter, StateOfPopUpLayout stateOfPopUpLayout) {
         ParseQuery<Item> query;
-        if(filter == null) {
+        if(stateOfPopUpLayout == null) {
             query = ParseQuery.getQuery("Item");
         }
         else{
-            query = filter.filterQuery();
+            query = stateOfPopUpLayout.filterQuery();
         }
         query.findInBackground(new FindCallback<Item>() {
             public void done(List<Item> objects, ParseException e) {

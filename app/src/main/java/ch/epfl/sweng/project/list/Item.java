@@ -10,7 +10,7 @@ import ch.epfl.sweng.project.R;
 public class Item extends ParseObject {
 
     public enum HouseType {
-        APPARTEMENT(getString(R.string.appartment)), HOUSE(getString(R.string.house)),
+        APARTMENT(getString(R.string.apartment)), HOUSE(getString(R.string.house)),
         BUILDING(getString(R.string.building));
 
         private final String description;
@@ -43,64 +43,66 @@ public class Item extends ParseObject {
         setSurface(surface);
     }
 
-    public void setPrice(int price) {
+    private void setPrice(int price) {
         put("price", price);
     }
 
-    public void setLocation(String location) {
+    private void setLocation(String location) {
         put("location", location);
     }
 
-    public void setType(HouseType type) {
+    private void setType(HouseType type) {
         put("type", type.ordinal());
     }
 
-    public void setRooms(double rooms) {
+    private void setRooms(double rooms) {
         put("rooms", rooms);
     }
 
-    public void setSurface(int surface) {
+    private void setSurface(int surface) {
         put("surface", surface);
     }
 
-    private String formatRooms(double rooms){
-        if(rooms%1 < 0.4) return (int) rooms + "";
-        else return (int)rooms +"\u00BD";
-    }
-    private String formatInts(int price, int acc) {
-        if (price > 9) {
-            return formatInts(price / 10, (acc + 1) % 3) + (acc == 2 ? "'" : "") + price % 10;
-        } else return "" + price;
-    }
     public HouseType getType() {
         return HouseType.values()[getInt("type")];
     }
 
-    public String getLocation() {
+    String getLocation() {
         return getString("location");
     }
 
-    public String getRooms() {
+    String getRooms() {
         return formatRooms(getDouble("rooms"));
     }
 
-    public int getSurface() {
+    private int getSurface() {
         return getInt("surface");
     }
 
-    public int getPrice() {
+    private int getPrice() {
         return getInt("price");
     }
 
-    public String printSurface(){
-        return formatInts(getSurface(),0);
+    String printSurface() {
+        return formatInts(getSurface(), 0);
     }
 
-    public String printPrice(){
-        return formatInts(getPrice(),0);
+    String printPrice() {
+        return formatInts(getPrice(), 0);
     }
 
-    private static String getString(int resId){
+    private static String getString(int resId) {
         return MainActivity.getContext().getString(resId);
+    }
+
+    private String formatRooms(double rooms) {
+        if (rooms % 1 < 0.4) return (int) rooms + "";
+        else return (int) rooms + "\u00BD";
+    }
+
+    private String formatInts(int price, int acc) {
+        if (price > 9) {
+            return formatInts(price / 10, (acc + 1) % 3) + (acc == 2 ? "'" : "") + price % 10;
+        } else return "" + price;
     }
 }

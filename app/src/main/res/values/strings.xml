@@ -7,15 +7,16 @@
     <string name="types_of_house">Types of house:</string>
     <string name="cities">Cities</string>
     <string name="number_of_rooms">Number of rooms</string>
-    <string name="price">Price:</string>
-    <string name="surface">Surface:</string>
-    <string name="filter">filter</string>
+    <string name="price">Max Price:</string>
+    <string name="surface">Min Surface:</string>
+    <string name="Filter">Filter</string>
     <array name="typeOfHouses">
         <item>All</item>
-        <item>House</item>
-        <item>Apartment</item>
+        <item>@string/apartment</item>
+        <item>@string/building</item>
+        <item>@string/house</item>
     </array>
-    <string name="appartment">Appartement</string>
+    <string name="apartment">Apartment</string>
     <string name="house">House</string>
     <string name="building">Building</string>
     <string name="erase">Erase</string>

@@ -19,6 +19,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
+import ch.epfl.sweng.project.filter.EraseButtonListener;
+import ch.epfl.sweng.project.filter.FilterButtonListener;
+import ch.epfl.sweng.project.filter.CustomOnSeekBarChangeListener;
 import ch.epfl.sweng.project.list.Item;
 import ch.epfl.sweng.project.list.ItemAdapter;
 
@@ -28,8 +32,11 @@ public class ListActivity extends AppCompatActivity {
     private static final int MAX_VALUE_PRICE = 500000;
     private static final int MIN_VALUE_SURFACE = 20;
     private static final int MAX_VALUE_SURFACE = 400;
+    private final String[] cities = new String[]{
+            "Geneve", "Renens", "Lausanne"
+    };
 
-    private Filter filter = null;
+    private StateOfPopUpLayout stateOfPopUpLayout = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +55,7 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
-        DataMgmt.getData(itemList, itemAdapter, filter);
+        DataMgmt.getData(itemList, itemAdapter, stateOfPopUpLayout);
         // Assign adapter to ListView
         listView.setAdapter(itemAdapter);
         // ListView Item Click Listener
@@ -61,8 +68,10 @@ public class ListActivity extends AppCompatActivity {
                 // ListView Clicked item index
                 Item itemValue = (Item) listView.getItemAtPosition(position);
                 Toast.makeText(getApplicationContext(),
-                        "MIIIIIAAAAAAOUUUUUUUUU", Toast.LENGTH_LONG)
+                        itemValue.getType().toString(), Toast.LENGTH_LONG)
                         .show();
+
+
             }
         });
     }
@@ -81,24 +90,18 @@ public class ListActivity extends AppCompatActivity {
         TextView showPrice = (TextView) popupLayout.findViewById(R.id.showPrice);
         TextView showSurface = (TextView) popupLayout.findViewById(R.id.showSurface);
 
-        if(filter != null){
-            spinner.setSelection(filter.getTypeSpinner().getSelectedItemPosition());
-            city.setText(filter.getCity().getText());
-            numberOfRooms.setText(filter.getNumberOfRooms().getText());
-            showPrice.setText(filter.getPrice().getText());
-            showSurface.setText(filter.getSurface().getText());
-            seekBarPrice.setProgress(filter.getSeekBarPrice().getProgress());
-            seekBarSurface.setProgress(filter.getSeekBarSurface().getProgress());
+
+        if(stateOfPopUpLayout != null){
+            stateOfPopUpLayout.recoverFilter(
+                    new StateOfPopUpLayout(
+                            spinner,city,numberOfRooms,showPrice,showSurface,seekBarPrice,seekBarSurface));
         }
 
-        filter = new Filter(spinner, city, numberOfRooms, showPrice, showSurface, seekBarPrice, seekBarSurface);
 
-        final String[] cities = new String[]{
-                "Geneve", "Renens", "Lausanne"
-        };
+        stateOfPopUpLayout = new StateOfPopUpLayout(
+                        spinner, city, numberOfRooms, showPrice, showSurface, seekBarPrice, seekBarSurface);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_dropdown_item_1line, cities);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, cities);
         city.setAdapter(adapter);
 
         showSeekBar(seekBarPrice, showPrice, MIN_VALUE_PRICE, MAX_VALUE_PRICE, "Chf");
@@ -106,16 +109,15 @@ public class ListActivity extends AppCompatActivity {
 
         Button eraseButton = (Button) popupLayout.findViewById(R.id.eraseButton);
         eraseButton.setOnClickListener(
-                new MyEraseButtonLister(spinner, city, numberOfRooms, showPrice, showSurface));
+                new EraseButtonListener(spinner, city, numberOfRooms, showPrice, showSurface));
 
         Button filterButton = (Button) popupLayout.findViewById(R.id.filterButton);
         filterButton.setOnClickListener(
-                new MyFilterButtonListener(helpDialog, filter, itemList, itemAdapter, listView));
+                new FilterButtonListener(helpDialog, stateOfPopUpLayout, itemList, itemAdapter, listView));
     }
 
     private void showSeekBar(SeekBar seekBar, TextView text, int minValue, int maxValue, String units) {
-
-        SeekBar.OnSeekBarChangeListener seekBarListenerPrice = new MyOnSeekBarChangeListener(
+        SeekBar.OnSeekBarChangeListener seekBarListenerPrice = new CustomOnSeekBarChangeListener(
                 text, minValue, maxValue, units);
         seekBar.setOnSeekBarChangeListener(seekBarListenerPrice);
     }

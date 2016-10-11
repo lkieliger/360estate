@@ -1,12 +1,11 @@
-package ch.epfl.sweng.project;
+package ch.epfl.sweng.project.filter;
 
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-class MyEraseButtonLister implements View.OnClickListener
-{
+public class EraseButtonListener implements View.OnClickListener {
 
     private Spinner typeSpinner;
     private AutoCompleteTextView city;
@@ -14,8 +13,8 @@ class MyEraseButtonLister implements View.OnClickListener
     private TextView price;
     private TextView Surface;
 
-    MyEraseButtonLister(Spinner typeSpinner, AutoCompleteTextView city, TextView numberOfRooms, TextView price,
-                        TextView surface) {
+    public EraseButtonListener(Spinner typeSpinner, AutoCompleteTextView city, TextView numberOfRooms, TextView price,
+                               TextView surface) {
         this.typeSpinner = typeSpinner;
         this.city = city;
         this.numberOfRooms = numberOfRooms;

@@ -70,10 +70,9 @@
 
 
         <SeekBar
-            style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:max="10"
+            android:max="20"
             android:progress="3"
             android:id="@+id/seekBarPrice"
             />
@@ -104,10 +103,9 @@
 
 
         <SeekBar
-            style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:max="10"
+            android:max="50"
             android:progress="3"
             android:id="@+id/seekBarSurface"
             />
@@ -126,7 +124,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
-        android:text="@string/filter"
+        android:text="@string/Filter"
         android:layout_gravity="center"
         android:id="@+id/filterButton"
         />

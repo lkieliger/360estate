@@ -14,7 +14,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/filter"
+        android:text="@string/Filter"
         android:layout_gravity="right"
         android:id="@+id/filterButtonPopUp"
         />

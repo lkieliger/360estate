@@ -1,16 +1,16 @@
-package ch.epfl.sweng.project;
+package ch.epfl.sweng.project.filter;
 
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-class MyOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
+public class CustomOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
     private TextView textShow;
     private final int minValue;
     private final int maxValue;
     private final String units;
     private int progressChanged;
 
-    MyOnSeekBarChangeListener(TextView textShow, int minValue, int maxValue, String units) {
+    public CustomOnSeekBarChangeListener(TextView textShow, int minValue, int maxValue, String units) {
         this.maxValue = maxValue;
         this.textShow = textShow;
         this.minValue = minValue;
@@ -31,9 +31,9 @@ class MyOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        if(maxValue>minValue) {
-            int res = progressChanged * (maxValue-minValue) / seekBar.getMax() + minValue;
-            textShow.setText(String.format("%1$d "+units,res));
+        if (maxValue > minValue) {
+            int res = progressChanged * (maxValue - minValue) / seekBar.getMax() + minValue;
+            textShow.setText(String.format("%1$d " + units, res));
         }
     }
 }
