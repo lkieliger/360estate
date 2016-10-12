@@ -2,6 +2,7 @@ package ch.epfl.sweng.project.filter;
 
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -14,7 +15,9 @@ public class EraseButtonListener implements View.OnClickListener {
     private AutoCompleteTextView city;
     private TextView numberOfRooms;
     private TextView price;
-    private TextView Surface;
+    private TextView surface;
+    private SeekBar seekBarPrice;
+    private SeekBar seekBarSurface;
 
     /**
      * @param typeSpinner The spinner of the types.
@@ -24,12 +27,14 @@ public class EraseButtonListener implements View.OnClickListener {
      * @param surface The surface entered.
      */
     public EraseButtonListener(Spinner typeSpinner, AutoCompleteTextView city, TextView numberOfRooms, TextView price,
-                               TextView surface) {
+                               TextView surface, SeekBar seekBarPrice, SeekBar seekBarSurface) {
         this.typeSpinner = typeSpinner;
         this.city = city;
         this.numberOfRooms = numberOfRooms;
         this.price = price;
-        Surface = surface;
+        this.surface = surface;
+        this.seekBarPrice = seekBarPrice;
+        this.seekBarSurface = seekBarSurface;
     }
 
     @Override
@@ -38,6 +43,8 @@ public class EraseButtonListener implements View.OnClickListener {
         city.setText("");
         numberOfRooms.setText("");
         price.setText("");
-        Surface.setText("");
+        surface.setText("");
+        seekBarPrice.setProgress(seekBarPrice.getMax());
+        seekBarSurface.setProgress(0);
     }
 }

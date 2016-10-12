@@ -75,11 +75,11 @@ public class Item extends ParseObject {
         return formatRooms(getDouble("rooms"));
     }
 
-    private int getSurface() {
+    public int getSurface() {
         return getInt("surface");
     }
 
-    private int getPrice() {
+    public int getPrice() {
         return getInt("price");
     }
 

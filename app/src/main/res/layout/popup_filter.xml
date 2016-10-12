@@ -40,7 +40,7 @@
     <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/autoCompleteTextView"
+        android:id="@+id/location"
         android:hint="@string/cities"
         android:layout_marginBottom="13dp"
         />
@@ -73,7 +73,7 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:max="20"
-            android:progress="3"
+            android:progress="20"
             android:id="@+id/seekBarPrice"
             />
 
@@ -106,7 +106,7 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:max="50"
-            android:progress="3"
+            android:progress="0"
             android:id="@+id/seekBarSurface"
             />
 

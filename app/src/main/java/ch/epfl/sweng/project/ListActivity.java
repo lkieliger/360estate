@@ -1,8 +1,8 @@
 package ch.epfl.sweng.project;
 
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
-import ch.epfl.sweng.project.filter.EraseButtonListener;
 import ch.epfl.sweng.project.filter.CustomOnSeekBarChangeListener;
+import ch.epfl.sweng.project.filter.EraseButtonListener;
+import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
 import ch.epfl.sweng.project.list.Item;
 import ch.epfl.sweng.project.list.ItemAdapter;
 
@@ -125,7 +125,7 @@ public class ListActivity extends AppCompatActivity {
         final AlertDialog helpDialog = createAlertDialog(popupLayout);
 
         final Spinner spinner = (Spinner) popupLayout.findViewById(R.id.spinner);
-        final AutoCompleteTextView city = (AutoCompleteTextView) popupLayout.findViewById(R.id.autoCompleteTextView);
+        final AutoCompleteTextView city = (AutoCompleteTextView) popupLayout.findViewById(R.id.location);
         final TextView numberOfRooms = (TextView) popupLayout.findViewById(R.id.numberOfRooms);
         final SeekBar seekBarPrice = (SeekBar) popupLayout.findViewById(R.id.seekBarPrice);
         final SeekBar seekBarSurface = (SeekBar) popupLayout.findViewById(R.id.seekBarSurface);
@@ -152,8 +152,8 @@ public class ListActivity extends AppCompatActivity {
         showSeekBar(seekBarSurface, showSurface, MIN_VALUE_SURFACE, MAX_VALUE_SURFACE, "m\u00B2");
 
         Button eraseButton = (Button) popupLayout.findViewById(R.id.eraseButton);
-        eraseButton.setOnClickListener(
-                new EraseButtonListener(spinner, city, numberOfRooms, showPrice, showSurface));
+        eraseButton.setOnClickListener(new EraseButtonListener(
+                spinner, city, numberOfRooms, showPrice, showSurface,seekBarPrice,seekBarSurface));
 
         Button filterButton = (Button) popupLayout.findViewById(R.id.filterButton);
         filterButton.setOnClickListener(new View.OnClickListener() {

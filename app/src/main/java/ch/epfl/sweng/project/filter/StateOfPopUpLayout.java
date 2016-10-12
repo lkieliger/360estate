@@ -3,6 +3,7 @@ package ch.epfl.sweng.project.filter;
 import android.util.Log;
 
 import com.parse.ParseQuery;
+
 import ch.epfl.sweng.project.list.Item;
 
 /**
@@ -10,8 +11,8 @@ import ch.epfl.sweng.project.list.Item;
  */
 public class StateOfPopUpLayout {
 
-    private static final double MIN_COEFF = 0.9;
-    private static final double MAX_COEFF = 1.1;
+    private static final double MIN_COEFF = 0.98;
+    private static final double MAX_COEFF = 1.02;
 
     private String typeSpinner;
     private int positionSpinner;
@@ -85,7 +86,6 @@ public class StateOfPopUpLayout {
         Boolean isNbrOfRoomsFiltered = !numberOfRooms.equals("");
         Boolean isPriceFiltered = !price.equals("");
         Boolean isSurfaceFiltered = !surface.equals("");
-
 
         if (isTypeFiltered) {
             try {
