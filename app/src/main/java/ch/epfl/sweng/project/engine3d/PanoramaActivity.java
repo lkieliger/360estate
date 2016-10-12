@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.rajawali3d.renderer.Renderer;
 import org.rajawali3d.view.ISurface;
 import org.rajawali3d.view.SurfaceView;
 
@@ -18,7 +17,7 @@ public class PanoramaActivity extends Activity {
     private static final String TAG = "PanoramaActivity";
 
     private SurfaceView mSurface;
-    private Renderer mRenderer;
+    private PanoramaRenderer mRenderer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

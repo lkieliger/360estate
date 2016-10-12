@@ -1,23 +1,20 @@
 package ch.epfl.sweng.project.engine3d;
 
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-
-import org.rajawali3d.renderer.Renderer;
 
 import static android.view.MotionEvent.INVALID_POINTER_ID;
 
 public class PanoramaTouchListener implements View.OnTouchListener {
 
-    private final Renderer mRenderer;
+    private final PanoramaRenderer mRenderer;
 
     private float mLastTouchX;
     private float mLastTouchY;
 
     private int mActivePointerId;
 
-    public PanoramaTouchListener(Renderer renderer){
+    public PanoramaTouchListener(PanoramaRenderer renderer){
         mRenderer = renderer;
     }
 
@@ -46,7 +43,7 @@ public class PanoramaTouchListener implements View.OnTouchListener {
                 final float dx = x - mLastTouchX;
                 final float dy = y - mLastTouchY;
 
-                //mRenderer.updateCameraRotation(dx, dy);
+                mRenderer.updateCameraRotation(dx, dy);
 
                 // Remember this touch position for the next move event
                 mLastTouchX = x;

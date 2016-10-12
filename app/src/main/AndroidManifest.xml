@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ListActivity" />
+        <activity android:name=".engine3d.PanoramaActivity" />
         <activity
             android:name=".user.LoginActivity"
             android:label="@string/title_activity_login" />

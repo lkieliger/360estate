@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.parse.Parse;
 
-import ch.epfl.sweng.project.user.LoginActivity;
+import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 
 /**
  * Your app's main activity.
@@ -41,7 +41,7 @@ public final class MainActivity extends AppCompatActivity {
             parseNotInitialized = false;
         }
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, PanoramaActivity.class);
 
         startActivity(intent);
     }
