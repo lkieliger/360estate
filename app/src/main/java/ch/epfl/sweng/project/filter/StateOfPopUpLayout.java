@@ -1,135 +1,129 @@
 package ch.epfl.sweng.project.filter;
 
-
-import android.widget.AutoCompleteTextView;
-import android.widget.SeekBar;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.util.Log;
 
 import com.parse.ParseQuery;
-
 import ch.epfl.sweng.project.list.Item;
 
+/**
+ * A state of the popup layout.
+ */
 public class StateOfPopUpLayout {
 
     private static final double MIN_COEFF = 0.9;
     private static final double MAX_COEFF = 1.1;
 
-    private Spinner typeSpinner;
-    private AutoCompleteTextView city;
-    private TextView numberOfRooms;
-    private TextView price;
-    private TextView surface;
-    private SeekBar seekBarPrice;
-    private SeekBar seekBarSurface;
+    private String typeSpinner;
+    private int positionSpinner;
+    private String city;
+    private String numberOfRooms;
+    private String price;
+    private String surface;
+    private int seekBarPricePosition;
+    private int seekBarSurfacePosition;
 
-    public StateOfPopUpLayout(Spinner typeSpinner, AutoCompleteTextView city, TextView numberOfRooms,
-                              TextView price, TextView surface, SeekBar seekBarPrice, SeekBar seekBarSurface) {
-
+    /**
+     * @param typeSpinner The type entered.
+     * @param positionSpinner The position of the selected item in the spinner.
+     * @param city The city entered.
+     * @param numberOfRooms The number of rooms entered.
+     * @param price The price entered.
+     * @param surface The surface entered.
+     * @param seekBarPricePosition The position of the seek bar used for the price.
+     * @param seekBarSurfacePosition The position of the seek bar used for the surface.
+     */
+    public StateOfPopUpLayout(String typeSpinner, int positionSpinner, String city, String numberOfRooms,
+                              String price, String surface, int seekBarPricePosition, int seekBarSurfacePosition) {
         this.typeSpinner = typeSpinner;
+        this.positionSpinner = positionSpinner;
         this.city = city;
         this.numberOfRooms = numberOfRooms;
         this.price = price;
         this.surface = surface;
-        this.seekBarPrice = seekBarPrice;
-        this.seekBarSurface = seekBarSurface;
+        this.seekBarPricePosition = seekBarPricePosition;
+        this.seekBarSurfacePosition = seekBarSurfacePosition;
     }
 
-
-    private TextView getSurface() {
-        return surface;
+    public int getPositionSpinner() {
+        return positionSpinner;
     }
 
-    private Spinner getTypeSpinner() {
-        return typeSpinner;
-    }
-
-    private AutoCompleteTextView getCity() {
+    public String getCity() {
         return city;
     }
 
-    private TextView getNumberOfRooms() {
+    public String getNumberOfRooms() {
         return numberOfRooms;
     }
 
-    private TextView getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    private SeekBar getSeekBarSurface() {
-        return seekBarSurface;
+    public String getSurface() {
+        return surface;
     }
 
-    private SeekBar getSeekBarPrice() {
-        return seekBarPrice;
+    public int getSeekBarPricePosition() {
+        return seekBarPricePosition;
     }
 
+    public int getSeekBarSurfacePosition() {
+        return seekBarSurfacePosition;
+    }
 
+    /**
+     * @return The query obtained by doing the logical AND of every of the condition by the parameters of the
+     * current state of the popup layout.
+     */
     public ParseQuery<Item> filterQuery() {
 
         ParseQuery<Item> query = ParseQuery.getQuery("Item");
 
-        String typeSelected = typeSpinner.getSelectedItem().toString();
-        String citySelected = city.getText().toString();
-        String roomSelected = numberOfRooms.getText().toString();
-        String priceSelected = price.getText().toString();
-        String surfaceSelected = surface.getText().toString();
-
-        Boolean isTypeFiltered = !typeSelected.equals("All");
-        Boolean isCityFiltered = !citySelected.equals("");
-        Boolean isNbrOfRoomsFiltered = !roomSelected.equals("");
-        Boolean isPriceFiltered = !priceSelected.equals("");
-        Boolean isSurfaceFiltered = !surfaceSelected.equals("");
+        Boolean isTypeFiltered = !typeSpinner.equals("All");
+        Boolean isCityFiltered = !city.equals("");
+        Boolean isNbrOfRoomsFiltered = !numberOfRooms.equals("");
+        Boolean isPriceFiltered = !price.equals("");
+        Boolean isSurfaceFiltered = !surface.equals("");
 
 
         if (isTypeFiltered) {
             try {
-                query.whereEqualTo("type", Item.HouseType.valueOf(typeSelected.toUpperCase()).ordinal());
+                query.whereEqualTo("type", Item.HouseType.valueOf(typeSpinner.toUpperCase()).ordinal());
             } catch (IllegalArgumentException e) {
-                System.err.print("IllegalArgumentException" + e.getMessage());
+                Log.d("StateOfPopUpLayout","IllegalArgumentException" + e.getMessage());
             }
         }
 
         if (isCityFiltered) {
-            query.whereEqualTo("location", citySelected);
+            query.whereEqualTo("location", city);
         }
 
         if (isNbrOfRoomsFiltered) {
             try {
-                query.whereEqualTo("rooms", Integer.parseInt(roomSelected));
+                query.whereEqualTo("rooms", Integer.parseInt(numberOfRooms));
             } catch (NumberFormatException e) {
-                System.err.print("NumberFormatException" + e.getMessage());
+                Log.d("StateOfPopUpLayout","NumberFormatException" + e.getMessage());
             }
         }
 
         if (isPriceFiltered) {
             try {
-                int temp = Integer.parseInt(price.getText().toString().split(" ")[0]);
+                int temp = Integer.parseInt(price.split(" ")[0]);
                 query.whereLessThanOrEqualTo("price", temp * MAX_COEFF);
             } catch (NumberFormatException e) {
-                System.err.print("NumberFormatException" + e.getMessage());
+                Log.d("StateOfPopUpLayout","NumberFormatException" + e.getMessage());
             }
         }
 
         if (isSurfaceFiltered) {
             try {
-                int temp = Integer.parseInt(surface.getText().toString().split(" ")[0]);
+                int temp = Integer.parseInt(surface.split(" ")[0]);
                 query.whereGreaterThanOrEqualTo("surface", temp * MIN_COEFF);
             } catch (NumberFormatException e) {
-                System.err.print("NumberFormatException" + e.getMessage());
+                Log.d("StateOfPopUpLayout","NumberFormatException" + e.getMessage());
             }
         }
-
         return query;
-    }
-
-    public void recoverFilter(StateOfPopUpLayout other) {
-        other.getTypeSpinner().setSelection(getTypeSpinner().getSelectedItemPosition());
-        other.getCity().setText(getCity().getText());
-        other.getNumberOfRooms().setText(getNumberOfRooms().getText());
-        other.getPrice().setText(getPrice().getText());
-        other.getSurface().setText(getSurface().getText());
-        other.getSeekBarPrice().setProgress(getSeekBarPrice().getProgress());
-        other.getSeekBarSurface().setProgress(getSeekBarSurface().getProgress());
     }
 }

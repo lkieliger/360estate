@@ -17,11 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
 import ch.epfl.sweng.project.filter.EraseButtonListener;
-import ch.epfl.sweng.project.filter.FilterButtonListener;
 import ch.epfl.sweng.project.filter.CustomOnSeekBarChangeListener;
 import ch.epfl.sweng.project.list.Item;
 import ch.epfl.sweng.project.list.ItemAdapter;
@@ -45,8 +45,8 @@ public class ListActivity extends AppCompatActivity {
 
         final List<Item> itemList = new ArrayList<>();
         final ItemAdapter itemAdapter = new ItemAdapter(this, itemList);
-
         final ListView listView = (ListView) findViewById(R.id.houseList);
+
         Button popupButton = (Button) findViewById(R.id.filterButtonPopUp);
         popupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,36 +70,80 @@ public class ListActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         itemValue.getType().toString(), Toast.LENGTH_LONG)
                         .show();
-
-
             }
         });
     }
 
-    public void initPopUpFilter(List<Item> itemList, ItemAdapter itemAdapter, ListView listView) {
+    /**
+     * Display above the seekBar a text to help the user to adjust the seekBar and his selected input.
+     *
+     * @param seekBar The seekBar where he can put his input.
+     * @param text The textView to display the value the user entered in the seekBar.
+     * @param minValue The minimum value the seekBar authorize.
+     * @param maxValue The maximum value the seekBar authorize.
+     * @param units The units in which the input is expressed.
+     */
+    private void showSeekBar(SeekBar seekBar, TextView text, int minValue, int maxValue, String units) {
+        SeekBar.OnSeekBarChangeListener seekBarListenerPrice = new CustomOnSeekBarChangeListener(
+                text, minValue, maxValue, units);
+        seekBar.setOnSeekBarChangeListener(seekBarListenerPrice);
+    }
 
+    /**
+     * @return A inflated layout of the popup.
+     */
+    private View inflatePopUp() {
+        LayoutInflater inflater = getLayoutInflater();
+        final ViewGroup nullParent = null;
+        return inflater.inflate(R.layout.popup_filter, nullParent);
+    }
+
+    /**
+     * @param popupLayout The inflated layout to be displayed.
+     * @return The alertDialog actually displaying the layout.
+     */
+    private AlertDialog createAlertDialog(View popupLayout) {
+        final AlertDialog.Builder helpBuilder = new AlertDialog.Builder(this);
+        helpBuilder.setTitle("");
+        helpBuilder.setView(popupLayout);
+        final AlertDialog helpDialog = helpBuilder.create();
+        helpDialog.show();
+        return helpDialog;
+    }
+
+    /**
+     * Initiate the popup filter.
+     *
+     * @param itemCollection The Collection containing the houses.
+     * @param itemAdapter    The adapter that make the link between the collection and the View.
+     * @param listView       The view where the items are displayed.
+     */
+    public void initPopUpFilter(
+            final Collection<Item> itemCollection, final ItemAdapter itemAdapter, final ListView listView) {
 
         View popupLayout = inflatePopUp();
-        AlertDialog helpDialog = createAlertDialog(popupLayout);
+        final AlertDialog helpDialog = createAlertDialog(popupLayout);
 
-        Spinner spinner = (Spinner) popupLayout.findViewById(R.id.spinner);
-        AutoCompleteTextView city = (AutoCompleteTextView) popupLayout.findViewById(R.id.autoCompleteTextView);
-        TextView numberOfRooms = (TextView) popupLayout.findViewById(R.id.numberOfRooms);
-        SeekBar seekBarPrice = (SeekBar) popupLayout.findViewById(R.id.seekBarPrice);
-        SeekBar seekBarSurface = (SeekBar) popupLayout.findViewById(R.id.seekBarSurface);
-        TextView showPrice = (TextView) popupLayout.findViewById(R.id.showPrice);
-        TextView showSurface = (TextView) popupLayout.findViewById(R.id.showSurface);
+        final Spinner spinner = (Spinner) popupLayout.findViewById(R.id.spinner);
+        final AutoCompleteTextView city = (AutoCompleteTextView) popupLayout.findViewById(R.id.autoCompleteTextView);
+        final TextView numberOfRooms = (TextView) popupLayout.findViewById(R.id.numberOfRooms);
+        final SeekBar seekBarPrice = (SeekBar) popupLayout.findViewById(R.id.seekBarPrice);
+        final SeekBar seekBarSurface = (SeekBar) popupLayout.findViewById(R.id.seekBarSurface);
+        final TextView showPrice = (TextView) popupLayout.findViewById(R.id.showPrice);
+        final TextView showSurface = (TextView) popupLayout.findViewById(R.id.showSurface);
 
-
-        if(stateOfPopUpLayout != null){
-            stateOfPopUpLayout.recoverFilter(
-                    new StateOfPopUpLayout(
-                            spinner,city,numberOfRooms,showPrice,showSurface,seekBarPrice,seekBarSurface));
+        /*
+         * Load the last state of popup layout, to display it in the popup.
+         */
+        if (stateOfPopUpLayout != null) {
+            spinner.setSelection(stateOfPopUpLayout.getPositionSpinner());
+            city.setText(stateOfPopUpLayout.getCity());
+            numberOfRooms.setText(stateOfPopUpLayout.getNumberOfRooms());
+            showPrice.setText(stateOfPopUpLayout.getPrice());
+            showSurface.setText(stateOfPopUpLayout.getSurface());
+            seekBarPrice.setProgress(stateOfPopUpLayout.getSeekBarPricePosition());
+            seekBarSurface.setProgress(stateOfPopUpLayout.getSeekBarSurfacePosition());
         }
-
-
-        stateOfPopUpLayout = new StateOfPopUpLayout(
-                        spinner, city, numberOfRooms, showPrice, showSurface, seekBarPrice, seekBarSurface);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, cities);
         city.setAdapter(adapter);
@@ -112,28 +156,27 @@ public class ListActivity extends AppCompatActivity {
                 new EraseButtonListener(spinner, city, numberOfRooms, showPrice, showSurface));
 
         Button filterButton = (Button) popupLayout.findViewById(R.id.filterButton);
-        filterButton.setOnClickListener(
-                new FilterButtonListener(helpDialog, stateOfPopUpLayout, itemList, itemAdapter, listView));
-    }
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-    private void showSeekBar(SeekBar seekBar, TextView text, int minValue, int maxValue, String units) {
-        SeekBar.OnSeekBarChangeListener seekBarListenerPrice = new CustomOnSeekBarChangeListener(
-                text, minValue, maxValue, units);
-        seekBar.setOnSeekBarChangeListener(seekBarListenerPrice);
-    }
-
-    private View inflatePopUp(){
-        LayoutInflater inflater = getLayoutInflater();
-        final ViewGroup nullParent = null;
-        return inflater.inflate(R.layout.popup_filter, nullParent);
-    }
-
-    private AlertDialog createAlertDialog(View popupLayout) {
-        final AlertDialog.Builder helpBuilder = new AlertDialog.Builder(this);
-        helpBuilder.setTitle("");
-        helpBuilder.setView(popupLayout);
-        final AlertDialog helpDialog = helpBuilder.create();
-        helpDialog.show();
-        return helpDialog;
+                /*
+                 * Saving the state of popup layout.
+                 */
+                stateOfPopUpLayout = new StateOfPopUpLayout(
+                        spinner.getSelectedItem().toString(),
+                        spinner.getSelectedItemPosition(),
+                        city.getText().toString(),
+                        numberOfRooms.getText().toString(),
+                        showPrice.getText().toString(),
+                        showSurface.getText().toString(),
+                        seekBarPrice.getProgress(),
+                        seekBarSurface.getProgress()
+                );
+                DataMgmt.getData(itemCollection, itemAdapter, stateOfPopUpLayout);
+                listView.setAdapter(itemAdapter);
+                helpDialog.dismiss();
+            }
+        });
     }
 }

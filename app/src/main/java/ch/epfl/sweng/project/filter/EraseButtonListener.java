@@ -5,6 +5,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+/**
+ * An erase button that erase the state of the popup
+ */
 public class EraseButtonListener implements View.OnClickListener {
 
     private Spinner typeSpinner;
@@ -13,6 +16,13 @@ public class EraseButtonListener implements View.OnClickListener {
     private TextView price;
     private TextView Surface;
 
+    /**
+     * @param typeSpinner The spinner of the types.
+     * @param city The city entered.
+     * @param numberOfRooms The number of rooms entered.
+     * @param price The price entered.
+     * @param surface The surface entered.
+     */
     public EraseButtonListener(Spinner typeSpinner, AutoCompleteTextView city, TextView numberOfRooms, TextView price,
                                TextView surface) {
         this.typeSpinner = typeSpinner;
