@@ -37,7 +37,7 @@ public class PanoramaActivity extends Activity {
 
 
         //Create listener for handling user inputs
-        View.OnTouchListener listener = new PanoramaTouchListener();
+        View.OnTouchListener listener = new PanoramaTouchListener(mRenderer);
 
         mSurface.setOnTouchListener(listener);
     }
