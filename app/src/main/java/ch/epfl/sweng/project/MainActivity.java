@@ -42,7 +42,6 @@ public final class MainActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(this, PanoramaActivity.class);
-
         startActivity(intent);
     }
 
