@@ -43,6 +43,6 @@ public class ItemView extends RelativeLayout {
         locationSurfaceRooms.setText(item.getLocation() + ", " + item.printSurface() + " m\u00B2, " +
                 item.getRooms() + " " + getContext().getString(R.string.rooms));
         priceType.setText("" + item.printPrice() + " CHF"+", "+item.getType().getDescription());
-        img.setImageResource(R.mipmap.chaton);
+        img.setImageResource(R.drawable.chaton);
     }
 }

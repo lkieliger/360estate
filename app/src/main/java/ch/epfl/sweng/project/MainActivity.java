@@ -2,8 +2,8 @@ package ch.epfl.sweng.project;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.parse.Parse;
 
@@ -36,7 +36,7 @@ public final class MainActivity extends AppCompatActivity {
                     // The network interceptor is debug Parse queries
                     //.addNetworkInterceptor(new ParseLogInterceptor())
                     .applicationId(APP_ID)
-                    .server("http://vps-fra.astutus.org:1337/parse/")
+                    .server("https://360.astutus.org/parse/")
                     .build()
             );
             parseNotInitialized = false;

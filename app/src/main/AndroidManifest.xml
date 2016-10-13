@@ -30,6 +30,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ch.epfl.sweng.project.user.LoginActivity" />
         </activity>
+        <activity android:name=".DescriptionActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -4,29 +4,35 @@ import android.util.Log;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.Collection;
 import java.util.List;
 
+import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
 import ch.epfl.sweng.project.list.Item;
 import ch.epfl.sweng.project.list.ItemAdapter;
 
-final class DataMgmt {
+public final class DataMgmt {
 
     private DataMgmt() {
     }
 
-    static void getData(final Collection<Item> itemList, final ItemAdapter itemAdapter) {
 
-        ParseObject.registerSubclass(Item.class);
-
-        ParseQuery<Item> query = ParseQuery.getQuery("Item");
+    public static void getData(
+            final Collection<Item> itemList, final ItemAdapter itemAdapter, StateOfPopUpLayout stateOfPopUpLayout) {
+        ParseQuery<Item> query;
+        if(stateOfPopUpLayout == null) {
+            query = ParseQuery.getQuery("Item");
+        }
+        else{
+            query = stateOfPopUpLayout.filterQuery();
+        }
         query.findInBackground(new FindCallback<Item>() {
             public void done(List<Item> objects, ParseException e) {
                 if (e == null) {
                     Log.d("DataMgmt", "Retrieved " + objects.size() + " house items");
+                    itemList.clear();
                     itemList.addAll(objects);
                     itemAdapter.notifyDataSetChanged();
 
