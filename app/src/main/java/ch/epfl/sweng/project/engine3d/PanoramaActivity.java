@@ -12,12 +12,13 @@ import org.rajawali3d.view.SurfaceView;
 
 import ch.epfl.sweng.project.R;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class PanoramaActivity extends Activity {
 
     private static final String TAG = "PanoramaActivity";
 
-    private SurfaceView mSurface;
-    private PanoramaRenderer mRenderer;
+    private SurfaceView mSurface = null;
+    private PanoramaRenderer mRenderer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

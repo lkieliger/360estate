@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">The360Estate</string>
     <string name="imgViewID">image__view_description</string>
     <string name="title_texte">title text</string>
@@ -20,14 +20,14 @@
     <string name="house">House</string>
     <string name="building">Building</string>
     <string name="erase">Erase</string>
-    <string name="description">
-        extViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextView
-        TextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextView
-        TextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextView
-        TextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextView
-        TextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextView
-        TextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextView
-        TextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextView
+    <string name="description">There worse by an of miles civil.
+        Manner before lively wholly am mr indeed expect.
+        Among every merry his yet has her. You mistress get
+        dashwood children off. Met whose marry under the merit.
+        In it do continual consulted no listening. Devonshire
+        sir sex motionlesstravelling six themselves. So colonel
+        as greatly shewing herself observe ashamed.
+        Demands minutes regular ye to detract is.
     </string>
     <string name = "text_title">Informations</string>
     <string name="description_title">Petit Chaton Mignon</string>
@@ -43,16 +43,16 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="error_incorrect_password" tools:ignore="UnusedResources">This password is incorrect</string>
+    <string name="error_field_required" tools:ignore="UnusedResources">This field is required</string>
     <string name="error_login_unsuccessful">Error when logging in, try again.</string>
-    <string name="permission_rationale">Contacts permissions are needed for providing
+    <string name="permission_rationale" tools:ignore="UnusedResources">Contacts permissions are needed for providing
         email completions.
     </string>
     <string name="info_login_successful">Login successful</string>
 
     <!-- Strings related to registering -->
-    <string name="prompt_password_again">Password (double check)</string>
+    <string name="prompt_password_again" tools:ignore="UnusedResources">Password (double check)</string>
     <string name="prompt_phone_number">Phone number</string>
     <string name="action_register">Register</string>
     <string name="error_empty_field">Please fill in all fields</string>

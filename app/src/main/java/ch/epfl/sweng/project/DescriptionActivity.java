@@ -21,7 +21,7 @@ public class DescriptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_description);
 
         ///////////
-        List<Integer> imagesIDs = new ArrayList<Integer>();
+        List<Integer> imagesIDs = new ArrayList<>();
         imagesIDs.add(1);
         imagesIDs.add(2);
         imagesIDs.add(3);

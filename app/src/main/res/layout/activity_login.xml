@@ -16,15 +16,17 @@
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.71">
+        android:layout_height="0dp"
+        android:layout_weight="0.71"
+        tools:ignore="UnusedIds,UselessParent">
 
         <LinearLayout
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:weightSum="1">
+            android:weightSum="1"
+            tools:ignore="UnusedIds">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -36,8 +38,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+                    android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -54,8 +55,7 @@
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+                    android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -68,7 +68,8 @@
                 android:text="@string/action_login"
                 android:textStyle="bold"
                 android:onClick="attemptLogin"
-                android:textColor="?android:attr/textColorPrimary" />
+                android:textColor="?android:attr/textColorPrimary"
+                tools:ignore="UnusedIds" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -84,7 +85,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/register_suggestion_message"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    tools:ignore="UnusedIds" />
 
                 <Button
                     android:text="@string/action_goto_registration"
@@ -94,7 +96,8 @@
                     android:onClick="proceedToRegistration"
                     android:textStyle="normal|bold"
                     android:fontFamily="sans-serif"
-                    android:textColor="?android:attr/textColorTertiary" />
+                    android:textColor="?android:attr/textColorTertiary"
+                    tools:ignore="UnusedIds" />
 
             </LinearLayout>
 

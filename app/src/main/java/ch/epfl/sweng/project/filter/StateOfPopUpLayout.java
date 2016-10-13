@@ -41,8 +41,8 @@ public class StateOfPopUpLayout {
         this.numberOfRooms = numberOfRooms;
         this.price = price;
         this.surface = surface;
-        this.seekBarPricePosition = barPricePosition;
-        this.seekBarSurfacePosition = barSurfacePosition;
+        seekBarPricePosition = barPricePosition;
+        seekBarSurfacePosition = barSurfacePosition;
     }
 
     public int getPositionSpinner() {

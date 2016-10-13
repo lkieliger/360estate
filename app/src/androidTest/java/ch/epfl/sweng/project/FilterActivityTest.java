@@ -1,5 +1,6 @@
 package ch.epfl.sweng.project;
 
+import android.os.Build;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -51,7 +52,9 @@ public class FilterActivityTest {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            Log.d(TAG , "InterruptedException" +e.getMessage());
+            if(BuildConfig.DEBUG){
+                Log.d(TAG , "InterruptedException" +e.getMessage());
+            }
         }
 
         onView(withId(R.id.filterButtonPopUp)).perform(click());
@@ -74,7 +77,9 @@ public class FilterActivityTest {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            Log.d(TAG , "InterruptedException" +e.getMessage());
+            if(BuildConfig.DEBUG) {
+                Log.d(TAG, "InterruptedException" + e.getMessage());
+            }
         }
 
         onView(withId(R.id.filterButtonPopUp)).perform(click());
@@ -96,7 +101,9 @@ public class FilterActivityTest {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            Log.d(TAG , "InterruptedException" +e.getMessage());
+            if(BuildConfig.DEBUG) {
+                Log.d(TAG, "InterruptedException" + e.getMessage());
+            }
         }
 
         onView(withId(R.id.filterButtonPopUp)).perform(click());
@@ -120,8 +127,9 @@ public class FilterActivityTest {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            Log.d(TAG , "InterruptedException" +e.getMessage());
-
+            if(BuildConfig.DEBUG) {
+                Log.d(TAG, "InterruptedException" + e.getMessage());
+            }
         }
 
         onView(withId(R.id.filterButtonPopUp)).perform(click());
@@ -144,7 +152,9 @@ public class FilterActivityTest {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            Log.d(TAG , "InterruptedException" +e.getMessage());
+            if(BuildConfig.DEBUG) {
+                Log.d(TAG, "InterruptedException" + e.getMessage());
+            }
         }
 
         onView(withId(R.id.filterButtonPopUp)).perform(click());

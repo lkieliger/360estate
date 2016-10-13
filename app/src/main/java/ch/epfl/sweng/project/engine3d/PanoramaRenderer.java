@@ -20,20 +20,21 @@ import org.rajawali3d.renderer.Renderer;
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
 
-public class PanoramaRenderer extends Renderer{
+class PanoramaRenderer extends Renderer{
 
     private static final double MAX_THETA = Math.PI;
     private static final double MAX_PHI = 2*Math.PI;
 
-    private double mScreenWidth;
+    private final double mScreenWidth;
 
-    private String TAG = "Renderer";
-    private Camera mCamera;
-    private Sphere mChildSphere;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final String TAG = "Renderer";
+    private final Camera mCamera;
+    private Sphere mChildSphere = null;
     private double mPhi;
     private double mTheta;
-    private Vector3 mInitialPos;
-    private Vector3 mInitialLookat;
+    private final Vector3 mInitialPos;
+    private final Vector3 mInitialLookat;
 
     public PanoramaRenderer(Context context) {
         super(context);

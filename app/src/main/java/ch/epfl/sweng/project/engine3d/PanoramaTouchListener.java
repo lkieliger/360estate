@@ -5,14 +5,14 @@ import android.view.View;
 
 import static android.view.MotionEvent.INVALID_POINTER_ID;
 
-public class PanoramaTouchListener implements View.OnTouchListener {
+class PanoramaTouchListener implements View.OnTouchListener {
 
     private final PanoramaRenderer mRenderer;
 
-    private float mLastTouchX;
-    private float mLastTouchY;
+    private float mLastTouchX = 0.0F;
+    private float mLastTouchY = 0.0F;
 
-    private int mActivePointerId;
+    private int mActivePointerId = 0;
 
     public PanoramaTouchListener(PanoramaRenderer renderer){
         mRenderer = renderer;
