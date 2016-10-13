@@ -32,4 +32,33 @@
     <string name = "text_title">Informations</string>
     <string name="description_title">Petit Chaton Mignon</string>
     <string name="button_text">Panoramic View</string>
+
+    <!-- Strings related to login -->
+    <string name="title_activity_login">Sign in</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_login">Sign in</string>
+    <string name="action_goto_registration">Register</string>
+    <string name="register_suggestion">Not yet registered ?</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_login_unsuccessful">Error when logging in, try again.</string>
+    <string name="permission_rationale">Contacts permissions are needed for providing
+        email completions.
+    </string>
+    <string name="info_login_successful">Login successful</string>
+
+    <!-- Strings related to registering -->
+    <string name="prompt_password_again">Password (double check)</string>
+    <string name="prompt_phone_number">Phone number</string>
+    <string name="action_register">Register</string>
+    <string name="error_empty_field">Please fill in all fields</string>
+    <string name="error_unmatching_passwords">Entered passwords don\'t match</string>
+    <string name="error_registration_unsuccessful">An error occurred when registering, please make
+        sure you have access to the network and try again</string>
+    <string name="info_registration_successful">Registration was successful, you may log in</string>
+    <string name="title_activity_register">Register</string>
 </resources>
