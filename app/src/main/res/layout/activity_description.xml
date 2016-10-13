@@ -51,7 +51,7 @@
             android:layout_weight="1"
             tools:ignore="UnusedIds" />
         <Button
-            android:id="@+id/panoramic"
+            android:id="@+id/action_launch_panorama"
 
             android:text="@string/button_text"
             android:textColor="#55CACF"

@@ -1,7 +1,9 @@
 package ch.epfl.sweng.project;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -9,6 +11,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 
 
 public class DescriptionActivity extends AppCompatActivity {
@@ -32,7 +35,7 @@ public class DescriptionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),
-                        "MIIIIIAAAAAAOUUUUUUUUU "+v.getId(), Toast.LENGTH_LONG)
+                        "MIIIIIAAAAAAOUUUUUUUUU "+v.getId(), Toast.LENGTH_SHORT)
                         .show();
             }
         };
@@ -49,5 +52,15 @@ public class DescriptionActivity extends AppCompatActivity {
             imgV.setOnClickListener(imgListener);
             scrollImg.addView(imgV);
         }
+
+        Button button = (Button) findViewById(R.id.action_launch_panorama);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DescriptionActivity.this, PanoramaActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }
