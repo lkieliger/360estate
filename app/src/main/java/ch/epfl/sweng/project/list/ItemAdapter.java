@@ -23,8 +23,9 @@ public class ItemAdapter extends ArrayAdapter<Item> {
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         ItemView itemView = (ItemView) convertView;
-        if (null == itemView)
+        if (null == itemView) {
             itemView = ItemView.inflate(parent);
+        }
         itemView.setItem(getItem(position));
         return itemView;
     }

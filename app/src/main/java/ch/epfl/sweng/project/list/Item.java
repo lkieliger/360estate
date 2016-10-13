@@ -12,16 +12,16 @@ public class Item extends ParseObject {
     public static final double halfRoom = 0.5;
 
     public enum HouseType {
-        APARTMENT(getString(R.string.apartment)), HOUSE(getString(R.string.house)),
-        BUILDING(getString(R.string.building));
+        APARTMENT(R.string.apartment), HOUSE(R.string.house),
+        BUILDING(R.string.building);
 
-        private final String description;
+        private final int description;
 
-        HouseType(String d) {
+        HouseType(int d) {
             description = d;
         }
 
-        public String getDescription() {
+        public int getDescription() {
             return description;
         }
     }
@@ -91,10 +91,6 @@ public class Item extends ParseObject {
 
     String printPrice() {
         return formatInts(getPrice(), 0);
-    }
-
-    private static String getString(int resId) {
-        return MainActivity.getContext().getString(resId);
     }
 
     private String formatRooms(double rooms) {

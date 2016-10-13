@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.parse.Parse;
+import com.parse.ParseObject;
 
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
+import ch.epfl.sweng.project.list.Item;
 
 /**
  * Your app's main activity.
@@ -15,8 +17,6 @@ import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 public final class MainActivity extends AppCompatActivity {
     public static final String APP_ID = "360ESTATE";
     private static boolean parseNotInitialized = true;
-
-    private static Context mContext;
 
     public static int add(final int a, final int b) {
         return a + b;
@@ -26,8 +26,6 @@ public final class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mContext = this;
 
         if (parseNotInitialized) {
             //Initialize connection with the parse server
@@ -41,12 +39,10 @@ public final class MainActivity extends AppCompatActivity {
             parseNotInitialized = false;
         }
 
-        Intent intent = new Intent(this, PanoramaActivity.class);
+        ParseObject.registerSubclass(Item.class);
+        Intent intent = new Intent(this, ListActivity.class);
         startActivity(intent);
     }
 
-    public static Context getContext() {
-        return mContext;
-    }
 
 }
