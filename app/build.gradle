@@ -15,15 +15,6 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        jackOptions {
-            enabled true
-        }
-
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -41,6 +32,7 @@ android {
         // Disable lint warnings about app indexing, and about non-latest tools versions
         // TODO consider re-enabling app indexing before publishing your application.
         // disable 'GoogleAppIndexingWarning', 'GradleDependency'
+        disable 'MissingTranslation'
     }
 
     // Workaround for an Android Studio bug in the "Missing Return Statement" warning
@@ -53,6 +45,9 @@ dependencies {
 //  Parse dependencies
     compile 'com.parse:parse-android:1.13.1'
     compile 'com.parse.bolts:bolts-android:1.4.0'
+
+    //Rajawali 3D engine
+    compile 'org.rajawali3d:rajawali:1.1.610@aar'
 
     debugCompile 'com.parse:parseinterceptors:0.0.2'
 

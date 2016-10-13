@@ -7,13 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.parse.Parse;
 
-import ch.epfl.sweng.project.user.LoginActivity;
+import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 
 /**
  * Your app's main activity.
  */
 public final class MainActivity extends AppCompatActivity {
-    public static final String NAME_KEY = "name";
     public static final String APP_ID = "360ESTATE";
     private static boolean parseNotInitialized = true;
 
@@ -33,7 +32,7 @@ public final class MainActivity extends AppCompatActivity {
         if (parseNotInitialized) {
             //Initialize connection with the parse server
             Parse.initialize(new Parse.Configuration.Builder(this)
-                    // The network interceptor is debug Parse queries
+                    // The network interceptor is used to debug the communication between server/client
                     //.addNetworkInterceptor(new ParseLogInterceptor())
                     .applicationId(APP_ID)
                     .server("https://360.astutus.org/parse/")
@@ -42,12 +41,12 @@ public final class MainActivity extends AppCompatActivity {
             parseNotInitialized = false;
         }
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, PanoramaActivity.class);
 
         startActivity(intent);
     }
 
-    public static Context getContext(){
+    public static Context getContext() {
         return mContext;
     }
 
