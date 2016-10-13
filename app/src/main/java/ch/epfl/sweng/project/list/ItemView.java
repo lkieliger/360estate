@@ -3,6 +3,7 @@ package ch.epfl.sweng.project.list;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -43,6 +44,6 @@ public class ItemView extends RelativeLayout {
         locationSurfaceRooms.setText(item.getLocation() + ", " + item.printSurface() + " m\u00B2, " +
                 item.getRooms() + " " + getContext().getString(R.string.rooms));
         priceType.setText("" + item.printPrice() + " CHF"+", "+item.getType().getDescription());
-        img.setImageResource(R.mipmap.chaton);
+        img.setImageResource(R.drawable.chaton);
     }
 }

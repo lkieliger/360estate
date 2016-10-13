@@ -11,59 +11,50 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ch.epfl.sweng.project.DescriptionActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1"
-        android:layout_marginBottom="15dp">
-        <LinearLayout
-            android:orientation="horizontal"
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+    >
+        <TextView
+            android:text="@string/description_title"
             android:layout_width="match_parent"
-            android:layout_height="136dp"
-            android:layout_marginBottom="15dp">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" app:srcCompat="@mipmap/chaton" android:id="@+id/imageView6"
-                android:layout_weight="0.5"
-                android:layout_margin="5dp"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" app:srcCompat="@mipmap/chaton" android:id="@+id/imageView7"
-                android:layout_weight="0.5"
-                android:layout_margin="5dp"
-            />
-        </LinearLayout>
+            android:layout_height="wrap_content" android:id="@+id/Title"
+            android:textStyle="bold"/>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="97dp"
+            android:layout_marginBottom="15dp" android:id="@+id/scroll"
+            android:fillViewport="true"
+            android:measureAllChildren="false">
+            <LinearLayout android:orientation="horizontal"
+                          android:layout_width="wrap_content"
+                          android:layout_height="97dp"
+                          android:id="@+id/imgs">
+            </LinearLayout>
+        </HorizontalScrollView>
+        <TextView
+            android:text="@string/text_title"
+            android:layout_width="match_parent"
+            android:layout_height="20dp" android:id="@+id/text_title"
+            android:layout_marginBottom="15dp"
+            android:textStyle="bold"
+        />
         <TextView
             android:text="@string/description"
             android:layout_width="match_parent"
-            android:layout_height="250dp" android:id="@+id/textView2" android:layout_weight="0.60"
-            android:layout_marginBottom="15dp"/>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="97dp">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" app:srcCompat="@mipmap/chaton" android:id="@+id/imageView8"
-                android:layout_weight="0.25"
-                android:layout_margin="2dp"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" app:srcCompat="@mipmap/chaton" android:id="@+id/imageView9"
-                android:layout_weight="0.25"
-                android:layout_margin="2dp"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" app:srcCompat="@mipmap/chaton" android:id="@+id/imageView10"
-                android:layout_weight="0.25"
-                android:layout_margin="2dp"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" app:srcCompat="@mipmap/chaton" android:id="@+id/imageView11"
-                android:layout_weight="0.25"
-                android:layout_margin="2dp"/>
+            android:layout_height="250dp" android:id="@+id/description"
+            android:layout_marginBottom="15dp"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/panoramic"
 
-        </LinearLayout>
+            android:text="@string/button_text"
+            android:textColor="#55CACF"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/button_shape"
+        />
     </LinearLayout>
 </RelativeLayout>

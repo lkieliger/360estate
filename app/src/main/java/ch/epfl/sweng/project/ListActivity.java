@@ -1,5 +1,6 @@
 package ch.epfl.sweng.project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -59,17 +60,17 @@ public class ListActivity extends AppCompatActivity {
         // Assign adapter to ListView
         listView.setAdapter(itemAdapter);
         // ListView Item Click Listener
+        final Intent intent = new Intent(this, DescriptionActivity.class);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
                 // ListView Clicked item index
                 Item itemValue = (Item) listView.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(),
-                        itemValue.getType().toString(), Toast.LENGTH_LONG)
-                        .show();
+                //intent.setTag();TODO add ID to intent
+
+                startActivity(intent);
             }
         });
     }
@@ -77,11 +78,11 @@ public class ListActivity extends AppCompatActivity {
     /**
      * Display above the seekBar a text to help the user to adjust the seekBar and his selected input.
      *
-     * @param seekBar The seekBar where he can put his input.
-     * @param text The textView to display the value the user entered in the seekBar.
+     * @param seekBar  The seekBar where he can put his input.
+     * @param text     The textView to display the value the user entered in the seekBar.
      * @param minValue The minimum value the seekBar authorize.
      * @param maxValue The maximum value the seekBar authorize.
-     * @param units The units in which the input is expressed.
+     * @param units    The units in which the input is expressed.
      */
     private void showSeekBar(SeekBar seekBar, TextView text, int minValue, int maxValue, String units) {
         SeekBar.OnSeekBarChangeListener seekBarListenerPrice = new CustomOnSeekBarChangeListener(
@@ -153,7 +154,7 @@ public class ListActivity extends AppCompatActivity {
 
         Button eraseButton = (Button) popupLayout.findViewById(R.id.eraseButton);
         eraseButton.setOnClickListener(new EraseButtonListener(
-                spinner, city, numberOfRooms, showPrice, showSurface,seekBarPrice,seekBarSurface));
+                spinner, city, numberOfRooms, showPrice, showSurface, seekBarPrice, seekBarSurface));
 
         Button filterButton = (Button) popupLayout.findViewById(R.id.filterButton);
         filterButton.setOnClickListener(new View.OnClickListener() {
