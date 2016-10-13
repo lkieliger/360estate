@@ -30,19 +30,19 @@ public class StateOfPopUpLayout {
      * @param numberOfRooms The number of rooms entered.
      * @param price The price entered.
      * @param surface The surface entered.
-     * @param seekBarPricePosition The position of the seek bar used for the price.
-     * @param seekBarSurfacePosition The position of the seek bar used for the surface.
+     * @param barPricePosition The position of the seek bar used for the price.
+     * @param barSurfacePosition The position of the seek bar used for the surface.
      */
     public StateOfPopUpLayout(String typeSpinner, int positionSpinner, String city, String numberOfRooms,
-                              String price, String surface, int seekBarPricePosition, int seekBarSurfacePosition) {
+                              String price, String surface, int barPricePosition, int barSurfacePosition) {
         this.typeSpinner = typeSpinner;
         this.positionSpinner = positionSpinner;
         this.city = city;
         this.numberOfRooms = numberOfRooms;
         this.price = price;
         this.surface = surface;
-        this.seekBarPricePosition = seekBarPricePosition;
-        this.seekBarSurfacePosition = seekBarSurfacePosition;
+        this.seekBarPricePosition = barPricePosition;
+        this.seekBarSurfacePosition = barSurfacePosition;
     }
 
     public int getPositionSpinner() {

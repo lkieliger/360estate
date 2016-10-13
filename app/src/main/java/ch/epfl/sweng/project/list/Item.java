@@ -9,6 +9,8 @@ import ch.epfl.sweng.project.R;
 @ParseClassName("Item")
 public class Item extends ParseObject {
 
+    public static final double halfRoom = 0.5;
+
     public enum HouseType {
         APARTMENT(getString(R.string.apartment)), HOUSE(getString(R.string.house)),
         BUILDING(getString(R.string.building));
@@ -96,7 +98,7 @@ public class Item extends ParseObject {
     }
 
     private String formatRooms(double rooms) {
-        if (rooms % 1 < 0.4) return (int) rooms + "";
+        if (rooms % 1 < halfRoom) return (int) rooms + "";
         else return (int) rooms + "\u00BD";
     }
 
