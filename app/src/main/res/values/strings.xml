@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">The360Estate</string>
-    <string name="imgViewID">image__view_description</string>
-    <string name="title_texte">title text</string>
+    <string name="imgViewID" translatable="false">image__view_description</string>
+    <string name="title_texte" translatable="false">title text</string>
     <string name="description_text">description text</string>
     <string name="rooms">rooms</string>
     <string name="types_of_house">Types of house:</string>
@@ -20,7 +20,7 @@
     <string name="house">House</string>
     <string name="building">Building</string>
     <string name="erase">Erase</string>
-    <string name="description">There worse by an of miles civil.
+    <string name="description" translatable="false">There worse by an of miles civil.
         Manner before lively wholly am mr indeed expect.
         Among every merry his yet has her. You mistress get
         dashwood children off. Met whose marry under the merit.
@@ -30,7 +30,7 @@
         Demands minutes regular ye to detract is.
     </string>
     <string name = "text_title">Informations</string>
-    <string name="description_title">Petit Chaton Mignon</string>
+    <string name="description_title">Cute little kitten</string>
     <string name="button_text">Panoramic View</string>
 
     <!-- Strings related to login -->
@@ -61,4 +61,5 @@
         sure you have access to the network and try again</string>
     <string name="info_registration_successful">Registration was successful, you may log in</string>
     <string name="title_activity_register">Register</string>
+    <string name="error_user_already_exists" >Account already exists for this username.</string>
 </resources>
