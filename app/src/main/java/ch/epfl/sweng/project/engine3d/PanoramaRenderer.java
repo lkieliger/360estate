@@ -28,10 +28,7 @@ public class PanoramaRenderer extends Renderer{
     private double mScreenWidth;
 
     private String TAG = "Renderer";
-    private DirectionalLight mDirectionalLight1;
-    private DirectionalLight mDirectionalLight2;
     private Camera mCamera;
-    private Sphere mEarthSphere;
     private Sphere mChildSphere;
     private double mPhi;
     private double mTheta;
@@ -49,7 +46,7 @@ public class PanoramaRenderer extends Renderer{
         mScreenWidth = size.x;
 
         mCamera = getCurrentCamera();
-        mCamera.setFieldOfView(90);
+        mCamera.setFieldOfView(80);
         mCamera.enableLookAt();
 
         setFrameRate(60);
@@ -65,16 +62,6 @@ public class PanoramaRenderer extends Renderer{
 
         mCamera.setPosition(mInitialPos);
         mCamera.setLookAt(mInitialLookat);
-
-        //TODO: Fix the lighting
-        mDirectionalLight1 = new DirectionalLight(0.5f, 0.5f, 1.0f);
-        mDirectionalLight2 = new DirectionalLight(-0.5f, -0.5f, -1.0f);
-        mDirectionalLight1.setColor(1.0f, 1.0f, 1.0f);
-        mDirectionalLight2.setColor(1.0f, 1.0f, 1.0f);
-        mDirectionalLight1.setPower(2);
-        mDirectionalLight2.setPower(2);
-        getCurrentScene().addLight(mDirectionalLight1);
-        getCurrentScene().addLight(mDirectionalLight2);
 
         Material material = new Material();
         Material material2 = new Material();
@@ -96,7 +83,7 @@ public class PanoramaRenderer extends Renderer{
         mChildSphere = new Sphere(8,10,10);
         mChildSphere.setMaterial(material2);
         mChildSphere.setX(50);
-        mEarthSphere = new Sphere(100, 48, 48);
+        Sphere mEarthSphere = new Sphere(100, 48, 48);
         mEarthSphere.addChild(mChildSphere);
         mEarthSphere.setPosition(mInitialPos);
         mEarthSphere.setBackSided(true);
