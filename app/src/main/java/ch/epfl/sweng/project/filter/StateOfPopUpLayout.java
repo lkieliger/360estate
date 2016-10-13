@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.parse.ParseQuery;
 
+import java.util.Locale;
+
 import ch.epfl.sweng.project.list.Item;
 
 /**
@@ -89,7 +91,7 @@ public class StateOfPopUpLayout {
 
         if (isTypeFiltered) {
             try {
-                query.whereEqualTo("type", Item.HouseType.valueOf(typeSpinner.toUpperCase()).ordinal());
+                query.whereEqualTo("type", Item.HouseType.valueOf(typeSpinner.toUpperCase(Locale.US)).ordinal());
             } catch (IllegalArgumentException e) {
                 Log.d("StateOfPopUpLayout","IllegalArgumentException" + e.getMessage());
             }

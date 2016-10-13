@@ -1,4 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Strings related to goods listing -->
     <string name="app_name">The360Estate</string>
     <string name="imgViewID">image__view_description</string>
     <string name="title_texte">title text</string>
@@ -32,6 +34,9 @@
     <string name = "text_title">Informations</string>
     <string name="description_title">Petit Chaton Mignon</string>
     <string name="button_text">Panoramic View</string>
+    <string name="text_currency">CHF</string>
+    <string name="text_location_surface">%1$s, %2$s m\u00B2, %3$s %4$s</string>
+    <string name="text_price_type">%1$s %2$s, %3$s</string>
 
     <!-- Strings related to login -->
     <string name="title_activity_login">Sign in</string>

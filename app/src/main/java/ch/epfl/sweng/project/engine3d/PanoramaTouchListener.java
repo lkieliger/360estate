@@ -54,6 +54,7 @@ class PanoramaTouchListener implements View.OnTouchListener {
 
             case MotionEvent.ACTION_UP:
                 mActivePointerId = INVALID_POINTER_ID;
+                v.performClick();
                 return true;
 
             case MotionEvent.ACTION_CANCEL:

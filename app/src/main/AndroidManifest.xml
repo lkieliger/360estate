@@ -23,7 +23,12 @@
         <activity android:name=".engine3d.PanoramaActivity" />
         <activity
             android:name=".user.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".user.RegisterActivity"
             android:label="@string/title_activity_register"

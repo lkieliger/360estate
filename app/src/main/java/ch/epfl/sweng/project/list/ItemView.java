@@ -40,10 +40,23 @@ public class ItemView extends RelativeLayout {
     }
 
     public void setItem(Item item) {
-        locationSurfaceRooms.setText(item.getLocation() + ", " + item.printSurface() + " m\u00B2, " +
-                item.getRooms() + " " + getContext().getString(R.string.rooms));
-        priceType.setText("" + item.printPrice() + " CHF"+", "+
-                getResources().getString(item.getType().getDescription()));
+       // locationSurfaceRooms.setText(item.getLocation() + ", " + item.printSurface() + " m\u00B2, " +
+         //       item.getRooms() + " " + getResources().getString(R.string.rooms));
+        locationSurfaceRooms.setText(String.format(
+                getResources().getString(R.string.text_location_surface),
+                item.getLocation(),
+                item.printSurface(),
+                item.getRooms(),
+                getResources().getString(R.string.rooms)
+        ));
+       // priceType.setText("" + item.printPrice() + " CHF"+", "+
+         //       getResources().getString(item.getType().getDescription()));
+        priceType.setText(String.format(
+                getResources().getString(R.string.text_price_type),
+                item.printPrice(),
+                getResources().getString(R.string.text_currency),
+                getResources().getString(item.getType().getDescription())
+        ));
         img.setImageResource(R.drawable.chaton);
     }
 }
