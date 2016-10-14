@@ -1,5 +1,6 @@
 package ch.epfl.sweng.project;
 
+import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
@@ -17,18 +18,19 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 
 
 @RunWith(AndroidJUnit4.class)
 public class RegisterActivityTest {
-    private final String TAG = "RegisterActivityTest: ";
+    private static final String TAG = "RegisterActivityTest: ";
 
 
 
     @Rule
-    public ActivityTestRule<MainActivity> loginActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     private void waitAction(){
         try {
@@ -44,16 +46,14 @@ public class RegisterActivityTest {
     public void registerCall(){
         waitAction();
 
-
-        onView(allOf(withId(R.id.goto_registration_button))).perform(scrollTo(), click());
-
+        ViewInteraction appCompatButton = onView(
+                allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
+                        getString(R.string.action_goto_registration))));
+        appCompatButton.perform(scrollTo(), click());
 
         waitAction();
 
         onView(withId(R.id.register_button)).check(matches(isDisplayed()));
-
-
-
 
     }
 }
