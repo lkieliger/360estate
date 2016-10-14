@@ -33,6 +33,7 @@ android {
         // TODO consider re-enabling app indexing before publishing your application.
         // disable 'GoogleAppIndexingWarning', 'GradleDependency'
         disable 'MissingTranslation'
+        abortOnError false
     }
 
     // Workaround for an Android Studio bug in the "Missing Return Statement" warning
