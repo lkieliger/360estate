@@ -14,11 +14,12 @@
     <string name="surface">Min Surface:</string>
     <string name="Filter">Filter</string>
     <array name="typeOfHouses">
-        <item>All</item>
+        <item>@string/all</item>
         <item>@string/apartment</item>
-        <item>@string/building</item>
         <item>@string/house</item>
+        <item>@string/building</item>
     </array>
+    <string name="all">All</string>
     <string name="apartment">Apartment</string>
     <string name="house">House</string>
     <string name="building">Building</string>
@@ -35,9 +36,9 @@
     <string name = "text_title">Informations</string>
     <string name="description_title">Cute little kitten</string>
     <string name="button_text">Panoramic View</string>
-    <string name="text_currency">CHF</string>
-    <string name="text_location_surface">%1$s, %2$s m \u00B2, %3$s %4$s</string>
-    <string name="text_price_type">%1$s %2$s, %3$s</string>
+    <string name="text_currency" translatable="false">CHF</string>
+    <string name="text_location_surface" translatable="false">%1$s, %2$s m \u00B2, %3$s %4$s</string>
+    <string name="text_price_type" translatable="false">%1$s %2$s, %3$s</string>
 
     <!-- Strings related to login -->
     <string name="title_activity_login">Sign in</string>

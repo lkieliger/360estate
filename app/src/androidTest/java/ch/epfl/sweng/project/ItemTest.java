@@ -1,5 +1,7 @@
 package ch.epfl.sweng.project;
 
+import com.parse.ParseObject;
+
 import org.junit.Test;
 
 import ch.epfl.sweng.project.list.Item;
@@ -8,7 +10,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Created by Niroshan Vijayarasa on 10.10.16.
  *
  * @brief This class test the Item object, that represent the house.
  */
@@ -21,18 +22,16 @@ public class ItemTest {
     private int surface = 200;
 
     private Item itemFactoryNoArgument(){
-        Item item = new Item();
+        ParseObject.registerSubclass(Item.class);
 
-        return item;
+        return new Item();
     }
 
 
     private Item itemFactoryWithArgument(){
+        ParseObject.registerSubclass(Item.class);
 
-
-        Item item = new Item(price,location, type, rooms, surface);
-
-        return item;
+        return new Item(price,location, type, rooms, surface);
     }
 
     @Test
