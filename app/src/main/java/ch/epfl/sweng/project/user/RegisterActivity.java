@@ -27,6 +27,7 @@ import static ch.epfl.sweng.project.user.InputValidityChecker.passwordMatches;
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";
+    public static final int USER_ALREADY_EXISTS = 202;
 
     private TextView mEmail;
     private TextView mPassword;
@@ -75,11 +76,24 @@ public class RegisterActivity extends AppCompatActivity {
 
                         finish();
                     } else {
-                        Toast popMsg = Toast.makeText(
-                                getApplicationContext(),
-                                getResources().getString(R.string.error_registration_unsuccessful),
-                                Toast.LENGTH_LONG);
-                        popMsg.show();
+                        Toast popMsg;
+                        switch (e.getCode()) {
+                            case USER_ALREADY_EXISTS:
+                                popMsg = Toast.makeText(
+                                        getApplicationContext(),
+                                        getResources().getString(R.string.error_user_already_exists),
+                                        Toast.LENGTH_LONG);
+                                popMsg.show();
+                                return;
+                            default:
+                                 popMsg = Toast.makeText(
+                                        getApplicationContext(),
+                                        getResources().getString(R.string.error_registration_unsuccessful),
+                                        Toast.LENGTH_LONG);
+                                popMsg.show();
+                        }
+
+                        ;
 
                         Log.e(TAG, Arrays.toString(e.getStackTrace()));
                     }
