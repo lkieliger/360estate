@@ -20,13 +20,15 @@
     <string name="error_invalid_email">L\'adresse email est invalide</string>
     <string name="error_invalid_password">Le mot de passe est trop court</string>
     <string name="error_login_unsuccessful">Impossible de se connecter, veuillez réessayer</string>
-    <string name="error_registration_unsuccessful">Une erreur s\'est produite pendant l\'enregistrement. Veuillez vérifier que votre connexion à internet fonctionnet et redémarrez l\'application</string>
+    <string name="error_registration_unsuccessful">Une erreur s\'est produite pendant l\'enregistrement.
+        Veuillez vérifier que votre connexion à internet fonctionnet et redémarrez l\'application</string>
     <string name="error_unmatching_passwords">Les mot de passe ne concordent pas</string>
     <string name="house">Maison</string>
     <string name="info_login_successful">Connexion réussie</string>
     <string name="info_registration_successful">Enregistrement réussi, vous pouvez vous connecter</string>
     <string name="number_of_rooms">Nombre de chambres</string>
-    <string name="permission_rationale">Les permissions de contacts sont requises pour afficher l\'auto-complétion des emails</string>
+    <string name="permission_rationale">Les permissions de contacts sont requises pour
+        afficher l\'auto-complétion des emails</string>
     <string name="price">Prix maximum</string>
     <string name="prompt_email">Courriel</string>
     <string name="prompt_password">Mot de passe</string>
@@ -39,4 +41,5 @@
     <string name="title_activity_register">S\'enregistrer</string>
     <string name="types_of_house">Types de maison</string>
     <string name="error_user_already_exists" >Le nom d\'utilisateur existe déjà sur le serveur.</string>
+    <string name="all">Tout</string>
 </resources>

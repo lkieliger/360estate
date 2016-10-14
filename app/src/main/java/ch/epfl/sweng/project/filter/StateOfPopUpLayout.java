@@ -16,7 +16,7 @@ public class StateOfPopUpLayout {
     private static final double MIN_COEFF = 0.98;
     private static final double MAX_COEFF = 1.02;
 
-    private String typeSpinner;
+    private int typeSpinner;
     private int positionSpinner;
     private String city;
     private String numberOfRooms;
@@ -25,17 +25,19 @@ public class StateOfPopUpLayout {
     private int seekBarPricePosition;
     private int seekBarSurfacePosition;
 
+
+
     /**
-     * @param typeSpinner The type entered.
-     * @param positionSpinner The position of the selected item in the spinner.
-     * @param city The city entered.
-     * @param numberOfRooms The number of rooms entered.
-     * @param price The price entered.
-     * @param surface The surface entered.
-     * @param barPricePosition The position of the seek bar used for the price.
+     * @param typeSpinner        The type entered.
+     * @param positionSpinner    The position of the selected item in the spinner.
+     * @param city               The city entered.
+     * @param numberOfRooms      The number of rooms entered.
+     * @param price              The price entered.
+     * @param surface            The surface entered.
+     * @param barPricePosition   The position of the seek bar used for the price.
      * @param barSurfacePosition The position of the seek bar used for the surface.
      */
-    public StateOfPopUpLayout(String typeSpinner, int positionSpinner, String city, String numberOfRooms,
+    public StateOfPopUpLayout(int typeSpinner, int positionSpinner, String city, String numberOfRooms,
                               String price, String surface, int barPricePosition, int barSurfacePosition) {
         this.typeSpinner = typeSpinner;
         this.positionSpinner = positionSpinner;
@@ -83,7 +85,7 @@ public class StateOfPopUpLayout {
 
         ParseQuery<Item> query = ParseQuery.getQuery("Item");
 
-        Boolean isTypeFiltered = !typeSpinner.equals("All");
+        Boolean isTypeFiltered = typeSpinner != 0;
         Boolean isCityFiltered = !city.equals("");
         Boolean isNbrOfRoomsFiltered = !numberOfRooms.equals("");
         Boolean isPriceFiltered = !price.equals("");
@@ -91,9 +93,9 @@ public class StateOfPopUpLayout {
 
         if (isTypeFiltered) {
             try {
-                query.whereEqualTo("type", Item.HouseType.valueOf(typeSpinner.toUpperCase(Locale.US)).ordinal());
+                query.whereEqualTo("type", typeSpinner - 1);
             } catch (IllegalArgumentException e) {
-                Log.d("StateOfPopUpLayout","IllegalArgumentException" + e.getMessage());
+                Log.d("StateOfPopUpLayout", "IllegalArgumentException" + e.getMessage());
             }
         }
 
@@ -105,7 +107,7 @@ public class StateOfPopUpLayout {
             try {
                 query.whereEqualTo("rooms", Integer.parseInt(numberOfRooms));
             } catch (NumberFormatException e) {
-                Log.d("StateOfPopUpLayout","NumberFormatException" + e.getMessage());
+                Log.d("StateOfPopUpLayout", "NumberFormatException" + e.getMessage());
             }
         }
 
@@ -114,7 +116,7 @@ public class StateOfPopUpLayout {
                 int temp = Integer.parseInt(price.split(" ")[0]);
                 query.whereLessThanOrEqualTo("price", temp * MAX_COEFF);
             } catch (NumberFormatException e) {
-                Log.d("StateOfPopUpLayout","NumberFormatException" + e.getMessage());
+                Log.d("StateOfPopUpLayout", "NumberFormatException" + e.getMessage());
             }
         }
 
@@ -123,7 +125,7 @@ public class StateOfPopUpLayout {
                 int temp = Integer.parseInt(surface.split(" ")[0]);
                 query.whereGreaterThanOrEqualTo("surface", temp * MIN_COEFF);
             } catch (NumberFormatException e) {
-                Log.d("StateOfPopUpLayout","NumberFormatException" + e.getMessage());
+                Log.d("StateOfPopUpLayout", "NumberFormatException" + e.getMessage());
             }
         }
         return query;

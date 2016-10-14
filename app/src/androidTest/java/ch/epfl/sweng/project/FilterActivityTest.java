@@ -9,7 +9,6 @@ import android.support.test.espresso.action.Swipe;
 import android.support.test.espresso.util.HumanReadables;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.mock.MockContext;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -99,7 +98,6 @@ public class FilterActivityTest {
         }
     }
 
-/*
     @Test
     public void typeTest() {
 
@@ -124,7 +122,6 @@ public class FilterActivityTest {
                     check(matches(hasDescendant(withText(containsString(getString(R.string.building))))));
         }
     }
-*/
 
     @Test
     public void priceTest() {
@@ -180,8 +177,8 @@ public class FilterActivityTest {
     private static class ViewTypeSafeMatcher extends TypeSafeMatcher<View> {
         private final int[] counts;
 
-        ViewTypeSafeMatcher(int[] counts) {
-            this.counts = counts;
+        ViewTypeSafeMatcher(int[] extCounts) {
+            counts = extCounts;
         }
 
         @Override
@@ -189,8 +186,8 @@ public class FilterActivityTest {
         }
 
         @Override
-        public boolean matchesSafely(View view) {
-            ListView listView = (ListView) view;
+        public boolean matchesSafely(View item) {
+            ListView listView = (ListView) item;
             counts[0] = listView.getCount();
             return true;
         }
@@ -207,14 +204,14 @@ public class FilterActivityTest {
     private static class SeekBarThumbCoordinatesProvider implements CoordinatesProvider {
         int mProgress;
 
-        public SeekBarThumbCoordinatesProvider(int progress) {
+        SeekBarThumbCoordinatesProvider(int progress) {
             mProgress = progress;
         }
 
         private static float[] getVisibleLeftTop(View view) {
             final int[] xy = new int[2];
             view.getLocationOnScreen(xy);
-            return new float[]{ (float) xy[0], (float) xy[1] };
+            return new float[]{ xy[0], xy[1] };
         }
 
         @Override
@@ -222,7 +219,7 @@ public class FilterActivityTest {
             if (!(view instanceof SeekBar)) {
                 throw new PerformException.Builder()
                         .withViewDescription(HumanReadables.describe(view))
-                        .withCause(new RuntimeException(String.format("SeekBar expected"))).build();
+                        .withCause(new RuntimeException("SeekBar expected")).build();
             }
             SeekBar seekBar = (SeekBar) view;
             int width = seekBar.getWidth() - seekBar.getPaddingLeft() - seekBar.getPaddingRight();

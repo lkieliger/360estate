@@ -163,7 +163,7 @@ public class ListActivity extends AppCompatActivity {
                  * Saving the state of popup layout.
                  */
                 stateOfPopUpLayout = new StateOfPopUpLayout(
-                        spinner.getSelectedItem().toString(),
+                        spinner.getSelectedItemPosition(),
                         spinner.getSelectedItemPosition(),
                         city.getText().toString(),
                         numberOfRooms.getText().toString(),

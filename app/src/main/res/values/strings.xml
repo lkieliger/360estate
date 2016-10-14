@@ -14,11 +14,12 @@
     <string name="surface">Min Surface:</string>
     <string name="Filter">Filter</string>
     <array name="typeOfHouses">
-        <item>All</item>
+        <item>@string/all</item>
         <item>@string/apartment</item>
-        <item>@string/building</item>
         <item>@string/house</item>
+        <item>@string/building</item>
     </array>
+    <string name="all">All</string>
     <string name="apartment">Apartment</string>
     <string name="house">House</string>
     <string name="building">Building</string>
