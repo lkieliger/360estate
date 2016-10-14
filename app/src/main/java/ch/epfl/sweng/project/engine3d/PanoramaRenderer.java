@@ -20,7 +20,7 @@ import org.rajawali3d.renderer.Renderer;
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
 
-class PanoramaRenderer extends Renderer{
+public class PanoramaRenderer extends Renderer{
 
     private static final double MAX_THETA = Math.PI;
     private static final double MAX_PHI = 2*Math.PI;

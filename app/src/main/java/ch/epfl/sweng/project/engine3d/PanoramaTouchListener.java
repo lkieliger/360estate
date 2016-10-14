@@ -5,7 +5,7 @@ import android.view.View;
 
 import static android.view.MotionEvent.INVALID_POINTER_ID;
 
-class PanoramaTouchListener implements View.OnTouchListener {
+public class PanoramaTouchListener implements View.OnTouchListener {
 
     private final PanoramaRenderer mRenderer;
 
@@ -15,6 +15,9 @@ class PanoramaTouchListener implements View.OnTouchListener {
     private int mActivePointerId = 0;
 
     public PanoramaTouchListener(PanoramaRenderer renderer){
+        if(renderer == null ){
+            throw new IllegalArgumentException("Renderer reference was null");
+        }
         mRenderer = renderer;
     }
 

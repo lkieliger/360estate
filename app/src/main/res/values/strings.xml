@@ -6,6 +6,7 @@
     <string name="title_texte">title text</string>
     <string name="description_text">description text</string>
     <string name="rooms">rooms</string>
+    <string name="n_rooms">%1$d rooms</string>
     <string name="types_of_house">Types of house:</string>
     <string name="cities">Cities</string>
     <string name="number_of_rooms">Number of rooms</string>
@@ -35,7 +36,7 @@
     <string name="description_title">Petit Chaton Mignon</string>
     <string name="button_text">Panoramic View</string>
     <string name="text_currency">CHF</string>
-    <string name="text_location_surface">%1$s, %2$s m\u00B2, %3$s %4$s</string>
+    <string name="text_location_surface">%1$s, %2$s m \u00B2, %3$s %4$s</string>
     <string name="text_price_type">%1$s %2$s, %3$s</string>
 
     <!-- Strings related to login -->
