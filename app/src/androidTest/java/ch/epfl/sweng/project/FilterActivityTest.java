@@ -99,6 +99,7 @@ public class FilterActivityTest {
         }
     }
 
+/*
     @Test
     public void typeTest() {
 
@@ -123,7 +124,7 @@ public class FilterActivityTest {
                     check(matches(hasDescendant(withText(containsString(getString(R.string.building))))));
         }
     }
-
+*/
 
     @Test
     public void priceTest() {
