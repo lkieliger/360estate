@@ -39,7 +39,8 @@ public class UserAlreadyPresent {
     @Test
     public void userAlreadyPresent() {
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.goto_registration_button), withText("S'enregistrer")));
+                allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
+                        getString(R.string.action_goto_registration))));
         appCompatButton.perform(scrollTo(), click());
 
         ViewInteraction appCompatTextView = onView(
@@ -55,7 +56,8 @@ public class UserAlreadyPresent {
         appCompatEditText2.perform(scrollTo(), replaceText("abcdef"), closeSoftKeyboard());
 
         ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.register_button), withText("S'enregistrer"),
+                allOf(withId(R.id.register_button), withText(mActivityTestRule.getActivity().
+                                getString(R.string.action_register)),
                         withParent(allOf(withId(R.id.email_login_form),
                                 withParent(withId(R.id.login_form))))));
         appCompatButton2.perform(scrollTo(), click());
