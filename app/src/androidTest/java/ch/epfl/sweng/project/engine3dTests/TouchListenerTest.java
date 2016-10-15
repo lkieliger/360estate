@@ -30,13 +30,17 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class TouchListenerTest {
-//TODO: Factorize this class
 
     @Rule
     public ActivityTestRule<PanoramaActivity> mActivityTestRule = new ActivityTestRule<>(PanoramaActivity.class);
 
+    private PanoramaRenderer renderer;
+    private View view;
+
     @Before
     public void initMembers() {
+        renderer = new PanoramaRenderer(mActivityTestRule.getActivity().getApplicationContext());
+        view = new MockView(mActivityTestRule.getActivity().getApplicationContext());
     }
 
     private MotionEvent genEvent(int action) {
@@ -50,8 +54,6 @@ public class TouchListenerTest {
 
     @Test
     public void consumesValidInput() {
-        PanoramaRenderer renderer = new PanoramaRenderer(mActivityTestRule.getActivity().getApplicationContext());
-        View view = new MockView(mActivityTestRule.getActivity().getApplicationContext());
 
         PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer);
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_DOWN)));
@@ -63,8 +65,6 @@ public class TouchListenerTest {
 
     @Test
     public void dontConsumeInvalidInput() {
-        PanoramaRenderer renderer = new PanoramaRenderer(mActivityTestRule.getActivity().getApplicationContext());
-        View view = new MockView(mActivityTestRule.getActivity().getApplicationContext());
 
         PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer);
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_ENTER)));

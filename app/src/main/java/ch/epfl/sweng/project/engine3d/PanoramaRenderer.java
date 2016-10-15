@@ -2,14 +2,11 @@ package ch.epfl.sweng.project.engine3d;
 
 
 import android.content.Context;
-import android.graphics.Point;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
-import android.view.WindowManager;
 
 import org.rajawali3d.cameras.Camera;
-import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.Texture;
@@ -22,29 +19,30 @@ import ch.epfl.sweng.project.R;
 
 public class PanoramaRenderer extends Renderer{
 
-    private static final double MAX_THETA = Math.PI;
-    private static final double MAX_PHI = 2*Math.PI;
+    public static final double SENSITIVITY = 1.0;
+    public static final double MAX_PHI = 2 * Math.PI;
+    public static final double EPSILON = 0.1d;
+    public static final double MAX_THETA = Math.PI - EPSILON;
 
-    private final double mScreenWidth;
 
-    @SuppressWarnings("FieldCanBeLocal")
     private final String TAG = "Renderer";
     private final Camera mCamera;
+    private final Vector3 mInitialPos;
+    private final Vector3 mInitialLookat;
+    private final double mXdpi;
+    private final double mYdpi;
     private Sphere mChildSphere = null;
     private double mPhi;
     private double mTheta;
-    private final Vector3 mInitialPos;
-    private final Vector3 mInitialLookat;
 
     public PanoramaRenderer(Context context) {
+
         super(context);
         mContext = context;
 
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        mScreenWidth = size.x;
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        mXdpi = displayMetrics.xdpi;
+        mYdpi = displayMetrics.ydpi;
 
         mCamera = getCurrentCamera();
         mCamera.setFieldOfView(80);
@@ -53,9 +51,9 @@ public class PanoramaRenderer extends Renderer{
         setFrameRate(60);
 
         mInitialPos = new Vector3(0,0,0);
-        mInitialLookat = new Vector3(1,0,0);
+        mInitialLookat = new Vector3(0, 0, 1);
         mPhi = 0;
-        mTheta = 90;
+        mTheta = Math.PI / 2.0;
     }
 
     @Override
@@ -83,7 +81,7 @@ public class PanoramaRenderer extends Renderer{
 
         mChildSphere = new Sphere(8,10,10);
         mChildSphere.setMaterial(material2);
-        mChildSphere.setX(50);
+        mChildSphere.setZ(50);
         Sphere mEarthSphere = new Sphere(100, 48, 48);
         mEarthSphere.addChild(mChildSphere);
         mEarthSphere.setPosition(mInitialPos);
@@ -106,15 +104,52 @@ public class PanoramaRenderer extends Renderer{
         super.onRender(elapsedTime, deltaTime);
 
         mChildSphere.rotate(Vector3.Axis.Y, 0.4);
-        double x = Math.sin(mTheta) * Math.cos(mPhi);
+        updateLookAt();
+    }
+
+    public void updateCameraRotation(float dx, float dy) {
+        mPhi += (dx / mXdpi) * SENSITIVITY;
+        mTheta -= (dy / mYdpi) * SENSITIVITY;
+        clampPhi();
+        clampTheta();
+
+    }
+
+    public double getCameraRotationPhi() {
+        return mPhi;
+    }
+
+    public double getCameraRotationTheta() {
+        return mTheta;
+    }
+
+    public void updateLookAt() {
+        double z = Math.sin(mTheta) * Math.cos(mPhi);
         double y = Math.cos(mTheta);
-        double z = Math.sin(mTheta) * Math.sin(mPhi);
+        double x = Math.sin(mTheta) * Math.sin(mPhi);
 
         mCamera.setLookAt(new Vector3(x,y,z));
     }
 
-    public void updateCameraRotation(float dx, float dy) {
-        mPhi -= (dx/ mScreenWidth)*3;
-        mTheta -= (dy/ mScreenWidth)*3;
+    private void clampPhi() {
+        if (mPhi < 0) {
+            if (mPhi < -MAX_PHI) {
+                //The camera did more that a complete turn in one frame !!
+                mPhi = 0;
+            } else {
+                mPhi = MAX_PHI + mPhi;
+            }
+        } else if (mPhi > MAX_PHI) {
+            mPhi -= MAX_PHI;
+        }
     }
+
+    private void clampTheta() {
+        if (mTheta < EPSILON) {
+            mTheta = EPSILON;
+        } else if (mTheta > MAX_THETA) {
+            mTheta = MAX_THETA;
+        }
+    }
+
 }
