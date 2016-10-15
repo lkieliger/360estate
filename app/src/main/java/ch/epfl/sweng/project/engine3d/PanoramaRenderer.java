@@ -67,7 +67,7 @@ public class PanoramaRenderer extends Renderer{
         material.setColor(0);
         material2.setColor(0);
 
-        Texture earthTexture = new Texture("Earth", R.drawable.pano_4096);
+        Texture earthTexture = new Texture("Earth", R.drawable.pano_1024);
         Texture earthTexture2 = new Texture("Earth", R.drawable.earthtruecolor_nasa_big);
         try{
             material.addTexture(earthTexture);
