@@ -112,12 +112,11 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private boolean userDataIsValid() {
 
-        return emailIsValid(mEmail.getText().toString(), mAppContext)
+        return  fieldsAreFilled()
+                && emailIsValid(mEmail.getText().toString(), mAppContext)
                 && passwordIsValid(mPassword.getText().toString(), mAppContext)
                 && passwordMatches(mPassword.getText().toString(),
-                mPasswordBis.getText().toString(),
-                mAppContext)
-                && fieldsAreFilled();
+                mPasswordBis.getText().toString(), mAppContext);
     }
 
 

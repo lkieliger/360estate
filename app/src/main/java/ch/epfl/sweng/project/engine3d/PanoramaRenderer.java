@@ -9,7 +9,6 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 
 import org.rajawali3d.cameras.Camera;
-import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.Texture;

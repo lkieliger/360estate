@@ -3,13 +3,12 @@ package ch.epfl.sweng.project.list;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
-import ch.epfl.sweng.project.MainActivity;
 import ch.epfl.sweng.project.R;
 
 @ParseClassName("Item")
 public class Item extends ParseObject {
 
-    public static final double halfRoom = 0.5;
+    private static final double halfRoom = 0.5;
 
     public enum HouseType {
         APARTMENT(R.string.apartment), HOUSE(R.string.house),

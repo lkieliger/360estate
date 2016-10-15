@@ -1,6 +1,5 @@
 package ch.epfl.sweng.project;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
-import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.list.Item;
 import ch.epfl.sweng.project.user.LoginActivity;
 

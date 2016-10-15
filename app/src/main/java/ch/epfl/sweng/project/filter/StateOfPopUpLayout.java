@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.parse.ParseQuery;
 
-import java.util.Locale;
-
 import ch.epfl.sweng.project.list.Item;
 
 /**
