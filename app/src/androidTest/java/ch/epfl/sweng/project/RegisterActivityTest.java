@@ -43,7 +43,7 @@ public class RegisterActivityTest {
 
     private void waitAction() {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "InterruptedException" + e.getMessage());

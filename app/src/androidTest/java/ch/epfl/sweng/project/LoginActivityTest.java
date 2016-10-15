@@ -38,7 +38,7 @@ public class LoginActivityTest {
 
     private void waitAction() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "InterruptedException" + e.getMessage());
@@ -54,6 +54,8 @@ public class LoginActivityTest {
         onView(withId(R.id.login_email)).perform(typeText("HolaSenior@Shanchez.co"), closeSoftKeyboard());
         onView(withId(R.id.login_password)).perform(typeText("PortesTriEstate"), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
+
+        waitAction();
 
         onView(withText(R.string.error_login_unsuccessful)).inRoot(withDecorView(not(is(mActivityTestRule.getActivity()
                 .getWindow().getDecorView())))).check(matches(isDisplayed()));

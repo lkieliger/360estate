@@ -171,9 +171,7 @@
     <inspection_tool class="ElementOnlyUsedFromTestCode" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="EmptyClass" enabled="true" level="ERROR" enabled_by_default="true">
       <option name="ignorableAnnotations">
-        <value>
-          <item value="org.junit.runner.RunWith" />
-        </value>
+        <value />
       </option>
       <option name="ignoreClassWithParameterization" value="false" />
       <option name="ignoreThrowables" value="true" />
