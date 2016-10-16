@@ -9,8 +9,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.sweng.project.user.RegisterActivity;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -23,6 +21,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -36,16 +35,6 @@ public class RegisterActivityTest {
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-
-    private void waitAction() {
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "InterruptedException" + e.getMessage());
-            }
-        }
-    }
 
     private void initTest(){
         ViewInteraction appCompatButton = onView(
@@ -77,7 +66,7 @@ public class RegisterActivityTest {
                                 withParent(withId(R.id.login_form))))));
         appCompatButton2.perform(scrollTo(), click());
 
-        waitAction();
+        wait250ms(TAG);
 
         onView(withText(R.string.error_user_already_exists)).inRoot(withDecorView(not(is(mActivityTestRule.getActivity()
                 .getWindow().getDecorView())))).check(matches(isDisplayed()));
@@ -86,7 +75,7 @@ public class RegisterActivityTest {
 
 
     @Test
-    public void errorWithdEmptyField(){
+    public void errorWithEmptyField(){
         initTest();
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
