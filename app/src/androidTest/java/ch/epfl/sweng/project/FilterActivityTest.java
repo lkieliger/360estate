@@ -72,7 +72,7 @@ public class FilterActivityTest {
                             String.format(
                                     getString(R.string.text_location_surface),
                                     "Renens",
-                                    "10'000",
+                                    "2'000'000",
                                     "3",
                                     getString(R.string.rooms)
                             ))))));

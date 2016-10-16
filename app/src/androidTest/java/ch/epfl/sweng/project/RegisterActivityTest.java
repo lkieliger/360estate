@@ -37,6 +37,8 @@ public class RegisterActivityTest {
 
 
     private void initTest(){
+        wait250ms(TAG);
+
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
                         getString(R.string.action_goto_registration))));

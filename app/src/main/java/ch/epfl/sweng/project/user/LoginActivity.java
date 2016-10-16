@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -19,6 +18,7 @@ import ch.epfl.sweng.project.R;
 
 import static ch.epfl.sweng.project.user.InputValidityChecker.emailIsValid;
 import static ch.epfl.sweng.project.user.InputValidityChecker.passwordIsValid;
+import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 /**
  * A login screen that offers login via email/password.
@@ -59,11 +59,8 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void done(ParseUser user, ParseException e) {
                             if (user != null) {
-                                Toast popMsg = Toast.makeText(
-                                        getApplicationContext(),
-                                        getResources().getText(R.string.info_login_successful),
-                                        Toast.LENGTH_SHORT);
-                                popMsg.show();
+                                shortToast(getApplicationContext(),
+                                        getResources().getText(R.string.info_login_successful));
 
                                 Intent intent = new Intent(LoginActivity.this, ListActivity.class);
                                 startActivity(intent);
@@ -71,11 +68,8 @@ public class LoginActivity extends AppCompatActivity {
                                 finish();
 
                             } else {
-                                Toast popMsg = Toast.makeText(
-                                        getApplicationContext(),
-                                        getResources().getText(R.string.error_login_unsuccessful),
-                                        Toast.LENGTH_SHORT);
-                                popMsg.show();
+                                shortToast(getApplicationContext(),
+                                        getResources().getText(R.string.error_login_unsuccessful));
                             }
                         }
                     });
@@ -121,9 +115,8 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (!filled) {
-            Toast popMsg = Toast.makeText(
-                    getApplicationContext(), R.string.error_empty_field, Toast.LENGTH_SHORT);
-            popMsg.show();
+            shortToast(getApplicationContext(),
+                    getResources().getText(R.string.error_empty_field));
         }
         return filled;
     }

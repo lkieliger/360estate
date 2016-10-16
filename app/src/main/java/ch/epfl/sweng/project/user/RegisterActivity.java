@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -20,6 +19,8 @@ import ch.epfl.sweng.project.R;
 import static ch.epfl.sweng.project.user.InputValidityChecker.emailIsValid;
 import static ch.epfl.sweng.project.user.InputValidityChecker.passwordIsValid;
 import static ch.epfl.sweng.project.user.InputValidityChecker.passwordMatches;
+import static ch.epfl.sweng.project.util.Toaster.longToast;
+import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 /**
  * A login screen that offers login via email/password.
@@ -68,29 +69,19 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void done(ParseException e) {
                     if (e == null) {
-                        Toast popMsg = Toast.makeText(
-                                getApplicationContext(),
-                                getResources().getString(R.string.info_registration_successful),
-                                Toast.LENGTH_SHORT);
-                        popMsg.show();
+                        shortToast(getApplicationContext(),
+                                getResources().getString(R.string.info_registration_successful));
 
                         finish();
                     } else {
-                        Toast popMsg;
                         switch (e.getCode()) {
                             case USER_ALREADY_EXISTS:
-                                popMsg = Toast.makeText(
-                                        getApplicationContext(),
-                                        getResources().getString(R.string.error_user_already_exists),
-                                        Toast.LENGTH_LONG);
-                                popMsg.show();
+                                longToast(getApplicationContext(),
+                                        getResources().getString(R.string.error_user_already_exists));
                                 return;
                             default:
-                                 popMsg = Toast.makeText(
-                                        getApplicationContext(),
-                                        getResources().getString(R.string.error_registration_unsuccessful),
-                                        Toast.LENGTH_LONG);
-                                popMsg.show();
+                                longToast(getApplicationContext(),
+                                        getResources().getString(R.string.error_registration_unsuccessful));
                         }
 
                         ;
@@ -112,7 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private boolean userDataIsValid() {
 
-        return  fieldsAreFilled()
+        return fieldsAreFilled()
                 && emailIsValid(mEmail.getText().toString(), mAppContext)
                 && passwordIsValid(mPassword.getText().toString(), mAppContext)
                 && passwordMatches(mPassword.getText().toString(),
@@ -137,9 +128,8 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (!filled) {
-            Toast popMsg = Toast.makeText(
-                    getApplicationContext(), R.string.error_empty_field, Toast.LENGTH_SHORT);
-            popMsg.show();
+            shortToast(getApplicationContext(),
+                    getResources().getText(R.string.error_empty_field));
         }
         return filled;
     }
