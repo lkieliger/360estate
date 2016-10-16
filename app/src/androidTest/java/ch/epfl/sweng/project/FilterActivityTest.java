@@ -30,6 +30,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
@@ -38,17 +39,6 @@ import static org.hamcrest.core.AllOf.allOf;
 
 @RunWith(AndroidJUnit4.class)
 public class FilterActivityTest {
-
-    private void waitAction() {
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "InterruptedException" + e.getMessage());
-            }
-        }
-    }
-
 
     private static final String TAG = "FilterActivityTest: ";
 
@@ -71,7 +61,7 @@ public class FilterActivityTest {
         onView(withId(R.id.seekBarSurface)).perform(scrubSeekBarAction(50));
 
         onView(withId(R.id.filterButton)).perform(click());
-        waitAction();
+        wait250ms(TAG);
 
         final int[] counts = {0};
         onView(withId(R.id.houseList)).check(matches(new ViewTypeSafeMatcher(counts)));
@@ -99,6 +89,7 @@ public class FilterActivityTest {
     }
 
 
+    //TODO: check if these tests are needed
     /*
     @Test
     public void numberOfRoomsTest() {
