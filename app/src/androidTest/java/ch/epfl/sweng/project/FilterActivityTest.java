@@ -61,6 +61,46 @@ public class FilterActivityTest {
 
 
     @Test
+    public void filterTest() {
+        onView(withId(R.id.filterButtonPopUp)).perform(click());
+        onView(withId(R.id.numberOfRooms)).perform(typeText("3"), closeSoftKeyboard());
+        onView(withId(R.id.location)).perform(typeText("Renens"), closeSoftKeyboard());
+        onView(withId(R.id.spinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(getString(R.string.building)))).perform(click());
+        onView(withId(R.id.seekBarPrice)).perform(scrubSeekBarAction(5));
+        onView(withId(R.id.seekBarSurface)).perform(scrubSeekBarAction(50));
+
+        onView(withId(R.id.filterButton)).perform(click());
+        waitAction();
+
+        final int[] counts = {0};
+        onView(withId(R.id.houseList)).check(matches(new ViewTypeSafeMatcher(counts)));
+
+        for (int i = 0; i < counts[0]; i++) {
+            onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(i).
+                    check(matches(hasDescendant(withText(containsString(
+                            String.format(
+                                    getString(R.string.text_location_surface),
+                                    "Renens",
+                                    "10'000",
+                                    "3",
+                                    getString(R.string.rooms)
+                            ))))));
+            onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(i).
+                    check(matches(hasDescendant(withText(containsString(
+                            String.format(
+                                    getString(R.string.text_price_type),
+                                    "100",
+                                    getString(R.string.text_currency),
+                                    getString(R.string.building)
+                            ))))));
+
+        }
+    }
+
+
+    /*
+    @Test
     public void numberOfRoomsTest() {
 
         onView(withId(R.id.filterButtonPopUp)).perform(click());
@@ -144,7 +184,7 @@ public class FilterActivityTest {
                     check(matches(hasDescendant(withText(containsString("2'000'000 m")))));
         }
     }
-
+*/
 
 
     private static class ViewTypeSafeMatcher extends TypeSafeMatcher<View> {
