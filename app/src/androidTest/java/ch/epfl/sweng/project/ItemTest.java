@@ -10,7 +10,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- *
  * @brief This class test the Item object, that represent the house.
  */
 public class ItemTest {
@@ -21,34 +20,24 @@ public class ItemTest {
     private double rooms = 5.5;
     private int surface = 200;
 
-    private Item itemFactoryNoArgument(){
+    private Item itemFactoryNoArgument() {
         ParseObject.registerSubclass(Item.class);
 
         return new Item();
     }
 
 
-    private Item itemFactoryWithArgument(){
+    private Item itemFactoryWithArgument() {
         ParseObject.registerSubclass(Item.class);
 
-        return new Item(price,location, type, rooms, surface);
+        return new Item(price, location, type, rooms, surface);
     }
 
     @Test
-    public void newItemCreationWithArgument(){
+    public void newItemCreationWithArgument() {
         Item item = itemFactoryWithArgument();
 
-
-
-        assertThat("invalid price in item",item.getPrice(),is(price) );
-        //assertThat("invalid location in item",item.getLocation(), is(location));
-        assertThat("invalid house type in item",item.getType(), is(type));
-
-
-
+        assertThat("invalid price in item", item.getPrice(), is(price));
+        assertThat("invalid house type in item", item.getType(), is(type));
     }
-
-
-
-
 }

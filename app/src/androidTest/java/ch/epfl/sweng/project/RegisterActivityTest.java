@@ -36,14 +36,10 @@ public class RegisterActivityTest {
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-    @Rule
-    public ActivityTestRule<RegisterActivity> mRegisterActivityTestRule = new ActivityTestRule<>(RegisterActivity
-            .class);
-
 
     private void waitAction() {
         try {
-            Thread.sleep(500);
+            Thread.sleep(250);
         } catch (InterruptedException e) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "InterruptedException" + e.getMessage());
@@ -92,7 +88,6 @@ public class RegisterActivityTest {
     @Test
     public void errorWithdEmptyField(){
         initTest();
-        waitAction();
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
                         getString(R.string.action_goto_registration))));
@@ -108,7 +103,6 @@ public class RegisterActivityTest {
     @Test
     public void errorWithInvalidPassword(){
         initTest();
-        waitAction();
 
         onView(withId(R.id.registration_email)).perform(typeText("HolaSenior@Shanchez.co"), closeSoftKeyboard());
         onView(withId(R.id.registration_phone)).perform(typeText("05404030"), closeSoftKeyboard());
@@ -125,7 +119,6 @@ public class RegisterActivityTest {
     @Test
     public void errorWithUnmatchingPassword(){
         initTest();
-        waitAction();
 
         onView(withId(R.id.registration_email)).perform(typeText("HolaSenior@Shanchez.co"), closeSoftKeyboard());
         onView(withId(R.id.registration_phone)).perform(typeText("05404030"), closeSoftKeyboard());

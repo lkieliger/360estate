@@ -38,7 +38,7 @@ public class LoginActivityTest {
 
     private void waitAction() {
         try {
-            Thread.sleep(500);
+            Thread.sleep(250);
         } catch (InterruptedException e) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "InterruptedException" + e.getMessage());
@@ -48,8 +48,6 @@ public class LoginActivityTest {
 
     @Test
     public void errorWithInvalidLogin() {
-
-        waitAction();
 
         onView(withId(R.id.login_email)).perform(typeText("HolaSenior@Shanchez.co"), closeSoftKeyboard());
         onView(withId(R.id.login_password)).perform(typeText("PortesTriEstate"), closeSoftKeyboard());
@@ -65,8 +63,6 @@ public class LoginActivityTest {
     @Test
     public void errorWithInvalidLoginMail(){
 
-        waitAction();
-
         onView(withId(R.id.login_email)).perform(typeText("HolaSenior@Shanchez"), closeSoftKeyboard());
         onView(withId(R.id.login_password)).perform(typeText("PortesTriEstate"), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
@@ -78,8 +74,6 @@ public class LoginActivityTest {
 
     @Test
     public void errorWithInvalidLoginPassWord(){
-
-        waitAction();
 
         onView(withId(R.id.login_email)).perform(typeText("HolaSenior@Shanchez.co"), closeSoftKeyboard());
         onView(withId(R.id.login_password)).perform(typeText("si"), closeSoftKeyboard());
@@ -93,8 +87,6 @@ public class LoginActivityTest {
     @Test
     public void testUserLogin(){
 
-        waitAction();
-
         onView(withId(R.id.login_email)).perform(typeText(TEST_USER_MAIL));
         onView(withId(R.id.login_password)).perform(typeText(TEST_USER_PASSWORD));
         onView(withId(R.id.login_button)).perform(click());
@@ -107,14 +99,11 @@ public class LoginActivityTest {
 
     @Test
     public void registerCall(){
-        waitAction();
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
                         getString(R.string.action_goto_registration))));
         appCompatButton.perform(scrollTo(), click());
-
-        waitAction();
 
         onView(withId(R.id.register_button)).check(matches(isDisplayed()));
     }

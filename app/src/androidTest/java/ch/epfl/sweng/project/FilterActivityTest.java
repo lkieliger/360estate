@@ -39,6 +39,17 @@ import static org.hamcrest.core.AllOf.allOf;
 @RunWith(AndroidJUnit4.class)
 public class FilterActivityTest {
 
+    private void waitAction() {
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "InterruptedException" + e.getMessage());
+            }
+        }
+    }
+
+
     private static final String TAG = "FilterActivityTest: ";
 
     @Rule
@@ -52,19 +63,11 @@ public class FilterActivityTest {
     @Test
     public void numberOfRoomsTest() {
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            if(BuildConfig.DEBUG){
-                Log.d(TAG , "InterruptedException" +e.getMessage());
-            }
-        }
-
         onView(withId(R.id.filterButtonPopUp)).perform(click());
         onView(withId(R.id.numberOfRooms)).perform(typeText("3"), closeSoftKeyboard());
         onView(withId(R.id.filterButton)).perform(click());
 
-
+        waitAction();
         final int[] counts = {0};
         onView(withId(R.id.houseList)).check(matches(new ViewTypeSafeMatcher(counts)));
 
@@ -77,18 +80,10 @@ public class FilterActivityTest {
     @Test
     public void cityTest() {
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            if(BuildConfig.DEBUG) {
-                Log.d(TAG, "InterruptedException" + e.getMessage());
-            }
-        }
-
         onView(withId(R.id.filterButtonPopUp)).perform(click());
         onView(withId(R.id.location)).perform(typeText("Renens"), closeSoftKeyboard());
         onView(withId(R.id.filterButton)).perform(click());
-
+        waitAction();
         final int[] counts = {0};
         onView(withId(R.id.houseList)).check(matches(new ViewTypeSafeMatcher(counts)));
 
@@ -101,19 +96,12 @@ public class FilterActivityTest {
     @Test
     public void typeTest() {
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            if(BuildConfig.DEBUG) {
-                Log.d(TAG, "InterruptedException" + e.getMessage());
-            }
-        }
 
         onView(withId(R.id.filterButtonPopUp)).perform(click());
         onView(withId(R.id.spinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(getString(R.string.building)))).perform(click());
         onView(withId(R.id.filterButton)).perform(click());
-
+        waitAction();
         final int[] counts = {0};
         onView(withId(R.id.houseList)).check(matches(new ViewTypeSafeMatcher(counts)));
 
@@ -126,18 +114,11 @@ public class FilterActivityTest {
     @Test
     public void priceTest() {
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            if(BuildConfig.DEBUG) {
-                Log.d(TAG, "InterruptedException" + e.getMessage());
-            }
-        }
 
         onView(withId(R.id.filterButtonPopUp)).perform(click());
         onView(withId(R.id.seekBarPrice)).perform(scrubSeekBarAction(5));
         onView(withId(R.id.filterButton)).perform(click());
-
+        waitAction();
 
         final int[] counts = {0};
         onView(withId(R.id.houseList)).check(matches(new ViewTypeSafeMatcher(counts)));
@@ -151,18 +132,10 @@ public class FilterActivityTest {
     @Test
     public void surfaceTest() {
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            if(BuildConfig.DEBUG) {
-                Log.d(TAG, "InterruptedException" + e.getMessage());
-            }
-        }
-
         onView(withId(R.id.filterButtonPopUp)).perform(click());
         onView(withId(R.id.seekBarSurface)).perform(scrubSeekBarAction(50));
         onView(withId(R.id.filterButton)).perform(click());
-
+        waitAction();
         final int[] counts = {0};
         onView(withId(R.id.houseList)).check(matches(new ViewTypeSafeMatcher(counts)));
 
