@@ -4,7 +4,7 @@ import com.parse.ParseObject;
 
 import org.junit.Test;
 
-import ch.epfl.sweng.project.list.Item;
+import ch.epfl.sweng.project.data.Item;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

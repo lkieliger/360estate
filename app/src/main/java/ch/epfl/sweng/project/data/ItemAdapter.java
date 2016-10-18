@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.list;
+package ch.epfl.sweng.project.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.list;
+package ch.epfl.sweng.project.data;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -10,10 +10,6 @@ import android.widget.TextView;
 
 import ch.epfl.sweng.project.R;
 
-/**
- * Isaac Leimgruber
- * SCIPER 236908
- */
 
 public class ItemView extends RelativeLayout {
     private TextView locationSurfaceRooms;
