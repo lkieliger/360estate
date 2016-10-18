@@ -8,11 +8,6 @@ import android.widget.ArrayAdapter;
 
 import java.util.List;
 
-/**
- * Isaac Leimgruber
- * SCIPER 236908
- */
-
 public class ItemAdapter extends ArrayAdapter<Item> {
 
     public ItemAdapter(Context c, List<Item> items) {

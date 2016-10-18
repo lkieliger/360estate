@@ -9,12 +9,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.parse.LogInCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.ListActivity;
 import ch.epfl.sweng.project.R;
+import ch.epfl.sweng.project.list.Item;
 
 import static ch.epfl.sweng.project.user.InputValidityChecker.emailIsValid;
 import static ch.epfl.sweng.project.user.InputValidityChecker.passwordIsValid;
@@ -26,7 +29,8 @@ import static ch.epfl.sweng.project.util.Toaster.shortToast;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
-
+    private static boolean parseNotInitialized = true;
+    public static final String APP_ID = "360ESTATE";
     private TextView mEmail;
     private TextView mPassword;
 
@@ -36,6 +40,20 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
+        if (parseNotInitialized) {
+            //Initialize connection with the parse server
+            Parse.initialize(new Parse.Configuration.Builder(this)
+                    // The network interceptor is used to debug the communication between server/client
+                    //.addNetworkInterceptor(new ParseLogInterceptor())
+                    .applicationId(APP_ID)
+                    .server("https://360.astutus.org/parse/")
+                    .build()
+            );
+            parseNotInitialized = false;
+        }
+        ParseObject.registerSubclass(Item.class);
 
         mEmail = (TextView) findViewById(R.id.login_email);
         mPassword = (TextView) findViewById(R.id.login_password);
