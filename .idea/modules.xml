@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/houseView360.iml" filepath="$PROJECT_DIR$/houseView360.iml" />
       <module fileurl="file://$PROJECT_DIR$/sweng-team-the360estate.iml" filepath="$PROJECT_DIR$/sweng-team-the360estate.iml" />
       <module fileurl="file://$PROJECT_DIR$/the360estate.iml" filepath="$PROJECT_DIR$/the360estate.iml" />
     </modules>
