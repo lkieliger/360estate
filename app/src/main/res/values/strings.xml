@@ -40,7 +40,7 @@
     <string name="text_price_type" translatable="false">%1$s %2$s, %3$s</string>
 
     <!-- Strings related to login -->
-    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_login">HouseView360</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_login">Sign in</string>
