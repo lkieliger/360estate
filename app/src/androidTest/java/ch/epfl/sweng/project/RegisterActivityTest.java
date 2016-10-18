@@ -23,6 +23,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
@@ -39,7 +40,7 @@ public class RegisterActivityTest {
 
 
     private void initTest(){
-        wait250ms(TAG);
+        wait1s(TAG);
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
@@ -81,6 +82,7 @@ public class RegisterActivityTest {
     @Test
     public void errorWithEmptyField(){
         initTest();
+        wait250ms(TAG);
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
                         getString(R.string.action_goto_registration))));
