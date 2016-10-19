@@ -32,7 +32,7 @@
         as greatly shewing herself observe ashamed.
         Demands minutes regular ye to detract is.
     </string>
-    <string name = "text_title">Informations</string>
+    <string name="text_title">Informations</string>
     <string name="description_title">Cute little kitten</string>
     <string name="button_text">Panoramic View</string>
     <string name="text_currency" translatable="false">CHF</string>
@@ -67,5 +67,5 @@
         sure you have access to the network and try again</string>
     <string name="info_registration_successful">Registration was successful, you may log in</string>
     <string name="title_activity_register">Register</string>
-    <string name="error_user_already_exists" >Account already exists for this username.</string>
+    <string name="error_user_already_exists">Account already exists for this username.</string>
 </resources>
