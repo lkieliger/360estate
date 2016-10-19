@@ -6,6 +6,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,32 +16,28 @@ import ch.epfl.sweng.project.util.Tuple;
 
 public class HouseManager {
 
-    private final Map<Integer,Map<Tuple<Double,Double>, Tuple<Integer,String>>> map;
+    private final Map<Integer, List<AngleMapping>> map;
 
-    public HouseManager(Map<Integer, Map<Tuple<Double, Double>, Tuple<Integer, String>>> map) {
-        this.map = map;
+    public HouseManager(Map<Integer, List<AngleMapping>> extMap) {
+        this.map = extMap;
     }
 
-    public Map<Integer, Map<Tuple<Double, Double>, Tuple<Integer, String>>> getMap() {
+    public Map<Integer, List<AngleMapping>> getMap() {
         return map;
     }
 
+    public static HouseManager reconstruct() {
+        final Map<Integer, List<AngleMapping>> resultMap = new HashMap<>();
 
-    public static HouseManager reconstruct(){
-        final Map<Integer,Map<Tuple<Double,Double>, Tuple<Integer,String>>> resultMap = new HashMap<>();
-
-        ParseQuery<OrientationMapping> query = ParseQuery.getQuery("OrientationMapping");
-        query.findInBackground(new FindCallback<OrientationMapping>() {
-            public void done(List<OrientationMapping> objects, ParseException e) {
+        ParseQuery<Neighbors> query = ParseQuery.getQuery("Neighbors");
+        query.findInBackground(new FindCallback<Neighbors>() {
+            public void done(List<Neighbors> objects, ParseException e) {
                 if (e == null) {
-                    Log.d("DataMgmt", "Retrieved " + objects.size() + " photosphere");
+                    Log.d("DataMgmt", "Retrieved " + objects.size() + " neighbors");
 
-                    for (OrientationMapping p: objects
-                            ) {
-                        Map<Tuple<Double,Double>,Tuple<Integer,String>> t = p.getMapping();
-                        resultMap.put(p.getId(),t);
+                    for (Neighbors n : objects) {
+                        resultMap.put(n.getId(), n.getNeighborsList());
                     }
-
                 } else {
                     Log.d("DataMgmt", "Error: " + e.getMessage());
                 }

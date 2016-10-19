@@ -36,8 +36,8 @@ public class ItemView extends RelativeLayout {
     }
 
     public void setItem(Item item) {
-       // locationSurfaceRooms.setText(item.getLocation() + ", " + item.printSurface() + " m\u00B2, " +
-         //       item.getRooms() + " " + getResources().getString(R.string.rooms));
+        // locationSurfaceRooms.setText(item.getLocation() + ", " + item.printSurface() + " m\u00B2, " +
+        //       item.getRooms() + " " + getResources().getString(R.string.rooms));
         locationSurfaceRooms.setText(String.format(
                 getResources().getString(R.string.text_location_surface),
                 item.getLocation(),
@@ -45,8 +45,8 @@ public class ItemView extends RelativeLayout {
                 item.getRooms(),
                 getResources().getString(R.string.rooms)
         ));
-       // priceType.setText("" + item.printPrice() + " CHF"+", "+
-         //       getResources().getString(item.getType().getDescription()));
+        // priceType.setText("" + item.printPrice() + " CHF"+", "+
+        //       getResources().getString(item.getType().getDescription()));
         priceType.setText(String.format(
                 getResources().getString(R.string.text_price_type),
                 item.printPrice(),

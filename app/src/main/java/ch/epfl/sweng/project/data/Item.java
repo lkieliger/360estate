@@ -29,13 +29,6 @@ public class Item extends ParseObject {
     public Item() {
     }
 
-    private int price;
-    private String location;
-    private HouseType type;
-    private double rooms;
-    private int surface;
-    //private final ParseFile img; TODO:add image
-
     public Item(int price, String location, HouseType type, double rooms, int surface) {
         setPrice(price);
         setLocation(location);
