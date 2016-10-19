@@ -31,8 +31,8 @@ public class PanoramaRendererTest {
 
     @Before
     public void initMembers() {
-        errorEpsilon = 1e-7;
-        renderer = new PanoramaRenderer(mActivityTestRule.getActivity().getApplicationContext());
+        errorEpsilon = 1e-5;
+        renderer = mActivityTestRule.getActivity().getAssociatedRenderer();
         metrics = mActivityTestRule.getActivity().getApplicationContext().getResources()
                 .getDisplayMetrics();
         cam = renderer.getCurrentCamera();
@@ -41,7 +41,6 @@ public class PanoramaRendererTest {
 
     @Test
     public void cameraConfigIsCorrect() {
-
         assertTrue(cam.isLookAtEnabled());
     }
 

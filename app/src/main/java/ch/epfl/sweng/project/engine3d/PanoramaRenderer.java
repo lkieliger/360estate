@@ -66,6 +66,8 @@ public class PanoramaRenderer extends Renderer {
     @Override
     public void initScene() {
 
+        Log.d(TAG, "Initializing scene");
+
         mCamera.setPosition(mInitialPos);
         mCamera.setLookAt(mInitialLookat);
 
@@ -76,26 +78,29 @@ public class PanoramaRenderer extends Renderer {
 
         Texture earthTexture = new Texture("Earth", R.drawable.pano_1024);
         Texture earthTexture2 = new Texture("Earth", R.drawable.earthtruecolor_nasa_big);
+        earthTexture.shouldRecycle(true);
+        earthTexture2.shouldRecycle(true);
+
         try {
             material.addTexture(earthTexture);
             material2.addTexture(earthTexture2);
 
         } catch (ATexture.TextureException error) {
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, "TEXTURE ERROR");
+                Log.d(TAG, error.toString());
             }
         }
 
         mChildSphere = new Sphere(8, 10, 10);
         mChildSphere.setMaterial(material2);
         mChildSphere.setZ(50);
-        Sphere mEarthSphere = new Sphere(100, 48, 48);
-        mEarthSphere.addChild(mChildSphere);
-        mEarthSphere.setPosition(mInitialPos);
-        mEarthSphere.setBackSided(true);
-        mEarthSphere.setMaterial(material);
+        Sphere earthSphere = new Sphere(100, 48, 48);
+        earthSphere.addChild(mChildSphere);
+        earthSphere.setPosition(mInitialPos);
+        earthSphere.setBackSided(true);
+        earthSphere.setMaterial(material);
 
-        getCurrentScene().addChild(mEarthSphere);
+        getCurrentScene().addChild(earthSphere);
     }
 
     /**
