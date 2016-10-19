@@ -12,6 +12,7 @@ import org.rajawali3d.cameras.Camera;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.Texture;
+import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Sphere;
 import org.rajawali3d.renderer.Renderer;
@@ -27,7 +28,7 @@ import static android.content.Context.SENSOR_SERVICE;
  */
 public class PanoramaRenderer extends Renderer {
 
-    public static final double SENSITIVITY = 1.0;
+    public static final double SENSITIVITY = 100.0;
     public static final double MAX_PHI = 2 * Math.PI;
     public static final double EPSILON = 0.1d;
     public static final double MAX_THETA = Math.PI - EPSILON;
@@ -44,6 +45,8 @@ public class PanoramaRenderer extends Renderer {
     private final boolean mRotSensorAvailable;
     private final Sensor mRotSensor;
     private Sphere mChildSphere = null;
+    private Quaternion mUserRot;
+    private Quaternion mSensorRot;
 
     //Phi is the azimutal angle
     private double mPhi;
@@ -77,9 +80,10 @@ public class PanoramaRenderer extends Renderer {
         mXdpi = displayMetrics.xdpi;
         mYdpi = displayMetrics.ydpi;
 
+        mUserRot = new Quaternion();
+        mSensorRot = new Quaternion();
         mCamera = getCurrentCamera();
         mCamera.setFieldOfView(80);
-        //mCamera.enableLookAt();
 
         setFrameRate(60);
 
@@ -94,7 +98,7 @@ public class PanoramaRenderer extends Renderer {
     public void onResume() {
         super.onResume();
         if (mRotSensorAvailable) {
-            mSensorManager.registerListener(mRotListener, mRotSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            mSensorManager.registerListener(mRotListener, mRotSensor, SensorManager.SENSOR_DELAY_GAME);
         }
     }
 
@@ -177,7 +181,8 @@ public class PanoramaRenderer extends Renderer {
         super.onRender(elapsedTime, deltaTime);
 
         mChildSphere.rotate(Vector3.Axis.Y, 0.4);
-        //updateLookAt();
+        Quaternion q = new Quaternion(mSensorRot);
+        mCamera.setCameraOrientation(q.multiply(mUserRot));
     }
 
     /**
@@ -192,11 +197,16 @@ public class PanoramaRenderer extends Renderer {
      * @param dy The difference in pixels along the Y axis. Positive means down
      */
     public void updateCameraRotation(float dx, float dy) {
-        mPhi += (dx / mXdpi) * SENSITIVITY;
-        mTheta -= (dy / mYdpi) * SENSITIVITY;
-        clampPhi();
-        clampTheta();
+        double phi = (dx / mXdpi) * SENSITIVITY;
 
+        Quaternion rotY = new Quaternion().fromAngleAxis(Vector3.Axis.Y, -phi);
+
+        mUserRot.multiply(rotY);
+
+    }
+
+    public void setSensorRotation(Quaternion q) {
+        mSensorRot = new Quaternion(q);
     }
 
     /**

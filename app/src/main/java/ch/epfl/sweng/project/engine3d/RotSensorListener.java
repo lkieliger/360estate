@@ -28,9 +28,9 @@ public class RotSensorListener implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         float[] val = event.values;
         Quaternion q = new Quaternion(-val[3], val[0], val[1], val[2]);
-        Quaternion mRot45X = new Quaternion().fromAngleAxis(Vector3.Axis.X, 90.0);
-        q.multiply(mRot45X);
-        mRenderer.getCurrentCamera().setCameraOrientation(q);
+        Quaternion rot90X = new Quaternion().fromAngleAxis(Vector3.Axis.X, 90.0);
+        q.multiply(rot90X);
+        mRenderer.setSensorRotation(q);
     }
 
     @Override
