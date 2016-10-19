@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.PanoramaTouchListener;
-import ch.epfl.sweng.project.engine3dTests.mockobjects.MockView;
 
 import static android.view.MotionEvent.ACTION_CANCEL;
 import static android.view.MotionEvent.ACTION_DOWN;
@@ -40,7 +39,7 @@ public class TouchListenerTest {
     @Before
     public void initMembers() {
         renderer = new PanoramaRenderer(mActivityTestRule.getActivity().getApplicationContext());
-        view = new MockView(mActivityTestRule.getActivity().getApplicationContext());
+        view = new View(mActivityTestRule.getActivity().getApplicationContext());
     }
 
     private MotionEvent genEvent(int action) {
