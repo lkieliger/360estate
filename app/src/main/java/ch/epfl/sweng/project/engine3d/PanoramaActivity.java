@@ -41,4 +41,9 @@ public class PanoramaActivity extends Activity {
 
         mSurface.setOnTouchListener(listener);
     }
+
+
+    public PanoramaRenderer getAssociatedRenderer() {
+        return mRenderer;
+    }
 }
