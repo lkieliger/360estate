@@ -4,9 +4,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
-import ch.epfl.sweng.project.BuildConfig;
+import org.rajawali3d.math.Quaternion;
+import org.rajawali3d.math.vector.Vector3;
 
 
 public class RotSensorListener implements SensorEventListener {
@@ -27,13 +27,10 @@ public class RotSensorListener implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         float[] val = event.values;
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "ROTATION SENSOR VALUE:");
-            for (int i = 0; i < val.length; i++) {
-                Log.d(TAG, "" + val[i]);
-            }
-        }
-
+        Quaternion q = new Quaternion(-val[3], val[0], val[1], val[2]);
+        Quaternion mRot45X = new Quaternion().fromAngleAxis(Vector3.Axis.X, 90.0);
+        q.multiply(mRot45X);
+        mRenderer.getCurrentCamera().setCameraOrientation(q);
     }
 
     @Override

@@ -79,12 +79,12 @@ public class PanoramaRenderer extends Renderer {
 
         mCamera = getCurrentCamera();
         mCamera.setFieldOfView(80);
-        mCamera.enableLookAt();
+        //mCamera.enableLookAt();
 
         setFrameRate(60);
 
         mInitialPos = new Vector3(0, 0, 0);
-        mInitialLookat = new Vector3(0, 0, 1);
+        mInitialLookat = new Vector3(0, 0, -1);
         mPhi = 0;
         mTheta = Math.PI / 2.0;
 
@@ -94,7 +94,7 @@ public class PanoramaRenderer extends Renderer {
     public void onResume() {
         super.onResume();
         if (mRotSensorAvailable) {
-            mSensorManager.registerListener(mRotListener, mRotSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(mRotListener, mRotSensor, SensorManager.SENSOR_DELAY_FASTEST);
         }
     }
 
@@ -177,7 +177,7 @@ public class PanoramaRenderer extends Renderer {
         super.onRender(elapsedTime, deltaTime);
 
         mChildSphere.rotate(Vector3.Axis.Y, 0.4);
-        updateLookAt();
+        //updateLookAt();
     }
 
     /**
@@ -204,7 +204,10 @@ public class PanoramaRenderer extends Renderer {
      * @param theta
      */
     public void setCameraRotation(double phi, double theta) {
-
+        mPhi = phi;
+        mTheta = theta;
+        clampPhi();
+        clampTheta();
     }
 
     public double getCameraRotationPhi() {
