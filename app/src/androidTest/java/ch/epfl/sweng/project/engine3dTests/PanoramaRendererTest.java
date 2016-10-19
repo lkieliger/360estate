@@ -31,7 +31,7 @@ public class PanoramaRendererTest {
 
     @Before
     public void initMembers() {
-        errorEpsilon = 1e-7;
+        errorEpsilon = 1e-5;
         renderer = new PanoramaRenderer(mActivityTestRule.getActivity().getApplicationContext());
         metrics = mActivityTestRule.getActivity().getApplicationContext().getResources()
                 .getDisplayMetrics();
