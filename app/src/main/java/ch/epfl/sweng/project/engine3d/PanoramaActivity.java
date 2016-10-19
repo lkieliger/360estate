@@ -3,6 +3,7 @@ package ch.epfl.sweng.project.engine3d;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ public class PanoramaActivity extends Activity {
 
     private SurfaceView mSurface = null;
     private PanoramaRenderer mRenderer = null;
+    private SensorManager mSensorManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

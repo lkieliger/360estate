@@ -2,6 +2,8 @@ package ch.epfl.sweng.project.engine3d;
 
 
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,6 +18,8 @@ import org.rajawali3d.renderer.Renderer;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
+
+import static android.content.Context.SENSOR_SERVICE;
 
 /**
  * This class defines how the 3d engine should be used to
@@ -35,6 +39,10 @@ public class PanoramaRenderer extends Renderer {
     private final Vector3 mInitialLookat;
     private final double mXdpi;
     private final double mYdpi;
+    private final SensorManager mSensorManager;
+    private final RotSensorListener mRotListener;
+    private final boolean mRotSensorAvailable;
+    private final Sensor mRotSensor;
     private Sphere mChildSphere = null;
 
     //Phi is the azimutal angle
@@ -45,6 +53,24 @@ public class PanoramaRenderer extends Renderer {
     public PanoramaRenderer(Context context) {
 
         super(context);
+
+        mSensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
+        Sensor rotSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
+
+        if (rotSensor == null) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "No rotSensor available");
+            }
+            mRotListener = null;
+            mRotSensor = null;
+            mRotSensorAvailable = false;
+        } else {
+            mRotListener = new RotSensorListener(this, mSensorManager);
+            mRotSensor = rotSensor;
+            mRotSensorAvailable = true;
+        }
+
+
         mContext = context;
 
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
@@ -61,7 +87,25 @@ public class PanoramaRenderer extends Renderer {
         mInitialLookat = new Vector3(0, 0, 1);
         mPhi = 0;
         mTheta = Math.PI / 2.0;
+
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mRotSensorAvailable) {
+            mSensorManager.registerListener(mRotListener, mRotSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mRotSensorAvailable) {
+            mSensorManager.unregisterListener(mRotListener);
+        }
+    }
+
 
     @Override
     public void initScene() {
@@ -152,6 +196,14 @@ public class PanoramaRenderer extends Renderer {
         mTheta -= (dy / mYdpi) * SENSITIVITY;
         clampPhi();
         clampTheta();
+
+    }
+
+    /**
+     * @param phi
+     * @param theta
+     */
+    public void setCameraRotation(double phi, double theta) {
 
     }
 
