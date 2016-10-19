@@ -16,6 +16,8 @@ import org.rajawali3d.math.vector.Vector3;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait500ms;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
@@ -36,11 +38,14 @@ public class PanoramaRendererTest {
         metrics = mActivityTestRule.getActivity().getApplicationContext().getResources()
                 .getDisplayMetrics();
         cam = renderer.getCurrentCamera();
+
+        wait1s("PanoramaRenderer test");
     }
 
 
     @Test
     public void cameraConfigIsCorrect() {
+        wait1s("PanoramaRenderer test");
         assertTrue(cam.isLookAtEnabled());
     }
 
