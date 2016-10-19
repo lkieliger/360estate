@@ -34,7 +34,7 @@ public class PanoramaActivity extends Activity {
         // Add mSurface to root view
         addContentView(mSurface, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
 
-        mRenderer = new PanoramaRenderer(this);
+        mRenderer = new PanoramaRenderer(this, getWindowManager().getDefaultDisplay());
         mSurface.setSurfaceRenderer(mRenderer);
 
 

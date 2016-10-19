@@ -4,9 +4,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.view.Display;
+import android.view.Surface;
 
 import org.rajawali3d.math.Quaternion;
-import org.rajawali3d.math.vector.Vector3;
 
 
 public class RotSensorListener implements SensorEventListener {
@@ -15,26 +16,66 @@ public class RotSensorListener implements SensorEventListener {
 
     private final PanoramaRenderer mRenderer;
     private final SensorManager mSensorManager;
+    private final Display mDisplay;
+    private float[] mRotationMatrixIn;
+    private float[] mRotationMatrixOut;
 
-    public RotSensorListener(PanoramaRenderer renderer, SensorManager sensorManager) {
+    public RotSensorListener(Display display, PanoramaRenderer renderer, SensorManager sensorManager) {
         if (renderer == null) {
             throw new IllegalArgumentException("Renderer reference was null");
         }
+        mDisplay = display;
         mRenderer = renderer;
         mSensorManager = sensorManager;
+        mRotationMatrixIn = new float[16];
+        mRotationMatrixOut = new float[16];
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        float[] val = event.values;
-        Quaternion q = new Quaternion(-val[3], val[0], val[1], val[2]);
-        Quaternion rot90X = new Quaternion().fromAngleAxis(Vector3.Axis.X, 90.0);
-        q.multiply(rot90X);
+
+        if (event.sensor.getType() != Sensor.TYPE_GAME_ROTATION_VECTOR) {
+            return;
+        }
+
+        event.values[3] = -event.values[3];
+        SensorManager.getRotationMatrixFromVector(mRotationMatrixIn, event.values);
+
+
+        switch (mDisplay.getRotation()) {
+            case Surface.ROTATION_0:
+                SensorManager.remapCoordinateSystem(mRotationMatrixIn, SensorManager.AXIS_X, SensorManager.AXIS_MINUS_Z,
+                        mRotationMatrixOut);
+                break;
+            case Surface.ROTATION_90:
+                SensorManager.remapCoordinateSystem(mRotationMatrixIn, SensorManager.AXIS_Y, SensorManager
+                                .AXIS_MINUS_Z,
+                        mRotationMatrixOut);
+                break;
+            case Surface.ROTATION_180:
+                SensorManager.remapCoordinateSystem(mRotationMatrixIn, SensorManager.AXIS_MINUS_X, SensorManager.AXIS_Z,
+                        mRotationMatrixOut);
+                break;
+            case Surface.ROTATION_270:
+                SensorManager.remapCoordinateSystem(mRotationMatrixIn, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X,
+                        mRotationMatrixOut);
+                break;
+        }
+
+        Quaternion q = new Quaternion().fromMatrix(floatToDoubleArray(mRotationMatrixOut));
         mRenderer.setSensorRotation(q);
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    private double[] floatToDoubleArray(float[] a) {
+        double[] ret = new double[a.length];
+        for (int i = 0; i < a.length; i++) {
+            ret[i] = Double.valueOf(a[i]);
+        }
+        return ret;
     }
 }

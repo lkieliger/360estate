@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 
 import org.rajawali3d.cameras.Camera;
@@ -35,6 +36,9 @@ public class PanoramaRenderer extends Renderer {
 
 
     private final String TAG = "Renderer";
+
+    private final Display mDisplay;
+
     private final Camera mCamera;
     private final Vector3 mInitialPos;
     private final Vector3 mInitialLookat;
@@ -48,9 +52,11 @@ public class PanoramaRenderer extends Renderer {
     private Quaternion mUserRot;
     private Quaternion mSensorRot;
 
-    public PanoramaRenderer(Context context) {
+    public PanoramaRenderer(Context context, Display display) {
 
         super(context);
+
+        mDisplay = display;
 
         mSensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         Sensor rotSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
@@ -63,7 +69,7 @@ public class PanoramaRenderer extends Renderer {
             mRotSensor = null;
             mRotSensorAvailable = false;
         } else {
-            mRotListener = new RotSensorListener(this, mSensorManager);
+            mRotListener = new RotSensorListener(mDisplay, this, mSensorManager);
             mRotSensor = rotSensor;
             mRotSensorAvailable = true;
         }
@@ -72,6 +78,7 @@ public class PanoramaRenderer extends Renderer {
         mContext = context;
 
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+
         mXdpi = displayMetrics.xdpi;
         mYdpi = displayMetrics.ydpi;
 
