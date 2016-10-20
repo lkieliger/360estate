@@ -41,7 +41,6 @@ public class PanoramaRenderer extends Renderer {
 
     private final Camera mCamera;
     private final Vector3 mInitialPos;
-    private final Vector3 mInitialLookat;
     private final double mXdpi;
     private final double mYdpi;
     private final SensorManager mSensorManager;
@@ -90,7 +89,6 @@ public class PanoramaRenderer extends Renderer {
         setFrameRate(60);
 
         mInitialPos = new Vector3(0, 0, 0);
-        mInitialLookat = new Vector3(0, 0, -1);
     }
 
     @Override
@@ -116,7 +114,6 @@ public class PanoramaRenderer extends Renderer {
         Log.d(TAG, "Initializing scene");
 
         mCamera.setPosition(mInitialPos);
-        mCamera.setLookAt(mInitialLookat);
 
         Material material = new Material();
         Material material2 = new Material();
@@ -211,7 +208,16 @@ public class PanoramaRenderer extends Renderer {
         mSensorRot = new Quaternion(q);
     }
 
+    public Quaternion getSensorRot() {
+        return new Quaternion(mSensorRot);
+    }
+
+    public SensorManager getSensorManager() {
+        return mSensorManager;
+    }
+
     /**
+     * Automatically called when rendering, should not be manually called except for testing purposes
      * Updates the camera rotation based on user input and sensor information if available.
      * The way the camera rotation works is the following:
      * <p>
@@ -223,7 +229,7 @@ public class PanoramaRenderer extends Renderer {
      * quaterion. Note that a defensive copy is needed because quaternions are mutable objects.
      * </p>
      */
-    private void updateCamera() {
+    public void updateCamera() {
         Quaternion q = new Quaternion(mSensorRot);
         mCamera.setCameraOrientation(q.multiply(mUserRot));
     }

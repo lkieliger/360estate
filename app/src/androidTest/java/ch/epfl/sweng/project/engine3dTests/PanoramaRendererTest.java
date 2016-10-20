@@ -2,25 +2,26 @@ package ch.epfl.sweng.project.engine3dTests;
 
 
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.rajawali3d.cameras.Camera;
+import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
 
+import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-@RunWith(AndroidJUnit4.class)
 public class PanoramaRendererTest {
+
+    private static final String TAG = "PanoramaRendererTest";
 
     @Rule
     public ActivityTestRule<PanoramaActivity> mActivityTestRule = new ActivityTestRule<>(PanoramaActivity.class);
@@ -31,107 +32,35 @@ public class PanoramaRendererTest {
 
     @Before
     public void initMembers() {
-        errorEpsilon = 1e-5;
-        renderer = mActivityTestRule.getActivity().getAssociatedRenderer();
-        metrics = mActivityTestRule.getActivity().getApplicationContext().getResources()
-                .getDisplayMetrics();
+        renderer = new PanoramaRenderer(
+                mActivityTestRule.getActivity().getApplicationContext(),
+                mActivityTestRule.getActivity().getWindowManager().getDefaultDisplay());
+        errorEpsilon = 0.1;
+        metrics = renderer.getContext().getResources().getDisplayMetrics();
         cam = renderer.getCurrentCamera();
     }
 
 
     @Test
     public void cameraConfigIsCorrect() {
-        assertTrue(cam.isLookAtEnabled());
+
+        assertFalse(cam.isLookAtEnabled());
     }
 
     @Test
-    public void cameraLookatIsCorrectAfterRot() {
-        Vector3 expectedLookat = new Vector3(0, 0, 1);
+    public void setSensorRotIsCorrect() {
+        Quaternion q1 = new Quaternion().fromAngleAxis(Vector3.Axis.X, 96);
 
-        renderer.updateLookAt();
-        assertAllCompononentEquals(expectedLookat, cam.getLookAt());
-
-        Log.d("cameraLookatTest", "<0,0,1> passed");
-
-        renderer.updateCameraRotation(angleToPixelDelta(Math.PI / 2, true), 0);
-        renderer.updateLookAt();
-        expectedLookat = new Vector3(1, 0, 0);
-        assertAllCompononentEquals(expectedLookat, cam.getLookAt());
-
-        Log.d("cameraLookatTest", "<1,0,0> passed");
-
-        renderer.updateCameraRotation(angleToPixelDelta(Math.PI / 2, true), 0);
-        renderer.updateLookAt();
-        expectedLookat = new Vector3(0, 0, -1);
-        assertAllCompononentEquals(expectedLookat, cam.getLookAt());
-
-        Log.d("cameraLookatTest", "<0,0,-1> passed");
-
-        renderer.updateCameraRotation(angleToPixelDelta(Math.PI / 2, true), 0);
-        renderer.updateLookAt();
-        expectedLookat = new Vector3(-1, 0, 0);
-        assertAllCompononentEquals(expectedLookat, cam.getLookAt());
-
-        Log.d("cameraLookatTest", "<-1,0,0> passed");
-
-        renderer.updateCameraRotation(angleToPixelDelta(Math.PI / 2, true), 0);
-        renderer.updateLookAt();
-        expectedLookat = new Vector3(0, 0, 1);
-        assertAllCompononentEquals(expectedLookat, cam.getLookAt());
-
-    }
-
-    /**
-     * We need this method since the lookat vector is computed using
-     * sines and cosines and inherently has some numerical errors
-     *
-     * @param v1 the expected value
-     * @param v2 the value to test
-     */
-    private void assertAllCompononentEquals(Vector3 v1, Vector3 v2) {
-        assertEquals(v1.x, v2.x, errorEpsilon);
-        assertEquals(v1.y, v2.y, errorEpsilon);
-        assertEquals(v1.z, v2.z, errorEpsilon);
+        //Check for defensive copy on render side
+        renderer.setSensorRotation(q1);
+        q1.multiply(new Quaternion().fromAngleAxis(Vector3.Axis.Y, 90));
+        assertQuaternionEquals(q1, renderer.getSensorRot(), false);
 
     }
 
     @Test
-    public void cameraPhiIsBounded() {
-        int turns = 3;
-        float steps = 30f;
-        float delta = 6.28319f / steps;
+    public void userRotIsTakenIntoAccount() {
 
-        for (int i = 0; i < turns * steps; i++) {
-            renderer.updateCameraRotation(angleToPixelDelta(delta, true), 0);
-            double phi = renderer.getCameraRotationPhi();
-            assertTrue(0 <= phi && phi <= PanoramaRenderer.MAX_PHI);
-
-        }
-
-        for (int i = 0; i < 2 * turns * steps; i++) {
-            renderer.updateCameraRotation(angleToPixelDelta(-delta, true), 0);
-            double phi = renderer.getCameraRotationPhi();
-            assertTrue(0 <= phi && phi <= PanoramaRenderer.MAX_PHI);
-        }
-    }
-
-    @Test
-    public void cameraThetaIsBounded() {
-        int turns = 3;
-        float steps = 15f;
-        float delta = 3.14159f / steps;
-
-        for (int i = 0; i < turns * steps; i++) {
-            renderer.updateCameraRotation(0, angleToPixelDelta(delta, false));
-            double theta = renderer.getCameraRotationTheta();
-            assertTrue(PanoramaRenderer.EPSILON <= theta && theta <= PanoramaRenderer.MAX_THETA);
-        }
-
-        for (int i = 0; i < 2 * turns * steps; i++) {
-            renderer.updateCameraRotation(0, angleToPixelDelta(-delta, false));
-            double theta = renderer.getCameraRotationTheta();
-            assertTrue(PanoramaRenderer.EPSILON <= theta && theta <= PanoramaRenderer.MAX_THETA);
-        }
     }
 
     @Test
@@ -141,7 +70,7 @@ public class PanoramaRendererTest {
      * reported by the touch listener
      */
     public void cameraSensitivityIsCorrect() {
-
+/*
         double phi = renderer.getCameraRotationPhi();
         double theta = renderer.getCameraRotationTheta();
 
@@ -155,14 +84,27 @@ public class PanoramaRendererTest {
 
         assertEquals(newPhi, camPhi);
         assertEquals(newTheta, camTheta);
-
+*/
     }
+
 
     private float angleToPixelDelta(double angle, boolean isAlongXAxis) {
         if (isAlongXAxis) {
             return (float) ((angle / PanoramaRenderer.SENSITIVITY) * metrics.xdpi);
         } else {
             return (float) ((angle / PanoramaRenderer.SENSITIVITY) * metrics.ydpi);
+        }
+    }
+
+    private void assertQuaternionEquals(Quaternion v1, Quaternion v2, boolean shouldBeEqual) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, String.format("V1: %1$.2f, %2$.2f, %3$.2f, %4$.2f", v1.w, v1.x, v1.y, v1.z));
+            Log.d(TAG, String.format("V2: %1$.2f, %2$.2f, %3$.2f, %4$.2f", v2.w, v2.x, v2.y, v2.z));
+        }
+        if (shouldBeEqual) {
+            assertTrue(v1.equals(v2, errorEpsilon));
+        } else {
+            assertFalse(v1.equals(v2, errorEpsilon));
         }
     }
 }
