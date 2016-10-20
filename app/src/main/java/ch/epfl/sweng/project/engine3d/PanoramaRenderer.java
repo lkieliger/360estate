@@ -56,6 +56,8 @@ public class PanoramaRenderer extends Renderer {
 
         super(context);
 
+        Log.d(TAG, "Creating PanoramaRenderer class");
+
         mDisplay = display;
 
         mSensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
@@ -125,8 +127,8 @@ public class PanoramaRenderer extends Renderer {
 
         Texture earthTexture = new Texture("Earth", R.drawable.pano_1024);
         Texture earthTexture2 = new Texture("Earth", R.drawable.earthtruecolor_nasa_big);
-        earthTexture.shouldRecycle(true);
-        earthTexture2.shouldRecycle(true);
+        //earthTexture.shouldRecycle(true);
+        //earthTexture2.shouldRecycle(true);
 
         try {
             material.addTexture(earthTexture);
@@ -209,6 +211,19 @@ public class PanoramaRenderer extends Renderer {
      */
     public void setSensorRotation(Quaternion q) {
         mSensorRot = new Quaternion(q);
+    }
+
+    public void fixScreenRotation(Quaternion transition) {
+        Log.d(TAG, "Fixing screen rot");
+
+        Log.d(TAG, String.format("Quaternion: %1$,.2f, %2$,.2f, %3$,.2f, %4$,.2f", transition.w, transition.x,
+                transition.y,
+                transition.z));
+        mUserRot.multiply(transition);
+    }
+
+    public Quaternion getmUserRot() {
+        return new Quaternion(mUserRot);
     }
 
     /**
