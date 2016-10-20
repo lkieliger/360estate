@@ -46,11 +46,16 @@ dependencies {
 //  Parse dependencies
     compile 'com.parse:parse-android:1.13.1'
     compile 'com.parse.bolts:bolts-android:1.4.0'
+    debugCompile 'com.parse:parseinterceptors:0.0.2'
 
     //Rajawali 3D engine
     compile 'org.rajawali3d:rajawali:1.1.610@aar'
 
-    debugCompile 'com.parse:parseinterceptors:0.0.2'
+    //Roboeletric testing framework
+    testCompile "org.robolectric:robolectric:3.1.2"
+    testCompile 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
+    testCompile 'org.testng:testng:6.9.6'
+    testCompile 'org.robolectric:shadows-httpclient:3.1.2'
 
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -60,6 +65,7 @@ dependencies {
 
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+
 }
 
 // Do not change the below code unless you're sure you know what you're doing
