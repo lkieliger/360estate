@@ -33,7 +33,6 @@ public class PanoramaTouchListener implements View.OnTouchListener {
         switch(action) {
             case MotionEvent.ACTION_DOWN:
 
-
                 // Remember where we started (for dragging)
                 mLastTouchX = x;
                 mLastTouchY = y;
