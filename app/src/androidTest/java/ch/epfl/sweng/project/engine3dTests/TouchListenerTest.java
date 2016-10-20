@@ -38,7 +38,10 @@ public class TouchListenerTest {
 
     @Before
     public void initMembers() {
-        renderer = new PanoramaRenderer(mActivityTestRule.getActivity().getApplicationContext());
+        renderer = new PanoramaRenderer(
+                mActivityTestRule.getActivity().getApplicationContext(), mActivityTestRule
+                .getActivity().getWindowManager().getDefaultDisplay());
+        renderer.setSceneCachingEnabled(false);
         view = new View(mActivityTestRule.getActivity().getApplicationContext());
     }
 
