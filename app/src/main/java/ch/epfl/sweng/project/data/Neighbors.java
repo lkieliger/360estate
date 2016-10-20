@@ -29,7 +29,7 @@ public class Neighbors extends ParseObject {
         put("id", id);
     }
 
-    private void setList(Iterable<AngleMapping> list) {
+    public void setNeighborsList(Iterable<AngleMapping> list) {
         try {
             JSONArray temp = new JSONArray();
             for (AngleMapping elem : list) {
