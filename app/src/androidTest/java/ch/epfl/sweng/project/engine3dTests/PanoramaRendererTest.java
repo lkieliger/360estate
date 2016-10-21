@@ -70,21 +70,17 @@ public class PanoramaRendererTest {
      * reported by the touch listener
      */
     public void cameraSensitivityIsCorrect() {
-/*
-        double phi = renderer.getCameraRotationPhi();
-        double theta = renderer.getCameraRotationTheta();
 
-        renderer.updateCameraRotation(10, -10);
+        double angleChange = 90;
 
-        double camPhi = renderer.getCameraRotationPhi();
-        double camTheta = renderer.getCameraRotationTheta();
+        Quaternion newRot = renderer.getUserRotation().
+                multiplyLeft(new Quaternion().fromAngleAxis(Vector3.Axis.Y, -angleChange));
 
-        double newPhi = phi + ((10d / metrics.xdpi) * PanoramaRenderer.SENSITIVITY);
-        double newTheta = theta + ((10d / metrics.ydpi) * PanoramaRenderer.SENSITIVITY);
+        float phi = angleToPixelDelta(angleChange, true);
+        renderer.updateCameraRotation(phi, 0);
 
-        assertEquals(newPhi, camPhi);
-        assertEquals(newTheta, camTheta);
-*/
+        assertQuaternionEquals(newRot, renderer.getUserRotation(), true);
+
     }
 
 

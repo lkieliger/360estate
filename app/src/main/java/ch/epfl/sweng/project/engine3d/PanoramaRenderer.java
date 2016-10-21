@@ -195,7 +195,7 @@ public class PanoramaRenderer extends Renderer {
         double phi = (dx / mXdpi) * SENSITIVITY;
 
         Quaternion rotY = new Quaternion().fromAngleAxis(Vector3.Axis.Y, -phi);
-        mUserRot.multiply(rotY);
+        mUserRot.multiplyLeft(rotY);
     }
 
     /**
@@ -208,12 +208,13 @@ public class PanoramaRenderer extends Renderer {
         mSensorRot = new Quaternion(q);
     }
 
-    public Quaternion getSensorRot() {
-        return new Quaternion(mSensorRot);
+
+    public Quaternion getUserRotation() {
+        return new Quaternion(mUserRot);
     }
 
-    public SensorManager getSensorManager() {
-        return mSensorManager;
+    public Quaternion getSensorRot() {
+        return new Quaternion(mSensorRot);
     }
 
     /**
@@ -233,5 +234,6 @@ public class PanoramaRenderer extends Renderer {
         Quaternion q = new Quaternion(mSensorRot);
         mCamera.setCameraOrientation(q.multiply(mUserRot));
     }
+
 
 }

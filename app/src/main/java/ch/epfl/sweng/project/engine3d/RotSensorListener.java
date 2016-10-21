@@ -4,6 +4,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 
@@ -17,8 +18,24 @@ public class RotSensorListener implements SensorEventListener {
 
     private final PanoramaRenderer mRenderer;
     private final Display mDisplay;
+    private final boolean isIsolatedFromApp;
     private float[] mRotationMatrixIn;
     private float[] mRotationMatrixOut;
+    private Quaternion mDummyRotation;
+    private int mScreenRotation;
+
+    /**
+     * A constructor for testing purposes
+     */
+    public RotSensorListener() {
+        mRenderer = null;
+        mDisplay = null;
+        mScreenRotation = Surface.ROTATION_0;
+        isIsolatedFromApp = true;
+        mDummyRotation = new Quaternion();
+        mRotationMatrixIn = new float[16];
+        mRotationMatrixOut = new float[16];
+    }
 
     public RotSensorListener(Display display, PanoramaRenderer renderer) {
         if (renderer == null) {
@@ -28,24 +45,42 @@ public class RotSensorListener implements SensorEventListener {
         mRenderer = renderer;
         mRotationMatrixIn = new float[16];
         mRotationMatrixOut = new float[16];
+        mDummyRotation = new Quaternion();
+        isIsolatedFromApp = false;
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-
         if (event.sensor.getType() != Sensor.TYPE_GAME_ROTATION_VECTOR) {
             return;
+        } else {
+            sensorChanged(event.values);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    public void sensorChanged(float[] values) {
+
+        if (!isIsolatedFromApp) {
+            mScreenRotation = mDisplay.getRotation();
         }
 
-        event.values[3] = -event.values[3];
+        values[3] = -values[3];
 
-        SensorManager.getRotationMatrixFromVector(mRotationMatrixIn, event.values);
+        Log.d(TAG, String.format("Before: %1$.2f, %2$.2f, %3$.2f, %4$.2f", values[3], values[0], values[1], values[2]));
+
+        SensorManager.getRotationMatrixFromVector(mRotationMatrixIn, values);
         SensorManager.remapCoordinateSystem(mRotationMatrixIn, SensorManager.AXIS_X, SensorManager.AXIS_MINUS_Z,
                 mRotationMatrixOut);
 
         Quaternion q = new Quaternion().fromMatrix(floatToDoubleArray(mRotationMatrixOut));
+        Log.d(TAG, String.format("After: %1$.2f, %2$.2f, %3$.2f, %4$.2f", q.w, q.x, q.y, q.z));
 
-        switch (mDisplay.getRotation()) {
+        switch (mScreenRotation) {
             case Surface.ROTATION_0:
                 break;
             case Surface.ROTATION_90:
@@ -60,18 +95,33 @@ public class RotSensorListener implements SensorEventListener {
         }
 
 
-        mRenderer.setSensorRotation(q);
+        if (isIsolatedFromApp) {
+            mDummyRotation = new Quaternion(q);
+        } else {
+            mRenderer.setSensorRotation(q);
+        }
     }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
+    public Quaternion getDummyRotation() {
+        return new Quaternion(mDummyRotation);
     }
 
-    private double[] floatToDoubleArray(float[] a) {
+    public void setScreenRotation(int r) {
+        mScreenRotation = r;
+    }
+
+    public double[] floatToDoubleArray(float[] a) {
         double[] ret = new double[a.length];
         for (int i = 0; i < a.length; i++) {
             ret[i] = Double.valueOf(a[i]);
+        }
+        return ret;
+    }
+
+    public float[] doubleToFloatArray(double[] a) {
+        float[] ret = new float[a.length];
+        for (int i = 0; i < a.length; i++) {
+            ret[i] = (float) a[i];
         }
         return ret;
     }
