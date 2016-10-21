@@ -31,6 +31,7 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class TouchListenerTest {
 
+    private static final String TAG = "TouchListener test";
     @Rule
     public ActivityTestRule<PanoramaActivity> mActivityTestRule = new ActivityTestRule<>(PanoramaActivity.class);
 
@@ -40,8 +41,10 @@ public class TouchListenerTest {
     @Before
     public void initMembers() {
         renderer = new PanoramaRenderer(
-                mActivityTestRule.getActivity().getApplicationContext(), mActivityTestRule
-                .getActivity().getWindowManager().getDefaultDisplay());
+                mActivityTestRule.getActivity().getApplicationContext(),
+                mActivityTestRule.getActivity().getWindowManager().getDefaultDisplay());
+        wait1s(TAG);
+        
         renderer.setSceneCachingEnabled(false);
         view = new View(mActivityTestRule.getActivity().getApplicationContext());
     }
@@ -50,14 +53,10 @@ public class TouchListenerTest {
         return MotionEvent.obtain(0, 0, action, 0, 0, 0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void touchListenerWithNullParameter() {
-        PanoramaTouchListener touchListener = new PanoramaTouchListener(null);
-    }
-
     @Test
-    public void consumesValidInput() {
-        wait1s("TouchListener test");
+    public void touchListenerTests() {
+
+        // consumes valid input
 
         View.OnTouchListener touchListener = new PanoramaTouchListener(renderer);
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_DOWN)));
@@ -65,14 +64,9 @@ public class TouchListenerTest {
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_MOVE)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_CANCEL)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_POINTER_UP)));
-    }
 
-    @Test
-    public void dontConsumeInvalidInput() {
+        // dontConsumeInvalidInput test
 
-        wait1s("TouchListener test");
-
-        View.OnTouchListener touchListener = new PanoramaTouchListener(renderer);
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_ENTER)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_EXIT)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_MOVE)));
