@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.project.user.LoginActivity;
+import ch.epfl.sweng.project.user.RegisterActivity;
+import ch.epfl.sweng.project.util.TestUtilityFunctions;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -36,21 +38,11 @@ public class RegisterActivityTest {
     private static final String TAG = "RegisterActivityTest: ";
 
     @Rule
-    public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
-
-
-    private void initTest(){
-        wait1s(TAG);
-
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
-                        getString(R.string.action_goto_registration))));
-        appCompatButton.perform(scrollTo(), click());
-    }
+    public ActivityTestRule<RegisterActivity> mActivityTestRule = new ActivityTestRule<>(RegisterActivity.class);
 
     @Test
     public void userAlreadyPresent() {
-        initTest();
+        TestUtilityFunctions.initializeParse(mActivityTestRule.getActivity().getBaseContext());
 
         ViewInteraction appCompatTextView = onView(
                 withId(R.id.registration_email));
@@ -75,54 +67,6 @@ public class RegisterActivityTest {
 
         onView(withText(R.string.error_user_already_exists)).inRoot(withDecorView(not(is(mActivityTestRule.getActivity()
                 .getWindow().getDecorView())))).check(matches(isDisplayed()));
-
-    }
-
-
-    @Test
-    public void errorWithEmptyField(){
-        initTest();
-        wait250ms(TAG);
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
-                        getString(R.string.action_goto_registration))));
-
-        onView(withId(R.id.registration_password)).perform(typeText("123456"), closeSoftKeyboard());
-        onView(withId(R.id.register_button)).perform(click());
-
-        onView(withText(R.string.error_empty_field)).inRoot(withDecorView(not(is(mActivityTestRule.getActivity()
-                .getWindow().getDecorView())))).check(matches(isDisplayed()));
-
-    }
-
-    @Test
-    public void errorWithInvalidPassword(){
-        initTest();
-
-        onView(withId(R.id.registration_email)).perform(typeText("HolaSenior@Shanchez.co"), closeSoftKeyboard());
-        onView(withId(R.id.registration_phone)).perform(typeText("05404030"), closeSoftKeyboard());
-        onView(withId(R.id.registration_password)).perform(typeText("pepe"), closeSoftKeyboard());
-        onView(withId(R.id.registration_password_bis)).perform(typeText("pepe"), closeSoftKeyboard());
-        onView(withId(R.id.register_button)).perform(click());
-
-        onView(withText(R.string.error_invalid_password)).inRoot(withDecorView(not(is(mActivityTestRule.getActivity()
-                .getWindow().getDecorView())))).check(matches(isDisplayed()));
-
-    }
-
-
-    @Test
-    public void errorWithUnmatchingPassword(){
-        initTest();
-
-        onView(withId(R.id.registration_email)).perform(typeText("HolaSenior@Shanchez.co"), closeSoftKeyboard());
-        onView(withId(R.id.registration_phone)).perform(typeText("05404030"), closeSoftKeyboard());
-        onView(withId(R.id.registration_password)).perform(typeText("pepeTheFrog"), closeSoftKeyboard());
-        onView(withId(R.id.registration_password_bis)).perform(typeText("PepeTheFrog"), closeSoftKeyboard());
-        onView(withId(R.id.register_button)).perform(click());
-
-        onView(withText(R.string.error_unmatching_passwords)).inRoot(withDecorView(not(is(mActivityTestRule
-                .getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
 
     }
 
