@@ -17,6 +17,7 @@ import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
@@ -72,10 +73,11 @@ public class PanoramaRendererTest {
 
         Quaternion newRot = renderer.getUserRotation().
                 multiplyLeft(new Quaternion().fromAngleAxis(Vector3.Axis.Y, -angleChange));
+        wait250ms(TAG);
+
 
         float phi = angleToPixelDelta(angleChange, true);
         renderer.updateCameraRotation(phi, 0);
-
         assertQuaternionEquals(newRot, renderer.getUserRotation(), true);
 
     }

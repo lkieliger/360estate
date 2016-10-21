@@ -82,25 +82,23 @@ public class DescriptionDisplayTest {
                         isDisplayed()));
         textView3.check(matches(isDisplayed()));
 
-        ViewInteraction imageView4  = onView(
+        ViewInteraction imageView4 = onView(
                 allOf(
                         withId(R.id.scroll),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.activity_description),0)
-                                ,1),isDisplayed()
+                                        withId(R.id.activity_description), 0)
+                                , 1), isDisplayed()
                 ));
         imageView4.check(matches(isDisplayed()));
 
-        ViewInteraction imageView2  = onView(
+        onView(
                 allOf(
                         withId(R.id.scroll),
-                            childAtPosition(
+                        childAtPosition(
                                 childAtPosition(
-                                    withId(R.id.activity_description),0)
-                            ,1))).perform(click());
-
-
+                                        withId(R.id.activity_description), 0)
+                                , 1))).perform(click());
 
 
         ViewInteraction imageView3 = onView(
@@ -125,6 +123,7 @@ public class DescriptionDisplayTest {
                 description.appendText("Child at position " + position + " in parent ");
                 parentMatcher.describeTo(description);
             }
+
             @Override
             public boolean matchesSafely(View view) {
                 ViewParent parent = view.getParent();
