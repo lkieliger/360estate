@@ -20,18 +20,24 @@ public class Resources extends ParseObject {
     }
 
 
-    private void setDescription(String desc) {
+    public void setDescription(String desc) {
         put(DESCRIPTION, desc);
     }
 
-    private void setPictures(List<String> picturesUrlList) {
+    public void setPictures(List<String> picturesUrlList) {
         JSONArray urlArray = new JSONArray(picturesUrlList);
         put(PICTURES_LIST, urlArray);
     }
 
 
-    //TODO: complete this method
-    private void setNeighborsList(List<Neighbors> neighborsList) {
+    public void setNeighborsList(List<PhotoSphereData> photoSphereList) {
+        JSONArray neighborsArray = new JSONArray();
+
+        for (PhotoSphereData p : photoSphereList) {
+            neighborsArray.put(p.getNeighborObject());
+        }
+
+        put("testArrayNeighbors", neighborsArray);
     }
 
     public String getDescription() {

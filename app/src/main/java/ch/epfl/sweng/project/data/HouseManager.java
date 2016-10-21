@@ -6,12 +6,9 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import ch.epfl.sweng.project.util.Tuple;
 
 
 public class HouseManager {
@@ -26,17 +23,18 @@ public class HouseManager {
         return map;
     }
 
+    /*
     public static HouseManager reconstruct() {
         final Map<Integer, List<AngleMapping>> resultMap = new HashMap<>();
 
-        ParseQuery<Neighbors> query = ParseQuery.getQuery("Neighbors");
-        query.findInBackground(new FindCallback<Neighbors>() {
-            public void done(List<Neighbors> objects, ParseException e) {
+        ParseQuery<PhotoSphereData> query = ParseQuery.getQuery("PhotoSphereData");
+        query.findInBackground(new FindCallback<PhotoSphereData>() {
+            public void done(List<PhotoSphereData> objects, ParseException e) {
                 if (e == null) {
                     Log.d("DataMgmt", "Retrieved " + objects.size() + " neighbors");
 
-                    for (Neighbors n : objects) {
-                        resultMap.put(n.getId(), n.getNeighborsList());
+                    for (PhotoSphereData n : objects) {
+                        resultMap.put(n.getId(), n.getNeighborsJsonArray());
                     }
                 } else {
                     Log.d("DataMgmt", "Error: " + e.getMessage());
@@ -45,5 +43,5 @@ public class HouseManager {
         });
 
         return new HouseManager(resultMap);
-    }
+    }*/
 }

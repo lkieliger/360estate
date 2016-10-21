@@ -3,34 +3,29 @@ package ch.epfl.sweng.project.data;
 import android.content.Context;
 
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.data.util.TestUtilityFunctions;
-import ch.epfl.sweng.project.user.LoginActivity;
 import ch.epfl.sweng.project.util.Tuple;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
-import org.robolectric.shadows.httpclient.FakeHttp;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 23)
-public class PhotoSphereTests {
+public class SampleRoboelectricTest {
 
     static boolean parseInit = false;
 
@@ -40,7 +35,7 @@ public class PhotoSphereTests {
             Context context = ShadowApplication.getInstance().getApplicationContext();
             Parse.enableLocalDatastore(context);
 
-            ParseObject.registerSubclass(Neighbors.class);
+            ParseObject.registerSubclass(PhotoSphereData.class);
             TestUtilityFunctions.initializeParseLocal(context);
             ParseUser.enableAutomaticUser();
 
@@ -59,17 +54,17 @@ public class PhotoSphereTests {
                     i + ".jpg"));
         }
 
-        Neighbors neighborsObject = new Neighbors();
-        neighborsObject.setNeighborsList(angleMappingList);
+        PhotoSphereData photoSphereDataObject = new PhotoSphereData(id, url, neighborsList);
+        photoSphereDataObject.getNeighborsList(angleMappingList);
 
-        neighborsObject.setId(12345);
+        photoSphereDataObject.setId(12345);
 
         /*
-        neighborsObject.save();
+        photoSphereDataObject.save();
 
         TestUtilityFunctions.wait250ms("DEBUG TAG");
 
-        List<AngleMapping> neighborsList = neighborsObject.getNeighborsList();
+        List<AngleMapping> neighborsList = photoSphereDataObject.getNeighborsJsonArray();
 
         for (int i = 0; i < angleMappingList.size(); i++) {
             assertEquals(neighborsList.get(i).getPhi(), angleMappingList.get(i).getPhi());
