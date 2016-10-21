@@ -61,11 +61,6 @@ public class PanoramaRendererTest {
     }
 
     @Test
-    public void userRotIsTakenIntoAccount() {
-
-    }
-
-    @Test
     /**
      * The camera sensitivity should depend on the dpi of the device
      * so that a swipe has the same effect regardless of the dx or dy
