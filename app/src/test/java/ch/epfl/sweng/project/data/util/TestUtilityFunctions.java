@@ -1,4 +1,5 @@
-package ch.epfl.sweng.project.util;
+package ch.epfl.sweng.project.data.util;
+
 
 import android.content.Context;
 import android.util.Log;
@@ -19,7 +20,15 @@ public final class TestUtilityFunctions {
                 // The network interceptor is used to debug the communication between server/client
                 //.addNetworkInterceptor(new ParseLogInterceptor())
                 .applicationId(APP_ID)
-                .server("https://360.astutus.org/parse/")
+                .server("http://360.astutus.org:1337/parse/")
+                .build()
+        );
+    }
+
+    public static void initializeParseLocal(Context context) {
+        Parse.initialize(new Parse.Configuration.Builder(context)
+                .applicationId(APP_ID)
+                .enableLocalDataStore()
                 .build()
         );
     }
@@ -39,15 +48,11 @@ public final class TestUtilityFunctions {
     public static void waitNms(String debugTag, long millis) {
         try {
             Thread.sleep(millis);
-            if (BuildConfig.DEBUG) {
-                Log.d(debugTag, "Thread slept for " + millis + " ms");
-            }
         } catch (InterruptedException e) {
             if (BuildConfig.DEBUG) {
                 Log.d(debugTag, "InterruptedException" + e.getMessage());
             }
         }
     }
-
 
 }

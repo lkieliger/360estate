@@ -8,8 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="ch.epfl.sweng.project.user.LoginActivity"
-    android:weightSum="1">
+    android:weightSum="1"
+    tools:context="ch.epfl.sweng.project.user.LoginActivity">
 
     <!-- Login progress -->
 
@@ -65,38 +65,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/action_login"
-                android:textStyle="bold"
                 android:onClick="attemptLogin"
+                android:text="@string/action_login"
                 android:textColor="?android:attr/textColorPrimary"
+                android:textStyle="bold"
                 tools:ignore="UnusedIds" />
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="60dp" />
 
                 <TextView
-                    android:text="@string/register_suggestion"
+                    android:id="@+id/register_suggestion_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/register_suggestion_message"
+                    android:text="@string/register_suggestion"
                     android:textAlignment="center"
                     tools:ignore="UnusedIds" />
 
                 <Button
-                    android:text="@string/action_goto_registration"
+                    android:id="@+id/goto_registration_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/goto_registration_button"
-                    android:onClick="proceedToRegistration"
-                    android:textStyle="normal|bold"
                     android:fontFamily="sans-serif"
+                    android:onClick="proceedToRegistration"
+                    android:text="@string/action_goto_registration"
                     android:textColor="?android:attr/textColorTertiary"
+                    android:textStyle="normal|bold"
                     tools:ignore="UnusedIds" />
 
             </LinearLayout>
