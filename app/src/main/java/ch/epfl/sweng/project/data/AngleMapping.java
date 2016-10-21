@@ -5,13 +5,13 @@ import ch.epfl.sweng.project.util.Tuple;
 class AngleMapping{
 
     private final Tuple<Double, Double> thetaPhi;
-    private final int id;
-    private final String url;
+    private final int mId;
+    private final String mUrl;
 
     AngleMapping(Tuple<Double, Double> extThetaPhi, int extId, String extUrl) {
-        this.thetaPhi = extThetaPhi;
-        this.id = extId;
-        this.url = extUrl;
+        thetaPhi = extThetaPhi;
+        mId = extId;
+        mUrl = extUrl;
     }
 
 
@@ -19,19 +19,19 @@ class AngleMapping{
         return thetaPhi;
     }
 
-    public Double getTheta() {
+    Double getTheta() {
         return thetaPhi.getX();
     }
 
-    public Double getPhi() {
+    Double getPhi() {
         return thetaPhi.getY();
     }
 
     public int getId() {
-        return id;
+        return mId;
     }
 
-    public String getUrl() {
-        return url;
+    String getUrl() {
+        return mUrl;
     }
 }

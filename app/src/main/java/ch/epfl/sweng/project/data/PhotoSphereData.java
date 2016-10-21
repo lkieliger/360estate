@@ -45,7 +45,7 @@ class PhotoSphereData {
         return neighborsJsonArray;
     }
 
-    public JSONObject getNeighborObject() {
+    JSONObject getNeighborObject() {
         JSONObject neighborObject = new JSONObject();
 
         try {
@@ -63,29 +63,55 @@ class PhotoSphereData {
     public int getId() {
         return mId;
     }
-/*
-    public List<AngleMapping> parseNeighborsJsonArray() {
-        JSONArray jsonArray = getJSONArray("mNeighborsList");
-        List<AngleMapping> resultList = new ArrayList<>();
-        if (jsonArray != null) {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                try {
-                    resultList.add(new AngleMapping(
-                            new Tuple<>(
-                                    jsonArray.getJSONObject(i).getDouble("theta"),
-                                    jsonArray.getJSONObject(i).getDouble("phi")
-                            ),
-                            jsonArray.getJSONObject(i).getInt("mId"),
-                            jsonArray.getJSONObject(i).getString("url")));
-                } catch (JSONException e) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "JSONException:" + e.getMessage());
-                    }
-                }
-            }
-        }
-        return resultList;
+
+    public String getUrl() {
+        return mUrl;
     }
 
-    */
+    static class Builder {
+        private int mId;
+        private String mUrl;
+        private List<AngleMapping> mNeighborsList;
+
+        Builder(int id) {
+            mId = id;
+        }
+
+        Builder setUrl(String url) {
+            mUrl = url;
+            return this;
+        }
+
+        Builder setNeighborsList(List<AngleMapping> neighborsList) {
+            mNeighborsList = neighborsList;
+            return this;
+        }
+
+        PhotoSphereData build() {
+            return new PhotoSphereData(mId, mUrl, mNeighborsList);
+        }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+        if((that == null) || (getClass() != that.getClass())){
+            return false;
+        }
+
+        PhotoSphereData thatPData = (PhotoSphereData) that;
+        if ((mId != thatPData.getId()) || (! mUrl.equals(thatPData.getUrl())))
+            return false;
+
+        //TODO: define AngleMapping comparison
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mId;
+        result = 31 * result + (mUrl != null ? mUrl.hashCode() : 0);
+        result = 31 * result + (mNeighborsList != null ? mNeighborsList.hashCode() : 0);
+        return result;
+    }
 }
