@@ -24,6 +24,7 @@ import static android.view.MotionEvent.ACTION_OUTSIDE;
 import static android.view.MotionEvent.ACTION_POINTER_DOWN;
 import static android.view.MotionEvent.ACTION_POINTER_UP;
 import static android.view.MotionEvent.ACTION_UP;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
@@ -56,8 +57,9 @@ public class TouchListenerTest {
 
     @Test
     public void consumesValidInput() {
+        wait1s("TouchListener test");
 
-        PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer);
+        View.OnTouchListener touchListener = new PanoramaTouchListener(renderer);
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_DOWN)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_UP)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_MOVE)));
@@ -68,7 +70,9 @@ public class TouchListenerTest {
     @Test
     public void dontConsumeInvalidInput() {
 
-        PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer);
+        wait1s("TouchListener test");
+
+        View.OnTouchListener touchListener = new PanoramaTouchListener(renderer);
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_ENTER)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_EXIT)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_MOVE)));

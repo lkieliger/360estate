@@ -39,6 +39,9 @@ public final class TestUtilityFunctions {
     public static void waitNms(String debugTag, long millis) {
         try {
             Thread.sleep(millis);
+            if (BuildConfig.DEBUG) {
+                Log.d(debugTag, "Thread slept for " + millis + " ms");
+            }
         } catch (InterruptedException e) {
             if (BuildConfig.DEBUG) {
                 Log.d(debugTag, "InterruptedException" + e.getMessage());
