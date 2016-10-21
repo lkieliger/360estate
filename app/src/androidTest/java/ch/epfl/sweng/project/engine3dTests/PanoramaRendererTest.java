@@ -16,6 +16,7 @@ import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
@@ -38,6 +39,7 @@ public class PanoramaRendererTest {
         errorEpsilon = 0.1;
         metrics = renderer.getContext().getResources().getDisplayMetrics();
         cam = renderer.getCurrentCamera();
+        wait1s(TAG);
     }
 
 
