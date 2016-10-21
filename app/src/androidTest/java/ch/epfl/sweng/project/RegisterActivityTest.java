@@ -10,8 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.project.user.LoginActivity;
-import ch.epfl.sweng.project.user.RegisterActivity;
-import ch.epfl.sweng.project.util.TestUtilityFunctions;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -38,11 +36,21 @@ public class RegisterActivityTest {
     private static final String TAG = "RegisterActivityTest: ";
 
     @Rule
-    public ActivityTestRule<RegisterActivity> mActivityTestRule = new ActivityTestRule<>(RegisterActivity.class);
+    public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
+
+
+    private void initTest(){
+        wait1s(TAG);
+
+        ViewInteraction appCompatButton = onView(
+                allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
+                        getString(R.string.action_goto_registration))));
+        appCompatButton.perform(scrollTo(), click());
+    }
 
     @Test
     public void userAlreadyPresent() {
-        TestUtilityFunctions.initializeParse(mActivityTestRule.getActivity().getBaseContext());
+        initTest();
 
         ViewInteraction appCompatTextView = onView(
                 withId(R.id.registration_email));
