@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
 import java.util.List;
 
 import static ch.epfl.sweng.project.data.JSONTags.*;
@@ -29,7 +30,7 @@ class PhotoSphereData {
     private JSONArray getNeighborsJsonArray() {
         JSONArray neighborsJsonArray = new JSONArray();
         try {
-            for (AngleMapping elem : mNeighborsList) {
+            for (AngleMapping elem : getNeighborsList()) {
                 JSONObject angleMapping = new JSONObject();
                 angleMapping.put(thetaTag, elem.getTheta());
                 angleMapping.put(phiTag, elem.getPhi());
@@ -68,10 +69,14 @@ class PhotoSphereData {
         return mUrl;
     }
 
+    public List<AngleMapping> getNeighborsList() {
+        return mNeighborsList;
+    }
+
     static class Builder {
         private int mId;
-        private String mUrl;
-        private List<AngleMapping> mNeighborsList;
+        private String mUrl = null;
+        private List<AngleMapping> mNeighborsList = null;
 
         Builder(int id) {
             mId = id;
@@ -93,16 +98,25 @@ class PhotoSphereData {
     }
 
     @Override
-    public boolean equals(Object that) {
-        if((that == null) || (getClass() != that.getClass())){
+    public boolean equals(Object obj) {
+        if ((obj == null) || (getClass() != obj.getClass())) {
             return false;
         }
 
-        PhotoSphereData thatPData = (PhotoSphereData) that;
-        if ((mId != thatPData.getId()) || (! mUrl.equals(thatPData.getUrl())))
+        PhotoSphereData thatPData = (PhotoSphereData) obj;
+        if ((mId != thatPData.getId()) || (!mUrl.equals(thatPData.getUrl())))
             return false;
 
-        //TODO: define AngleMapping comparison
+        if (getNeighborsList().size() != thatPData.getNeighborsList().size())
+            return false;
+
+        Iterator<AngleMapping> mNeighborListIt = mNeighborsList.iterator();
+        Iterator<AngleMapping> thatNeighborListIt = thatPData.getNeighborsList().iterator();
+
+        while (mNeighborListIt.hasNext()) {
+            if (!mNeighborListIt.next().equals(thatNeighborListIt.next()))
+                return false;
+        }
 
         return true;
     }
@@ -111,7 +125,7 @@ class PhotoSphereData {
     public int hashCode() {
         int result = mId;
         result = 31 * result + (mUrl != null ? mUrl.hashCode() : 0);
-        result = 31 * result + (mNeighborsList != null ? mNeighborsList.hashCode() : 0);
+        result = 31 * result + (getNeighborsList() != null ? getNeighborsList().hashCode() : 0);
         return result;
     }
 }

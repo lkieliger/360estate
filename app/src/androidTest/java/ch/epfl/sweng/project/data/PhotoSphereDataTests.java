@@ -24,18 +24,19 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class PhotoSphereDataTests {
 
-    private static boolean parseInit = false;
-    final Context context = InstrumentationRegistry.getTargetContext();
+    private static boolean parseNotInitialized = true;
+    private final Context context = InstrumentationRegistry.getTargetContext();
     private static final String TAG = "PhotoSphereDataTests";
 
+    @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
     @Before
     public void init() {
-        if (!parseInit) {
+        if (parseNotInitialized) {
             ParseObject.registerSubclass(Resources.class);
 
             TestUtilityFunctions.initializeParse(context);
             ParseUser.enableAutomaticUser();
-            parseInit = true;
+            parseNotInitialized = false;
         }
     }
 
@@ -49,16 +50,6 @@ public class PhotoSphereDataTests {
                     i,
                     i + ".jpg"));
         }
-
-        PhotoSphereData photoSphereData = new PhotoSphereData(14145, "14145.jpg", neighborsList);
-
-        /*
-        for (int i = 0; i < neighborsList.size(); i++) {
-            assertEquals(neighborsList.get(i).getPhi(), neighborsList.get(i).getPhi());
-            assertEquals(neighborsList.get(i).getTheta(), neighborsList.get(i).getTheta());
-            assertEquals(neighborsList.get(i).getId(), neighborsList.get(i).getId());
-            assertEquals(neighborsList.get(i).getUrl(), neighborsList.get(i).getUrl());
-        }*/
 
         Resources testResources = new Resources();
 

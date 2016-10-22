@@ -23,6 +23,7 @@ public class Resources extends ParseObject {
     private static final String TAG = "Resources class";
 
     public Resources() {
+    // Default constructor needed for Parse objects
     }
 
     void setDescription(String desc) {
