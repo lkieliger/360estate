@@ -30,12 +30,16 @@ import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait500ms;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
 
 @RunWith(AndroidJUnit4.class)
 public class DescriptionDisplayTest {
+
+    private static final String TAG = "DescriptionDisplay test";
 
     @Rule
     public ActivityTestRule<DescriptionActivity> mActivityTestRule = new ActivityTestRule<>(DescriptionActivity.class);
@@ -51,6 +55,8 @@ public class DescriptionDisplayTest {
                                 3),
                         isDisplayed()));
         textView.check(matches(isDisplayed()));
+
+        wait250ms(TAG);
 
         ViewInteraction button = onView(
                 allOf(withId(R.id.action_launch_panorama),
@@ -100,6 +106,7 @@ public class DescriptionDisplayTest {
                                         withId(R.id.activity_description), 0)
                                 , 1))).perform(click());
 
+        wait500ms(TAG);
 
         ViewInteraction imageView3 = onView(
                 allOf(withId(R.id.displayed_image),
@@ -111,6 +118,8 @@ public class DescriptionDisplayTest {
                                 0),
                         isDisplayed()));
         imageView3.check(matches(isDisplayed()));
+
+        wait250ms(TAG);
 
     }
 

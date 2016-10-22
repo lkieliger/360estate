@@ -29,8 +29,6 @@ public class LoginActivityTests {
 
     @Test
     public void testInvalidInput() {
-
-        /*
         LoginActivity activity = Robolectric.buildActivity(LoginActivity.class).create().get();
 
         Button loginButton = (Button) activity.findViewById(R.id.login_button);
@@ -48,16 +46,12 @@ public class LoginActivityTests {
         TextView passwordText = (TextView) activity.findViewById(R.id.login_password);
         passwordText.append("abcdef");
         loginButton.performClick();
-
-        */
     }
 
 
 
     @Test
     public void registerActivityIsLaunched() {
-
-        /*
         LoginActivity activity = Robolectric.buildActivity(LoginActivity.class).create().get();
         Button registrationButton = (Button) activity.findViewById(R.id.goto_registration_button);
         registrationButton.performClick();
@@ -65,8 +59,6 @@ public class LoginActivityTests {
         Intent expectedIntent = new Intent(activity, RegisterActivity.class);
 
         assertThat(shadowOf(activity).getNextStartedActivity().toString(), equalTo(expectedIntent.toString()));
-
-        */
     }
 
 }

@@ -28,6 +28,14 @@ android {
         }
     }
 
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
+
     lintOptions {
         // Disable lint warnings about app indexing, and about non-latest tools versions
         // TODO consider re-enabling app indexing before publishing your application.
