@@ -41,8 +41,9 @@ public class DescriptionDisplayTest {
 
     private static final String TAG = "DescriptionDisplay test";
 
-    @Rule
+    /*@Rule
     public ActivityTestRule<DescriptionActivity> mActivityTestRule = new ActivityTestRule<>(DescriptionActivity.class);
+    */
 
     @Test
     public void descriptionDisplayTest() {
