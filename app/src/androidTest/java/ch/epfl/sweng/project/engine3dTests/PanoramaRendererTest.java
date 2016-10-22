@@ -50,6 +50,7 @@ public class PanoramaRendererTest {
     @Test
     public void panoramaRendererBigTest() {
 
+        wait500ms(TAG);
         // cameraConfigIsCorrect test
         assertFalse(cam.isLookAtEnabled());
 
@@ -61,6 +62,8 @@ public class PanoramaRendererTest {
         //Check for defensive copy on render side
         renderer.setSensorRotation(q1);
         q1.multiply(new Quaternion().fromAngleAxis(Vector3.Axis.Y, 90));
+
+        wait500ms(TAG);
         assertQuaternionEquals(q1, renderer.getSensorRot(), false);
 
 
@@ -75,11 +78,13 @@ public class PanoramaRendererTest {
 
         Quaternion newRot = renderer.getUserRotation().
                 multiplyLeft(new Quaternion().fromAngleAxis(Vector3.Axis.Y, -angleChange));
-        wait250ms(TAG);
+        wait500ms(TAG);
 
 
         float phi = angleToPixelDelta(angleChange, true);
         renderer.updateCameraRotation(phi, 0);
+
+        wait500ms(TAG);
         assertQuaternionEquals(newRot, renderer.getUserRotation(), true);
 
     }
