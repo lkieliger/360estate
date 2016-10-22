@@ -4,7 +4,6 @@ package ch.epfl.sweng.project.engine3dTests;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 import android.view.Surface;
-import android.view.View;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,9 +14,9 @@ import org.rajawali3d.math.vector.Vector3;
 import java.util.Arrays;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.RotSensorListener;
 
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
@@ -25,10 +24,8 @@ import static junit.framework.Assert.assertTrue;
 public class RotListenerTest {
 
     private static final String TAG = "RotListenerTest";
-    private RotSensorListener rotListener;
-    private PanoramaRenderer renderer;
-    private View view;
-    private double errorEpsilon;
+    private RotSensorListener rotListener = null;
+    private double errorEpsilon = -1;
 
     @Before
     public void initMembers() {
@@ -51,14 +48,20 @@ public class RotListenerTest {
 
         rotListener.setScreenRotation(Surface.ROTATION_90);
         rotListener.sensorChanged(Arrays.copyOf(values, values.length));
+
+        wait250ms(TAG);
         assertQuaternionEquals(q3, rotListener.getDummyRotation(), true);
 
         rotListener.setScreenRotation(Surface.ROTATION_180);
         rotListener.sensorChanged(Arrays.copyOf(values, values.length));
+
+        wait250ms(TAG);
         assertQuaternionEquals(q4, rotListener.getDummyRotation(), true);
 
         rotListener.setScreenRotation(Surface.ROTATION_270);
         rotListener.sensorChanged(Arrays.copyOf(values, values.length));
+
+        wait250ms(TAG);
         assertQuaternionEquals(q5, rotListener.getDummyRotation(), true);
     }
 

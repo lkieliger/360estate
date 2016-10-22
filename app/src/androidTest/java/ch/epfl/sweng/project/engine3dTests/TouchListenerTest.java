@@ -25,6 +25,7 @@ import static android.view.MotionEvent.ACTION_POINTER_DOWN;
 import static android.view.MotionEvent.ACTION_POINTER_UP;
 import static android.view.MotionEvent.ACTION_UP;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
@@ -35,8 +36,8 @@ public class TouchListenerTest {
     @Rule
     public ActivityTestRule<PanoramaActivity> mActivityTestRule = new ActivityTestRule<>(PanoramaActivity.class);
 
-    private PanoramaRenderer renderer;
-    private View view;
+    private PanoramaRenderer renderer = null;
+    private View view = null;
 
     @Before
     public void initMembers() {
@@ -46,6 +47,7 @@ public class TouchListenerTest {
         wait1s(TAG);
         
         renderer.setSceneCachingEnabled(false);
+        wait250ms(TAG);
         view = new View(mActivityTestRule.getActivity().getApplicationContext());
     }
 
@@ -59,6 +61,8 @@ public class TouchListenerTest {
         // consumes valid input
 
         View.OnTouchListener touchListener = new PanoramaTouchListener(renderer);
+        wait250ms(TAG);
+
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_DOWN)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_UP)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_MOVE)));
