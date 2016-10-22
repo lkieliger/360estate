@@ -23,13 +23,14 @@ task jacocoReport(type: JacocoReport, dependsOn: ['connectedAndroidTest', 'testD
 
     jacocoClasspath = configurations['androidJacocoAnt']
 
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*',
+                      '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
     def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
     def mainSrc = "${project.projectDir}/src/main/java"
 
     sourceDirectories = files([mainSrc])
     classDirectories = files([debugTree])
     executionData = fileTree(dir: project.projectDir, includes:
-				['**/*.exec', '**/*.ec'])
+            ['**/*.exec', '**/*.ec'])
 }
 
