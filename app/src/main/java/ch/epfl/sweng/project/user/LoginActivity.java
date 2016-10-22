@@ -31,10 +31,10 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static boolean parseNotInitialized = true;
     public static final String APP_ID = "360ESTATE";
-    private TextView mEmail;
-    private TextView mPassword;
+    private TextView mEmail = null;
+    private TextView mPassword = null;
 
-    private Context mAppContext;
+    private Context mAppContext = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                     .server("https://360.astutus.org/parse/")
                     .build()
             );
+            //noinspection AssignmentToStaticFieldFromInstanceMethod
             parseNotInitialized = false;
         }
         ParseObject.registerSubclass(Item.class);

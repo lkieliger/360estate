@@ -2,21 +2,25 @@ package ch.epfl.sweng.project.data;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.sweng.project.user.LoginActivity;
 import ch.epfl.sweng.project.util.TestUtilityFunctions;
 import ch.epfl.sweng.project.util.Tuple;
 
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -24,20 +28,15 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class PhotoSphereDataTests {
 
-    private static boolean parseNotInitialized = true;
-    private final Context context = InstrumentationRegistry.getTargetContext();
     private static final String TAG = "PhotoSphereDataTests";
 
-    @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
-    @Before
-    public void init() {
-        if (parseNotInitialized) {
-            ParseObject.registerSubclass(Resources.class);
 
-            TestUtilityFunctions.initializeParse(context);
-            ParseUser.enableAutomaticUser();
-            parseNotInitialized = false;
-        }
+    @Rule
+    public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
+
+    @Before
+    public void setup() {
+        ParseObject.registerSubclass(Resources.class);
     }
 
     @Test
