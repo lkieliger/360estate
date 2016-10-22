@@ -18,6 +18,7 @@ import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait500ms;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
@@ -37,21 +38,24 @@ public class PanoramaRendererTest {
         renderer = new PanoramaRenderer(
                 mActivityTestRule.getActivity().getApplicationContext(),
                 mActivityTestRule.getActivity().getWindowManager().getDefaultDisplay());
-        errorEpsilon = 0.1;
+        wait1s(TAG);
+
+        errorEpsilon = 0.1d;
         metrics = renderer.getContext().getResources().getDisplayMetrics();
         cam = renderer.getCurrentCamera();
-        wait1s(TAG);
+        wait500ms(TAG);
     }
 
 
     @Test
-    public void cameraConfigIsCorrect() {
+    public void panoramaRendererBigTest() {
 
+        // cameraConfigIsCorrect test
         assertFalse(cam.isLookAtEnabled());
-    }
 
-    @Test
-    public void setSensorRotIsCorrect() {
+
+        // setSensorRotIsCorrect test
+
         Quaternion q1 = new Quaternion().fromAngleAxis(Vector3.Axis.X, 96);
 
         //Check for defensive copy on render side
@@ -59,15 +63,13 @@ public class PanoramaRendererTest {
         q1.multiply(new Quaternion().fromAngleAxis(Vector3.Axis.Y, 90));
         assertQuaternionEquals(q1, renderer.getSensorRot(), false);
 
-    }
 
-    @Test
-    /**
+    /*
+     *  * cameraSensitivityIsCorrect test
      * The camera sensitivity should depend on the dpi of the device
      * so that a swipe has the same effect regardless of the dx or dy
      * reported by the touch listener
      */
-    public void cameraSensitivityIsCorrect() {
 
         double angleChange = 90;
 

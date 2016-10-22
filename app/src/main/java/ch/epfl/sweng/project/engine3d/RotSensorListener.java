@@ -11,6 +11,8 @@ import android.view.Surface;
 import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
 
+import ch.epfl.sweng.project.BuildConfig;
+
 
 public class RotSensorListener implements SensorEventListener {
 
@@ -71,14 +73,18 @@ public class RotSensorListener implements SensorEventListener {
 
         values[3] = -values[3];
 
-        Log.d(TAG, String.format("Before: %1$.2f, %2$.2f, %3$.2f, %4$.2f", values[3], values[0], values[1], values[2]));
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, String.format("Before: %1$.2f, %2$.2f, %3$.2f, %4$.2f",
+                    values[3], values[0], values[1], values[2]));
 
         SensorManager.getRotationMatrixFromVector(mRotationMatrixIn, values);
         SensorManager.remapCoordinateSystem(mRotationMatrixIn, SensorManager.AXIS_X, SensorManager.AXIS_MINUS_Z,
                 mRotationMatrixOut);
 
         Quaternion q = new Quaternion().fromMatrix(floatToDoubleArray(mRotationMatrixOut));
-        Log.d(TAG, String.format("After: %1$.2f, %2$.2f, %3$.2f, %4$.2f", q.w, q.x, q.y, q.z));
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, String.format("After: %1$.2f, %2$.2f, %3$.2f, %4$.2f",
+                    q.w, q.x, q.y, q.z));
 
         switch (mScreenRotation) {
             case Surface.ROTATION_0:

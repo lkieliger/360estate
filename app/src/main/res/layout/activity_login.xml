@@ -46,12 +46,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <!-- The imeActionId needs to be an hardcoded int because of roboelectric issue-->
+
                 <EditText
                     android:id="@+id/login_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
+                    android:imeActionId="1414"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"

@@ -30,12 +30,16 @@ import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait500ms;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
 
 @RunWith(AndroidJUnit4.class)
 public class DescriptionDisplayTest {
+
+    private static final String TAG = "DescriptionDisplay test";
 
     @Rule
     public ActivityTestRule<DescriptionActivity> mActivityTestRule = new ActivityTestRule<>(DescriptionActivity.class);
@@ -52,6 +56,8 @@ public class DescriptionDisplayTest {
                         isDisplayed()));
         textView.check(matches(isDisplayed()));
 
+        wait250ms(TAG);
+
         ViewInteraction button = onView(
                 allOf(withId(R.id.action_launch_panorama),
                         childAtPosition(
@@ -60,6 +66,8 @@ public class DescriptionDisplayTest {
                                         0),
                                 4),
                         isDisplayed()));
+        wait250ms(TAG);
+
         button.check(matches(isDisplayed()));
 
         ViewInteraction textView2 = onView(
@@ -70,6 +78,9 @@ public class DescriptionDisplayTest {
                                         0),
                                 0),
                         isDisplayed()));
+
+        wait250ms(TAG);
+
         textView2.check(matches(isDisplayed()));
 
         ViewInteraction textView3 = onView(
@@ -80,6 +91,9 @@ public class DescriptionDisplayTest {
                                         0),
                                 2),
                         isDisplayed()));
+
+        wait250ms(TAG);
+
         textView3.check(matches(isDisplayed()));
 
         ViewInteraction imageView4 = onView(
@@ -90,6 +104,8 @@ public class DescriptionDisplayTest {
                                         withId(R.id.activity_description), 0)
                                 , 1), isDisplayed()
                 ));
+        wait250ms(TAG);
+
         imageView4.check(matches(isDisplayed()));
 
         onView(
@@ -100,6 +116,7 @@ public class DescriptionDisplayTest {
                                         withId(R.id.activity_description), 0)
                                 , 1))).perform(click());
 
+        wait500ms(TAG);
 
         ViewInteraction imageView3 = onView(
                 allOf(withId(R.id.displayed_image),
@@ -110,6 +127,8 @@ public class DescriptionDisplayTest {
                                                 0)),
                                 0),
                         isDisplayed()));
+
+        wait250ms(TAG);
         imageView3.check(matches(isDisplayed()));
 
     }
