@@ -66,6 +66,8 @@ public class DescriptionDisplayTest {
                                         0),
                                 4),
                         isDisplayed()));
+        wait250ms(TAG);
+
         button.check(matches(isDisplayed()));
 
         ViewInteraction textView2 = onView(
@@ -76,6 +78,9 @@ public class DescriptionDisplayTest {
                                         0),
                                 0),
                         isDisplayed()));
+
+        wait250ms(TAG);
+
         textView2.check(matches(isDisplayed()));
 
         ViewInteraction textView3 = onView(
@@ -86,6 +91,9 @@ public class DescriptionDisplayTest {
                                         0),
                                 2),
                         isDisplayed()));
+
+        wait250ms(TAG);
+
         textView3.check(matches(isDisplayed()));
 
         ViewInteraction imageView4 = onView(
@@ -96,6 +104,8 @@ public class DescriptionDisplayTest {
                                         withId(R.id.activity_description), 0)
                                 , 1), isDisplayed()
                 ));
+        wait250ms(TAG);
+
         imageView4.check(matches(isDisplayed()));
 
         onView(
@@ -117,9 +127,9 @@ public class DescriptionDisplayTest {
                                                 0)),
                                 0),
                         isDisplayed()));
-        imageView3.check(matches(isDisplayed()));
 
         wait250ms(TAG);
+        imageView3.check(matches(isDisplayed()));
 
     }
 

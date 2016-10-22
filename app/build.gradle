@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco'
+apply from: 'jacoco.gradle'
 
 android {
     compileSdkVersion 24
@@ -25,14 +25,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt')
-        }
-    }
-
-    testOptions {
-        unitTests.all {
-            jacoco {
-                includeNoLocationClasses = true
-            }
         }
     }
 
@@ -78,27 +70,3 @@ dependencies {
 
 }
 
-// Do not change the below code unless you're sure you know what you're doing
-// Also make sure Jenkins config is synced with this one.
-
-jacoco {
-    toolVersion = "0.7.7.201606060606"
-}
-
-task jacocoReport(type: JacocoReport, dependsOn: "connectedAndroidTest") {
-    sourceDirectories = files(['**/src/main/java'])
-
-    classDirectories = fileTree(
-            dir: '**/classes',
-            excludes: [
-                '**/R.class',
-                '**/R$*.class',
-                '**/BuildConfig.*',
-                '**/Manifest*.*',
-                '**/*Test*.*',
-                '**/android/**/*.*'
-            ]
-    )
-
-    executionData = files('build/outputs/code-coverage/connected/coverage.ec')
-}
