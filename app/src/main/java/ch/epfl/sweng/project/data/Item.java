@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.list;
+package ch.epfl.sweng.project.data;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
@@ -28,13 +28,6 @@ public class Item extends ParseObject {
     //default constructor necessary for Parse subclass
     public Item() {
     }
-
-    private int price;
-    private String location;
-    private HouseType type;
-    private double rooms;
-    private int surface;
-    //private final ParseFile img; TODO:add image
 
     public Item(int price, String location, HouseType type, double rooms, int surface) {
         setPrice(price);

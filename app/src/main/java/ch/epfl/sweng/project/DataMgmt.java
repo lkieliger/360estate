@@ -13,8 +13,8 @@ import java.util.Collection;
 import java.util.List;
 
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
-import ch.epfl.sweng.project.list.Item;
-import ch.epfl.sweng.project.list.ItemAdapter;
+import ch.epfl.sweng.project.data.Item;
+import ch.epfl.sweng.project.data.ItemAdapter;
 
 public final class DataMgmt {
 
