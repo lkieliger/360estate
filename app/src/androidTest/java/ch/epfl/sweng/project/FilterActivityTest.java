@@ -16,9 +16,12 @@ import android.widget.SeekBar;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import ch.epfl.sweng.project.user.LoginActivity;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -30,6 +33,8 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
@@ -39,27 +44,64 @@ import static org.hamcrest.core.AllOf.allOf;
 @RunWith(AndroidJUnit4.class)
 public class FilterActivityTest {
 
-    private void waitAction() {
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "InterruptedException" + e.getMessage());
-            }
-        }
-    }
-
-
     private static final String TAG = "FilterActivityTest: ";
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<ListActivity> mActivityTestRule = new ActivityTestRule<>(ListActivity.class);
 
-    @Rule
-    public ActivityTestRule<ListActivity> listActivityActivityTestRule =
-            new ActivityTestRule<>(ListActivity.class);
+    @After
+    public void finishActivity() {
+        mActivityTestRule.getActivity().finish();
+        wait1s(TAG);
+    }
+
+    @Test
+    public void filterTest() {
+        wait1s(TAG);
+
+        onView(withId(R.id.filterButtonPopUp)).perform(click());
+        onView(withId(R.id.numberOfRooms)).perform(typeText("3"), closeSoftKeyboard());
+        onView(withId(R.id.location)).perform(typeText("Renens"), closeSoftKeyboard());
+        onView(withId(R.id.spinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(getString(R.string.building)))).perform(click());
+        onView(withId(R.id.seekBarPrice)).perform(scrubSeekBarAction(5));
+        onView(withId(R.id.seekBarSurface)).perform(scrubSeekBarAction(50));
+
+        onView(withId(R.id.filterButton)).perform(click());
+        wait250ms(TAG);
+
+        final int[] counts = {0};
+        onView(withId(R.id.houseList)).check(matches(new ViewTypeSafeMatcher(counts)));
+
+        for (int i = 0; i < counts[0]; i++) {
+            onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(i).
+                    check(matches(hasDescendant(withText(containsString(
+                            String.format(
+                                    getString(R.string.text_location_surface),
+                                    "Renens",
+                                    "2'000'000",
+                                    "3",
+                                    getString(R.string.rooms)
+                            ))))));
+            onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(i).
+                    check(matches(hasDescendant(withText(containsString(
+                            String.format(
+                                    getString(R.string.text_price_type),
+                                    "100",
+                                    getString(R.string.text_currency),
+                                    getString(R.string.building)
+                            ))))));
+
+        }
 
 
+        onView(withId(R.id.filterButtonPopUp)).perform(click());
+        onView(withId(R.id.eraseButton)).perform(click());
+    }
+
+
+    //TODO: check if these tests are needed
+    /*
     @Test
     public void numberOfRoomsTest() {
 
@@ -144,7 +186,7 @@ public class FilterActivityTest {
                     check(matches(hasDescendant(withText(containsString("2'000'000 m")))));
         }
     }
-
+*/
 
 
     private static class ViewTypeSafeMatcher extends TypeSafeMatcher<View> {
@@ -204,6 +246,6 @@ public class FilterActivityTest {
     }
 
     private String getString(int id){
-        return listActivityActivityTestRule.getActivity().getString(id);
+        return mActivityTestRule.getActivity().getString(id);
     }
 }

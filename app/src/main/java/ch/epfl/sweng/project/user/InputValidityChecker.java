@@ -2,13 +2,14 @@ package ch.epfl.sweng.project.user;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
+
+import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 final class InputValidityChecker {
 
@@ -21,29 +22,25 @@ final class InputValidityChecker {
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
-    private InputValidityChecker(){
-
+    private InputValidityChecker() {
     }
 
     /**
      * This method checks user password for validity. It should satisfy:
-     *  - At least 4 chars..
+     * - At least 4 chars..
      *
      * @return true if the password is valid
      */
-    static boolean passwordIsValid(String pwd, Context context){
+    static boolean passwordIsValid(String pwd, Context context) {
         boolean passLen = pwd.length() > 4;
 
-        if(BuildConfig.DEBUG){
-            Log.d(TAG, "Password length check returned "+passLen);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Password length check returned " + passLen);
         }
 
-        if(!passLen){
-            Toast popMsg = Toast.makeText(
-                    context,
-                    context.getResources().getText(R.string.error_invalid_password),
-                    Toast.LENGTH_SHORT);
-            popMsg.show();
+        if (!passLen) {
+            shortToast(context,
+                    context.getResources().getText(R.string.error_invalid_password));
         }
 
         return passLen;
@@ -51,52 +48,44 @@ final class InputValidityChecker {
 
     /**
      * This method checks user email for validity. It should satisfy:
-     *  - At least a @
+     * - At least a @
      *
      * @return true if the email is valid
      */
-    static boolean emailIsValid(String email, Context context){
-        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(email);
-        boolean emailCheck = matcher.find();
+    static boolean emailIsValid(String email, Context context) {
+        boolean emailCheck = validate(email);
 
-        if(BuildConfig.DEBUG){
-            Log.d(TAG, "Email validity check returned "+ emailCheck);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Email validity check returned " + emailCheck);
         }
 
-        if(!emailCheck){
-            Toast popMsg = Toast.makeText(
-                    context,
-                    context.getResources().getText(R.string.error_invalid_email),
-                    Toast.LENGTH_SHORT);
-            popMsg.show();
+        if (!emailCheck) {
+            shortToast(context,
+                    context.getResources().getText(R.string.error_invalid_email));
         }
 
         return emailCheck;
     }
 
 
-
     public static boolean validate(String emailStr) {
-        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
         return matcher.find();
     }
 
     /**
      * @return true if the input is twice the same password
      */
-    static boolean passwordMatches(String pwd1, String pwd2, Context context){
+    static boolean passwordMatches(String pwd1, String pwd2, Context context) {
         boolean match = pwd1.equals(pwd2);
 
-        if(BuildConfig.DEBUG){
-            Log.d(TAG, "Result of password matching was: "+match);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Result of password matching was: " + match);
         }
 
-        if(!match){
-            Toast popMsg = Toast.makeText(
-                    context,
-                    context.getResources().getText(R.string.error_unmatching_passwords),
-                    Toast.LENGTH_SHORT);
-            popMsg.show();
+        if (!match) {
+            shortToast(context,
+                    context.getResources().getText(R.string.error_unmatching_passwords));
         }
 
         return match;

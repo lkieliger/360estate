@@ -28,11 +28,13 @@
             android:layout_marginBottom="15dp" android:id="@+id/scroll"
             android:fillViewport="true"
             android:measureAllChildren="false"
-            tools:ignore="UnusedIds">
+            tools:ignore="UnusedIds"
+            >
             <LinearLayout android:orientation="horizontal"
                           android:layout_width="wrap_content"
                           android:layout_height="97dp"
-                          android:id="@+id/imgs">
+                          android:id="@+id/imgs"
+                          >
             </LinearLayout>
         </HorizontalScrollView>
         <TextView

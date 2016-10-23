@@ -32,7 +32,7 @@
         as greatly shewing herself observe ashamed.
         Demands minutes regular ye to detract is.
     </string>
-    <string name = "text_title">Informations</string>
+    <string name="text_title">Informations</string>
     <string name="description_title">Cute little kitten</string>
     <string name="button_text">Panoramic View</string>
     <string name="text_currency" translatable="false">CHF</string>
@@ -40,7 +40,7 @@
     <string name="text_price_type" translatable="false">%1$s %2$s, %3$s</string>
 
     <!-- Strings related to login -->
-    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_login">HouseView360</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_login">Sign in</string>
@@ -67,5 +67,5 @@
         sure you have access to the network and try again</string>
     <string name="info_registration_successful">Registration was successful, you may log in</string>
     <string name="title_activity_register">Register</string>
-    <string name="error_user_already_exists" >Account already exists for this username.</string>
+    <string name="error_user_already_exists">Account already exists for this username.</string>
 </resources>

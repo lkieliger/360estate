@@ -51,12 +51,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <!-- The imeActionId needs to be an hardcoded int because of roboelectric issue-->
+
                 <EditText
                     android:id="@+id/registration_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
+                    android:imeActionId="1410"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
@@ -69,10 +71,10 @@
                 android:layout_height="match_parent">
 
                 <EditText
+                    android:id="@+id/registration_password_bis"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
-                    android:id="@+id/registration_password_bis"
                     android:inputType="textPassword"
                     android:maxLines="1" />
 
@@ -83,10 +85,10 @@
                 android:layout_height="match_parent">
 
                 <EditText
+                    android:id="@+id/registration_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_phone_number"
-                    android:id="@+id/registration_phone"
                     android:inputType="phone" />
             </android.support.design.widget.TextInputLayout>
 
@@ -96,9 +98,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:onClick="attemptRegistration"
                 android:text="@string/action_register"
                 android:textStyle="bold"
-                android:onClick="attemptRegistration"
                 tools:ignore="UnusedIds" />
 
         </LinearLayout>

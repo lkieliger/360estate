@@ -5,11 +5,12 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.sweng.project.user.RegisterActivity;
+import ch.epfl.sweng.project.user.LoginActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -23,6 +24,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -34,20 +37,17 @@ public class RegisterActivityTest {
     private static final String TAG = "RegisterActivityTest: ";
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
-
-    private void waitAction() {
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "InterruptedException" + e.getMessage());
-            }
-        }
+    @After
+    public void finishActivity() {
+        mActivityTestRule.getActivity().finish();
+        wait1s(TAG);
     }
 
     private void initTest(){
+        wait1s(TAG);
+
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
                         getString(R.string.action_goto_registration))));
@@ -77,57 +77,10 @@ public class RegisterActivityTest {
                                 withParent(withId(R.id.login_form))))));
         appCompatButton2.perform(scrollTo(), click());
 
-        waitAction();
+        wait250ms(TAG);
 
         onView(withText(R.string.error_user_already_exists)).inRoot(withDecorView(not(is(mActivityTestRule.getActivity()
                 .getWindow().getDecorView())))).check(matches(isDisplayed()));
-
-    }
-
-
-    @Test
-    public void errorWithdEmptyField(){
-        initTest();
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
-                        getString(R.string.action_goto_registration))));
-
-        onView(withId(R.id.registration_password)).perform(typeText("123456"), closeSoftKeyboard());
-        onView(withId(R.id.register_button)).perform(click());
-
-        onView(withText(R.string.error_empty_field)).inRoot(withDecorView(not(is(mActivityTestRule.getActivity()
-                .getWindow().getDecorView())))).check(matches(isDisplayed()));
-
-    }
-
-    @Test
-    public void errorWithInvalidPassword(){
-        initTest();
-
-        onView(withId(R.id.registration_email)).perform(typeText("HolaSenior@Shanchez.co"), closeSoftKeyboard());
-        onView(withId(R.id.registration_phone)).perform(typeText("05404030"), closeSoftKeyboard());
-        onView(withId(R.id.registration_password)).perform(typeText("pepe"), closeSoftKeyboard());
-        onView(withId(R.id.registration_password_bis)).perform(typeText("pepe"), closeSoftKeyboard());
-        onView(withId(R.id.register_button)).perform(click());
-
-        onView(withText(R.string.error_invalid_password)).inRoot(withDecorView(not(is(mActivityTestRule.getActivity()
-                .getWindow().getDecorView())))).check(matches(isDisplayed()));
-
-    }
-
-
-    @Test
-    public void errorWithUnmatchingPassword(){
-        initTest();
-
-        onView(withId(R.id.registration_email)).perform(typeText("HolaSenior@Shanchez.co"), closeSoftKeyboard());
-        onView(withId(R.id.registration_phone)).perform(typeText("05404030"), closeSoftKeyboard());
-        onView(withId(R.id.registration_password)).perform(typeText("pepeTheFrog"), closeSoftKeyboard());
-        onView(withId(R.id.registration_password_bis)).perform(typeText("PepeTheFrog"), closeSoftKeyboard());
-        onView(withId(R.id.register_button)).perform(click());
-
-        onView(withText(R.string.error_unmatching_passwords)).inRoot(withDecorView(not(is(mActivityTestRule
-                .getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
 
     }
 

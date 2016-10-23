@@ -15,6 +15,8 @@ import java.util.List;
 
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 
+import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;
+
 
 public class DescriptionActivity extends AppCompatActivity {
 
@@ -25,32 +27,32 @@ public class DescriptionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_description);
 
-        ///////////
-        List<Integer> imagesIDs = new ArrayList<>();
-        imagesIDs.add(1);
-        imagesIDs.add(2);
-        imagesIDs.add(3);
-        imagesIDs.add(4);
-        imagesIDs.add(5);
-        View.OnClickListener imgListener = new View.OnClickListener() {
+        //TODO: get imgUrls list from Parse and put it into imagesUrl
+        List<String> imagesURL = new ArrayList<>();
+        imagesURL.add("https://360.astutus.org/estate/chaton1.jpg");
+        imagesURL.add("https://360.astutus.org/estate/chaton2.jpg");
+        imagesURL.add("https://360.astutus.org/estate/chaton3.jpg");
+        imagesURL.add("https://360.astutus.org/estate/chaton4.jpg");
+        imagesURL.add("https://360.astutus.org/estate/houseSmall.jpg");
 
+        View.OnClickListener imgListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),
-                        "MIIIIIAAAAAAOUUUUUUUUU "+v.getId(), Toast.LENGTH_SHORT)
-                        .show();
+                Intent intent = new Intent(DescriptionActivity.this, DisplayActivity.class);
+                intent.putExtra("URL", (String) v.getTag());
+                startActivity(intent);
             }
         };
 
 
         final LinearLayout scrollImg = (LinearLayout) findViewById(R.id.imgs);
-        for(Integer imgID : imagesIDs){
+        for (String url : imagesURL) {
             ImageView imgV = new ImageView(this);
-            imgV.setId(imgID);
+            imgV.setTag(url);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(cellSize, cellSize);
             params.setMargins(0, 0, 10, 0);
             imgV.setLayoutParams(params);
-            imgV.setImageResource(R.drawable.chaton);
+            getImgFromUrlIntoView(this, url, imgV);
             imgV.setOnClickListener(imgListener);
             scrollImg.addView(imgV);
         }

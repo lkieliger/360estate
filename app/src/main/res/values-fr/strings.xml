@@ -29,13 +29,13 @@
     <string name="number_of_rooms">Nombre de chambres</string>
     <string name="permission_rationale">Les permissions de contacts sont requises pour
         afficher l\'auto-complétion des emails</string>
-    <string name="price">Prix maximum</string>
+    <string name="price">Prix max.</string>
     <string name="prompt_email">Courriel</string>
     <string name="prompt_password">Mot de passe</string>
     <string name="prompt_password_again">Mot de passe (vérification)</string>
     <string name="prompt_phone_number">Numéro de téléphone</string>
     <string name="register_suggestion">Pas encore enregistré ?</string>
-    <string name="surface">suface min.</string>
+    <string name="surface">Suface min.</string>
     <string name="text_title">Informations</string>
     <string name="title_activity_login">Se connecter</string>
     <string name="title_activity_register">S\'enregistrer</string>

@@ -34,6 +34,3 @@
   15. 'account forgot' clickable text (sends an e-mail that allows you to change your pass) 
 
   16. More information on nearby infrastructure will be available (transport, schools, shops)
-
-
-

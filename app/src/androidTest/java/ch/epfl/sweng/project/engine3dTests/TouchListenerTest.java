@@ -5,6 +5,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,7 +14,6 @@ import org.junit.runner.RunWith;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.PanoramaTouchListener;
-import ch.epfl.sweng.project.engine3dTests.mockobjects.MockView;
 
 import static android.view.MotionEvent.ACTION_CANCEL;
 import static android.view.MotionEvent.ACTION_DOWN;
@@ -25,48 +25,59 @@ import static android.view.MotionEvent.ACTION_OUTSIDE;
 import static android.view.MotionEvent.ACTION_POINTER_DOWN;
 import static android.view.MotionEvent.ACTION_POINTER_UP;
 import static android.view.MotionEvent.ACTION_UP;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class TouchListenerTest {
-//TODO: Factorize this class
 
+    private static final String TAG = "TouchListener test";
     @Rule
     public ActivityTestRule<PanoramaActivity> mActivityTestRule = new ActivityTestRule<>(PanoramaActivity.class);
 
+    private PanoramaRenderer renderer = null;
+    private View view = null;
+
     @Before
     public void initMembers() {
+        renderer = new PanoramaRenderer(
+                mActivityTestRule.getActivity().getApplicationContext(),
+                mActivityTestRule.getActivity().getWindowManager().getDefaultDisplay());
+        wait1s(TAG);
+        
+        renderer.setSceneCachingEnabled(false);
+        wait250ms(TAG);
+        view = new View(mActivityTestRule.getActivity().getApplicationContext());
+    }
+
+    @After
+    public void finishActivity() {
+        mActivityTestRule.getActivity().finish();
+        wait1s(TAG);
     }
 
     private MotionEvent genEvent(int action) {
         return MotionEvent.obtain(0, 0, action, 0, 0, 0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void touchListenerWithNullParameter() {
-        PanoramaTouchListener touchListener = new PanoramaTouchListener(null);
-    }
-
     @Test
-    public void consumesValidInput() {
-        PanoramaRenderer renderer = new PanoramaRenderer(mActivityTestRule.getActivity().getApplicationContext());
-        View view = new MockView(mActivityTestRule.getActivity().getApplicationContext());
+    public void touchListenerTests() {
 
-        PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer);
+        // consumes valid input
+
+        View.OnTouchListener touchListener = new PanoramaTouchListener(renderer);
+        wait250ms(TAG);
+
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_DOWN)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_UP)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_MOVE)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_CANCEL)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_POINTER_UP)));
-    }
 
-    @Test
-    public void dontConsumeInvalidInput() {
-        PanoramaRenderer renderer = new PanoramaRenderer(mActivityTestRule.getActivity().getApplicationContext());
-        View view = new MockView(mActivityTestRule.getActivity().getApplicationContext());
+        // dontConsumeInvalidInput test
 
-        PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer);
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_ENTER)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_EXIT)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_MOVE)));

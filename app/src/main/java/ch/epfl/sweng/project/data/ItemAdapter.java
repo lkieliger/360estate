@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.list;
+package ch.epfl.sweng.project.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,11 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import java.util.List;
-
-/**
- * Isaac Leimgruber
- * SCIPER 236908
- */
 
 public class ItemAdapter extends ArrayAdapter<Item> {
 

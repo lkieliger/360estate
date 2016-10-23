@@ -4,13 +4,13 @@ import com.parse.ParseObject;
 
 import org.junit.Test;
 
-import ch.epfl.sweng.project.list.Item;
+import ch.epfl.sweng.project.data.Item;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * @brief This class test the Item object, that represent the house.
+ * This class tests the Item object, that represent the house.
  */
 public class ItemTest {
 
@@ -19,13 +19,6 @@ public class ItemTest {
     private Item.HouseType type = Item.HouseType.APARTMENT;
     private double rooms = 5.5;
     private int surface = 200;
-
-    private Item itemFactoryNoArgument() {
-        ParseObject.registerSubclass(Item.class);
-
-        return new Item();
-    }
-
 
     private Item itemFactoryWithArgument() {
         ParseObject.registerSubclass(Item.class);
