@@ -26,9 +26,9 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class PhotoSphereDataTests {
+public class ResourcesTests {
 
-    private static final String TAG = "PhotoSphereDataTests";
+    private static final String TAG = "Resources Test";
 
 
     @Rule
@@ -41,8 +41,10 @@ public class PhotoSphereDataTests {
 
     @Test
     public void testNeighbors() {
-        List<AngleMapping> neighborsList = new ArrayList<>();
 
+        Resources testResources = new Resources();
+
+        List<AngleMapping> neighborsList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             neighborsList.add(new AngleMapping(
                     new Tuple<>(0.14d + i / 1000d, 0.10d + i / 1000d),
@@ -50,13 +52,16 @@ public class PhotoSphereDataTests {
                     i + ".jpg"));
         }
 
-        Resources testResources = new Resources();
-
         List<PhotoSphereData> photoSphereDatas = new ArrayList<>();
         photoSphereDatas.add(new PhotoSphereData(14145, "14145.jpg", neighborsList));
         photoSphereDatas.add(new PhotoSphereData(14146, "14146.jpg", neighborsList));
         photoSphereDatas.add(new PhotoSphereData(14145, "14145.jpg", neighborsList));
         testResources.setPhotoSphereDatas(photoSphereDatas);
+
+        List<String> urlList = new ArrayList<>(3);
+        urlList.add("https://360.estate.org/estate/houseSmall.jpg");
+        urlList.add("https://360.estate.org/estate/houseBig.jpg");
+        testResources.setPicturesUrlList(urlList);
 
         testResources.setDescription("THISisATest");
 
@@ -68,6 +73,14 @@ public class PhotoSphereDataTests {
 
        for (int i = 0; i < photoSphereDatas1.size(); i++) {
             assertTrue((photoSphereDatas.get(i)).equals(photoSphereDatas1.get(i)));
+        }
+
+        assertEquals("THISisATest", testResources.getDescription());
+
+        List<String> urlList1 = testResources.getPicturesList();
+
+        for (int i = 0; i < urlList.size(); i++) {
+            assertEquals(urlList.get(i), urlList1.get(i));
         }
 
         wait250ms(TAG);

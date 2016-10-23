@@ -1,6 +1,5 @@
 package ch.epfl.sweng.project;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.shadows.ShadowToast;
 
 import ch.epfl.sweng.project.user.LoginActivity;

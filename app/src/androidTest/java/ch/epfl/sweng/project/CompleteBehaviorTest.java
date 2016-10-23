@@ -1,6 +1,7 @@
 package ch.epfl.sweng.project;
 
 
+import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.security.SecureRandom;
 
 import ch.epfl.sweng.project.user.LoginActivity;
 
@@ -24,14 +27,13 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait500ms;
 import static org.hamcrest.Matchers.anything;
 
 public class CompleteBehaviorTest {
 
-    private static final String TAG = "LoginActivityTest";
-    private static final String TEST_USER_MAIL = "test@astutus.org";
-    private static final String TEST_USER_PASSWORD = "12345";
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
@@ -40,25 +42,44 @@ public class CompleteBehaviorTest {
     @Test
     public void testFullApp() {
 
-        onView(withId(R.id.login_email)).perform(typeText(TEST_USER_MAIL), closeSoftKeyboard());
-        onView(withId(R.id.login_password)).perform(typeText(TEST_USER_PASSWORD), closeSoftKeyboard());
+        String tag = "LoginActivityTest";
+        String testUserMail = "test@" + randomString(6) + ".org";
+        String testUserPassword = "12345";
+        String testUserPhone = "+078888888";
+
+        onView(withId(R.id.goto_registration_button)).perform(click());
+        wait500ms(tag);
+
+        onView(withId(R.id.registration_email)).perform(typeText(testUserMail), closeSoftKeyboard());
+        onView(withId(R.id.registration_password)).perform(typeText(testUserPassword), closeSoftKeyboard());
+        onView(withId(R.id.registration_password_bis)).perform(typeText(testUserPassword), closeSoftKeyboard());
+        onView(withId(R.id.registration_phone)).perform(typeText(testUserPhone), closeSoftKeyboard());
+        onView(withId(R.id.register_button)).perform(click());
+
+        wait1s(tag);
+
+        onView(withId(R.id.login_email)).perform(typeText(testUserMail), closeSoftKeyboard());
+        onView(withId(R.id.login_password)).perform(typeText(testUserPassword), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
 
-        wait250ms(TAG);
+        wait250ms(tag);
 
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
 
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(2).perform(click());
 
-        wait250ms(TAG);
+        wait500ms(tag);
+        ViewInteraction img3 = onView(childAtPosition(withId(R.id.imgs), 3));
+        img3.perform(scrollTo());
+        wait250ms(tag);
+        img3.perform(click());
+        wait250ms(tag);
 
-        onView(childAtPosition(withId(R.id.imgs), 4)).perform(scrollTo()).perform(click());
-        wait250ms(TAG);
         onView(withId(R.id.displayed_image)).check(matches(isDisplayed()));
 
         pressBack();
 
-        wait250ms(TAG);
+        wait250ms(tag);
 
     }
 
@@ -80,4 +101,21 @@ public class CompleteBehaviorTest {
             }
         };
     }
+
+
+    /*
+ Random string, for the registration.
+ Source:
+ http://stackoverflow.com/questions/41107/how-to-generate-a-random-alpha-numeric-string
+  */
+    private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static SecureRandom rnd = new SecureRandom();
+
+    private static String randomString(int len) {
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++)
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        return sb.toString();
+    }
+
 }

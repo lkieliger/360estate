@@ -88,6 +88,10 @@ public class FilterActivityTest {
                             ))))));
 
         }
+
+
+        onView(withId(R.id.filterButtonPopUp)).perform(click());
+        onView(withId(R.id.eraseButton)).perform(click());
     }
 
 

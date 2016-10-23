@@ -23,7 +23,7 @@ public class Resources extends ParseObject {
     private static final String TAG = "Resources class";
 
     public Resources() {
-    // Default constructor needed for Parse objects
+        // Default constructor needed for Parse objects
     }
 
     void setDescription(String desc) {
@@ -49,12 +49,18 @@ public class Resources extends ParseObject {
         return getString(descriptionTag);
     }
 
-    public List<String> getPicturesList() throws JSONException {
+    public List<String> getPicturesList() {
         JSONArray urlArray = getJSONArray(picturesListTag);
         List<String> picturesList = new ArrayList<>();
 
-        for (int i = 0; i < urlArray.length(); i++) {
-            picturesList.add(urlArray.getString(i));
+        try {
+            for (int i = 0; i < urlArray.length(); i++) {
+                picturesList.add(urlArray.getString(i));
+            }
+        } catch (JSONException e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "JSON Exception:" + e.getMessage());
+            }
         }
 
         return picturesList;

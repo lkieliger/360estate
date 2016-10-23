@@ -1,6 +1,5 @@
 package ch.epfl.sweng.project;
 
-import android.content.Intent;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -11,13 +10,11 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowToast;
 
-import ch.epfl.sweng.project.user.LoginActivity;
 import ch.epfl.sweng.project.user.RegisterActivity;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 23)
