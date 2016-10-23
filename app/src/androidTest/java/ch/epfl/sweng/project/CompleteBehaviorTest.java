@@ -43,6 +43,7 @@ public class CompleteBehaviorTest {
     @After
     public void finishActivity() {
         mActivityTestRule.getActivity().finish();
+        wait1s(TAG);
     }
 
     @Test

@@ -56,6 +56,8 @@ public class TouchListenerTest {
     public void finishActivity() {
         mActivityTestRule.getActivity().finish();
         wait1s(TAG);
+
+        renderer = null;
     }
 
     private MotionEvent genEvent(int action) {

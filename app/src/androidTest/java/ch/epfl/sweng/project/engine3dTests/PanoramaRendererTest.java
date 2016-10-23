@@ -48,7 +48,11 @@ public class PanoramaRendererTest {
 
     @After
     public void finishActivity() {
+        mActivityTestRule.getActivity().getAssociatedRenderer().onPause();
+
         mActivityTestRule.getActivity().finish();
+
+        renderer = null;
         wait1s(TAG);
     }
 
