@@ -16,6 +16,7 @@ import android.widget.SeekBar;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +33,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
@@ -45,15 +47,18 @@ public class FilterActivityTest {
     private static final String TAG = "FilterActivityTest: ";
 
     @Rule
-    public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
+    public ActivityTestRule<ListActivity> mActivityTestRule = new ActivityTestRule<>(ListActivity.class);
 
-    @Rule
-    public ActivityTestRule<ListActivity> listActivityActivityTestRule =
-            new ActivityTestRule<>(ListActivity.class);
-
+    @After
+    public void finishActivity() {
+        mActivityTestRule.getActivity().finish();
+        wait1s(TAG);
+    }
 
     @Test
     public void filterTest() {
+        wait1s(TAG);
+
         onView(withId(R.id.filterButtonPopUp)).perform(click());
         onView(withId(R.id.numberOfRooms)).perform(typeText("3"), closeSoftKeyboard());
         onView(withId(R.id.location)).perform(typeText("Renens"), closeSoftKeyboard());
@@ -241,6 +246,6 @@ public class FilterActivityTest {
     }
 
     private String getString(int id){
-        return listActivityActivityTestRule.getActivity().getString(id);
+        return mActivityTestRule.getActivity().getString(id);
     }
 }

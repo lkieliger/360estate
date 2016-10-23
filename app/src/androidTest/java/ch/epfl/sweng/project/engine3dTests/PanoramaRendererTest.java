@@ -5,6 +5,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,6 +44,12 @@ public class PanoramaRendererTest {
         metrics = renderer.getContext().getResources().getDisplayMetrics();
         cam = renderer.getCurrentCamera();
         wait500ms(TAG);
+    }
+
+    @After
+    public void finishActivity() {
+        mActivityTestRule.getActivity().finish();
+        wait1s(TAG);
     }
 
 

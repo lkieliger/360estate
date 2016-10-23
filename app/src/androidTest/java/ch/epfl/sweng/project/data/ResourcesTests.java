@@ -8,6 +8,7 @@ import android.support.test.runner.AndroidJUnit4;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,6 +38,12 @@ public class ResourcesTests {
     @Before
     public void setup() {
         ParseObject.registerSubclass(Resources.class);
+    }
+
+    @After
+    public void finishActivity() {
+        mActivityTestRule.getActivity().finish();
+        wait1s(TAG);
     }
 
     @Test

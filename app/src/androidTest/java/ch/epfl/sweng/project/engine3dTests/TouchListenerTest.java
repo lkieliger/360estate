@@ -5,6 +5,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,6 +50,12 @@ public class TouchListenerTest {
         renderer.setSceneCachingEnabled(false);
         wait250ms(TAG);
         view = new View(mActivityTestRule.getActivity().getApplicationContext());
+    }
+
+    @After
+    public void finishActivity() {
+        mActivityTestRule.getActivity().finish();
+        wait1s(TAG);
     }
 
     private MotionEvent genEvent(int action) {

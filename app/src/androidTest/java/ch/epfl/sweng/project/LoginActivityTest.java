@@ -6,6 +6,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,12 @@ public class LoginActivityTest {
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
+
+    @After
+    public void finishActivity() {
+        mActivityTestRule.getActivity().finish();
+        wait1s(TAG);
+    }
 
     @Test
     public void testUserLogin() {

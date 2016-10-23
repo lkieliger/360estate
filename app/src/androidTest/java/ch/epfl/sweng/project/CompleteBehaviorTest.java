@@ -10,6 +10,7 @@ import android.view.ViewParent;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -39,15 +40,20 @@ public class CompleteBehaviorTest {
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
+    @After
+    public void finishActivity() {
+        mActivityTestRule.getActivity().finish();
+    }
 
     @Test
     public void testFullApp() {
+        wait1s(TAG);
 
         String testUserMail = "test@" + randomString(6) + ".org";
         String testUserPassword = "12345";
         String testUserPhone = "+078888888";
 
-        onView(withId(R.id.goto_registration_button)).perform(click());
+        onView(withId(R.id.goto_registration_button)).perform(closeSoftKeyboard()).perform(click());
         wait500ms(TAG);
 
         onView(withId(R.id.registration_email)).perform(typeText(testUserMail), closeSoftKeyboard());
@@ -66,18 +72,20 @@ public class CompleteBehaviorTest {
         wait500ms(TAG);
 
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
+        wait1s(TAG);
 
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(2).perform(click());
 
+        onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
         wait1s(TAG);
         wait1s(TAG);
 
-        ViewInteraction img3 = onView(childAtPosition(withId(R.id.imgs), 3));
+        ViewInteraction img1 = onView(childAtPosition(withId(R.id.imgs), 1));
         wait250ms(TAG);
 
-        img3.perform(scrollTo());
+        img1.perform(scrollTo());
         wait250ms(TAG);
-        img3.perform(click());
+        img1.perform(click());
         wait250ms(TAG);
 
         onView(withId(R.id.displayed_image)).check(matches(isDisplayed()));
