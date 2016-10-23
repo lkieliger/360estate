@@ -81,7 +81,6 @@ public class CompleteBehaviorTest {
         wait1s(TAG);
         wait1s(TAG);
         wait1s(TAG);
-        wait1s(TAG);
 
         ViewInteraction img0 = onView(childAtPosition(withId(R.id.imgs), 0));
         wait500ms(TAG);
