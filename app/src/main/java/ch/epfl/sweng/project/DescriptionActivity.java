@@ -38,14 +38,14 @@ public class DescriptionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DescriptionActivity.this, DisplayActivity.class);
-                intent.putExtra("URL", (String)v.getTag());
+                intent.putExtra("URL", (String) v.getTag());
                 startActivity(intent);
             }
         };
 
 
         final LinearLayout scrollImg = (LinearLayout) findViewById(R.id.imgs);
-        for(String url : imagesURL){
+        for (String url : imagesURL) {
             ImageView imgV = new ImageView(this);
             imgV.setTag(url);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(cellSize, cellSize);
