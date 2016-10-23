@@ -23,7 +23,6 @@ final class InputValidityChecker {
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     private InputValidityChecker() {
-
     }
 
     /**
@@ -54,8 +53,7 @@ final class InputValidityChecker {
      * @return true if the email is valid
      */
     static boolean emailIsValid(String email, Context context) {
-        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
-        boolean emailCheck = matcher.find();
+        boolean emailCheck = validate(email);
 
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Email validity check returned " + emailCheck);

@@ -33,19 +33,26 @@ public class LoginActivityTests {
         assertNotNull(loginButton);
         loginButton.performClick();
 
-        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(activity.getString(R.string.error_invalid_email)));
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(activity.getString(R.string.error_empty_field)));
 
         TextView loginText = (TextView) activity.findViewById(R.id.login_email);
-        loginText.append("test@real.com");
+        TextView passwordText = (TextView) activity.findViewById(R.id.login_password);
+
+        loginText.append("test@");
+        passwordText.append("abc");
+
+        loginButton.performClick();
+
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(activity.getString(R.string.error_invalid_email)));
+
+        loginText.append("real.com");
         loginButton.performClick();
 
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(activity.getString(R.string.error_invalid_password)));
 
-        TextView passwordText = (TextView) activity.findViewById(R.id.login_password);
-        passwordText.append("abcdef");
+        passwordText.append("def");
         loginButton.performClick();
     }
-
 
 
     @Test

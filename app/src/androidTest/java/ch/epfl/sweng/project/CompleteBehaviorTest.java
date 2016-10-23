@@ -34,6 +34,7 @@ import static org.hamcrest.Matchers.anything;
 
 public class CompleteBehaviorTest {
 
+    private static final String TAG = "LoginActivityTest";
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
@@ -42,13 +43,12 @@ public class CompleteBehaviorTest {
     @Test
     public void testFullApp() {
 
-        String tag = "LoginActivityTest";
         String testUserMail = "test@" + randomString(6) + ".org";
         String testUserPassword = "12345";
         String testUserPhone = "+078888888";
 
         onView(withId(R.id.goto_registration_button)).perform(click());
-        wait500ms(tag);
+        wait500ms(TAG);
 
         onView(withId(R.id.registration_email)).perform(typeText(testUserMail), closeSoftKeyboard());
         onView(withId(R.id.registration_password)).perform(typeText(testUserPassword), closeSoftKeyboard());
@@ -56,30 +56,35 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.registration_phone)).perform(typeText(testUserPhone), closeSoftKeyboard());
         onView(withId(R.id.register_button)).perform(click());
 
-        wait1s(tag);
+        wait1s(TAG);
+        wait1s(TAG);
 
         onView(withId(R.id.login_email)).perform(typeText(testUserMail), closeSoftKeyboard());
         onView(withId(R.id.login_password)).perform(typeText(testUserPassword), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
 
-        wait250ms(tag);
+        wait500ms(TAG);
 
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
 
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(2).perform(click());
 
-        wait500ms(tag);
+        wait1s(TAG);
+        wait1s(TAG);
+
         ViewInteraction img3 = onView(childAtPosition(withId(R.id.imgs), 3));
+        wait250ms(TAG);
+
         img3.perform(scrollTo());
-        wait250ms(tag);
+        wait250ms(TAG);
         img3.perform(click());
-        wait250ms(tag);
+        wait250ms(TAG);
 
         onView(withId(R.id.displayed_image)).check(matches(isDisplayed()));
 
         pressBack();
 
-        wait250ms(tag);
+        wait250ms(TAG);
 
     }
 

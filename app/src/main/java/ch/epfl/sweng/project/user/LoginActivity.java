@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     public void attemptLogin(View view) {
 
-        if (userDataIsValid()) {
+        if (fieldsAreFilled() && userDataIsValid()) {
 
             ParseUser.logInInBackground(mEmail.getText().toString(),
                     mPassword.getText().toString(),
