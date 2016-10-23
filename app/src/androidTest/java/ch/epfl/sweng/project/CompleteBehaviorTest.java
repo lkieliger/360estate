@@ -79,6 +79,8 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
         wait1s(TAG);
         wait1s(TAG);
+
+        /*
         wait1s(TAG);
         wait1s(TAG);
 
@@ -93,6 +95,7 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.displayed_image)).check(matches(isDisplayed()));
 
         pressBack();
+        */
 
         wait250ms(TAG);
 
