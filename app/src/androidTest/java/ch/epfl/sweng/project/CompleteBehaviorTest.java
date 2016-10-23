@@ -79,13 +79,16 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
         wait1s(TAG);
         wait1s(TAG);
+        wait1s(TAG);
+        wait1s(TAG);
+        wait1s(TAG);
 
-        ViewInteraction img1 = onView(childAtPosition(withId(R.id.imgs), 1));
-        wait250ms(TAG);
+        ViewInteraction img0 = onView(childAtPosition(withId(R.id.imgs), 0));
+        wait500ms(TAG);
 
-        img1.perform(scrollTo());
+        img0.perform(scrollTo());
         wait250ms(TAG);
-        img1.perform(click());
+        img0.perform(click());
         wait250ms(TAG);
 
         onView(withId(R.id.displayed_image)).check(matches(isDisplayed()));
