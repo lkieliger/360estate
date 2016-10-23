@@ -9,7 +9,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.rajawali3d.view.SurfaceView;
 
+import ch.epfl.sweng.project.data.HouseManager;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.PanoramaTouchListener;
@@ -35,12 +37,14 @@ public class TouchListenerTest {
 
     private PanoramaRenderer renderer;
     private View view;
+    private SurfaceView mSurface = null;
+    private HouseManager mHouseManager = null;
 
     @Before
     public void initMembers() {
         renderer = new PanoramaRenderer(
                 mActivityTestRule.getActivity().getApplicationContext(), mActivityTestRule
-                .getActivity().getWindowManager().getDefaultDisplay());
+                .getActivity().getWindowManager().getDefaultDisplay(),mHouseManager);
         renderer.setSceneCachingEnabled(false);
         view = new View(mActivityTestRule.getActivity().getApplicationContext());
     }
@@ -51,13 +55,13 @@ public class TouchListenerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void touchListenerWithNullParameter() {
-        PanoramaTouchListener touchListener = new PanoramaTouchListener(null);
+        PanoramaTouchListener touchListener = new PanoramaTouchListener(null,mSurface,mHouseManager);
     }
 
     @Test
     public void consumesValidInput() {
 
-        PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer);
+        PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer,mSurface,mHouseManager);
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_DOWN)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_UP)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_MOVE)));
@@ -68,7 +72,7 @@ public class TouchListenerTest {
     @Test
     public void dontConsumeInvalidInput() {
 
-        PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer);
+        PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer,mSurface,mHouseManager);
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_ENTER)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_EXIT)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_MOVE)));

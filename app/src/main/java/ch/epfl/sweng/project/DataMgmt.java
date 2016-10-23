@@ -1,11 +1,17 @@
 package ch.epfl.sweng.project;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,9 +21,37 @@ import ch.epfl.sweng.project.list.ItemAdapter;
 
 public final class DataMgmt {
 
+    private static final String TAG = "DataMgmt";
+
     private DataMgmt() {
     }
 
+    public static void getImgFromUrlIntoView(Context context, String url, ImageView imgV){
+        Picasso.with(context).load(url).into(imgV);
+    }
+
+    public static Bitmap getBitmapfromUrl(Context mContext, String url) {
+
+        Bitmap mBitmap = null;
+        Picasso.Builder builder = new Picasso.Builder(mContext);
+        builder.listener(new Picasso.Listener() {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, exception.getMessage());
+                }
+            }
+        });
+
+        try {
+            mBitmap = builder.build().with(mContext).load(url).get();
+        } catch (IOException e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, e.getMessage());
+            }
+        }
+        return mBitmap;
+    }
 
     public static void getData(
             final Collection<Item> itemList, final ItemAdapter itemAdapter, StateOfPopUpLayout stateOfPopUpLayout) {

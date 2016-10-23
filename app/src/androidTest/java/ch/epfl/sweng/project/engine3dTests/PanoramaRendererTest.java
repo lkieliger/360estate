@@ -13,6 +13,7 @@ import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.data.HouseManager;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
@@ -29,12 +30,13 @@ public class PanoramaRendererTest {
     private DisplayMetrics metrics;
     private Camera cam;
     private double errorEpsilon;
+    private final HouseManager houseManager = null;
 
     @Before
     public void initMembers() {
         renderer = new PanoramaRenderer(
                 mActivityTestRule.getActivity().getApplicationContext(),
-                mActivityTestRule.getActivity().getWindowManager().getDefaultDisplay());
+                mActivityTestRule.getActivity().getWindowManager().getDefaultDisplay(),houseManager);
         errorEpsilon = 0.1;
         metrics = renderer.getContext().getResources().getDisplayMetrics();
         cam = renderer.getCurrentCamera();

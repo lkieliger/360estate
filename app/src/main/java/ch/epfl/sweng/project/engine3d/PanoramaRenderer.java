@@ -2,24 +2,33 @@ package ch.epfl.sweng.project.engine3d;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
+import android.widget.ImageView;
 
+import org.rajawali3d.Object3D;
 import org.rajawali3d.cameras.Camera;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
-import org.rajawali3d.primitives.Sphere;
 import org.rajawali3d.renderer.Renderer;
+import org.rajawali3d.util.ObjectColorPicker;
+import org.rajawali3d.util.OnObjectPickedListener;
+
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
+import ch.epfl.sweng.project.data.AngleMapping;
+import ch.epfl.sweng.project.data.HouseManager;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -27,12 +36,14 @@ import static android.content.Context.SENSOR_SERVICE;
  * This class defines how the 3d engine should be used to
  * render the scene.
  */
-public class PanoramaRenderer extends Renderer {
+public class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
 
     public static final double SENSITIVITY = 100.0;
     public static final double MAX_PHI = 2 * Math.PI;
     public static final double EPSILON = 0.1d;
     public static final double MAX_THETA = Math.PI - EPSILON;
+
+    private PanoSphere earthSphere = new PanoSphere(100, 48, 48);
 
 
     private final String TAG = "Renderer";
@@ -47,18 +58,24 @@ public class PanoramaRenderer extends Renderer {
     private final RotSensorListener mRotListener;
     private final boolean mRotSensorAvailable;
     private final Sensor mRotSensor;
-    private Sphere mChildSphere = null;
+
     private Quaternion mUserRot;
     private Quaternion mSensorRot;
 
-    public PanoramaRenderer(Context context, Display display) {
+    private HouseManager mHouseManager;
+    private ObjectColorPicker mPicker;
+
+    public PanoramaRenderer(Context context, Display display, HouseManager houseManager) {
 
         super(context);
+
+        mPicker = new ObjectColorPicker(this);
 
         mDisplay = display;
 
         mSensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         Sensor rotSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
+        mHouseManager = houseManager;
 
         if (rotSensor == null) {
             if (BuildConfig.DEBUG) {
@@ -120,14 +137,16 @@ public class PanoramaRenderer extends Renderer {
         material.setColor(0);
         material2.setColor(0);
 
-        Texture earthTexture = new Texture("Earth", R.drawable.pano_1024);
+        Bitmap mBitmap = DataMgmt.getBitmapfromUrl(getContext(),mHouseManager.getStartingUrl());
+
+
+        Texture earthTexture = new Texture("Earth", mBitmap);
         Texture earthTexture2 = new Texture("Earth", R.drawable.earthtruecolor_nasa_big);
         earthTexture.shouldRecycle(true);
         earthTexture2.shouldRecycle(true);
 
         try {
             material.addTexture(earthTexture);
-            material2.addTexture(earthTexture2);
 
         } catch (ATexture.TextureException error) {
             if (BuildConfig.DEBUG) {
@@ -135,16 +154,77 @@ public class PanoramaRenderer extends Renderer {
             }
         }
 
-        mChildSphere = new Sphere(8, 10, 10);
-        mChildSphere.setMaterial(material2);
-        mChildSphere.setZ(50);
-        Sphere earthSphere = new Sphere(100, 48, 48);
-        earthSphere.addChild(mChildSphere);
         earthSphere.setPosition(mInitialPos);
         earthSphere.setBackSided(true);
         earthSphere.setMaterial(material);
 
+
+        for (AngleMapping angleMapping: mHouseManager.getSparseArray().get(mHouseManager.getStartingId())) {
+
+            mPicker.setOnObjectPickedListener(this);
+            PanoramaTransitionObject mChildSphere = new PanoramaTransitionObject(8, 10, 10,angleMapping.getId(),
+                    angleMapping.getUrl());
+            mChildSphere.setMaterial(material2);
+            mChildSphere.setX(50*Math.sin(angleMapping.getPhi())*Math.cos(angleMapping.getTheta()));
+            mChildSphere.setZ(50*Math.sin(angleMapping.getPhi())*Math.sin(angleMapping.getTheta()));
+            mChildSphere.setY(50*Math.cos(angleMapping.getPhi()));
+
+            mPicker.registerObject(mChildSphere);
+            earthSphere.addChild(mChildSphere);
+        }
+
+
         getCurrentScene().addChild(earthSphere);
+    }
+
+
+    public void updateScene(String url,int id){
+        Log.d(TAG, "Update scene");
+
+        mCamera.setPosition(mInitialPos);
+
+        Material material = new Material();
+        material.setColor(0);
+
+        Material material2 = new Material();
+        material2.setColor(0);
+
+
+        Bitmap mBitmap = DataMgmt.getBitmapfromUrl(getContext(),url);
+
+        Texture earthTexture = new Texture("Earth", mBitmap);
+
+        Texture earthTexture2 = new Texture("Earth", R.drawable.earthtruecolor_nasa_big);
+        earthTexture.shouldRecycle(true);
+        earthTexture2.shouldRecycle(true);
+
+        try {
+            material.addTexture(earthTexture);
+
+        } catch (ATexture.TextureException error) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, error.toString());
+            }
+        }
+
+        earthSphere.removeAllChild();
+        earthSphere.setBackSided(true);
+        earthSphere.setMaterial(material);
+
+        for (AngleMapping angleMapping: mHouseManager.getSparseArray().get(id)) {
+            mPicker.setOnObjectPickedListener(this);
+            PanoramaTransitionObject mChildSphere = new PanoramaTransitionObject(8, 10, 10,angleMapping.getId(),
+                    angleMapping.getUrl());
+            mChildSphere.setX(50*Math.sin(angleMapping.getPhi())*Math.cos(angleMapping.getTheta()));
+            mChildSphere.setZ(50*Math.sin(angleMapping.getPhi())*Math.sin(angleMapping.getTheta()));
+            mChildSphere.setY(50*Math.cos(angleMapping.getPhi()));
+            mChildSphere.setMaterial(material2);
+            mPicker.registerObject(mChildSphere);
+            earthSphere.addChild(mChildSphere);
+        }
+
+        getCurrentScene().addChild(earthSphere);
+
     }
 
     /**
@@ -176,9 +256,14 @@ public class PanoramaRenderer extends Renderer {
     public void onRender(final long elapsedTime, final double deltaTime) {
         super.onRender(elapsedTime, deltaTime);
 
+        /*
         mChildSphere.rotate(Vector3.Axis.Y, 0.4);
+        */
+
         updateCamera();
+
     }
+
 
     /**
      * Use this method to rotate the camera according to the user input.
@@ -235,5 +320,21 @@ public class PanoramaRenderer extends Renderer {
         mCamera.setCameraOrientation(q.multiply(mUserRot));
     }
 
+
+    @Override
+    public void onObjectPicked(@NonNull Object3D object) {
+        PanoramaTransitionObject panoObject = (PanoramaTransitionObject)object;
+        updateScene(panoObject.getNextUrl(),panoObject.getId());
+    }
+
+    @Override
+    public void onNoObjectPicked() {
+
+    }
+
+    public void getObjectAt(float x, float y) {
+        Log.d(TAG,"ObjectPicked");
+        mPicker.getObjectAt(x, y);
+    }
 
 }
