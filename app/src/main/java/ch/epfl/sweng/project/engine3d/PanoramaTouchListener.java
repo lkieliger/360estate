@@ -12,8 +12,7 @@ import static android.view.MotionEvent.INVALID_POINTER_ID;
 public class PanoramaTouchListener implements View.OnTouchListener {
 
     private final PanoramaRenderer mRenderer;
-    private final SurfaceView mSurface;
-    private HouseManager mHouseManager;
+
     private boolean isOnClick = false;
     private final int SCROLL_THRESHOLD = 10;
 
@@ -25,13 +24,11 @@ public class PanoramaTouchListener implements View.OnTouchListener {
 
     private int mActivePointerId = 0;
 
-    public PanoramaTouchListener(PanoramaRenderer renderer, SurfaceView surface, HouseManager houseManager){
+    public PanoramaTouchListener(PanoramaRenderer renderer){
         if(renderer == null ){
             throw new IllegalArgumentException("Renderer reference was null");
         }
         mRenderer = renderer;
-        mSurface = surface;
-        mHouseManager = houseManager;
     }
 
     @Override

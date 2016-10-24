@@ -2,7 +2,10 @@ package ch.epfl.sweng.project.engine3d;
 
 import org.rajawali3d.primitives.Sphere;
 
-public class PanoramaTransitionObject extends Sphere {
+/**
+ * Represent the object permitting transtion to the next panoSphere.
+ */
+class PanoramaTransitionObject extends Sphere {
 
     private final int Id;
     private final String nextUrl;
@@ -36,11 +39,11 @@ public class PanoramaTransitionObject extends Sphere {
         this.nextUrl = nextUrl;
     }
 
-    public int getId() {
+    int getId() {
         return Id;
     }
 
-    public String getNextUrl() {
+    String getNextUrl() {
         return nextUrl;
     }
 }

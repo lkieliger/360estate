@@ -68,7 +68,6 @@ public class PanoramaActivity extends Activity {
         AngleMapping angleMapping8 = new AngleMapping(4.5,1.5,4,url4);
 
 
-
         List<AngleMapping> list4 = new ArrayList<>();
         list4.add(angleMapping1);
         list4.add(angleMapping2);
@@ -104,7 +103,7 @@ public class PanoramaActivity extends Activity {
         mSurface.setSurfaceRenderer(mRenderer);
 
         //Create listener for handling user inputs
-        View.OnTouchListener listener = new PanoramaTouchListener(mRenderer,mSurface,houseManager);
+        View.OnTouchListener listener = new PanoramaTouchListener(mRenderer);
         mSurface.setOnTouchListener(listener);
 
 

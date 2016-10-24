@@ -10,7 +10,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
-import android.widget.ImageView;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.cameras.Camera;
@@ -43,7 +42,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public static final double EPSILON = 0.1d;
     public static final double MAX_THETA = Math.PI - EPSILON;
 
-    private PanoSphere earthSphere = new PanoSphere(100, 48, 48);
+    private PanoramaSphere earthSphere = new PanoramaSphere(100, 48, 48);
 
 
     private final String TAG = "Renderer";
@@ -135,19 +134,15 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         Material material = new Material();
         Material material2 = new Material();
         material.setColor(0);
-        material2.setColor(0);
+        material2.setColor(250);
 
         Bitmap mBitmap = DataMgmt.getBitmapfromUrl(getContext(),mHouseManager.getStartingUrl());
 
-
         Texture earthTexture = new Texture("Earth", mBitmap);
-        Texture earthTexture2 = new Texture("Earth", R.drawable.earthtruecolor_nasa_big);
         earthTexture.shouldRecycle(true);
-        earthTexture2.shouldRecycle(true);
 
         try {
             material.addTexture(earthTexture);
-
         } catch (ATexture.TextureException error) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, error.toString());
@@ -157,37 +152,27 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         earthSphere.setPosition(mInitialPos);
         earthSphere.setBackSided(true);
         earthSphere.setMaterial(material);
+        mPicker.setOnObjectPickedListener(this);
 
-
-        for (AngleMapping angleMapping: mHouseManager.getSparseArray().get(mHouseManager.getStartingId())) {
-
-            mPicker.setOnObjectPickedListener(this);
-            PanoramaTransitionObject mChildSphere = new PanoramaTransitionObject(8, 10, 10,angleMapping.getId(),
-                    angleMapping.getUrl());
-            mChildSphere.setMaterial(material2);
-            mChildSphere.setX(50*Math.sin(angleMapping.getPhi())*Math.cos(angleMapping.getTheta()));
-            mChildSphere.setZ(50*Math.sin(angleMapping.getPhi())*Math.sin(angleMapping.getTheta()));
-            mChildSphere.setY(50*Math.cos(angleMapping.getPhi()));
-
-            mPicker.registerObject(mChildSphere);
-            earthSphere.addChild(mChildSphere);
-        }
-
-
+        addPanoramaTransitionObject(material2,mHouseManager.getStartingId());
         getCurrentScene().addChild(earthSphere);
+
     }
 
 
-    public void updateScene(String url,int id){
+    /**
+     * Update the current scene
+     *
+     * @param url the url of the image that will be loaded and added on the PanoSphere.
+     * @param id the id of the image that will be loaded and added on the PanoSphere.
+     */
+    private void updateScene(String url,int id){
         Log.d(TAG, "Update scene");
 
-        mCamera.setPosition(mInitialPos);
-
         Material material = new Material();
-        material.setColor(0);
-
         Material material2 = new Material();
-        material2.setColor(0);
+        material.setColor(0);
+        material2.setColor(250);
 
 
         Bitmap mBitmap = DataMgmt.getBitmapfromUrl(getContext(),url);
@@ -207,25 +192,35 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             }
         }
 
-        earthSphere.removeAllChild();
-        earthSphere.setBackSided(true);
         earthSphere.setMaterial(material);
 
+        addPanoramaTransitionObject(material2,id);
+
+        getCurrentScene().addChild(earthSphere);
+    }
+
+    /**
+     * Add all the PanoramaTransition object into the Panosphere
+     *
+     * @param materialObject the material of the transition objects.
+     * @param id the id of the current panoSphere.
+     */
+    private void addPanoramaTransitionObject(Material materialObject, int id){
+
+        earthSphere.removeAllChild();
+
         for (AngleMapping angleMapping: mHouseManager.getSparseArray().get(id)) {
-            mPicker.setOnObjectPickedListener(this);
-            PanoramaTransitionObject mChildSphere = new PanoramaTransitionObject(8, 10, 10,angleMapping.getId(),
+            PanoramaTransitionObject mChildSphere = new PanoramaTransitionObject(4, 10, 10,angleMapping.getId(),
                     angleMapping.getUrl());
+            mChildSphere.setMaterial(materialObject);
             mChildSphere.setX(50*Math.sin(angleMapping.getPhi())*Math.cos(angleMapping.getTheta()));
             mChildSphere.setZ(50*Math.sin(angleMapping.getPhi())*Math.sin(angleMapping.getTheta()));
             mChildSphere.setY(50*Math.cos(angleMapping.getPhi()));
-            mChildSphere.setMaterial(material2);
             mPicker.registerObject(mChildSphere);
             earthSphere.addChild(mChildSphere);
         }
-
-        getCurrentScene().addChild(earthSphere);
-
     }
+
 
     /**
      * Method currently not used as the panorama renderer activity already implements an

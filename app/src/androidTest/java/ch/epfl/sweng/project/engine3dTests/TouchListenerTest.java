@@ -37,7 +37,6 @@ public class TouchListenerTest {
 
     private PanoramaRenderer renderer;
     private View view;
-    private SurfaceView mSurface = null;
     private HouseManager mHouseManager = null;
 
     @Before
@@ -55,13 +54,13 @@ public class TouchListenerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void touchListenerWithNullParameter() {
-        PanoramaTouchListener touchListener = new PanoramaTouchListener(null,mSurface,mHouseManager);
+        PanoramaTouchListener touchListener = new PanoramaTouchListener(null);
     }
 
     @Test
     public void consumesValidInput() {
 
-        PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer,mSurface,mHouseManager);
+        PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer);
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_DOWN)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_UP)));
         assertTrue(touchListener.onTouch(view, genEvent(ACTION_MOVE)));
@@ -72,7 +71,7 @@ public class TouchListenerTest {
     @Test
     public void dontConsumeInvalidInput() {
 
-        PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer,mSurface,mHouseManager);
+        PanoramaTouchListener touchListener = new PanoramaTouchListener(renderer);
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_ENTER)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_EXIT)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_MOVE)));

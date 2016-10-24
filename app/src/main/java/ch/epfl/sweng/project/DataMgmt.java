@@ -30,6 +30,13 @@ public final class DataMgmt {
         Picasso.with(context).load(url).into(imgV);
     }
 
+
+    /**
+     * Get a bitmap from url using Picasso.
+     *
+     * @param mContext
+     * @param url the url to load
+     */
     public static Bitmap getBitmapfromUrl(Context mContext, String url) {
 
         Bitmap mBitmap = null;
