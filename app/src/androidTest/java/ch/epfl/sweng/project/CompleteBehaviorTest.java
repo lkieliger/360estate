@@ -31,6 +31,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait500ms;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.waitNms;
 import static org.hamcrest.Matchers.anything;
 
 public class CompleteBehaviorTest {
@@ -78,14 +79,11 @@ public class CompleteBehaviorTest {
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(2).perform(click());
 
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
-        wait1s(TAG);
-        wait1s(TAG);
 
-        /*
-        wait1s(TAG);
-        wait1s(TAG);
+        // wait 5s for the images to load
+        waitNms(TAG, 3000);
 
-        ViewInteraction img0 = onView(childAtPosition(withId(R.id.imgs), 0));
+        ViewInteraction img0 = onView(childAtPosition(withId(R.id.scroll), 0));
         wait500ms(TAG);
 
         img0.perform(scrollTo());
@@ -96,7 +94,10 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.displayed_image)).check(matches(isDisplayed()));
 
         pressBack();
-        */
+
+        wait250ms(TAG);
+
+        onView(withId(R.id.action_launch_panorama)).perform(click());
 
         wait250ms(TAG);
 
