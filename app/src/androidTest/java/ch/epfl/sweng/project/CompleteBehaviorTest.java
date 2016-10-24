@@ -97,7 +97,9 @@ public class CompleteBehaviorTest {
 
         wait250ms(TAG);
 
+        onView(withId(R.id.action_launch_panorama)).perform(click());
 
+        wait250ms(TAG);
 
     }
 
