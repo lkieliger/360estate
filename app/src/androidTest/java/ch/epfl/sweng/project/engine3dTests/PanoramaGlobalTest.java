@@ -4,7 +4,6 @@ package ch.epfl.sweng.project.engine3dTests;
 import android.support.test.rule.ActivityTestRule;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -20,7 +19,6 @@ import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.PanoramaTouchListener;
-import ch.epfl.sweng.project.engine3d.RotSensorListener;
 
 import static android.view.MotionEvent.ACTION_CANCEL;
 import static android.view.MotionEvent.ACTION_DOWN;
