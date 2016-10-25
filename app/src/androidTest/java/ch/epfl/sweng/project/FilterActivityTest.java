@@ -101,11 +101,6 @@ public class FilterActivityTest {
         onView(withId(R.id.filterButtonPopUp)).perform(click());
         onView(withId(R.id.eraseButton)).perform(click());
 
-        wait250ms(TAG);
-
-        StateOfPopUpLayout s = new StateOfPopUpLayout(1,1,"abc ","abc ","abc ","abc ",1,1);
-        s.filterQuery();
-
     }
 
 
