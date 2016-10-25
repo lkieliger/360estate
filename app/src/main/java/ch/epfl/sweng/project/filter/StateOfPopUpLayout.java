@@ -1,5 +1,6 @@
 package ch.epfl.sweng.project.filter;
 
+import android.support.compat.BuildConfig;
 import android.util.Log;
 
 import com.parse.ParseQuery;
@@ -22,7 +23,6 @@ public class StateOfPopUpLayout {
     private String surface;
     private int seekBarPricePosition;
     private int seekBarSurfacePosition;
-
 
 
     /**
@@ -90,39 +90,30 @@ public class StateOfPopUpLayout {
         Boolean isSurfaceFiltered = !surface.equals("");
 
         if (isTypeFiltered) {
-            try {
-                query.whereEqualTo("type", typeSpinner - 1);
-            } catch (IllegalArgumentException e) {
-                Log.d("StateOfPopUpLayout", "IllegalArgumentException" + e.getMessage());
-            }
+            query.whereEqualTo("type", typeSpinner - 1);
         }
 
         if (isCityFiltered) {
             query.whereEqualTo("location", city);
         }
 
-        if (isNbrOfRoomsFiltered) {
-            try {
+        try {
+            if (isNbrOfRoomsFiltered) {
                 query.whereEqualTo("rooms", Integer.parseInt(numberOfRooms));
-            } catch (NumberFormatException e) {
-                Log.d("StateOfPopUpLayout", "NumberFormatException" + e.getMessage());
             }
-        }
 
-        if (isPriceFiltered) {
-            try {
+            if (isPriceFiltered) {
                 int temp = Integer.parseInt(price.split(" ")[0]);
                 query.whereLessThanOrEqualTo("price", temp * MAX_COEFF);
-            } catch (NumberFormatException e) {
-                Log.d("StateOfPopUpLayout", "NumberFormatException" + e.getMessage());
             }
-        }
 
-        if (isSurfaceFiltered) {
-            try {
+            if (isSurfaceFiltered) {
+
                 int temp = Integer.parseInt(surface.split(" ")[0]);
                 query.whereGreaterThanOrEqualTo("surface", temp * MIN_COEFF);
-            } catch (NumberFormatException e) {
+            }
+        } catch (NumberFormatException e) {
+            if (BuildConfig.DEBUG) {
                 Log.d("StateOfPopUpLayout", "NumberFormatException" + e.getMessage());
             }
         }
