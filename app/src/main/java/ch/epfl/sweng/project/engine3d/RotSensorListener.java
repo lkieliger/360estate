@@ -24,7 +24,7 @@ public class RotSensorListener implements SensorEventListener {
     private float[] mRotationMatrixIn;
     private float[] mRotationMatrixOut;
     private Quaternion mDummyRotation;
-    private int mScreenRotation;
+    private int mScreenRotation = 0;
 
     /**
      * A constructor for testing purposes

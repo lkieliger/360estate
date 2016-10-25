@@ -72,8 +72,6 @@ public class ResourcesTests {
 
         testResources.setDescription("THISisATest");
 
-        testResources.saveInBackground();
-
         List<PhotoSphereData> photoSphereDatas1 = testResources.getPhotoSphereDatas();
 
         assertEquals(photoSphereDatas.size(), photoSphereDatas1.size());
