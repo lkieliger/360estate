@@ -29,7 +29,7 @@ public class DescriptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_description);
 
         //TODO: get imgUrls list from Parse and put it into imagesUrl
-        List<String> imagesURL = new ArrayList<>();
+        final ArrayList<String> imagesURL = new ArrayList<>();
         imagesURL.add("https://360.astutus.org/estate/chaton1.jpg");
         imagesURL.add("https://360.astutus.org/estate/chaton2.jpg");
         imagesURL.add("https://360.astutus.org/estate/chaton3.jpg");

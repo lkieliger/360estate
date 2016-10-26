@@ -57,9 +57,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         ParseObject.registerSubclass(Item.class);
 
-        Intent intent = new Intent(this, DescriptionActivity.class);
-        startActivity(intent);
-
         mEmail = (TextView) findViewById(R.id.login_email);
         mPassword = (TextView) findViewById(R.id.login_password);
         mAppContext = getApplicationContext();

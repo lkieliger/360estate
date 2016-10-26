@@ -35,7 +35,7 @@ import static org.hamcrest.Matchers.is;
 
 
 @RunWith(AndroidJUnit4.class)
-public class DescriptionDisplayTest {
+public class DescriptionSlideTest {
 
     @Rule
     public ActivityTestRule<DescriptionActivity> mActivityTestRule = new ActivityTestRule<>(DescriptionActivity.class);
@@ -100,19 +100,6 @@ public class DescriptionDisplayTest {
                                     withId(R.id.activity_description),0)
                             ,1))).perform(click());
 
-
-
-
-        ViewInteraction imageView3 = onView(
-                allOf(withId(R.id.displayed_image),
-                        childAtPosition(
-                                allOf(withId(R.id.activity_display),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                0),
-                        isDisplayed()));
-        imageView3.check(matches(isDisplayed()));
 
     }
 
