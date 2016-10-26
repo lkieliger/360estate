@@ -49,36 +49,32 @@ public class Resources extends ParseObject {
         return getString(descriptionTag);
     }
 
-    public List<String> getPicturesList() {
+    public List<String> getPicturesList() throws JSONException {
         JSONArray urlArray = getJSONArray(picturesListTag);
         List<String> picturesList = new ArrayList<>();
 
-        try {
-            for (int i = 0; i < urlArray.length(); i++) {
-                picturesList.add(urlArray.getString(i));
-            }
-        } catch (JSONException e) {
+        if (urlArray == null) {
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, "JSON Exception:" + e.getMessage());
+                Log.d(TAG, "Error parsing the picturesList array from JSON");
             }
+            return picturesList;
+        }
+
+        for (int i = 0; i < urlArray.length(); i++) {
+            picturesList.add(urlArray.getString(i));
         }
 
         return picturesList;
     }
 
-    public List<PhotoSphereData> getPhotoSphereDatas() {
+    public List<PhotoSphereData> getPhotoSphereDatas() throws JSONException {
         JSONArray photoSphereDataArray = getJSONArray(photoSphereDatasTag);
         List<PhotoSphereData> photoSphereDatas = new ArrayList<>(photoSphereDataArray.length());
-        try {
-            for (int i = 0; i < photoSphereDataArray.length(); i++) {
-                JSONObject photoSphereObject = (JSONObject) photoSphereDataArray.get(i);
-                photoSphereDatas.add(parsePhotoSphereData(photoSphereObject));
-            }
-        } catch (JSONException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "JSON Exception:" + e.getMessage());
-            }
+        for (int i = 0; i < photoSphereDataArray.length(); i++) {
+            JSONObject photoSphereObject = (JSONObject) photoSphereDataArray.get(i);
+            photoSphereDatas.add(parsePhotoSphereData(photoSphereObject));
         }
+
         return photoSphereDatas;
     }
 
