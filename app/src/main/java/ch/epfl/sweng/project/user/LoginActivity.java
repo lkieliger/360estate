@@ -15,6 +15,7 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.DescriptionActivity;
 import ch.epfl.sweng.project.ListActivity;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.Item;
@@ -55,6 +56,9 @@ public class LoginActivity extends AppCompatActivity {
             parseNotInitialized = false;
         }
         ParseObject.registerSubclass(Item.class);
+
+        Intent intent = new Intent(this, DescriptionActivity.class);
+        startActivity(intent);
 
         mEmail = (TextView) findViewById(R.id.login_email);
         mPassword = (TextView) findViewById(R.id.login_password);
