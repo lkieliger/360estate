@@ -40,9 +40,6 @@ public class AngleMapping{
     public String getUrl() {
         return mUrl;
     }
-    String getUrl() {
-        return mUrl;
-    }
 
     @Override
     public boolean equals(Object obj) {

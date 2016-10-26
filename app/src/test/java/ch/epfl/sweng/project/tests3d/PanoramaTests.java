@@ -19,6 +19,8 @@ import org.robolectric.annotation.Config;
 import org.robolectric.internal.Shadow;
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.data.HouseManager;
+import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.PanoramaTouchListener;
 import ch.epfl.sweng.project.engine3d.RotSensorListener;
@@ -55,12 +57,11 @@ public class PanoramaTests {
     public void panoramaRenderTests() {
 
         LoginActivity loginActivity = Robolectric.buildActivity(LoginActivity.class).
-                create().
-                get();
+                create().get();
 
         Display display = Shadow.newInstanceOf(Display.class);
 
-        PanoramaRenderer panoramaRenderer = new PanoramaRenderer(loginActivity.getBaseContext(), display);
+        PanoramaRenderer panoramaRenderer = new PanoramaRenderer(loginActivity.getBaseContext(), display, null);
 
         RotSensorListener rotSensorListener = new RotSensorListener(display, panoramaRenderer);
         assertTrue(rotSensorListener.getDummyRotation().equals(new Quaternion()));
@@ -128,6 +129,9 @@ public class PanoramaTests {
 
 
     }
+
+
+
 
     private void assertQuaternionEquals(Quaternion v1, Quaternion v2, boolean shouldBeEqual) {
         if (BuildConfig.DEBUG) {
