@@ -92,7 +92,7 @@ public class DescriptionDisplayTest {
                 ));
         imageView4.check(matches(isDisplayed()));
 
-        ViewInteraction imageView2  = onView(
+        onView(
                 allOf(
                         withId(R.id.scroll),
                             childAtPosition(
