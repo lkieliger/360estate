@@ -2,14 +2,20 @@ package ch.epfl.sweng.project.data;
 
 import ch.epfl.sweng.project.util.Tuple;
 
-class AngleMapping {
+public class AngleMapping{
 
     private final Tuple<Double, Double> thetaPhi;
     private final int mId;
     private final String mUrl;
 
-    AngleMapping(Tuple<Double, Double> extThetaPhi, int extId, String extUrl) {
+    public AngleMapping(Tuple<Double, Double> extThetaPhi, int extId, String extUrl) {
         thetaPhi = extThetaPhi;
+        mId = extId;
+        mUrl = extUrl;
+    }
+
+    public AngleMapping(Double extTheta, Double extPhi, int extId, String extUrl){
+        thetaPhi = new Tuple<Double, Double>(extTheta,extPhi);
         mId = extId;
         mUrl = extUrl;
     }
@@ -19,11 +25,11 @@ class AngleMapping {
         return thetaPhi;
     }
 
-    Double getTheta() {
+    public Double getTheta() {
         return thetaPhi.getX();
     }
 
-    Double getPhi() {
+    public Double getPhi() {
         return thetaPhi.getY();
     }
 
@@ -31,6 +37,9 @@ class AngleMapping {
         return mId;
     }
 
+    public String getUrl() {
+        return mUrl;
+    }
     String getUrl() {
         return mUrl;
     }
