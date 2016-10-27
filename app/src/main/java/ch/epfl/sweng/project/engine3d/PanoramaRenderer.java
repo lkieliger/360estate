@@ -22,7 +22,6 @@ import org.rajawali3d.renderer.Renderer;
 import org.rajawali3d.util.ObjectColorPicker;
 import org.rajawali3d.util.OnObjectPickedListener;
 
-
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
@@ -41,14 +40,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public static final double MAX_PHI = 2 * Math.PI;
     public static final double EPSILON = 0.1d;
     public static final double MAX_THETA = Math.PI - EPSILON;
-
-    private PanoramaSphere earthSphere = new PanoramaSphere(100, 48, 48);
-
-
     private final String TAG = "Renderer";
-
     private final Display mDisplay;
-
     private final Camera mCamera;
     private final Vector3 mInitialPos;
     private final double mXdpi;
@@ -57,7 +50,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private final RotSensorListener mRotListener;
     private final boolean mRotSensorAvailable;
     private final Sensor mRotSensor;
-
+    private PanoramaSphere earthSphere = new PanoramaSphere(100, 48, 48);
     private Quaternion mUserRot;
     private Quaternion mSensorRot;
 
@@ -272,7 +265,12 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * @param dy The difference in pixels along the Y axis. Positive means down
      */
     public void updateCameraRotation(float dx, float dy) {
-        double phi = (dx / mXdpi) * SENSITIVITY;
+        double x = (dx / mXdpi) * SENSITIVITY;
+        double y = (dy / mYdpi) * SENSITIVITY;
+
+        double roll = mSensorRot.getRotationZ();
+
+        double phi = (Math.cos(roll) * x) - (Math.sin(roll) * y);
 
         Quaternion rotY = new Quaternion().fromAngleAxis(Vector3.Axis.Y, -phi);
         mUserRot.multiplyLeft(rotY);
