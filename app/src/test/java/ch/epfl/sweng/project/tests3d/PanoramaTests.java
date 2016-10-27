@@ -1,7 +1,6 @@
 package ch.epfl.sweng.project.tests3d;
 
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,8 +18,6 @@ import org.robolectric.annotation.Config;
 import org.robolectric.internal.Shadow;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.data.HouseManager;
-import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.PanoramaTouchListener;
 import ch.epfl.sweng.project.engine3d.RotSensorListener;
@@ -49,6 +46,7 @@ public class PanoramaTests {
 
     private static final String TAG = "Panorama unit tests";
     private static double errorEpsilon = 0.1d;
+    private PanoramaRenderer panoramaRenderer;
     private DisplayMetrics metrics = null;
 
 
@@ -61,7 +59,7 @@ public class PanoramaTests {
 
         Display display = Shadow.newInstanceOf(Display.class);
 
-        PanoramaRenderer panoramaRenderer = new PanoramaRenderer(loginActivity.getBaseContext(), display, null);
+        panoramaRenderer = new PanoramaRenderer(loginActivity.getBaseContext(), display, null);
 
         RotSensorListener rotSensorListener = new RotSensorListener(display, panoramaRenderer);
         assertTrue(rotSensorListener.getDummyRotation().equals(new Quaternion()));
@@ -92,15 +90,16 @@ public class PanoramaTests {
      * reported by the touch listener
      */
 
-        double angleChange = 90;
+        double angleChange = Math.cos(angleToPixelDelta(90, true));
 
         Quaternion newRot = panoramaRenderer.getUserRotation().
-                multiplyLeft(new Quaternion().fromAngleAxis(Vector3.Axis.Y, -angleChange));
+                multiplyLeft(new Quaternion().fromAngleAxis(Vector3.Axis.Y, -90));
         wait500ms(TAG);
 
 
-        float phi = angleToPixelDelta(angleChange, true);
-        panoramaRenderer.updateCameraRotation(phi, 0);
+        float dx = angleToPixelDelta(90 / Math.cos(panoramaRenderer.getSensorRot().getRotationZ()),
+                true);
+        panoramaRenderer.updateCameraRotation(dx, 0);
 
         wait1s(TAG);
         assertQuaternionEquals(newRot, panoramaRenderer.getUserRotation(), true);
@@ -131,13 +130,10 @@ public class PanoramaTests {
     }
 
 
-
-
     private void assertQuaternionEquals(Quaternion v1, Quaternion v2, boolean shouldBeEqual) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, String.format("V1: %1$.2f, %2$.2f, %3$.2f, %4$.2f", v1.w, v1.x, v1.y, v1.z));
-            Log.d(TAG, String.format("V2: %1$.2f, %2$.2f, %3$.2f, %4$.2f", v2.w, v2.x, v2.y, v2.z));
-        }
+
+        System.out.println(String.format("V1: %1$.2f, %2$.2f, %3$.2f, %4$.2f", v1.w, v1.x, v1.y, v1.z));
+        System.out.println(String.format("V2: %1$.2f, %2$.2f, %3$.2f, %4$.2f", v2.w, v2.x, v2.y, v2.z));
         if (shouldBeEqual) {
             Assert.assertTrue(v1.equals(v2, errorEpsilon));
         } else {
