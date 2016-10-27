@@ -132,7 +132,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         Bitmap mBitmap = DataMgmt.getBitmapfromUrl(getContext(),mHouseManager.getStartingUrl());
 
         Texture earthTexture = new Texture("Earth", mBitmap);
-        earthTexture.shouldRecycle(true);
 
         try {
             material.addTexture(earthTexture);
@@ -173,8 +172,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         Texture earthTexture = new Texture("Earth", mBitmap);
 
         Texture earthTexture2 = new Texture("Earth", R.drawable.earthtruecolor_nasa_big);
-        earthTexture.shouldRecycle(true);
-        earthTexture2.shouldRecycle(true);
 
         try {
             material.addTexture(earthTexture);

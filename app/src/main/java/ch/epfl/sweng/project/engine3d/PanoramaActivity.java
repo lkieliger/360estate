@@ -174,7 +174,7 @@ public class PanoramaActivity extends Activity {
         client.connect();
         AppIndex.AppIndexApi.start(client, getIndexApiAction());
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
     }
 
     @Override
