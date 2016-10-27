@@ -28,6 +28,8 @@ public class DescriptionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_description);
 
+        Bundle b = getIntent().getExtras();
+        String id = b.getString("id");
         //TODO: get imgUrls list from Parse and put it into imagesUrl
         final ArrayList<String> imagesURL = new ArrayList<>();
         imagesURL.add("https://360.astutus.org/estate/chaton1.jpg");
