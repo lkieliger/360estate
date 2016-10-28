@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,16 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.parse.DeleteCallback;
+import com.parse.FindCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseRelation;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,6 +36,7 @@ import ch.epfl.sweng.project.filter.EraseButtonListener;
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
 import ch.epfl.sweng.project.data.Item;
 import ch.epfl.sweng.project.data.ItemAdapter;
+import ch.epfl.sweng.project.user.LoginActivity;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -43,6 +55,10 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+
+
+
+
         final List<Item> itemList = new ArrayList<>();
         final ItemAdapter itemAdapter = new ItemAdapter(this, itemList);
         final ListView listView = (ListView) findViewById(R.id.houseList);
@@ -54,6 +70,17 @@ public class ListActivity extends AppCompatActivity {
                 initPopUpFilter(itemList, itemAdapter, listView);
             }
         });
+
+        Button logOutButton = (Button) findViewById(R.id.logOutButton);
+        logOutButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v){
+                logOutUser();
+            }
+        });
+
+
 
         DataMgmt.getData(itemList, itemAdapter, stateOfPopUpLayout);
         // Assign adapter to ListView
@@ -73,6 +100,8 @@ public class ListActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     /**
      * Display above the seekBar a text to help the user to adjust the seekBar and his selected input.
@@ -179,4 +208,15 @@ public class ListActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    public void logOutUser() {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+
+
+
+
+    }
+
+
 }

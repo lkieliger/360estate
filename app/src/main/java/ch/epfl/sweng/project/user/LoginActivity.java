@@ -8,11 +8,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+
+
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+
+import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.ListActivity;
@@ -33,6 +41,10 @@ public class LoginActivity extends AppCompatActivity {
     public static final String APP_ID = "360ESTATE";
     private TextView mEmail = null;
     private TextView mPassword = null;
+    public static final String  CURRENTUSERID = "currentUserId";
+
+
+    //private static ParseUser currentUser = null;
 
     private Context mAppContext = null;
 
@@ -42,13 +54,17 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
+
         if (parseNotInitialized) {
             //Initialize connection with the parse server
+
+
             Parse.initialize(new Parse.Configuration.Builder(this)
                     // The network interceptor is used to debug the communication between server/client
                     //.addNetworkInterceptor(new ParseLogInterceptor())
                     .applicationId(APP_ID)
                     .server("https://360.astutus.org/parse/")
+                    .enableLocalDataStore()  // enable the Offline Mode
                     .build()
             );
             //noinspection AssignmentToStaticFieldFromInstanceMethod
@@ -59,7 +75,26 @@ public class LoginActivity extends AppCompatActivity {
         mEmail = (TextView) findViewById(R.id.login_email);
         mPassword = (TextView) findViewById(R.id.login_password);
         mAppContext = getApplicationContext();
+
+        // Check if the LD persisted user information if so transit to the listActivity else proceed on login.
+
+        if(userAlreadyLogIn()){
+            Intent intent = new Intent(LoginActivity.this, ListActivity.class);
+            startActivity(intent);
+
+            finish();
+
+        }
+
+
+
+
+
     }
+
+
+
+
 
 
     /**
@@ -81,10 +116,32 @@ public class LoginActivity extends AppCompatActivity {
                                 shortToast(getApplicationContext(),
                                         getResources().getText(R.string.info_login_successful));
 
+
+                                // persist user Information
+                                System.out.println("confirm login");
+                                ParseUser.getCurrentUser().pinInBackground(CURRENTUSERID,new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if(e == null){
+                                            System.out.println("the User parse object has been saved correcly");
+
+                                        }else{
+                                            System.out.println("Pinn background does not work.");
+                                        }
+                                    }
+                                });
+
+
+
+
+
                                 Intent intent = new Intent(LoginActivity.this, ListActivity.class);
                                 startActivity(intent);
 
                                 finish();
+
+
+
 
                             } else {
                                 shortToast(getApplicationContext(),
@@ -138,6 +195,28 @@ public class LoginActivity extends AppCompatActivity {
                     getResources().getText(R.string.error_empty_field));
         }
         return filled;
+    }
+
+    /**
+     * This method helps to decide if the user need to reconnect.
+     * @return true if user's information is already cached.
+     */
+    private boolean userAlreadyLogIn(){
+
+        int nbrUser=0;
+        ParseQuery queryExistingUser = ParseUser.getQuery();
+        try {
+            nbrUser= queryExistingUser.fromLocalDatastore().count();
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+        }
+
+
+
+
+        System.out.println("The number of user log-in :"+ nbrUser ) ;
+
+        return (nbrUser > 0);
     }
 
 }
