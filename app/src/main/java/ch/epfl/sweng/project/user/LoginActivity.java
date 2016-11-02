@@ -20,6 +20,8 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 
+import org.rajawali3d.loader.ParsingException;
+
 import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
@@ -78,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check if the LD persisted user information if so transit to the listActivity else proceed on login.
 
+
         if(userAlreadyLogIn()){
             Intent intent = new Intent(LoginActivity.this, ListActivity.class);
             startActivity(intent);
@@ -119,6 +122,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 // persist user Information
                                 System.out.println("confirm login");
+                                /**
                                 ParseUser.getCurrentUser().pinInBackground(CURRENTUSERID,new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
@@ -130,6 +134,8 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
+
+                                 **/
 
 
 
@@ -202,7 +208,7 @@ public class LoginActivity extends AppCompatActivity {
      * @return true if user's information is already cached.
      */
     private boolean userAlreadyLogIn(){
-
+        /**
         int nbrUser=0;
         ParseQuery queryExistingUser = ParseUser.getQuery();
         try {
@@ -210,13 +216,26 @@ public class LoginActivity extends AppCompatActivity {
         } catch (ParseException e) {
             System.out.println(e.getMessage());
         }
+        **/
+        boolean isLogIn = false;
+        ParseUser currentUser = ParseUser.getCurrentUser();
+
+        if(currentUser != null) {
+            isLogIn = currentUser.isAuthenticated();
+        }else{
+            System.out.println("currentUser is Null.");
+        }
+
+        if(isLogIn){
+            System.out.println("User already LogIn");
+
+        }else{
+            System.out.println("User not logIn.");
+        }
 
 
 
-
-        System.out.println("The number of user log-in :"+ nbrUser ) ;
-
-        return (nbrUser > 0);
+        return isLogIn;
     }
 
 }
