@@ -27,6 +27,7 @@ import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.AngleMapping;
 import ch.epfl.sweng.project.data.HouseManager;
+import ch.epfl.sweng.project.util.DebugPrinter;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -56,6 +57,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     private HouseManager mHouseManager;
     private ObjectColorPicker mPicker;
+
+    private int debugCounter = 0;
 
     public PanoramaRenderer(Context context, Display display, HouseManager houseManager) {
 
@@ -222,16 +225,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void onTouchEvent(MotionEvent event) {
     }
 
-    /**
-     * Method not used
-     *
-     * @param x .
-     * @param y .
-     * @param z .
-     * @param w .
-     * @param i .
-     * @param j .
-     */
     @Override
     public void onOffsetsChanged(float x, float y, float z, float w, int i, int j) {
     }
@@ -241,11 +234,16 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void onRender(final long elapsedTime, final double deltaTime) {
         super.onRender(elapsedTime, deltaTime);
 
-        /*
-        mChildSphere.rotate(Vector3.Axis.Y, 0.4);
-        */
-
         updateCamera();
+
+        if (BuildConfig.DEBUG) {
+
+            if (debugCounter == 60) {
+                debugCounter = 0;
+                DebugPrinter.printRendererDebug(TAG, this);
+            }
+            debugCounter++;
+        }
 
     }
 
