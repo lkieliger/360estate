@@ -15,6 +15,13 @@ public final class DebugPrinter {
     private DebugPrinter() {
     }
 
+    /**
+     * This method should be called by a PanoramaRenderer object. It implements all the logic about the printing
+     * of useful parameters in the logcat.
+     *
+     * @param tag The tag of the panorama renderer, which will be transmitted to the Log.d() method
+     * @param pr  A reference to the PanoramaRenderer in order to extract all the useful information
+     */
     @SuppressLint("LogConditional")
     public static void printRendererDebug(String tag, PanoramaRenderer pr) {
 
