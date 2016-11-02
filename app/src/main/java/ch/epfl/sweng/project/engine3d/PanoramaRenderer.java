@@ -14,8 +14,10 @@ import android.view.MotionEvent;
 import org.rajawali3d.Object3D;
 import org.rajawali3d.cameras.Camera;
 import org.rajawali3d.materials.Material;
+import org.rajawali3d.materials.MaterialManager;
 import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.Texture;
+import org.rajawali3d.materials.textures.TextureManager;
 import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.renderer.Renderer;
@@ -24,7 +26,6 @@ import org.rajawali3d.util.OnObjectPickedListener;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.DataMgmt;
-import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.AngleMapping;
 import ch.epfl.sweng.project.data.HouseManager;
 import ch.epfl.sweng.project.util.DebugPrinter;
@@ -51,7 +52,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private final RotSensorListener mRotListener;
     private final boolean mRotSensorAvailable;
     private final Sensor mRotSensor;
-    private PanoramaSphere earthSphere = new PanoramaSphere(100, 48, 48);
+    private PanoramaSphere mPanoSphere;
     private Quaternion mUserRot;
     private Quaternion mSensorRot;
 
@@ -64,8 +65,10 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
         super(context);
 
-        mPicker = new ObjectColorPicker(this);
+        TextureManager.getInstance().registerRenderer(this);
+        MaterialManager.getInstance().registerRenderer(this);
 
+        mPicker = new ObjectColorPicker(this);
         mDisplay = display;
 
         mSensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
@@ -127,15 +130,14 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
         mCamera.setPosition(mInitialPos);
 
-        Material material = new Material();
+        //Material material = new Material();
         Material material2 = new Material();
-        material.setColor(0);
         material2.setColor(250);
 
         Bitmap mBitmap = DataMgmt.getBitmapfromUrl(getContext(),mHouseManager.getStartingUrl());
 
-        Texture earthTexture = new Texture("Earth", mBitmap);
-
+        //Texture t = new Texture(PanoramaSphere.TEXTURE_TAG, mBitmap);
+        /*
         try {
             material.addTexture(earthTexture);
         } catch (ATexture.TextureException error) {
@@ -143,14 +145,13 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
                 Log.d(TAG, error.toString());
             }
         }
-
-        earthSphere.setPosition(mInitialPos);
-        earthSphere.setBackSided(true);
-        earthSphere.setMaterial(material);
+        */
+        mPanoSphere = new PanoramaSphere(100, 48, 48, mBitmap);
+        mPanoSphere.associateToPanoramaScene(getCurrentScene());
         mPicker.setOnObjectPickedListener(this);
 
         addPanoramaTransitionObject(material2,mHouseManager.getStartingId());
-        getCurrentScene().addChild(earthSphere);
+
 
     }
 
@@ -163,7 +164,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      */
     private void updateScene(String url,int id){
         Log.d(TAG, "Update scene");
-
+/*
         Material material = new Material();
         Material material2 = new Material();
         material.setColor(0);
@@ -185,11 +186,11 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             }
         }
 
-        earthSphere.setMaterial(material);
+        mPanoSphere.setMaterial(material);
 
         addPanoramaTransitionObject(material2,id);
 
-        getCurrentScene().addChild(earthSphere);
+        getCurrentScene().addChild(mPanoSphere);*/
     }
 
     /**
@@ -200,7 +201,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      */
     private void addPanoramaTransitionObject(Material materialObject, int id){
 
-        earthSphere.removeAllChild();
+        mPanoSphere.removeAllChild();
 
         for (AngleMapping angleMapping: mHouseManager.getSparseArray().get(id)) {
             PanoramaTransitionObject mChildSphere = new PanoramaTransitionObject(4, 10, 10,angleMapping.getId(),
@@ -210,7 +211,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             mChildSphere.setZ(50*Math.sin(angleMapping.getPhi())*Math.sin(angleMapping.getTheta()));
             mChildSphere.setY(50*Math.cos(angleMapping.getPhi()));
             mPicker.registerObject(mChildSphere);
-            earthSphere.addChild(mChildSphere);
+            mPanoSphere.addChild(mChildSphere);
         }
     }
 
@@ -323,6 +324,18 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void getObjectAt(float x, float y) {
         Log.d(TAG,"ObjectPicked");
         mPicker.getObjectAt(x, y);
+    }
+
+
+    private void applyTexture(Bitmap b, Object3D o) {
+        Material m = new Material();
+        m.setColor(0);
+        try {
+            m.addTexture(new Texture("hh", b));
+        } catch (ATexture.TextureException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        o.setMaterial(m);
     }
 
 }
