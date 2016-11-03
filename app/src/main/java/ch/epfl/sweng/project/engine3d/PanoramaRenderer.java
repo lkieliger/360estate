@@ -139,12 +139,11 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             }
         }
         */
-        mPanoSphere = new PanoramaSphere(100, 48, 48, mBitmap);
-        mPanoSphere.associateToPanoramaScene(getCurrentScene());
+        mPanoSphere = new PanoramaSphere(mBitmap);
         mPicker.setOnObjectPickedListener(this);
+        getCurrentScene().addChild(mPanoSphere);
 
         addPanoramaTransitionObject(material2, mHouseManager.getStartingId());
-
 
     }
 
