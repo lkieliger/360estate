@@ -3,6 +3,7 @@ package ch.epfl.sweng.project.engine3d;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Plane;
+import org.rajawali3d.util.ObjectColorPicker;
 
 /**
  * Represent the object permitting transtion to the next panoSphere.
@@ -14,7 +15,8 @@ class PanoramaTransitionObject extends Plane implements PanoramaComponent {
     private final String nextUrl;
 
     public PanoramaTransitionObject(double theta, double phi, int id, String nextUrl) {
-        super(10, 10, 2, 2, Vector3.Axis.X);
+        super(10, 10, 2, 2, Vector3.Axis.Z);
+        enableLookAt();
 
         Id = id;
         this.nextUrl = nextUrl;
@@ -26,7 +28,7 @@ class PanoramaTransitionObject extends Plane implements PanoramaComponent {
         setX(50 * Math.sin(phi) * Math.cos(theta));
         setZ(50 * Math.sin(phi) * Math.sin(theta));
         setY(50 * Math.cos(phi));
-
+        mLookAt = new Vector3(0, 0, 0);
     }
 
     int getId() {
@@ -35,5 +37,15 @@ class PanoramaTransitionObject extends Plane implements PanoramaComponent {
 
     String getNextUrl() {
         return nextUrl;
+    }
+
+    @Override
+    public void unregisterComponent(ObjectColorPicker p) {
+        p.unregisterObject(this);
+    }
+
+    @Override
+    public void registerComponent(ObjectColorPicker p) {
+        p.registerObject(this);
     }
 }

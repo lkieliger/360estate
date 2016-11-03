@@ -13,7 +13,6 @@ import android.view.MotionEvent;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.cameras.Camera;
-import org.rajawali3d.materials.Material;
 import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.renderer.Renderer;
@@ -22,7 +21,6 @@ import org.rajawali3d.util.OnObjectPickedListener;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.DataMgmt;
-import ch.epfl.sweng.project.data.AngleMapping;
 import ch.epfl.sweng.project.data.HouseManager;
 import ch.epfl.sweng.project.util.DebugPrinter;
 
@@ -123,27 +121,12 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
         mCamera.setPosition(mInitialPos);
 
-        //Material material = new Material();
-        Material material2 = new Material();
-        material2.setColor(250);
 
-        Bitmap mBitmap = DataMgmt.getBitmapfromUrl(getContext(), mHouseManager.getStartingUrl());
-
-        //Texture t = new Texture(PanoramaSphere.TEXTURE_TAG, mBitmap);
-        /*
-        try {
-            material.addTexture(earthTexture);
-        } catch (ATexture.TextureException error) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, error.toString());
-            }
-        }
-        */
-        mPanoSphere = new PanoramaSphere(mBitmap);
+        mPanoSphere = new PanoramaSphere();
         mPicker.setOnObjectPickedListener(this);
         getCurrentScene().addChild(mPanoSphere);
 
-        addPanoramaTransitionObject(mHouseManager.getStartingId());
+        updateScene(mHouseManager.getStartingUrl(), mHouseManager.getStartingId());
 
     }
 
@@ -157,37 +140,12 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private void updateScene(String url, int id) {
         Log.d(TAG, "Update scene");
 
-        Material material2 = new Material();
-        material2.setColor(250);
-
-
         Bitmap b = DataMgmt.getBitmapfromUrl(getContext(), url);
 
+        mPanoSphere.detachPanoramaComponents(mPicker);
         mPanoSphere.setPhotoTexture(b);
-        addPanoramaTransitionObject(id);
+        mPanoSphere.attachPanoramaComponents(mHouseManager.getSparseArray().get(id), mPicker);
     }
-
-    /**
-     * Add all the PanoramaTransition object into the Panosphere
-     *
-     * @param id             the id of the current panoSphere.
-     */
-    private void addPanoramaTransitionObject(int id) {
-
-        mPanoSphere.removeAllChild();
-
-        for (AngleMapping angleMapping : mHouseManager.getSparseArray().get(id)) {
-            PanoramaTransitionObject transitionObject = new PanoramaTransitionObject(
-                    angleMapping.getTheta(),
-                    angleMapping.getPhi(),
-                    angleMapping.getId(),
-                    angleMapping.getUrl());
-
-            mPicker.registerObject(transitionObject);
-            mPanoSphere.addChild(transitionObject);
-        }
-    }
-
 
     /**
      * Method currently not used as the panorama renderer activity already implements an
@@ -285,6 +243,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     @Override
     public void onObjectPicked(@NonNull Object3D object) {
+        Log.d(TAG, "ObjectPicked");
         PanoramaTransitionObject panoObject = (PanoramaTransitionObject) object;
         updateScene(panoObject.getNextUrl(), panoObject.getId());
     }
@@ -295,7 +254,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     }
 
     public void getObjectAt(float x, float y) {
-        Log.d(TAG, "ObjectPicked");
         mPicker.getObjectAt(x, y);
     }
 

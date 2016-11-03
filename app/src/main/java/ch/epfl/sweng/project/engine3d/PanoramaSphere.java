@@ -9,6 +9,12 @@ import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.materials.textures.TextureManager;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Sphere;
+import org.rajawali3d.util.ObjectColorPicker;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ch.epfl.sweng.project.data.AngleMapping;
 
 
 /**
@@ -17,8 +23,10 @@ import org.rajawali3d.primitives.Sphere;
 final class PanoramaSphere extends Sphere {
 
     public static final String TEXTURE_TAG = "PhotoTexture";
+    private final static int INITIAL_COMPONENTLIST_SIZE = 10;
     private static final String TAG = "PanoramaSphere";
     private static final Vector3 INITIAL_POS = new Vector3(0, 0, 0);
+    private final List<PanoramaComponent> mComponentList;
     private Texture mPhotoTexture;
 
     /**
@@ -32,8 +40,10 @@ final class PanoramaSphere extends Sphere {
      *
      * @param b A bitmap file that contains the panorama photograph
      */
-    PanoramaSphere(Bitmap b) {
+    PanoramaSphere() {
         super(100, 48, 48);
+
+        mComponentList = new ArrayList<>(INITIAL_COMPONENTLIST_SIZE);
 
         setBackSided(true);
         setPosition(INITIAL_POS);
@@ -41,7 +51,7 @@ final class PanoramaSphere extends Sphere {
         mMaterial.setColor(0);
         mMaterial.enableLighting(false);
 
-        mPhotoTexture = new Texture(TEXTURE_TAG, b);
+        mPhotoTexture = new Texture(TEXTURE_TAG);
 
         try {
             mMaterial.addTexture(mPhotoTexture);
@@ -55,7 +65,11 @@ final class PanoramaSphere extends Sphere {
     /**
      * Call this method to dissociate all UI components that were previously defined as children of the panorama sphere
      */
-    void removeAllChild() {
+    void detachPanoramaComponents(ObjectColorPicker p) {
+        for (PanoramaComponent pc : mComponentList) {
+            pc.unregisterComponent(p);
+        }
+        mComponentList.clear();
         mChildren.clear();
     }
 
@@ -71,8 +85,20 @@ final class PanoramaSphere extends Sphere {
         TextureManager.getInstance().replaceTexture(mPhotoTexture);
     }
 
-    void attachPanoramaComponent(PanoramaComponent component) {
+    void attachPanoramaComponents(List<AngleMapping> l, ObjectColorPicker p) {
+        Log.d(TAG, "Call to attach panorama");
+        for (AngleMapping am : l) {
 
+            Log.d(TAG, "Adding a transition object");
+            PanoramaTransitionObject transitionObject = new PanoramaTransitionObject(
+                    am.getTheta(),
+                    am.getPhi(),
+                    am.getId(),
+                    am.getUrl());
+            transitionObject.registerComponent(p);
+            addChild(transitionObject);
+            mComponentList.add(transitionObject);
+        }
     }
 
 
