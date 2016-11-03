@@ -21,38 +21,33 @@ class PanoramaSphere extends Sphere implements PanoramaComponent {
     private static final String TAG = "PanoramaSphere";
     private static final Vector3 INITIAL_POS = new Vector3(0, 0, 0);
     private Texture mPhotoTexture;
-    private Material mPhotoMaterial;
-    private Bitmap mBitmap;
 
     PanoramaSphere(float radius, int segmentsW, int segmentsH, Bitmap b) {
         super(radius, segmentsW, segmentsH);
 
         setBackSided(true);
         setPosition(INITIAL_POS);
-
-        mBitmap = b;
-
-        mPhotoMaterial = new Material();
-        mPhotoMaterial.setColor(0);
-        mPhotoMaterial.enableLighting(false);
+        mMaterial = new Material();
+        mMaterial.setColor(0);
+        mMaterial.enableLighting(false);
 
         mPhotoTexture = new Texture(TEXTURE_TAG, b);
 
         try {
-            mPhotoMaterial.addTexture(mPhotoTexture);
+            mMaterial.addTexture(mPhotoTexture);
         } catch (ATexture.TextureException e) {
             Log.e(TAG, e.getMessage());
         }
 
-        setMaterial(mPhotoMaterial);
+        setMaterial(mMaterial);
     }
 
-    void removeAllChild(){
+    void removeAllChild() {
         mChildren.clear();
     }
 
     public void setPhotoTexture(Bitmap b) {
-        mPhotoTexture.setBitmap(mBitmap);
+        mPhotoTexture.setBitmap(b);
         TextureManager.getInstance().replaceTexture(mPhotoTexture);
     }
 
