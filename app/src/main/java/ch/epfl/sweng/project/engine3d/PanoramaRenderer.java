@@ -143,7 +143,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mPicker.setOnObjectPickedListener(this);
         getCurrentScene().addChild(mPanoSphere);
 
-        addPanoramaTransitionObject(material2, mHouseManager.getStartingId());
+        addPanoramaTransitionObject(mHouseManager.getStartingId());
 
     }
 
@@ -164,28 +164,27 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         Bitmap b = DataMgmt.getBitmapfromUrl(getContext(), url);
 
         mPanoSphere.setPhotoTexture(b);
-        addPanoramaTransitionObject(material2, id);
+        addPanoramaTransitionObject(id);
     }
 
     /**
      * Add all the PanoramaTransition object into the Panosphere
      *
-     * @param materialObject the material of the transition objects.
      * @param id             the id of the current panoSphere.
      */
-    private void addPanoramaTransitionObject(Material materialObject, int id) {
+    private void addPanoramaTransitionObject(int id) {
 
         mPanoSphere.removeAllChild();
 
         for (AngleMapping angleMapping : mHouseManager.getSparseArray().get(id)) {
-            PanoramaTransitionObject mChildSphere = new PanoramaTransitionObject(4, 10, 10, angleMapping.getId(),
+            PanoramaTransitionObject transitionObject = new PanoramaTransitionObject(
+                    angleMapping.getTheta(),
+                    angleMapping.getPhi(),
+                    angleMapping.getId(),
                     angleMapping.getUrl());
-            mChildSphere.setMaterial(materialObject);
-            mChildSphere.setX(50 * Math.sin(angleMapping.getPhi()) * Math.cos(angleMapping.getTheta()));
-            mChildSphere.setZ(50 * Math.sin(angleMapping.getPhi()) * Math.sin(angleMapping.getTheta()));
-            mChildSphere.setY(50 * Math.cos(angleMapping.getPhi()));
-            mPicker.registerObject(mChildSphere);
-            mPanoSphere.addChild(mChildSphere);
+
+            mPicker.registerObject(transitionObject);
+            mPanoSphere.addChild(transitionObject);
         }
     }
 

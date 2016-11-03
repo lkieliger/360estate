@@ -14,7 +14,7 @@ import org.rajawali3d.primitives.Sphere;
 /**
  * Represent the panoramic Spere containing the image.
  */
-final class PanoramaSphere extends Sphere implements PanoramaComponent {
+final class PanoramaSphere extends Sphere {
 
     public static final String TEXTURE_TAG = "PhotoTexture";
     private static final String TAG = "PanoramaSphere";
@@ -70,5 +70,10 @@ final class PanoramaSphere extends Sphere implements PanoramaComponent {
         mPhotoTexture.setBitmap(b);
         TextureManager.getInstance().replaceTexture(mPhotoTexture);
     }
+
+    void attachPanoramaComponent(PanoramaComponent component) {
+
+    }
+
 
 }
