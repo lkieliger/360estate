@@ -1,17 +1,10 @@
 package ch.epfl.sweng.project.data;
 
-import android.util.Log;
 import android.util.SparseArray;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-
+//TODO: Add documentation for this object
 public class HouseManager {
 
     private final SparseArray<List<AngleMapping>> sparseArray;
@@ -24,6 +17,8 @@ public class HouseManager {
         startingId = extStartingId;
     }
 
+    //TODO: This is super super bad, never return a reference to a whole array
+    //See for defensive copying and maybe refine class/method logic
     public SparseArray<List<AngleMapping>> getSparseArray() {
         return sparseArray;
     }
@@ -35,6 +30,9 @@ public class HouseManager {
     public String getStartingUrl() {
         return startingUrl;
     }
+
+
+    //TODO: Determine if this code is necessary
 /*
     public static HouseManager reconstruct(){
         final Map<Integer,Map<Tuple<Double,Double>, Tuple<Integer,String>>> resultMap = new HashMap<>();
