@@ -1,6 +1,10 @@
 package ch.epfl.sweng.project.engine3d;
 
+import org.rajawali3d.materials.textures.ATexture;
+import org.rajawali3d.materials.textures.AlphaMapTexture;
 import org.rajawali3d.math.vector.Vector3;
+
+import ch.epfl.sweng.project.R;
 
 /**
  * Represent the object permitting transition to the next panoramicSphere. Each of those object will stock the next id
@@ -8,7 +12,9 @@ import org.rajawali3d.math.vector.Vector3;
  */
 class PanoramaTransitionObject extends PanoramaObject {
 
-
+    private final static String TEXTURE_TAG = "PanoTransitionTex";
+    private final static double DISTANCE = 50.0;
+    private final static int TEXTURE_COLOR = 0x22c8ff;
     private final int Id;
     private final String nextUrl;
 
@@ -23,13 +29,22 @@ class PanoramaTransitionObject extends PanoramaObject {
     PanoramaTransitionObject(double theta, double phi, int id, String nextUrl) {
         super();
         enableLookAt();
+        AlphaMapTexture alphamap = new AlphaMapTexture(TEXTURE_TAG, R.drawable
+                .transition_tex);
+        mMaterial.setColor(TEXTURE_COLOR);
+
+        try {
+            mMaterial.addTexture(alphamap);
+        } catch (ATexture.TextureException e) {
+            e.printStackTrace();
+        }
 
         Id = id;
         this.nextUrl = nextUrl;
 
-        setX(50 * Math.sin(phi) * Math.cos(theta));
-        setZ(50 * Math.sin(phi) * Math.sin(theta));
-        setY(50 * Math.cos(phi));
+        setX(DISTANCE * Math.sin(phi) * Math.cos(theta));
+        setZ(DISTANCE * Math.sin(phi) * Math.sin(theta));
+        setY(DISTANCE * Math.cos(phi));
         mLookAt = new Vector3(0, 0, 0);
     }
 

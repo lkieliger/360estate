@@ -48,7 +48,6 @@ final class PanoramaSphere extends Sphere {
         setPosition(INITIAL_POS);
         mMaterial = new Material();
         mMaterial.setColor(0);
-        mMaterial.enableLighting(false);
 
         mPhotoTexture = new Texture(TEXTURE_TAG);
 
