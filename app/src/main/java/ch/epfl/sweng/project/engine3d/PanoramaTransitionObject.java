@@ -6,7 +6,8 @@ import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.util.ObjectColorPicker;
 
 /**
- * Represent the object permitting transtion to the next panoSphere.
+ * Represent the object permitting transition to the next panoramicSphere. Each of those object will stock the next id
+ * and url to load it directly.
  */
 class PanoramaTransitionObject extends Plane implements PanoramaComponent {
 
@@ -65,6 +66,6 @@ class PanoramaTransitionObject extends Plane implements PanoramaComponent {
                     "parent !");
         }
         mParent.removeChild(this);
-        this.destroy();
+        destroy();
     }
 }

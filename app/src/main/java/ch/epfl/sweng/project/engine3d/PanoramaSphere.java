@@ -23,7 +23,7 @@ import ch.epfl.sweng.project.data.AngleMapping;
 final class PanoramaSphere extends Sphere {
 
     public static final String TEXTURE_TAG = "PhotoTexture";
-    private final static int INITIAL_COMPONENTLIST_SIZE = 10;
+    private static final int INITIAL_COMPONENTLIST_SIZE = 10;
     private static final String TAG = "PanoramaSphere";
     private static final Vector3 INITIAL_POS = new Vector3(0, 0, 0);
     private final List<PanoramaComponent> mComponentList;
@@ -85,7 +85,7 @@ final class PanoramaSphere extends Sphere {
         TextureManager.getInstance().replaceTexture(mPhotoTexture);
     }
 
-    void attachPanoramaComponents(List<AngleMapping> l, ObjectColorPicker p) {
+    void attachPanoramaComponents(Iterable<AngleMapping> l, ObjectColorPicker p) {
         Log.d(TAG, "Call to attach panorama");
         for (AngleMapping am : l) {
 
@@ -96,11 +96,10 @@ final class PanoramaSphere extends Sphere {
                     am.getId(),
                     am.getUrl());
             transitionObject.registerComponentAtPicker(p);
-            transitionObject.setPickingColor(mComponentIndex++);
+            transitionObject.setPickingColor(mComponentIndex);
+            mComponentIndex++;
             addChild(transitionObject);
             mComponentList.add(transitionObject);
         }
     }
-
-
 }
