@@ -33,11 +33,8 @@ import static android.content.Context.SENSOR_SERVICE;
 public class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
 
     public static final double SENSITIVITY = 100.0;
-    public static final double EPSILON = 0.1d;
     private final String TAG = "Renderer";
-    private final Display mDisplay;
     private final Camera mCamera;
-    private final Vector3 mInitialPos;
     private final double mXdpi;
     private final double mYdpi;
     private final SensorManager mSensorManager;
@@ -53,13 +50,12 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     private int debugCounter = 0;
 
-    public PanoramaRenderer(Context context, Display display, HouseManager houseManager) {
 
+    public PanoramaRenderer(Context context, Display display, HouseManager houseManager) {
         super(context);
 
         mPicker = new ObjectColorPicker(this);
         mPicker.setOnObjectPickedListener(this);
-        mDisplay = display;
 
         mSensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         Sensor rotSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
@@ -73,16 +69,13 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             mRotSensor = null;
             mRotSensorAvailable = false;
         } else {
-            mRotListener = new RotSensorListener(mDisplay, this);
+            mRotListener = new RotSensorListener(display, this);
             mRotSensor = rotSensor;
             mRotSensorAvailable = true;
         }
 
 
-        mContext = context;
-
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-
         mXdpi = displayMetrics.xdpi;
         mYdpi = displayMetrics.ydpi;
 
@@ -92,8 +85,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mCamera.setFieldOfView(80);
 
         setFrameRate(60);
-
-        mInitialPos = new Vector3(0, 0, 0);
     }
 
     @Override
@@ -119,8 +110,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
         Log.d(TAG, "Initializing scene");
 
-        mCamera.setPosition(mInitialPos);
-
+        mCamera.setPosition(new Vector3(0, 0, 0));
         mPanoSphere = new PanoramaSphere();
         getCurrentScene().addChild(mPanoSphere);
         updateScene(mHouseManager.getStartingUrl(), mHouseManager.getStartingId());
@@ -134,7 +124,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * @param url the url of the image that will be loaded and added on the PanoSphere.
      * @param id  the id used to retrieve the mappings from angle to transition info
      */
-    private void updateScene(String url, int id) {
+    public void updateScene(String url, int id) {
         Log.d(TAG, "Update scene");
 
         Bitmap b = DataMgmt.getBitmapfromUrl(getContext(), url);
@@ -231,8 +221,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     @Override
     public void onObjectPicked(@NonNull Object3D object) {
         Log.d(TAG, "ObjectPicked");
-        PanoramaTransitionObject panoObject = (PanoramaTransitionObject) object;
-        updateScene(panoObject.getNextUrl(), panoObject.getId());
+        PanoramaObject panoObject = (PanoramaObject) object;
+        panoObject.reactWith(this);
     }
 
     @Override

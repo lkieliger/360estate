@@ -26,7 +26,7 @@ final class PanoramaSphere extends Sphere {
     private final static int INITIAL_COMPONENTLIST_SIZE = 10;
     private static final String TAG = "PanoramaSphere";
     private static final Vector3 INITIAL_POS = new Vector3(0, 0, 0);
-    private final List<PanoramaComponent> mComponentList;
+    private final List<PanoramaObject> mComponentList;
     private Texture mPhotoTexture;
     private int mComponentIndex = 0;
 
@@ -65,7 +65,7 @@ final class PanoramaSphere extends Sphere {
      * Call this method to dissociate all UI components that were previously defined as children of the panorama sphere
      */
     void detachPanoramaComponents(ObjectColorPicker p) {
-        for (PanoramaComponent pc : mComponentList) {
+        for (PanoramaObject pc : mComponentList) {
             pc.unregisterComponentFromPicker(p);
             pc.detachFromParentAndDie();
             mComponentIndex--;

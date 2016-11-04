@@ -1,14 +1,11 @@
 package ch.epfl.sweng.project.engine3d;
 
-import org.rajawali3d.materials.Material;
 import org.rajawali3d.math.vector.Vector3;
-import org.rajawali3d.primitives.Plane;
-import org.rajawali3d.util.ObjectColorPicker;
 
 /**
  * Represent the object permitting transtion to the next panoSphere.
  */
-class PanoramaTransitionObject extends Plane implements PanoramaComponent {
+class PanoramaTransitionObject extends PanoramaObject {
 
 
     private final int Id;
@@ -23,15 +20,11 @@ class PanoramaTransitionObject extends Plane implements PanoramaComponent {
      * @param nextUrl The url of the panorama to show after the transition
      */
     PanoramaTransitionObject(double theta, double phi, int id, String nextUrl) {
-        super(10, 10, 2, 2, Vector3.Axis.Z);
+        super();
         enableLookAt();
 
         Id = id;
         this.nextUrl = nextUrl;
-
-        Material m = new Material();
-        m.setColor(250);
-        setMaterial(m);
 
         setX(50 * Math.sin(phi) * Math.cos(theta));
         setZ(50 * Math.sin(phi) * Math.sin(theta));
@@ -47,24 +40,15 @@ class PanoramaTransitionObject extends Plane implements PanoramaComponent {
         return nextUrl;
     }
 
+    /**
+     * When called this method will update the PanoramaRender so that it reflects a transition to another panorama
+     *
+     * @param p
+     */
     @Override
-    public void unregisterComponentFromPicker(ObjectColorPicker p) {
-        p.unregisterObject(this);
+    public void reactWith(PanoramaRenderer p) {
+        p.updateScene(getNextUrl(), getId());
     }
 
-    @Override
-    public void registerComponentAtPicker(ObjectColorPicker p) {
-        p.registerObject(this);
-        this.setPickingColor(0);
-    }
 
-    @Override
-    public void detachFromParentAndDie() {
-        if (mParent == null) {
-            throw new IllegalStateException("Trying to detach PanoramaTransitionObject from a null " +
-                    "parent !");
-        }
-        mParent.removeChild(this);
-        this.destroy();
-    }
 }
