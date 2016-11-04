@@ -2,9 +2,17 @@ package ch.epfl.sweng.project.data;
 
 import android.util.SparseArray;
 
+import java.util.ArrayList;
 import java.util.List;
 
-//TODO: Add documentation for this object
+/**
+ * House Manager represent the interaction of the different rooms (i.e
+ * {@link ch.epfl.sweng.project.engine3d.PanoramaSphere}) of the all house using the logic of a graph.
+ * It contain a starting url that will be used to load the first panoramaSphere image. The id, is used to load all
+ * the neighbors ( i.e {@link ch.epfl.sweng.project.engine3d.PanoramaTransitionObject}) on the panoramaSphere.
+ * It contain also a SparseArray ( an optimized map from integer to objects), that will be used to stock the "graph".
+ * The SparseArray will be used to map an Id to an list of {@link AngleMapping} representing the neighbors of the id.
+ */
 public class HouseManager {
 
     private final SparseArray<List<AngleMapping>> sparseArray;
@@ -17,10 +25,8 @@ public class HouseManager {
         startingId = extStartingId;
     }
 
-    //TODO: This is super super bad, never return a reference to a whole array
-    //See for defensive copying and maybe refine class/method logic
-    public SparseArray<List<AngleMapping>> getSparseArray() {
-        return sparseArray;
+    public List<AngleMapping> getNeighborsFromId(int id){
+        return new ArrayList<>(sparseArray.get(id));
     }
 
     public int getStartingId() {
@@ -30,32 +36,4 @@ public class HouseManager {
     public String getStartingUrl() {
         return startingUrl;
     }
-
-
-    //TODO: Determine if this code is necessary
-/*
-    public static HouseManager reconstruct(){
-        final Map<Integer,Map<Tuple<Double,Double>, Tuple<Integer,String>>> resultMap = new HashMap<>();
-
-        ParseQuery<OrientationMapping> query = ParseQuery.getQuery("OrientationMapping");
-        query.findInBackground(new FindCallback<OrientationMapping>() {
-            public void done(List<OrientationMapping> objects, ParseException e) {
-                if (e == null) {
-                    Log.d("DataMgmt", "Retrieved " + objects.size() + " photosphere");
-
-                    for (OrientationMapping p: objects
-                            ) {
-                        Map<Tuple<Double,Double>,Tuple<Integer,String>> t = p.getMapping();
-                        resultMap.put(p.getId(),t);
-                    }
-
-                } else {
-                    Log.d("DataMgmt", "Error: " + e.getMessage());
-                }
-            }
-        });
-
-        return new HouseManager(resultMap);
-    }
-    */
 }

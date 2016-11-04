@@ -114,7 +114,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mPanoSphere = new PanoramaSphere();
         getCurrentScene().addChild(mPanoSphere);
         updateScene(mHouseManager.getStartingUrl(), mHouseManager.getStartingId());
-
     }
 
 
@@ -128,10 +127,9 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         Log.d(TAG, "Update scene");
 
         Bitmap b = DataMgmt.getBitmapfromUrl(getContext(), url);
-
         mPanoSphere.detachPanoramaComponents(mPicker);
         mPanoSphere.setPhotoTexture(b);
-        mPanoSphere.attachPanoramaComponents(mHouseManager.getSparseArray().get(id), mPicker);
+        mPanoSphere.attachPanoramaComponents(mHouseManager.getNeighborsFromId(id), mPicker);
     }
 
     @Override

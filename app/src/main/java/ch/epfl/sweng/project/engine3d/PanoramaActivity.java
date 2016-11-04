@@ -54,7 +54,7 @@ public class PanoramaActivity extends Activity {
 
 
         //Example of Pano
-        String url1 = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/360%C2%B0_Panorama_Obermarkt_G%C3%B" +
+        String url1 ="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/360%C2%B0_Panorama_Obermarkt_G%C3%B" +
                 "6rlitz.jpg/1024px-360%C2%B0_Panorama_Obermarkt_G%C3%B6rlitz.jpg";
         String url2 = "https://upload.wikimedia" +
                 ".org/wikipedia/commons/thumb/c/c5/360%C2%B0_Panorama_Bahnhof_G%C3%B6rlitz.jpg/1024px-360%C2%B0_P" +

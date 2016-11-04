@@ -3,7 +3,8 @@ package ch.epfl.sweng.project.engine3d;
 import org.rajawali3d.math.vector.Vector3;
 
 /**
- * Represent the object permitting transtion to the next panoSphere.
+ * Represent the object permitting transition to the next panoramicSphere. Each of those object will stock the next id
+ * and url to load it directly.
  */
 class PanoramaTransitionObject extends PanoramaObject {
 
