@@ -18,6 +18,10 @@
         android:text="@string/Filter"
         android:layout_gravity="right"
         android:id="@+id/filterButtonPopUp"
+        android:textColor="#55CACF"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:background="@drawable/button_shape"
         />
     <ListView
         android:layout_width="match_parent"

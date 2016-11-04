@@ -59,9 +59,9 @@
             android:textColor="#55CACF"
             android:textSize="20sp"
             android:textAllCaps="false"
+            android:background="@drawable/button_shape"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@drawable/button_shape"
             tools:ignore="UnusedIds" />
     </LinearLayout>
 </RelativeLayout>

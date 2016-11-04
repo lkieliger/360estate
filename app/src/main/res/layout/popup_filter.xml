@@ -10,6 +10,10 @@
         android:layout_gravity="right"
         android:text="@string/erase"
         android:id="@+id/eraseButton"
+        android:textColor="#55CACF"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:background="@drawable/button_shape"
         />
 
     <LinearLayout
@@ -127,6 +131,10 @@
         android:text="@string/Filter"
         android:layout_gravity="center"
         android:id="@+id/filterButton"
+        android:textColor="#55CACF"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:background="@drawable/button_shape"
         />
 
 
