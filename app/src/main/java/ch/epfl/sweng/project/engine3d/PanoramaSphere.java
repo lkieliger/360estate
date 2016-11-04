@@ -28,6 +28,7 @@ final class PanoramaSphere extends Sphere {
     private static final Vector3 INITIAL_POS = new Vector3(0, 0, 0);
     private final List<PanoramaComponent> mComponentList;
     private Texture mPhotoTexture;
+    private int mComponentIndex = 0;
 
     /**
      * A PanoramaSphere is a rajawali 3d object that stores a panorama image
@@ -37,8 +38,6 @@ final class PanoramaSphere extends Sphere {
      * an ID which is used by the texture manager to keep track of all texture used by the application. The
      * bitmap associated with a texture can change but the texture instance remains unique. Therefore subsequent
      * panorama photo changes should call the texture setter as it will handle the bitmap replacement
-     *
-     * @param b A bitmap file that contains the panorama photograph
      */
     PanoramaSphere() {
         super(100, 48, 48);
@@ -67,10 +66,11 @@ final class PanoramaSphere extends Sphere {
      */
     void detachPanoramaComponents(ObjectColorPicker p) {
         for (PanoramaComponent pc : mComponentList) {
-            pc.unregisterComponent(p);
+            pc.unregisterComponentFromPicker(p);
+            pc.detachFromParentAndDie();
+            mComponentIndex--;
         }
         mComponentList.clear();
-        mChildren.clear();
     }
 
     /**
@@ -95,7 +95,8 @@ final class PanoramaSphere extends Sphere {
                     am.getPhi(),
                     am.getId(),
                     am.getUrl());
-            transitionObject.registerComponent(p);
+            transitionObject.registerComponentAtPicker(p);
+            transitionObject.setPickingColor(mComponentIndex++);
             addChild(transitionObject);
             mComponentList.add(transitionObject);
         }
