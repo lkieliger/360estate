@@ -28,6 +28,7 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.logUserOut;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait500ms;
@@ -46,6 +47,7 @@ public class CompleteBehaviorTest {
     public void finishActivity() {
         mActivityTestRule.getActivity().finish();
         wait1s(TAG);
+        logUserOut();
     }
 
     @Test
@@ -91,19 +93,6 @@ public class CompleteBehaviorTest {
         wait250ms(TAG);
         img0.perform(click());
         wait250ms(TAG);
-
-/*
-    TODO: correct this part of the test
-
-        onView(allOf(withId(R.id.displayed_image),
-                childAtPosition(
-                        allOf(withId(R.id.content),
-                                childAtPosition(
-                                        withId(R.id.pager),
-                                        1)),
-                        0),
-                isDisplayed())).check(matches(isDisplayed()));
-*/
 
         pressBack();
 

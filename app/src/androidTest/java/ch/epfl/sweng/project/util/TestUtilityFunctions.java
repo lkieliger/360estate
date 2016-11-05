@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.parse.Parse;
+import com.parse.ParseUser;
 
 import ch.epfl.sweng.project.BuildConfig;
 
@@ -22,6 +23,14 @@ public final class TestUtilityFunctions {
                 .server("https://360.astutus.org/parse/")
                 .build()
         );
+    }
+
+    public static void logUserOut() {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+
+        if(currentUser != null) {
+            ParseUser.logOut();
+        }
     }
 
     public static void wait250ms(String debugTag) {

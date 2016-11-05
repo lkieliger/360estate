@@ -216,6 +216,7 @@ public class ListActivity extends AppCompatActivity {
         if(currentUser != null) {
             ParseUser.logOut();
         }
+        finish();
     }
 
 
