@@ -37,9 +37,10 @@
     <string name="register_suggestion">Pas encore enregistré ?</string>
     <string name="surface">Suface min.</string>
     <string name="text_title">Informations</string>
-    <string name="title_activity_login">Se connecter</string>
+    <string name="title_activity_login">Maison à 360°</string>
     <string name="title_activity_register">S\'enregistrer</string>
     <string name="types_of_house">Types de maison</string>
     <string name="error_user_already_exists" >Le nom d\'utilisateur existe déjà sur le serveur.</string>
     <string name="all">Tout</string>
+    <string name="LogOut">Se déconnecter</string>
 </resources>
