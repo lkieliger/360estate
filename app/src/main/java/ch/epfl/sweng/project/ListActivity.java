@@ -215,14 +215,7 @@ public class ListActivity extends AppCompatActivity {
 
         if(currentUser != null) {
             ParseUser.logOut();
-            finish();
         }
-
-        //throw new NullPointerException("the current user is null.");
-        //ParseObject.unpinAllInBackground();
-
-
-
     }
 
 

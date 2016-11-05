@@ -15,17 +15,10 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 
 
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
-
-import org.rajawali3d.loader.ParsingException;
-
-import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.DescriptionActivity;
 import ch.epfl.sweng.project.ListActivity;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.Item;
@@ -44,18 +37,12 @@ public class LoginActivity extends AppCompatActivity {
     public static final String APP_ID = "360ESTATE";
     private TextView mEmail = null;
     private TextView mPassword = null;
-    public static final String  CURRENTUSERID = "currentUserId";
-
-
-    //private static ParseUser currentUser = null;
-
     private Context mAppContext = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
 
 
         if (parseNotInitialized) {
@@ -79,27 +66,14 @@ public class LoginActivity extends AppCompatActivity {
         mPassword = (TextView) findViewById(R.id.login_password);
         mAppContext = getApplicationContext();
 
-        // Check if the LD persisted user information if so transit to the listActivity else proceed on login.
-
-
-        if(userAlreadyLogIn()){
+        // Check if the user is already logged in in the localDatastore, and jump to the ListActivity accordingly
+        if (userAlreadyLoggedIn()) {
             Intent intent = new Intent(LoginActivity.this, ListActivity.class);
             startActivity(intent);
 
             finish();
-
         }
-
-
-
-
-
     }
-
-
-
-
-
 
     /**
      * This method is called when the user clicks on the login button
@@ -120,35 +94,10 @@ public class LoginActivity extends AppCompatActivity {
                                 shortToast(getApplicationContext(),
                                         getResources().getText(R.string.info_login_successful));
 
-
-                                // persist user Information
-                                System.out.println("confirm login");
-                                /**
-                                ParseUser.getCurrentUser().pinInBackground(CURRENTUSERID,new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if(e == null){
-                                            System.out.println("the User parse object has been saved correcly");
-
-                                        }else{
-                                            System.out.println("Pinn background does not work.");
-                                        }
-                                    }
-                                });
-
-                                 **/
-
-
-
-
-
                                 Intent intent = new Intent(LoginActivity.this, ListActivity.class);
                                 startActivity(intent);
 
                                 finish();
-
-
-
 
                             } else {
                                 shortToast(getApplicationContext(),
@@ -205,38 +154,25 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * This method helps to decide if the user need to reconnect.
      * @return true if user's information is already cached.
      */
-    private boolean userAlreadyLogIn(){
-        /**
-        int nbrUser=0;
-        ParseQuery queryExistingUser = ParseUser.getQuery();
-        try {
-            nbrUser= queryExistingUser.fromLocalDatastore().count();
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-        }
-        **/
-        boolean isLogIn = false;
+    private boolean userAlreadyLoggedIn() {
         ParseUser currentUser = ParseUser.getCurrentUser();
 
-        if(currentUser != null) {
-            isLogIn = currentUser.isAuthenticated();
-        }else{
-            System.out.println("currentUser is Null.");
+        if (currentUser != null) {
+            if (currentUser.isAuthenticated()) {
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "The user is already logged in");
+
+                return true;
+            } else {
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "The user is not authenticated");
+
+            }
         }
 
-        if(isLogIn){
-            System.out.println("User already LogIn");
-
-        }else{
-            System.out.println("User not logIn.");
-        }
-
-
-
-        return isLogIn;
+        return false;
     }
 
 }
