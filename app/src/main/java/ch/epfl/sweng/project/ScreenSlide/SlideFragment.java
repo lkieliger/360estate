@@ -1,14 +1,11 @@
 package ch.epfl.sweng.project.ScreenSlide;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import ch.epfl.sweng.project.R;
 

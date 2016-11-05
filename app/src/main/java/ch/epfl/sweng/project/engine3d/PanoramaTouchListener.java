@@ -2,23 +2,16 @@ package ch.epfl.sweng.project.engine3d;
 
 import android.util.Log;
 import android.view.MotionEvent;
-import org.rajawali3d.view.SurfaceView;
 import android.view.View;
-
-import ch.epfl.sweng.project.data.HouseManager;
 
 import static android.view.MotionEvent.INVALID_POINTER_ID;
 
 public class PanoramaTouchListener implements View.OnTouchListener {
 
-    private final PanoramaRenderer mRenderer;
-
-    private boolean isOnClick = false;
-    private final int SCROLL_THRESHOLD = 10;
-
-
     private static final String TAG = "PanoramaTouchListener";
-
+    private final PanoramaRenderer mRenderer;
+    private final int SCROLL_THRESHOLD = 10;
+    private boolean isOnClick = false;
     private float mLastTouchX = 0.0F;
     private float mLastTouchY = 0.0F;
 

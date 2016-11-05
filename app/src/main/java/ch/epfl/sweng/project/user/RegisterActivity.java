@@ -27,9 +27,8 @@ import static ch.epfl.sweng.project.util.Toaster.shortToast;
  */
 public class RegisterActivity extends AppCompatActivity {
 
-    private static final String TAG = "RegisterActivity";
     public static final int USER_ALREADY_EXISTS = 202;
-
+    private static final String TAG = "RegisterActivity";
     private TextView mEmail;
     private TextView mPassword;
     private TextView mPasswordBis;
@@ -83,8 +82,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 longToast(getApplicationContext(),
                                         getResources().getString(R.string.error_registration_unsuccessful));
                         }
-
-                        ;
 
                         Log.e(TAG, Arrays.toString(e.getStackTrace()));
                     }

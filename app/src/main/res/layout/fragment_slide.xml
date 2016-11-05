@@ -8,13 +8,14 @@
     >
 
     <ImageView
+        android:id="@+id/displayed_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:adjustViewBounds="true"
         android:layout_gravity="center"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        app:srcCompat="@drawable/chaton"
-        android:id="@+id/displayed_image" />
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/description_slide"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/chaton"/>
 </ScrollView>

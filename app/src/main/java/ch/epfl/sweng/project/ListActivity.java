@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,26 +16,17 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.parse.DeleteCallback;
-import com.parse.FindCallback;
-import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import ch.epfl.sweng.project.data.Item;
+import ch.epfl.sweng.project.data.ItemAdapter;
 import ch.epfl.sweng.project.filter.CustomOnSeekBarChangeListener;
 import ch.epfl.sweng.project.filter.EraseButtonListener;
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
-import ch.epfl.sweng.project.data.Item;
-import ch.epfl.sweng.project.data.ItemAdapter;
-import ch.epfl.sweng.project.user.LoginActivity;
 
 public class ListActivity extends AppCompatActivity {
 

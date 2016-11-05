@@ -7,7 +7,6 @@ import com.parse.ParseObject;
 import junit.framework.Assert;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +19,6 @@ import java.util.List;
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.util.Tuple;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)

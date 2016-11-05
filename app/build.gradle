@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply from: 'jacoco.gradle'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 25
     buildToolsVersion "24.0.3"
 
     defaultConfig {
         applicationId "ch.epfl.sweng.project"
-        minSdkVersion 19
-        targetSdkVersion 24
+        minSdkVersion 21
+        targetSdkVersion 25
 
         versionCode 1
         versionName "1.0"
@@ -43,8 +43,8 @@ android {
 dependencies {
     //picasso dependencies
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:design:25.0.0'
 //  Parse dependencies
     compile 'com.parse:parse-android:1.13.1'
     compile 'com.parse.bolts:bolts-android:1.4.0'
@@ -68,6 +68,6 @@ dependencies {
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
 
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+    compile 'com.google.android.gms:play-services-appindexing:9.8.0'
 }
 

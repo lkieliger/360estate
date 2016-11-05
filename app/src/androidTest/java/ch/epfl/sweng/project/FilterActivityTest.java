@@ -1,6 +1,5 @@
 package ch.epfl.sweng.project;
 
-import android.support.compat.*;
 import android.support.test.espresso.PerformException;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.action.CoordinatesProvider;
@@ -10,7 +9,6 @@ import android.support.test.espresso.action.Swipe;
 import android.support.test.espresso.util.HumanReadables;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -18,13 +16,9 @@ import android.widget.SeekBar;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
-import ch.epfl.sweng.project.user.LoginActivity;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -52,55 +46,18 @@ public class FilterActivityTest {
     @Rule
     public ActivityTestRule<ListActivity> mActivityTestRule = new ActivityTestRule<>(ListActivity.class);
 
+    public static ViewAction scrubSeekBarAction(int progress) {
+        return actionWithAssertions(new GeneralSwipeAction(
+                Swipe.SLOW,
+                new SeekBarThumbCoordinatesProvider(0),
+                new SeekBarThumbCoordinatesProvider(progress),
+                Press.PINPOINT));
+    }
+
     @After
     public void finishActivity() {
         mActivityTestRule.getActivity().finish();
         wait1s(TAG);
-    }
-
-    @Test
-    public void filterTest() {
-        wait1s(TAG);
-
-        onView(withId(R.id.filterButtonPopUp)).perform(click());
-        onView(withId(R.id.numberOfRooms)).perform(typeText("3"), closeSoftKeyboard());
-        onView(withId(R.id.location)).perform(typeText("Renens"), closeSoftKeyboard());
-        onView(withId(R.id.spinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is(getString(R.string.building)))).perform(click());
-        onView(withId(R.id.seekBarPrice)).perform(scrubSeekBarAction(5));
-        onView(withId(R.id.seekBarSurface)).perform(scrubSeekBarAction(50));
-
-        onView(withId(R.id.filterButton)).perform(click());
-        wait250ms(TAG);
-
-        final int[] counts = {0};
-        onView(withId(R.id.houseList)).check(matches(new ViewTypeSafeMatcher(counts)));
-
-        for (int i = 0; i < counts[0]; i++) {
-            onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(i).
-                    check(matches(hasDescendant(withText(containsString(
-                            String.format(
-                                    getString(R.string.text_location_surface),
-                                    "Renens",
-                                    "2'000'000",
-                                    "3",
-                                    getString(R.string.rooms)
-                            ))))));
-            onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(i).
-                    check(matches(hasDescendant(withText(containsString(
-                            String.format(
-                                    getString(R.string.text_price_type),
-                                    "100",
-                                    getString(R.string.text_currency),
-                                    getString(R.string.building)
-                            ))))));
-
-        }
-
-
-        onView(withId(R.id.filterButtonPopUp)).perform(click());
-        onView(withId(R.id.eraseButton)).perform(click());
-
     }
 
 
@@ -192,6 +149,54 @@ public class FilterActivityTest {
     }
 */
 
+    @Test
+    public void filterTest() {
+        wait1s(TAG);
+
+        onView(withId(R.id.filterButtonPopUp)).perform(click());
+        onView(withId(R.id.numberOfRooms)).perform(typeText("3"), closeSoftKeyboard());
+        onView(withId(R.id.location)).perform(typeText("Renens"), closeSoftKeyboard());
+        onView(withId(R.id.spinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(getString(R.string.building)))).perform(click());
+        onView(withId(R.id.seekBarPrice)).perform(scrubSeekBarAction(5));
+        onView(withId(R.id.seekBarSurface)).perform(scrubSeekBarAction(50));
+
+        onView(withId(R.id.filterButton)).perform(click());
+        wait250ms(TAG);
+
+        final int[] counts = {0};
+        onView(withId(R.id.houseList)).check(matches(new ViewTypeSafeMatcher(counts)));
+
+        for (int i = 0; i < counts[0]; i++) {
+            onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(i).
+                    check(matches(hasDescendant(withText(containsString(
+                            String.format(
+                                    getString(R.string.text_location_surface),
+                                    "Renens",
+                                    "2'000'000",
+                                    "3",
+                                    getString(R.string.rooms)
+                            ))))));
+            onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(i).
+                    check(matches(hasDescendant(withText(containsString(
+                            String.format(
+                                    getString(R.string.text_price_type),
+                                    "100",
+                                    getString(R.string.text_currency),
+                                    getString(R.string.building)
+                            ))))));
+
+        }
+
+
+        onView(withId(R.id.filterButtonPopUp)).perform(click());
+        onView(withId(R.id.eraseButton)).perform(click());
+
+    }
+
+    private String getString(int id) {
+        return mActivityTestRule.getActivity().getString(id);
+    }
 
     private static class ViewTypeSafeMatcher extends TypeSafeMatcher<View> {
         private final int[] counts;
@@ -210,14 +215,6 @@ public class FilterActivityTest {
             counts[0] = listView.getCount();
             return true;
         }
-    }
-
-    public static ViewAction scrubSeekBarAction(int progress) {
-        return actionWithAssertions(new GeneralSwipeAction(
-                Swipe.SLOW,
-                new SeekBarThumbCoordinatesProvider(0),
-                new SeekBarThumbCoordinatesProvider(progress),
-                Press.PINPOINT));
     }
 
     private static class SeekBarThumbCoordinatesProvider implements CoordinatesProvider {
@@ -247,9 +244,5 @@ public class FilterActivityTest {
             float[] xy = getVisibleLeftTop(seekBar);
             return new float[]{ xy[0] + xPosition, xy[1] + 10 };
         }
-    }
-
-    private String getString(int id){
-        return mActivityTestRule.getActivity().getString(id);
     }
 }

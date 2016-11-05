@@ -76,4 +76,7 @@
     <!-- Strings related to Logout -->
     <string name="LogOut">Logout</string>
 
+    <!-- Strings related to descriptions -->
+    <string name="description_slide">Slide with property pictures</string>
+
 </resources>

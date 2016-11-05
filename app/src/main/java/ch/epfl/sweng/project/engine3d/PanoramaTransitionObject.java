@@ -59,7 +59,7 @@ class PanoramaTransitionObject extends PanoramaObject {
     /**
      * When called this method will update the PanoramaRender so that it reflects a transition to another panorama
      *
-     * @param p
+     * @param p A reference to the panorama renderer
      */
     @Override
     public void reactWith(PanoramaRenderer p) {

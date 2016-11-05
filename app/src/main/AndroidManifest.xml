@@ -32,8 +32,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ch.epfl.sweng.project.user.LoginActivity" />
         </activity>
-        <activity android:name=".DescriptionActivity"></activity>
-        <activity android:name=".ScreenSlide.SlideActivity"></activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+        <activity android:name=".DescriptionActivity"/>
+        <activity android:name=".ScreenSlide.SlideActivity"/><!-- ATTENTION: This was auto-generated to add
+         Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
             android:name="com.google.android.gms.version"

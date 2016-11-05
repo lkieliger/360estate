@@ -17,6 +17,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.internal.Shadow;
 
+import java.util.Locale;
+
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.PanoramaTouchListener;
@@ -132,8 +134,10 @@ public class PanoramaTests {
 
     private void assertQuaternionEquals(Quaternion v1, Quaternion v2, boolean shouldBeEqual) {
 
-        System.out.println(String.format("V1: %1$.2f, %2$.2f, %3$.2f, %4$.2f", v1.w, v1.x, v1.y, v1.z));
-        System.out.println(String.format("V2: %1$.2f, %2$.2f, %3$.2f, %4$.2f", v2.w, v2.x, v2.y, v2.z));
+        System.out.println(String.format(Locale.getDefault(), "V1: %1$.2f, %2$.2f, %3$.2f, %4$.2f", v1.w, v1.x, v1.y,
+                v1.z));
+        System.out.println(String.format(Locale.getDefault(), "V2: %1$.2f, %2$.2f, %3$.2f, %4$.2f", v2.w, v2.x, v2.y,
+                v2.z));
         if (shouldBeEqual) {
             Assert.assertTrue(v1.equals(v2, errorEpsilon));
         } else {
