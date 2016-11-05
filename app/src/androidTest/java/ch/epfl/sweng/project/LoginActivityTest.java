@@ -24,6 +24,7 @@ import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.logUserOut;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static org.hamcrest.Matchers.allOf;
@@ -44,6 +45,7 @@ public class LoginActivityTest {
     public void finishActivity() {
         mActivityTestRule.getActivity().finish();
         wait1s(TAG);
+        logUserOut();
     }
 
     @Test
