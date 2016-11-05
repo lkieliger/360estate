@@ -2,6 +2,11 @@ package ch.epfl.sweng.project.data;
 
 import ch.epfl.sweng.project.util.Tuple;
 
+
+/**
+ * Represent a neighbor of a {@link ch.epfl.sweng.project.engine3d.PanoramaSphere}. It indeed maps a certain
+ * angle (theta and phi) to a neighbor id and the url of the neighbor image.
+ */
 public class AngleMapping{
 
     private final Tuple<Double, Double> thetaPhi;
@@ -15,7 +20,7 @@ public class AngleMapping{
     }
 
     public AngleMapping(Double extTheta, Double extPhi, int extId, String extUrl){
-        thetaPhi = new Tuple<Double, Double>(extTheta,extPhi);
+        thetaPhi = new Tuple<>(extTheta,extPhi);
         mId = extId;
         mUrl = extUrl;
     }
