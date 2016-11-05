@@ -13,6 +13,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.sweng.project.ScreenSlide.SlideActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 
 import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;
@@ -27,8 +28,9 @@ public class DescriptionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_description);
 
+        Bundle b = getIntent().getExtras();
         //TODO: get imgUrls list from Parse and put it into imagesUrl
-        List<String> imagesURL = new ArrayList<>();
+        final ArrayList<String> imagesURL = new ArrayList<>();
         imagesURL.add("https://360.astutus.org/estate/chaton1.jpg");
         imagesURL.add("https://360.astutus.org/estate/chaton2.jpg");
         imagesURL.add("https://360.astutus.org/estate/chaton3.jpg");
@@ -38,8 +40,11 @@ public class DescriptionActivity extends AppCompatActivity {
         View.OnClickListener imgListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DescriptionActivity.this, DisplayActivity.class);
-                intent.putExtra("URL", (String) v.getTag());
+                Intent intent = new Intent(DescriptionActivity.this, SlideActivity.class);
+                Bundle extras = new Bundle();
+                extras.putString("URL", (String) v.getTag());
+                extras.putStringArrayList("ArrayURL", imagesURL);
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         };

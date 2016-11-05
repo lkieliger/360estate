@@ -29,12 +29,13 @@ public class Item extends ParseObject {
     public Item() {
     }
 
-    public Item(int price, String location, HouseType type, double rooms, int surface) {
+    public Item(int price, String location, HouseType type, double rooms, int surface, String id) {
         setPrice(price);
         setLocation(location);
         setType(type);
         setRooms(rooms);
         setSurface(surface);
+        setId(id);
     }
 
     private void setPrice(int price) {
@@ -57,9 +58,13 @@ public class Item extends ParseObject {
         put("surface", surface);
     }
 
+    private void setId(String id){ put("id", id);}
+
     public HouseType getType() {
         return HouseType.values()[getInt("type")];
     }
+
+    public String getId(){ return getString("id");}
 
     String getLocation() {
         return getString("location");

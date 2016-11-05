@@ -1,7 +1,5 @@
-package ch.epfl.sweng.project.engine3dTests;
+package ch.epfl.sweng.project.tests3d;
 
-
-import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 import android.view.Surface;
 
@@ -10,20 +8,24 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.engine3d.RotSensorListener;
 
-import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
+import static ch.epfl.sweng.project.util.UnitTestUtilityFunctions.wait250ms;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-@RunWith(AndroidJUnit4.class)
-public class RotListenerTest {
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 23)
 
-    private static final String TAG = "RotListenerTest";
+public class RotListenerTests {
+
+    private static final String TAG = "RotListenerTests";
     private RotSensorListener rotListener = null;
     private double errorEpsilon = -1;
 

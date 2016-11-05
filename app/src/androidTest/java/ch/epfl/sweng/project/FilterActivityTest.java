@@ -1,5 +1,6 @@
 package ch.epfl.sweng.project;
 
+import android.support.compat.*;
 import android.support.test.espresso.PerformException;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.action.CoordinatesProvider;
@@ -17,10 +18,12 @@ import android.widget.SeekBar;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
 import ch.epfl.sweng.project.user.LoginActivity;
 
 import static android.support.test.espresso.Espresso.onData;
@@ -97,6 +100,7 @@ public class FilterActivityTest {
 
         onView(withId(R.id.filterButtonPopUp)).perform(click());
         onView(withId(R.id.eraseButton)).perform(click());
+
     }
 
 

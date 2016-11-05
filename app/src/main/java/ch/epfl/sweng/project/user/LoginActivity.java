@@ -25,6 +25,7 @@ import org.rajawali3d.loader.ParsingException;
 import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.DescriptionActivity;
 import ch.epfl.sweng.project.ListActivity;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.Item;

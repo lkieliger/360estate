@@ -69,6 +69,10 @@
     <string name="title_activity_register">Register</string>
     <string name="error_user_already_exists">Account already exists for this username.</string>
 
+    <!-- Strings related to 3D debugging -->
+    <string name="debug_camera_rotation">CamRX=%1$.2f CamRY=%2$.2f CamRZ=%3$.2f</string>
+    <string name="debug_sensor_rotation">SenRX=%1$.2f SenRY=%2$.2f SenRZ=%3$.2f</string>
+
     <!-- Strings related to Logout -->
     <string name="LogOut">Logout</string>
 
