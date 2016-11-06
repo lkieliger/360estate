@@ -71,10 +71,10 @@ public class ResourcesTest {
         }
 
         List<PhotoSphereData> photoSphereDatas = new ArrayList<>();
-        photoSphereDatas.add(new PhotoSphereData(14145, "14145.jpg", neighborsList));
-        photoSphereDatas.add(new PhotoSphereData(14146, "14146.jpg", neighborsList));
-        photoSphereDatas.add(new PhotoSphereData(14145, "14145.jpg", neighborsList));
-        testResources.setPhotoSphereDatas(photoSphereDatas);
+        photoSphereDatas.add(new PhotoSphereData(14145, neighborsList));
+        photoSphereDatas.add(new PhotoSphereData(14146, neighborsList));
+        photoSphereDatas.add(new PhotoSphereData(14145, neighborsList));
+        testResources.setPhotoSphereDatas(photoSphereDatas, 112358, "blabla");
 
         List<String> urlList = new ArrayList<>(3);
         urlList.add("https://360.estate.org/estate/houseSmall.jpg");
@@ -111,8 +111,5 @@ public class ResourcesTest {
         for (int i = 0; i < urlList.size(); i++) {
             Assert.assertEquals(urlList.get(i), urlList1.get(i));
         }
-
     }
-
-
 }

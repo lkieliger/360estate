@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
@@ -26,28 +27,48 @@ public class Resources extends ParseObject {
         // Default constructor needed for Parse objects
     }
 
-    void setDescription(String desc) {
+    public void setDescription(String desc) {
         put(descriptionTag, desc);
     }
 
-    public void setPicturesUrlList(List<String> picturesUrlList) {
+    public void setId(String id) {
+        put(idHouse, id);
+    }
+
+
+    public void setPicturesUrlList(Collection<String> picturesUrlList) {
         JSONArray urlArray = new JSONArray(picturesUrlList);
         put(picturesListTag, urlArray);
     }
 
 
-    void setPhotoSphereDatas(Iterable<PhotoSphereData> photoSphereList) {
-        JSONArray photoSphereDatas = new JSONArray();
-        for (PhotoSphereData p : photoSphereList) {
-            photoSphereDatas.put(p.getNeighborObject());
-        }
+    public void setPhotoSphereDatas(Iterable<PhotoSphereData> photoSphereList, int startingId, String startingUrl){
+        JSONObject photoSphereDatas = new JSONObject();
 
-        put(photoSphereDatasTag, photoSphereDatas);
+        JSONArray neighborsList = new JSONArray();
+        for (PhotoSphereData p : photoSphereList) {
+            neighborsList.put(p.getNeighborObject());
+        }
+        try {
+            photoSphereDatas.put("startingId",String.valueOf(startingId));
+            photoSphereDatas.put("startingUrl",startingUrl);
+            photoSphereDatas.put("neighborsList",neighborsList);
+        } catch (JSONException e) {
+            if(BuildConfig.DEBUG){
+                Log.d(TAG,e.getMessage());
+            }
+        }
+        put(panoSphereDatas, photoSphereDatas);
     }
 
     public String getDescription() {
         return getString(descriptionTag);
     }
+
+    public String getId() {
+        return getString(idHouse);
+    }
+
 
     public List<String> getPicturesList() throws JSONException {
         JSONArray urlArray = getJSONArray(picturesListTag);
@@ -68,7 +89,7 @@ public class Resources extends ParseObject {
     }
 
     public List<PhotoSphereData> getPhotoSphereDatas() throws JSONException {
-        JSONArray photoSphereDataArray = getJSONArray(photoSphereDatasTag);
+        JSONArray photoSphereDataArray = getJSONObject(panoSphereDatas).getJSONArray("neighborsList");
         List<PhotoSphereData> photoSphereDatas = new ArrayList<>(photoSphereDataArray.length());
         for (int i = 0; i < photoSphereDataArray.length(); i++) {
             JSONObject photoSphereObject = (JSONObject) photoSphereDataArray.get(i);
@@ -76,6 +97,16 @@ public class Resources extends ParseObject {
         }
 
         return photoSphereDatas;
+    }
+
+    public int getStartingId() throws JSONException {
+        JSONObject panoSphereData = getJSONObject(panoSphereDatas);
+        return panoSphereData.getInt("startingId");
+    }
+
+    public String getStartingIString() throws JSONException {
+        JSONObject panoSphereData = getJSONObject(panoSphereDatas);
+        return panoSphereData.getString("startingUrl");
     }
 
 
@@ -100,7 +131,6 @@ public class Resources extends ParseObject {
         }
 
         builder.setNeighborsList(neighborsList);
-        builder.setUrl(photoSphereObject.getString(urlTag));
 
         return builder.build();
     }

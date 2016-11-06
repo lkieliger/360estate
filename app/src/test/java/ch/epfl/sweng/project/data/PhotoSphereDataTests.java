@@ -32,27 +32,22 @@ public class PhotoSphereDataTests {
 
         PhotoSphereData pData = new PhotoSphereData.Builder(14).
                 setNeighborsList(neighborsList).
-                setUrl("https://360.estate.org/estate/houseBig.jpg").
                 build();
 
         PhotoSphereData pData2 = new PhotoSphereData.Builder(14).
                 setNeighborsList(neighborsList).
-                setUrl("https://360.estate.org/estate/houseBig.jpg").
                 build();
 
         PhotoSphereData pData3 = new PhotoSphereData.Builder(15).
                 setNeighborsList(neighborsList).
-                setUrl("https://360.estate.org/estate/houseBig.jpg").
                 build();
 
         PhotoSphereData pData4 = new PhotoSphereData.Builder(14).
                 setNeighborsList(neighborsList).
-                setUrl("NotTheSameUrl").
                 build();
 
         PhotoSphereData pData5 = new PhotoSphereData.Builder(14).
                 setNeighborsList(neighborsList.subList(0, 5)).
-                setUrl("https://360.estate.org/estate/houseBig.jpg").
                 build();
 
 
@@ -60,15 +55,14 @@ public class PhotoSphereDataTests {
         neighborsList2.set(0, new AngleMapping(new Tuple<>(1.4, 2.8), 13, "url"));
         PhotoSphereData pData6 = new PhotoSphereData.Builder(14).
                 setNeighborsList(neighborsList2).
-                setUrl("https://360.estate.org/estate/houseBig.jpg").
                 build();
 
         assertTrue(pData.equals(pData2));
 
         assertFalse(pData.equals(null));
         assertFalse(pData.equals(neighborsList));
-        assertFalse(pData.equals(pData3));
-        assertFalse(pData.equals(pData4));
+        assertTrue(pData.equals(pData3));
+        assertTrue(pData.equals(pData4));
         assertFalse(pData.equals(pData5));
         assertFalse(pData.equals(pData6));
     }
@@ -86,25 +80,18 @@ public class PhotoSphereDataTests {
 
         PhotoSphereData pData = new PhotoSphereData.Builder(14).
                 setNeighborsList(neighborsList).
-                setUrl("https://360.estate.org/estate/houseBig.jpg").
                 build();
 
         PhotoSphereData pData2 = new PhotoSphereData.Builder(14).
                 setNeighborsList(neighborsList).
-                setUrl("https://360.estate.org/estate/houseBig.jpg").
                 build();
 
 
         assertTrue(pData.hashCode() == pData2.hashCode());
 
-        PhotoSphereData pData3 = new PhotoSphereData.Builder(14).
-                setNeighborsList(neighborsList).
-                build();
 
-        assertFalse(pData.hashCode() == pData3.hashCode());
 
         PhotoSphereData pData4 = new PhotoSphereData.Builder(14).
-                setUrl("https://360.estate.org/estate/houseBig.jpg").
                 build();
 
         assertFalse(pData.hashCode() == pData4.hashCode());

@@ -58,13 +58,13 @@ public class Item extends ParseObject {
         put("surface", surface);
     }
 
-    private void setId(String id){ put("id", id);}
+    private void setId(String id){ put("idHouse", id);}
 
     public HouseType getType() {
         return HouseType.values()[getInt("type")];
     }
 
-    public String getId(){ return getString("id");}
+    public String getId(){ return getString("idHouse");}
 
     String getLocation() {
         return getString("location");

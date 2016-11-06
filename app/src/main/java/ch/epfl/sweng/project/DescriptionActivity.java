@@ -64,10 +64,12 @@ public class DescriptionActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DescriptionActivity.this, PanoramaActivity.class);
-                startActivity(intent);
+                Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
+                Intent intentFromList = getIntent();
+                String id = intentFromList.getStringExtra("id");
+                intentToPanorama.putExtra("id",id);
+                startActivity(intentToPanorama);
             }
         });
-
     }
 }

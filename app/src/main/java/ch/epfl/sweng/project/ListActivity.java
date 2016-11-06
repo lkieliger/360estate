@@ -85,7 +85,6 @@ public class ListActivity extends AppCompatActivity {
                 // ListView Clicked item index
                 Item itemValue = (Item) listView.getItemAtPosition(position);
                 intent.putExtra("id", itemValue.getId());
-
                 startActivity(intent);
             }
         });

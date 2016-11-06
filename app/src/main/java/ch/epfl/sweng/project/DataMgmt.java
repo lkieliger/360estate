@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
+import android.util.SparseArray;
 import android.widget.ImageView;
 
 import com.parse.FindCallback;
@@ -11,10 +12,18 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import ch.epfl.sweng.project.data.AngleMapping;
+import ch.epfl.sweng.project.data.HouseManager;
+import ch.epfl.sweng.project.data.JSONTags;
+import ch.epfl.sweng.project.data.PhotoSphereData;
+import ch.epfl.sweng.project.data.Resources;
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
 import ch.epfl.sweng.project.data.Item;
 import ch.epfl.sweng.project.data.ItemAdapter;
@@ -33,9 +42,6 @@ public final class DataMgmt {
 
     /**
      * Get a bitmap from url using Picasso.
-     *
-     * @param mContext
-     * @param url the url to load
      */
     public static Bitmap getBitmapfromUrl(Context mContext, String url) {
 
@@ -84,5 +90,45 @@ public final class DataMgmt {
         });
     }
 
+    public static HouseManager getHouseManager(String id){
+        ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
+        query.whereEqualTo(JSONTags.idHouse,id);
 
+        List<Resources> listResource = new ArrayList<>();
+
+        try {
+            listResource = query.find();
+        } catch (ParseException e) {
+            if(BuildConfig.DEBUG) {
+                Log.d("DataMgmt", "Error: " + e.getMessage());
+            }
+        }
+
+        if(listResource.isEmpty()) Log.d("DataMgmt", "Error: No resource has this id.");
+        if(listResource.size()>1) Log.d("DataMgmt", "Warning: The same id has different Resources.");
+
+        Resources resources = listResource.get(0);
+        List<PhotoSphereData> photoSphereDataList = new ArrayList<>();
+        int startingId = -1;
+        String startingUrl = "";
+
+        try {
+            photoSphereDataList = resources.getPhotoSphereDatas();
+            startingId = resources.getStartingId();
+            startingUrl = resources.getStartingIString();
+        } catch (JSONException e) {
+            if (BuildConfig.DEBUG) {
+                Log.d("DataMgmt", "Error: " + e.getMessage());
+            }
+        }
+
+        SparseArray<List<AngleMapping>> sparseArray = new SparseArray<>();
+
+        for(PhotoSphereData photoSphereData: photoSphereDataList){
+            sparseArray.append(photoSphereData.getId(),photoSphereData.getNeighborsList());
+        }
+
+
+       return new HouseManager(sparseArray,startingId,startingUrl);
+    }
 }

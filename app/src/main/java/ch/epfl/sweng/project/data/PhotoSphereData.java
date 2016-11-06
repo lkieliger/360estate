@@ -13,17 +13,15 @@ import java.util.List;
 import static ch.epfl.sweng.project.data.JSONTags.*;
 
 
-class PhotoSphereData {
+public class PhotoSphereData {
 
     private final int mId;
-    private final String mUrl;
     private final List<AngleMapping> mNeighborsList;
 
     private static final String TAG = "PhotoSphereData";
 
-    PhotoSphereData(int extId, String extUrl, List<AngleMapping> extNeighborsList) {
+    public PhotoSphereData(int extId, List<AngleMapping> extNeighborsList) {
         mId = extId;
-        mUrl = extUrl;
         mNeighborsList = extNeighborsList;
     }
 
@@ -51,7 +49,6 @@ class PhotoSphereData {
 
         try {
             neighborObject.put(idTag, mId);
-            neighborObject.put(urlTag, mUrl);
             neighborObject.put(neighborsListTag, getNeighborsJsonArray());
         } catch (JSONException e) {
             if (BuildConfig.DEBUG) {
@@ -65,9 +62,6 @@ class PhotoSphereData {
         return mId;
     }
 
-    public String getUrl() {
-        return mUrl;
-    }
 
     public List<AngleMapping> getNeighborsList() {
         return mNeighborsList;
@@ -75,16 +69,10 @@ class PhotoSphereData {
 
     static class Builder {
         private int mId;
-        private String mUrl = null;
         private List<AngleMapping> mNeighborsList = null;
 
         Builder(int id) {
             mId = id;
-        }
-
-        Builder setUrl(String url) {
-            mUrl = url;
-            return this;
         }
 
         Builder setNeighborsList(List<AngleMapping> neighborsList) {
@@ -93,7 +81,7 @@ class PhotoSphereData {
         }
 
         PhotoSphereData build() {
-            return new PhotoSphereData(mId, mUrl, mNeighborsList);
+            return new PhotoSphereData(mId, mNeighborsList);
         }
     }
 
@@ -104,8 +92,6 @@ class PhotoSphereData {
         }
 
         PhotoSphereData thatPData = (PhotoSphereData) obj;
-        if ((mId != thatPData.getId()) || (!mUrl.equals(thatPData.getUrl())))
-            return false;
 
         if (getNeighborsList().size() != thatPData.getNeighborsList().size())
             return false;
@@ -124,7 +110,6 @@ class PhotoSphereData {
     @Override
     public int hashCode() {
         int result = mId;
-        result = 31 * result + (mUrl != null ? mUrl.hashCode() : 0);
         result = 31 * result + (getNeighborsList() != null ? getNeighborsList().hashCode() : 0);
         return result;
     }
