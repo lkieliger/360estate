@@ -1,141 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical" android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
     <Button
+        android:id="@+id/eraseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:text="@string/erase"
-        android:id="@+id/eraseButton"
-        android:textColor="#55CACF"
-        android:textSize="20sp"
-        android:textAllCaps="false"
         android:background="@drawable/button_shape"
-        />
+        android:text="@string/erase"
+        android:textAllCaps="false"
+        android:textColor="#55CACF"
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/types_of_house"
             android:layout_weight="50"
+            android:text="@string/types_of_house"
             android:textSize="18sp"
 
             />
 
         <Spinner
+            android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/spinner"
-            android:entries="@array/typeOfHouses"
             android:layout_weight="50"
-            android:spinnerMode="dialog"
-            />
+            android:entries="@array/typeOfHouses"
+            android:spinnerMode="dialog" />
     </LinearLayout>
 
     <AutoCompleteTextView
+        android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/location"
-        android:hint="@string/cities"
         android:layout_marginBottom="13dp"
-        />
+        android:hint="@string/cities" />
 
 
     <EditText
+        android:id="@+id/numberOfRooms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/number_of_rooms"
-        android:inputType="number"
-        android:id="@+id/numberOfRooms"
-        />
+        android:inputType="number" />
 
 
-    <LinearLayout
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/price"
-            android:textSize="18sp"
-            android:layout_weight="2"
-            />
-
-
-        <SeekBar
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:max="20"
-            android:progress="20"
-            android:id="@+id/seekBarPrice"
-            />
-
-    </LinearLayout>
-
-    <TextView
-        android:text=""
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/showPrice"
-        android:gravity="center"
-        />
-
-
-    <LinearLayout
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/surface"
-            android:textSize="18sp"
-            android:layout_weight="2"
-            />
-
-
-        <SeekBar
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:max="50"
-            android:progress="0"
-            android:id="@+id/seekBarSurface"
-            />
-
-    </LinearLayout>
-
-    <TextView
-        android:text=""
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/showSurface"
-        android:gravity="center"
-        />
-
-    <Button
+    <EditText
+        android:id="@+id/MaxSurface"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:text="@string/Filter"
-        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
+        android:hint="@string/surfaceMax"
+        android:textSize="18sp"
+        android:inputType="number"/>
+
+
+    <EditText
+        android:id="@+id/MinSurface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/surfaceMin"
+        android:textSize="18sp"
+        android:inputType="number"/>
+
+
+    <EditText
+        android:id="@+id/MaxPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:hint="@string/priceMax"
+        android:textSize="18sp"
+        android:inputType="number"/>
+
+
+    <EditText
+        android:id="@+id/MinPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/priceMin"
+        android:textSize="18sp"
+        android:inputType="number"/>
+
+    <Button
         android:id="@+id/filterButton"
-        android:textColor="#55CACF"
-        android:textSize="20sp"
-        android:textAllCaps="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="13dp"
         android:background="@drawable/button_shape"
-        />
+        android:text="@string/Filter"
+        android:textAllCaps="false"
+        android:textColor="#55CACF"
+        android:textSize="20sp" />
 
 
 </LinearLayout>

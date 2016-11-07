@@ -46,14 +46,6 @@ public class FilterActivityTest {
     @Rule
     public ActivityTestRule<ListActivity> mActivityTestRule = new ActivityTestRule<>(ListActivity.class);
 
-    public static ViewAction scrubSeekBarAction(int progress) {
-        return actionWithAssertions(new GeneralSwipeAction(
-                Swipe.SLOW,
-                new SeekBarThumbCoordinatesProvider(0),
-                new SeekBarThumbCoordinatesProvider(progress),
-                Press.PINPOINT));
-    }
-
     @After
     public void finishActivity() {
         mActivityTestRule.getActivity().finish();
@@ -155,11 +147,16 @@ public class FilterActivityTest {
 
         onView(withId(R.id.filterButtonPopUp)).perform(click());
         onView(withId(R.id.numberOfRooms)).perform(typeText("3"), closeSoftKeyboard());
+        onView(withId(R.id.MaxSurface)).perform(typeText("2000000"), closeSoftKeyboard());
+        onView(withId(R.id.MinSurface)).perform(typeText("2000000"), closeSoftKeyboard());
+
+        onView(withId(R.id.MaxPrice)).perform(typeText("100"), closeSoftKeyboard());
+        onView(withId(R.id.MinPrice)).perform(typeText("100"), closeSoftKeyboard());
+
         onView(withId(R.id.location)).perform(typeText("Renens"), closeSoftKeyboard());
         onView(withId(R.id.spinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(getString(R.string.building)))).perform(click());
-        onView(withId(R.id.seekBarPrice)).perform(scrubSeekBarAction(5));
-        onView(withId(R.id.seekBarSurface)).perform(scrubSeekBarAction(50));
+
 
         onView(withId(R.id.filterButton)).perform(click());
         wait250ms(TAG);
@@ -187,11 +184,10 @@ public class FilterActivityTest {
                             ))))));
 
         }
-
-
+        wait1s(TAG);
         onView(withId(R.id.filterButtonPopUp)).perform(click());
+        wait250ms(TAG);
         onView(withId(R.id.eraseButton)).perform(click());
-
     }
 
     private String getString(int id) {
@@ -214,35 +210,6 @@ public class FilterActivityTest {
             ListView listView = (ListView) item;
             counts[0] = listView.getCount();
             return true;
-        }
-    }
-
-    private static class SeekBarThumbCoordinatesProvider implements CoordinatesProvider {
-        int mProgress;
-
-        SeekBarThumbCoordinatesProvider(int progress) {
-            mProgress = progress;
-        }
-
-        private static float[] getVisibleLeftTop(View view) {
-            final int[] xy = new int[2];
-            view.getLocationOnScreen(xy);
-            return new float[]{ xy[0], xy[1] };
-        }
-
-        @Override
-        public float[] calculateCoordinates(View view) {
-            if (!(view instanceof SeekBar)) {
-                throw new PerformException.Builder()
-                        .withViewDescription(HumanReadables.describe(view))
-                        .withCause(new RuntimeException("SeekBar expected")).build();
-            }
-            SeekBar seekBar = (SeekBar) view;
-            int width = seekBar.getWidth() - seekBar.getPaddingLeft() - seekBar.getPaddingRight();
-            double progress = mProgress == 0 ? seekBar.getProgress() : mProgress;
-            int xPosition = (int) (seekBar.getPaddingLeft() + width * progress / seekBar.getMax());
-            float[] xy = getVisibleLeftTop(seekBar);
-            return new float[]{ xy[0] + xPosition, xy[1] + 10 };
         }
     }
 }

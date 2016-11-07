@@ -14,37 +14,30 @@ public class EraseButtonListener implements View.OnClickListener {
     private Spinner typeSpinner;
     private AutoCompleteTextView city;
     private TextView numberOfRooms;
-    private TextView price;
-    private TextView surface;
-    private SeekBar seekBarPrice;
-    private SeekBar seekBarSurface;
+    private TextView maxPrice;
+    private TextView minPrice;
+    private TextView maxSurface;
+    private TextView minSurface;
 
-    /**
-     * @param typeSpinner The spinner of the types.
-     * @param city The city entered.
-     * @param numberOfRooms The number of rooms entered.
-     * @param price The price entered.
-     * @param surface The surface entered.
-     */
-    public EraseButtonListener(Spinner typeSpinner, AutoCompleteTextView city, TextView numberOfRooms, TextView price,
-                               TextView surface, SeekBar seekBarPrice, SeekBar seekBarSurface) {
+    public EraseButtonListener(Spinner typeSpinner, AutoCompleteTextView city, TextView numberOfRooms,
+                               TextView maxPrice, TextView minPrice, TextView maxSurface, TextView minSurface) {
         this.typeSpinner = typeSpinner;
         this.city = city;
         this.numberOfRooms = numberOfRooms;
-        this.price = price;
-        this.surface = surface;
-        this.seekBarPrice = seekBarPrice;
-        this.seekBarSurface = seekBarSurface;
+        this.maxPrice = maxPrice;
+        this.minPrice = minPrice;
+        this.maxSurface = maxSurface;
+        this.minSurface = minSurface;
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         typeSpinner.setSelection(0);
         city.setText("");
         numberOfRooms.setText("");
-        price.setText("");
-        surface.setText("");
-        seekBarPrice.setProgress(seekBarPrice.getMax());
-        seekBarSurface.setProgress(0);
+        maxPrice.setText("");
+        minPrice.setText("");
+        maxSurface.setText("");
+        minSurface.setText("");
     }
 }

@@ -3,6 +3,7 @@ package ch.epfl.sweng.project.filter;
 import android.support.compat.BuildConfig;
 import android.util.Log;
 
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import ch.epfl.sweng.project.data.Item;
@@ -12,40 +13,37 @@ import ch.epfl.sweng.project.data.Item;
  */
 public class StateOfPopUpLayout {
 
-    private static final double MIN_COEFF = 0.98;
-    private static final double MAX_COEFF = 1.02;
-
     private int typeSpinner;
     private int positionSpinner;
     private String city;
     private String numberOfRooms;
-    private String price;
-    private String surface;
-    private int seekBarPricePosition;
-    private int seekBarSurfacePosition;
-
+    private String maxPrice;
+    private String minPrice;
+    private String maxSurface;
+    private String minSurface;
 
     /**
      * @param typeSpinner        The type entered.
      * @param positionSpinner    The position of the selected item in the spinner.
      * @param city               The city entered.
      * @param numberOfRooms      The number of rooms entered.
-     * @param price              The price entered.
-     * @param surface            The surface entered.
-     * @param barPricePosition   The position of the seek bar used for the price.
-     * @param barSurfacePosition The position of the seek bar used for the surface.
+     * @param maxPrice           The maximum price entered.
+     * @param minPrice           The minimum price entered.
+     * @param maxSurface         The maximum Surface entered.
+     * @param minSurface         The minimum Surface entered.
      */
     public StateOfPopUpLayout(int typeSpinner, int positionSpinner, String city, String numberOfRooms,
-                              String price, String surface, int barPricePosition, int barSurfacePosition) {
+                              String maxPrice, String minPrice, String maxSurface,String minSurface) {
+        this.minSurface = minSurface;
         this.typeSpinner = typeSpinner;
         this.positionSpinner = positionSpinner;
         this.city = city;
         this.numberOfRooms = numberOfRooms;
-        this.price = price;
-        this.surface = surface;
-        seekBarPricePosition = barPricePosition;
-        seekBarSurfacePosition = barSurfacePosition;
+        this.maxPrice = maxPrice;
+        this.minPrice = minPrice;
+        this.maxSurface = maxSurface;
     }
+
 
     public int getPositionSpinner() {
         return positionSpinner;
@@ -59,20 +57,20 @@ public class StateOfPopUpLayout {
         return numberOfRooms;
     }
 
-    public String getPrice() {
-        return price;
+    public String getMaxPrice() {
+        return maxPrice;
     }
 
-    public String getSurface() {
-        return surface;
+    public String getMinPrice() {
+        return minPrice;
     }
 
-    public int getSeekBarPricePosition() {
-        return seekBarPricePosition;
+    public String getMaxSurface() {
+        return maxSurface;
     }
 
-    public int getSeekBarSurfacePosition() {
-        return seekBarSurfacePosition;
+    public String getMinSurface() {
+        return minSurface;
     }
 
     /**
@@ -86,8 +84,11 @@ public class StateOfPopUpLayout {
         Boolean isTypeFiltered = typeSpinner != 0;
         Boolean isCityFiltered = !city.equals("");
         Boolean isNbrOfRoomsFiltered = !numberOfRooms.equals("");
-        Boolean isPriceFiltered = !price.equals("");
-        Boolean isSurfaceFiltered = !surface.equals("");
+        Boolean isMaxPriceFiltered = !maxPrice.equals("");
+        Boolean isMinPriceFiltered = !minPrice.equals("");
+        Boolean isMaxSurfaceFiltered = !maxSurface.equals("");
+        Boolean isMinSurfaceFiltered = !minSurface.equals("");
+
 
         if (isTypeFiltered) {
             query.whereEqualTo("type", typeSpinner - 1);
@@ -102,16 +103,11 @@ public class StateOfPopUpLayout {
                 query.whereEqualTo("rooms", Integer.parseInt(numberOfRooms));
             }
 
-            if (isPriceFiltered) {
-                int temp = Integer.parseInt(price.split(" ")[0]);
-                query.whereLessThanOrEqualTo("price", temp * MAX_COEFF);
-            }
+            filterWithMax(isMaxPriceFiltered,"price",maxPrice,query);
+            filterWithMin(isMinPriceFiltered,"price",minPrice,query);
+            filterWithMax(isMaxSurfaceFiltered,"surface",maxSurface,query);
+            filterWithMin(isMinSurfaceFiltered,"surface",minSurface,query);
 
-            if (isSurfaceFiltered) {
-
-                int temp = Integer.parseInt(surface.split(" ")[0]);
-                query.whereGreaterThanOrEqualTo("surface", temp * MIN_COEFF);
-            }
         } catch (NumberFormatException e) {
             if (BuildConfig.DEBUG) {
                 Log.d("StateOfPopUpLayout", "NumberFormatException" + e.getMessage());
@@ -119,4 +115,21 @@ public class StateOfPopUpLayout {
         }
         return query;
     }
+
+    private <T extends ParseObject> void filterWithMax(boolean isFiltered, String paramToFilter,
+                                                       String paramGet, ParseQuery<T> query){
+        if(isFiltered){
+            int temp = Integer.parseInt(paramGet);
+            query.whereLessThanOrEqualTo(paramToFilter, temp);
+        }
+    }
+
+    private <T extends ParseObject> void filterWithMin(boolean isFiltered,String paramToFilter,
+                                                       String paramGet,ParseQuery<T> query){
+        if(isFiltered){
+            int temp = Integer.parseInt(paramGet);
+            query.whereGreaterThanOrEqualTo(paramToFilter, temp);
+        }
+    }
+
 }

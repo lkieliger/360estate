@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -24,16 +23,11 @@ import java.util.List;
 
 import ch.epfl.sweng.project.data.Item;
 import ch.epfl.sweng.project.data.ItemAdapter;
-import ch.epfl.sweng.project.filter.CustomOnSeekBarChangeListener;
 import ch.epfl.sweng.project.filter.EraseButtonListener;
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
 
 public class ListActivity extends AppCompatActivity {
 
-    private static final int MIN_VALUE_PRICE = 100000;
-    private static final int MAX_VALUE_PRICE = 500000;
-    private static final int MIN_VALUE_SURFACE = 20;
-    private static final int MAX_VALUE_SURFACE = 400;
     private final String[] cities = new String[]{
             "Geneve", "Renens", "Lausanne"
     };
@@ -65,7 +59,7 @@ public class ListActivity extends AppCompatActivity {
         logOutButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
-            public void onClick(View v){
+            public void onClick(View view){
                 logOutUser();
             }
         });
@@ -79,11 +73,11 @@ public class ListActivity extends AppCompatActivity {
         final Intent intent = new Intent(this, DescriptionActivity.class);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> adapterView, View view,
+                                    int i, long l) {
 
                 // ListView Clicked item index
-                Item itemValue = (Item) listView.getItemAtPosition(position);
+                Item itemValue = (Item) listView.getItemAtPosition(i);
                 intent.putExtra("id", itemValue.getId());
                 startActivity(intent);
             }
@@ -92,20 +86,7 @@ public class ListActivity extends AppCompatActivity {
 
 
 
-    /**
-     * Display above the seekBar a text to help the user to adjust the seekBar and his selected input.
-     *
-     * @param seekBar  The seekBar where he can put his input.
-     * @param text     The textView to display the value the user entered in the seekBar.
-     * @param minValue The minimum value the seekBar authorize.
-     * @param maxValue The maximum value the seekBar authorize.
-     * @param units    The units in which the input is expressed.
-     */
-    private void showSeekBar(SeekBar seekBar, TextView text, int minValue, int maxValue, String units) {
-        SeekBar.OnSeekBarChangeListener seekBarListenerPrice = new CustomOnSeekBarChangeListener(
-                text, minValue, maxValue, units);
-        seekBar.setOnSeekBarChangeListener(seekBarListenerPrice);
-    }
+
 
     /**
      * @return A inflated layout of the popup.
@@ -145,10 +126,12 @@ public class ListActivity extends AppCompatActivity {
         final Spinner spinner = (Spinner) popupLayout.findViewById(R.id.spinner);
         final AutoCompleteTextView city = (AutoCompleteTextView) popupLayout.findViewById(R.id.location);
         final TextView numberOfRooms = (TextView) popupLayout.findViewById(R.id.numberOfRooms);
-        final SeekBar seekBarPrice = (SeekBar) popupLayout.findViewById(R.id.seekBarPrice);
-        final SeekBar seekBarSurface = (SeekBar) popupLayout.findViewById(R.id.seekBarSurface);
-        final TextView showPrice = (TextView) popupLayout.findViewById(R.id.showPrice);
-        final TextView showSurface = (TextView) popupLayout.findViewById(R.id.showSurface);
+        final TextView maxPrice = (TextView) popupLayout.findViewById(R.id.MaxPrice);
+        final TextView minPrice = (TextView) popupLayout.findViewById(R.id.MinPrice);
+        final TextView maxSurface = (TextView) popupLayout.findViewById(R.id.MaxSurface);
+        final TextView minSurface = (TextView) popupLayout.findViewById(R.id.MinSurface);
+
+
 
         /*
          * Load the last state of popup layout, to display it in the popup.
@@ -157,26 +140,23 @@ public class ListActivity extends AppCompatActivity {
             spinner.setSelection(stateOfPopUpLayout.getPositionSpinner());
             city.setText(stateOfPopUpLayout.getCity());
             numberOfRooms.setText(stateOfPopUpLayout.getNumberOfRooms());
-            showPrice.setText(stateOfPopUpLayout.getPrice());
-            showSurface.setText(stateOfPopUpLayout.getSurface());
-            seekBarPrice.setProgress(stateOfPopUpLayout.getSeekBarPricePosition());
-            seekBarSurface.setProgress(stateOfPopUpLayout.getSeekBarSurfacePosition());
+            maxPrice.setText(stateOfPopUpLayout.getMaxPrice());
+            minPrice.setText(stateOfPopUpLayout.getMinPrice());
+            maxSurface.setText(stateOfPopUpLayout.getMaxSurface());
+            minSurface.setText(stateOfPopUpLayout.getMinSurface());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, cities);
         city.setAdapter(adapter);
 
-        showSeekBar(seekBarPrice, showPrice, MIN_VALUE_PRICE, MAX_VALUE_PRICE, "Chf");
-        showSeekBar(seekBarSurface, showSurface, MIN_VALUE_SURFACE, MAX_VALUE_SURFACE, "m\u00B2");
-
         Button eraseButton = (Button) popupLayout.findViewById(R.id.eraseButton);
         eraseButton.setOnClickListener(new EraseButtonListener(
-                spinner, city, numberOfRooms, showPrice, showSurface, seekBarPrice, seekBarSurface));
+                spinner, city, numberOfRooms, maxPrice, minPrice, maxSurface, minSurface));
 
         Button filterButton = (Button) popupLayout.findViewById(R.id.filterButton);
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
                 /*
                  * Saving the state of popup layout.
@@ -186,10 +166,10 @@ public class ListActivity extends AppCompatActivity {
                         spinner.getSelectedItemPosition(),
                         city.getText().toString(),
                         numberOfRooms.getText().toString(),
-                        showPrice.getText().toString(),
-                        showSurface.getText().toString(),
-                        seekBarPrice.getProgress(),
-                        seekBarSurface.getProgress()
+                        maxPrice.getText().toString(),
+                        minPrice.getText().toString(),
+                        maxSurface.getText().toString(),
+                        minSurface.getText().toString()
                 );
                 DataMgmt.getData(itemCollection, itemAdapter, stateOfPopUpLayout);
                 listView.setAdapter(itemAdapter);
