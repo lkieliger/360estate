@@ -1,6 +1,8 @@
-package ch.epfl.sweng.project.engine3d;
+package ch.epfl.sweng.project.engine3d.components;
 
 import android.util.Log;
+
+import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
 
 public final class PanoramaInfoObject extends PanoramaObject {

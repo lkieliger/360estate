@@ -1,8 +1,10 @@
-package ch.epfl.sweng.project.engine3d;
+package ch.epfl.sweng.project.engine3d.listeners;
 
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
 import static android.view.MotionEvent.INVALID_POINTER_ID;
 

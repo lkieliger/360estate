@@ -21,8 +21,8 @@ import java.util.Locale;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
-import ch.epfl.sweng.project.engine3d.PanoramaTouchListener;
-import ch.epfl.sweng.project.engine3d.RotSensorListener;
+import ch.epfl.sweng.project.engine3d.listeners.PanoramaTouchListener;
+import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
 import ch.epfl.sweng.project.user.LoginActivity;
 
 import static android.view.MotionEvent.ACTION_CANCEL;

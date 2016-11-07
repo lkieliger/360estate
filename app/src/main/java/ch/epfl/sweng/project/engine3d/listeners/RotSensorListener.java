@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.engine3d;
+package ch.epfl.sweng.project.engine3d.listeners;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -9,6 +9,8 @@ import android.view.Surface;
 
 import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
+
+import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
 
 public class RotSensorListener implements SensorEventListener {

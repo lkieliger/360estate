@@ -22,6 +22,9 @@ import org.rajawali3d.util.OnObjectPickedListener;
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.data.HouseManager;
+import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
+import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
+import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
 import ch.epfl.sweng.project.util.DebugPrinter;
 
 import static android.content.Context.SENSOR_SERVICE;
@@ -211,7 +214,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     }
 
 
-    void getObjectAt(float x, float y) {
+    public void getObjectAt(float x, float y) {
         mPicker.getObjectAt(x, y);
     }
 
