@@ -83,6 +83,9 @@ public class CompleteBehaviorTest {
 
     @Test
     public void testFullApp() {
+
+        logUserOut();
+
         wait1s(TAG);
 
         String testUserMail = "test@" + randomString(6) + ".org";

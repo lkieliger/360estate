@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.project.data.AngleMapping;
+import ch.epfl.sweng.project.data.TransitionObject;
 
 
 /**
@@ -88,17 +89,25 @@ public final class PanoramaSphere extends Sphere {
         Log.d(TAG, "Call to attach panorama");
         for (AngleMapping am : l) {
 
-            Log.d(TAG, "Adding a transition object");
-            PanoramaTransitionObject transitionObject = new PanoramaTransitionObject(
-                    am.getTheta(),
-                    am.getPhi(),
-                    am.getId(),
-                    am.getUrl());
-            transitionObject.registerComponentAtPicker(p);
-            transitionObject.setPickingColor(mComponentIndex);
-            mComponentIndex++;
-            addChild(transitionObject);
-            mComponentList.add(transitionObject);
+            switch (am.getType()) {
+                case INFORMATION:
+
+                    break;
+                case TRANSITION:
+                    Log.d(TAG, "Adding a transition object");
+                    TransitionObject amTransition = (TransitionObject) am;
+                    PanoramaTransitionObject transitionObject = new PanoramaTransitionObject(
+                            amTransition.getTheta(),
+                            amTransition.getPhi(),
+                            amTransition.getId(),
+                            amTransition.getUrl());
+                    transitionObject.registerComponentAtPicker(p);
+                    transitionObject.setPickingColor(mComponentIndex);
+                    mComponentIndex++;
+                    addChild(transitionObject);
+                    mComponentList.add(transitionObject);
+                    break;
+            }
         }
     }
 }

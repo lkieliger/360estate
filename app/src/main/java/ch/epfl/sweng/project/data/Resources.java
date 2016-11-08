@@ -42,7 +42,7 @@ public class Resources extends ParseObject {
     }
 
 
-    public void setPhotoSphereDatas(Iterable<PhotoSphereData> photoSphereList, int startingId, String startingUrl){
+    public void setPhotoSphereDatas(Iterable<PhotoSphereData> photoSphereList, int startingId, String startingUrl) {
         JSONObject photoSphereDatas = new JSONObject();
 
         JSONArray neighborsList = new JSONArray();
@@ -50,12 +50,12 @@ public class Resources extends ParseObject {
             neighborsList.put(p.getNeighborObject());
         }
         try {
-            photoSphereDatas.put("startingId",String.valueOf(startingId));
-            photoSphereDatas.put("startingUrl",startingUrl);
-            photoSphereDatas.put("neighborsList",neighborsList);
+            photoSphereDatas.put(startingIdTag, String.valueOf(startingId));
+            photoSphereDatas.put(startingUrlTag, startingUrl);
+            photoSphereDatas.put(neighborsListTag, neighborsList);
         } catch (JSONException e) {
-            if(BuildConfig.DEBUG){
-                Log.d(TAG,e.getMessage());
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, e.getMessage());
             }
         }
         put(panoSphereDatas, photoSphereDatas);
@@ -101,12 +101,12 @@ public class Resources extends ParseObject {
 
     public int getStartingId() throws JSONException {
         JSONObject panoSphereData = getJSONObject(panoSphereDatas);
-        return panoSphereData.getInt("startingId");
+        return panoSphereData.getInt(startingIdTag);
     }
 
     public String getStartingIString() throws JSONException {
         JSONObject panoSphereData = getJSONObject(panoSphereDatas);
-        return panoSphereData.getString("startingUrl");
+        return panoSphereData.getString(startingUrlTag);
     }
 
 
@@ -120,7 +120,7 @@ public class Resources extends ParseObject {
         if (neighborsJSONArray != null) {
             for (int i = 0; i < neighborsJSONArray.length(); i++) {
 
-                neighborsList.add(new AngleMapping(
+                neighborsList.add(new TransitionObject(
                         new Tuple<>(
                                 neighborsJSONArray.getJSONObject(i).getDouble(thetaTag),
                                 neighborsJSONArray.getJSONObject(i).getDouble(phiTag)

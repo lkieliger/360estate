@@ -1,30 +1,33 @@
 package ch.epfl.sweng.project.data;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
 import ch.epfl.sweng.project.util.Tuple;
+
+import static ch.epfl.sweng.project.data.JSONTags.phiTag;
+import static ch.epfl.sweng.project.data.JSONTags.thetaTag;
 
 
 /**
- * Represent a neighbor of a {@link ch.epfl.sweng.project.engine3d.PanoramaSphere}. It indeed maps a certain
+ * Represent a neighbor of a {@link ch.epfl.sweng.project.engine3d.components.PanoramaSphere}. It maps a certain
  * angle (theta and phi) to a neighbor id and the url of the neighbor image.
  */
-public class AngleMapping{
+public abstract class AngleMapping {
 
     private final Tuple<Double, Double> thetaPhi;
-    private final int mId;
-    private final String mUrl;
 
-    public AngleMapping(Tuple<Double, Double> extThetaPhi, int extId, String extUrl) {
+
+    AngleMapping(Tuple<Double, Double> extThetaPhi) {
         thetaPhi = extThetaPhi;
-        mId = extId;
-        mUrl = extUrl;
     }
 
-    public AngleMapping(Double extTheta, Double extPhi, int extId, String extUrl){
-        thetaPhi = new Tuple<>(extTheta,extPhi);
-        mId = extId;
-        mUrl = extUrl;
+    AngleMapping(Double extTheta, Double extPhi) {
+        thetaPhi = new Tuple<>(extTheta, extPhi);
     }
 
+    public abstract PanoramaComponentType getType();
 
     public Tuple<Double, Double> getThetaPhi() {
         return thetaPhi;
@@ -38,12 +41,11 @@ public class AngleMapping{
         return thetaPhi.getY();
     }
 
-    public int getId() {
-        return mId;
-    }
-
-    public String getUrl() {
-        return mUrl;
+    public JSONObject toJSONObject() throws JSONException {
+        JSONObject jsonAM = new JSONObject();
+        jsonAM.put(thetaTag, getTheta());
+        jsonAM.put(phiTag, getPhi());
+        return jsonAM;
     }
 
     @Override
@@ -53,17 +55,12 @@ public class AngleMapping{
         }
 
         AngleMapping thatAngleMapping = (AngleMapping) obj;
-        return getId() == thatAngleMapping.getId() &&
-                getUrl().equals(thatAngleMapping.getUrl()) &&
-                (Double.compare(getTheta(), thatAngleMapping.getTheta()) == 0) &&
+        return (Double.compare(getTheta(), thatAngleMapping.getTheta()) == 0) &&
                 (Double.compare(getPhi(), thatAngleMapping.getPhi()) == 0);
     }
 
     @Override
     public int hashCode() {
-        int result = mId;
-        result = 31 * result + (mUrl != null ? mUrl.hashCode() : 0);
-        result = 31 * result + thetaPhi.hashCode();
-        return result;
+        return thetaPhi.hashCode();
     }
 }

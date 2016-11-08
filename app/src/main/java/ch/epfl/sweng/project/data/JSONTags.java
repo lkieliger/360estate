@@ -8,6 +8,9 @@ public interface JSONTags {
     String panoSphereDatas = "panoSphereDatas";
     String idHouse = "idHouse";
 
+    String startingIdTag = "startingId";
+    String startingUrlTag = "startingUrl";
+
     String thetaTag = "theta";
     String phiTag = "phi";
     String idTag = "id";
