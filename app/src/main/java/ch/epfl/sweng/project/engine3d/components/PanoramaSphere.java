@@ -89,25 +89,14 @@ public final class PanoramaSphere extends Sphere {
         Log.d(TAG, "Call to attach panorama");
         for (AngleMapping am : l) {
 
-            switch (am.getType()) {
-                case INFORMATION:
+            PanoramaObject panoramaObject = am.toPanoramaObject();
 
-                    break;
-                case TRANSITION:
-                    Log.d(TAG, "Adding a transition object");
-                    TransitionObject amTransition = (TransitionObject) am;
-                    PanoramaTransitionObject transitionObject = new PanoramaTransitionObject(
-                            amTransition.getTheta(),
-                            amTransition.getPhi(),
-                            amTransition.getId(),
-                            amTransition.getUrl());
-                    transitionObject.registerComponentAtPicker(p);
-                    transitionObject.setPickingColor(mComponentIndex);
-                    mComponentIndex++;
-                    addChild(transitionObject);
-                    mComponentList.add(transitionObject);
-                    break;
-            }
+            panoramaObject.registerComponentAtPicker(p);
+            panoramaObject.setPickingColor(mComponentIndex);
+
+            mComponentIndex++;
+            addChild(panoramaObject);
+            mComponentList.add(panoramaObject);
         }
     }
 }

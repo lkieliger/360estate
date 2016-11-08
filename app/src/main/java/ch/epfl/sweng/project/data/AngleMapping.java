@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
+import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.util.Tuple;
 
 import static ch.epfl.sweng.project.data.JSONTags.phiTag;
@@ -47,6 +48,8 @@ public abstract class AngleMapping {
         jsonAM.put(phiTag, getPhi());
         return jsonAM;
     }
+
+    public abstract PanoramaObject toPanoramaObject();
 
     @Override
     public boolean equals(Object obj) {

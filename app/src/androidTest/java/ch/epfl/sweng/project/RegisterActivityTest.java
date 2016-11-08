@@ -22,6 +22,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.logUserOut;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static org.hamcrest.Matchers.allOf;
@@ -41,6 +42,8 @@ public class RegisterActivityTest {
     public void finishActivity() {
         mActivityTestRule.getActivity().finish();
         wait1s(TAG);
+        logUserOut();
+
     }
 
     private void initTest(){
@@ -79,6 +82,9 @@ public class RegisterActivityTest {
 
         onView(withText(R.string.error_user_already_exists)).inRoot(withDecorView(not(is(mActivityTestRule.getActivity()
                 .getWindow().getDecorView())))).check(matches(isDisplayed()));
+
+        logUserOut();
+
 
     }
 

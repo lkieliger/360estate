@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
 import ch.epfl.sweng.project.util.Tuple;
 
 import static ch.epfl.sweng.project.data.JSONTags.*;
@@ -32,7 +33,7 @@ public class Resources extends ParseObject {
     }
 
     public void setId(String id) {
-        put(idHouse, id);
+        put(idHouseTag, id);
     }
 
 
@@ -52,13 +53,13 @@ public class Resources extends ParseObject {
         try {
             photoSphereDatas.put(startingIdTag, String.valueOf(startingId));
             photoSphereDatas.put(startingUrlTag, startingUrl);
-            photoSphereDatas.put(neighborsListTag, neighborsList);
+            photoSphereDatas.put(panoramaRoomsTag, neighborsList);
         } catch (JSONException e) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, e.getMessage());
             }
         }
-        put(panoSphereDatas, photoSphereDatas);
+        put(panoSphereDatasTag, photoSphereDatas);
     }
 
     public String getDescription() {
@@ -66,7 +67,7 @@ public class Resources extends ParseObject {
     }
 
     public String getId() {
-        return getString(idHouse);
+        return getString(idHouseTag);
     }
 
 
@@ -89,8 +90,9 @@ public class Resources extends ParseObject {
     }
 
     public List<PhotoSphereData> getPhotoSphereDatas() throws JSONException {
-        JSONArray photoSphereDataArray = getJSONObject(panoSphereDatas).getJSONArray("neighborsList");
+        JSONArray photoSphereDataArray = getJSONObject(panoSphereDatasTag).getJSONArray(panoramaRoomsTag);
         List<PhotoSphereData> photoSphereDatas = new ArrayList<>(photoSphereDataArray.length());
+
         for (int i = 0; i < photoSphereDataArray.length(); i++) {
             JSONObject photoSphereObject = (JSONObject) photoSphereDataArray.get(i);
             photoSphereDatas.add(parsePhotoSphereData(photoSphereObject));
@@ -100,12 +102,12 @@ public class Resources extends ParseObject {
     }
 
     public int getStartingId() throws JSONException {
-        JSONObject panoSphereData = getJSONObject(panoSphereDatas);
+        JSONObject panoSphereData = getJSONObject(panoSphereDatasTag);
         return panoSphereData.getInt(startingIdTag);
     }
 
     public String getStartingIString() throws JSONException {
-        JSONObject panoSphereData = getJSONObject(panoSphereDatas);
+        JSONObject panoSphereData = getJSONObject(panoSphereDatasTag);
         return panoSphereData.getString(startingUrlTag);
     }
 
@@ -116,17 +118,25 @@ public class Resources extends ParseObject {
         JSONArray neighborsJSONArray = photoSphereObject.getJSONArray(neighborsListTag);
 
         PhotoSphereData.Builder builder = new PhotoSphereData.Builder(photoSphereObject.getInt(idTag));
+        PanoramaComponentType[] typeValues = PanoramaComponentType.values();
 
         if (neighborsJSONArray != null) {
             for (int i = 0; i < neighborsJSONArray.length(); i++) {
 
-                neighborsList.add(new TransitionObject(
-                        new Tuple<>(
-                                neighborsJSONArray.getJSONObject(i).getDouble(thetaTag),
-                                neighborsJSONArray.getJSONObject(i).getDouble(phiTag)
-                        ),
-                        neighborsJSONArray.getJSONObject(i).getInt(idTag),
-                        neighborsJSONArray.getJSONObject(i).getString(urlTag)));
+                switch (typeValues[neighborsJSONArray.getJSONObject(i).getInt(typeTag)]) {
+                    case TRANSITION:
+                        neighborsList.add(new TransitionObject(
+                                new Tuple<>(
+                                        neighborsJSONArray.getJSONObject(i).getDouble(thetaTag),
+                                        neighborsJSONArray.getJSONObject(i).getDouble(phiTag)
+                                ),
+                                neighborsJSONArray.getJSONObject(i).getInt(idTag),
+                                neighborsJSONArray.getJSONObject(i).getString(urlTag)));
+                        break;
+
+                    case INFORMATION:
+
+                }
             }
         }
 
@@ -134,6 +144,4 @@ public class Resources extends ParseObject {
 
         return builder.build();
     }
-
-
 }

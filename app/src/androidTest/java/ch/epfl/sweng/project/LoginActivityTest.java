@@ -41,7 +41,6 @@ public class LoginActivityTest {
     public void finishActivity() {
         mActivityTestRule.getActivity().finish();
         wait1s(TAG);
-        logUserOut();
     }
 
     @Test
@@ -67,6 +66,9 @@ public class LoginActivityTest {
         wait250ms(TAG);
 
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
+
+        logUserOut();
+
     }
 
 }

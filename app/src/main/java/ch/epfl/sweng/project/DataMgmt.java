@@ -35,7 +35,7 @@ public final class DataMgmt {
     private DataMgmt() {
     }
 
-    public static void getImgFromUrlIntoView(Context context, String url, ImageView imgV){
+    public static void getImgFromUrlIntoView(Context context, String url, ImageView imgV) {
         Picasso.with(context).load(url).into(imgV);
     }
 
@@ -69,10 +69,9 @@ public final class DataMgmt {
     public static void getData(
             final Collection<Item> itemList, final ItemAdapter itemAdapter, StateOfPopUpLayout stateOfPopUpLayout) {
         ParseQuery<Item> query;
-        if(stateOfPopUpLayout == null) {
+        if (stateOfPopUpLayout == null) {
             query = ParseQuery.getQuery("Item");
-        }
-        else{
+        } else {
             query = stateOfPopUpLayout.filterQuery();
         }
         query.findInBackground(new FindCallback<Item>() {
@@ -90,22 +89,22 @@ public final class DataMgmt {
         });
     }
 
-    public static HouseManager getHouseManager(String id){
+    public static HouseManager getHouseManager(String id) {
         ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
-        query.whereEqualTo(JSONTags.idHouse,id);
+        query.whereEqualTo(JSONTags.idHouseTag, id);
 
         List<Resources> listResource = new ArrayList<>();
 
         try {
             listResource = query.find();
         } catch (ParseException e) {
-            if(BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG) {
                 Log.d("DataMgmt", "Error: " + e.getMessage());
             }
         }
 
-        if(listResource.isEmpty()) Log.d("DataMgmt", "Error: No resource has this id.");
-        if(listResource.size()>1) Log.d("DataMgmt", "Warning: The same id has different Resources.");
+        if (listResource.isEmpty()) Log.d("DataMgmt", "Error: No resource has this id.");
+        if (listResource.size() > 1) Log.d("DataMgmt", "Warning: The same id has different Resources.");
 
         Resources resources = listResource.get(0);
         List<PhotoSphereData> photoSphereDataList = new ArrayList<>();
@@ -124,11 +123,34 @@ public final class DataMgmt {
 
         SparseArray<List<AngleMapping>> sparseArray = new SparseArray<>();
 
-        for(PhotoSphereData photoSphereData: photoSphereDataList){
-            sparseArray.append(photoSphereData.getId(),photoSphereData.getNeighborsList());
+        for (PhotoSphereData photoSphereData : photoSphereDataList) {
+            sparseArray.append(photoSphereData.getId(), photoSphereData.getNeighborsList());
         }
 
 
-       return new HouseManager(sparseArray,startingId,startingUrl);
+        return new HouseManager(sparseArray, startingId, startingUrl);
+    }
+
+    public static Resources getResourcesObject(String id) {
+        ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
+        query.whereEqualTo(JSONTags.idHouseTag, id);
+
+        List<Resources> listResource = new ArrayList<>();
+
+        try {
+            listResource = query.find();
+        } catch (ParseException e) {
+            if (BuildConfig.DEBUG) {
+                Log.d("DataMgmt", "Error: " + e.getMessage());
+            }
+        }
+
+        if (listResource.isEmpty()) {
+            throw new IllegalArgumentException("DataMgmt Error: No resource has this id.");
+
+        }
+        if (listResource.size() > 1) Log.d("DataMgmt", "Warning: The same id has different Resources.");
+
+        return listResource.get(0);
     }
 }
