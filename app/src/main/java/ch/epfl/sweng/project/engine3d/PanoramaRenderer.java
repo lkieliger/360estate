@@ -35,7 +35,7 @@ import static android.content.Context.SENSOR_SERVICE;
  */
 public class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
 
-    public static final double SENSITIVITY = 100.0;
+    public static final double SENSITIVITY = 50.0;
     private final String TAG = "Renderer";
     private final Camera mCamera;
     private final double mXdpi;
@@ -47,6 +47,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private PanoramaSphere mPanoSphere;
     private Quaternion mUserRot;
     private Quaternion mSensorRot;
+    private double mYaw;
 
     private HouseManager mHouseManager;
     private ObjectColorPicker mPicker;
@@ -164,12 +165,12 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * @param dy The difference in pixels along the Y axis. Positive means down
      */
     public void updateCameraRotation(float dx, float dy) {
-        double x = (dx / mXdpi) * SENSITIVITY;
-        double y = (dy / mYdpi) * SENSITIVITY;
+        double xComp = (dx / mXdpi) * SENSITIVITY;
+        double yComp = (dy / mYdpi) * SENSITIVITY;
 
-        double roll = mSensorRot.getRotationZ();
+        Log.d(TAG, "ROLL FROM SENSOR" + mYaw);
 
-        double phi = (Math.cos(roll) * x) - (Math.sin(roll) * y);
+        double phi = (Math.cos(mYaw) * xComp) + (Math.sin(mYaw) * yComp);
 
         Quaternion rotY = new Quaternion().fromAngleAxis(Vector3.Axis.Y, -phi);
         mUserRot.multiplyLeft(rotY);
@@ -184,6 +185,19 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      */
     public void setSensorRotation(Quaternion q) {
         mSensorRot = new Quaternion(q);
+    }
+
+    public double getDeviceYaw() {
+        return mYaw;
+    }
+
+    /**
+     * Updates the device yaw needed to compute the camera rotation for a user swipe
+     *
+     * @param y
+     */
+    public void setDeviceYaw(double y) {
+        mYaw = y;
     }
 
     public Quaternion getUserRotation() {
