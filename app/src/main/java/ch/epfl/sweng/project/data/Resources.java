@@ -90,8 +90,9 @@ public class Resources extends ParseObject {
     }
 
     public List<PhotoSphereData> getPhotoSphereDatas() throws JSONException {
-        JSONArray photoSphereDataArray = getJSONObject(panoSphereDatasTag).getJSONArray(neighborsListTag);
+        JSONArray photoSphereDataArray = getJSONObject(panoSphereDatasTag).getJSONArray(panoramaRoomsTag);
         List<PhotoSphereData> photoSphereDatas = new ArrayList<>(photoSphereDataArray.length());
+
         for (int i = 0; i < photoSphereDataArray.length(); i++) {
             JSONObject photoSphereObject = (JSONObject) photoSphereDataArray.get(i);
             photoSphereDatas.add(parsePhotoSphereData(photoSphereObject));

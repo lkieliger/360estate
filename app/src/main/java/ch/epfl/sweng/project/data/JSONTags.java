@@ -5,8 +5,8 @@ public interface JSONTags {
     String neighborsListTag = "neighborsList";
     String picturesListTag = "picturesList";
     String descriptionTag = "description";
-    String panoSphereDatasTag = "panoSphereDatasTag";
-    String idHouseTag = "idHouseTag";
+    String panoSphereDatasTag = "panoSphereDatas";
+    String idHouseTag = "idHouse";
 
     String panoramaRoomsTag = "panoramaRooms";
 
