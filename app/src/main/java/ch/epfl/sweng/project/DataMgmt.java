@@ -92,7 +92,7 @@ public final class DataMgmt {
 
     public static HouseManager getHouseManager(String id){
         ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
-        query.whereEqualTo(JSONTags.idHouse,id);
+        query.whereEqualTo(JSONTags.idHouseTag,id);
 
         List<Resources> listResource = new ArrayList<>();
 

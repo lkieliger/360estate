@@ -5,6 +5,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
+import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
+import ch.epfl.sweng.project.engine3d.components.PanoramaTransitionObject;
 import ch.epfl.sweng.project.util.Tuple;
 
 import static ch.epfl.sweng.project.data.JSONTags.idTag;
@@ -48,6 +50,11 @@ public class TransitionObject extends AngleMapping {
         jsonTransition.put(idTag, getId());
         jsonTransition.put(urlTag, getUrl());
         return jsonTransition;
+    }
+
+    @Override
+    public PanoramaObject toPanoramaObject() {
+        return new PanoramaTransitionObject(getTheta(), getPhi(), getId(), getUrl());
     }
 
     @Override
