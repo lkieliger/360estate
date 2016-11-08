@@ -69,6 +69,7 @@ public class RotSensorListener implements SensorEventListener {
         SensorManager.remapCoordinateSystem(mRotationMatrixIn, SensorManager.AXIS_X, SensorManager.AXIS_MINUS_Z,
                 mRotationMatrixOut);
 
+        //This is needed so the UnitTests don't have to initalise a renderer juste for testing the listener logic
         if (!isIsolatedFromApp) {
             mScreenRotation = mDisplay.getRotation();
             mRenderer.setDeviceYaw(Math.atan2(mRotationMatrixOut[1], mRotationMatrixOut[5]));
