@@ -328,7 +328,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             try {
                 ret = builder.build().with(getContext()).load(url).resize(2048, 4096).get();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             }
 
             //TODO: perform some extensives checks for null pointers
