@@ -122,6 +122,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
+     * This method is called when the user wants to reset his password
+     *
+     * @param view The view from which the event was generated
+     */
+    public void proceedToReset(View view) {
+        Intent intent = new Intent(this, ResetActivity.class);
+        startActivity(intent);
+    }
+
+
+
+    /**
      * This method checks whether the user input is correct. That is if
      * all TextEdits are filled with apropriate information
      *
