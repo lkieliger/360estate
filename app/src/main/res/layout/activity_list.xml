@@ -26,6 +26,15 @@
             android:textColor="#55CACF" />
 
         <Button
+            android:id="@+id/FavoriteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:background="@drawable/button_shape"
+            android:text="@string/favorites"
+            android:textColor="#55CACF" />
+
+        <Button
             android:id="@+id/filterButtonPopUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

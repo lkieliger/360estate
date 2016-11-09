@@ -86,5 +86,6 @@
     <string name="max">max</string>
     <string name="prix">Prix</string>
     <string name="rooms_filter">Rooms</string>
+    <string name="favorites">Favorites</string>
 
 </resources>

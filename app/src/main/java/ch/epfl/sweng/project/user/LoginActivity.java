@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         ParseObject.registerSubclass(Item.class);
         ParseObject.registerSubclass(Resources.class);
+        ParseObject.registerSubclass(Favorites.class);
 
         mEmail = (TextView) findViewById(R.id.login_email);
         mPassword = (TextView) findViewById(R.id.login_password);
