@@ -163,7 +163,7 @@ public final class DataMgmt {
 
     public static String getResources(String identifier, final Collection<String> urls){
         ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
-        query.whereEqualTo(JSONTags.idHouse,identifier);
+        query.whereEqualTo(JSONTags.idHouseTag,identifier);
 
         List<Resources> listResource = new ArrayList<>();
 

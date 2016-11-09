@@ -13,7 +13,7 @@ import ch.epfl.sweng.project.R;
 
 public class SlideActivity extends FragmentActivity {
 
-    private static final int NUM_PAGES = 5;
+    private static int NUM_PAGES;
     private ViewPager vPager;
     private PagerAdapter adapter;
     private int size;
@@ -27,7 +27,7 @@ public class SlideActivity extends FragmentActivity {
         Bundle bundle = getIntent().getExtras();
         urls = (ArrayList<String>) bundle.get("ArrayURL");
         int first = urls.indexOf((String) bundle.getString("URL"));
-        size = urls.size();
+        NUM_PAGES = urls.size();
         vPager = (ViewPager) findViewById(R.id.pager);
         adapter = new SlidePagerAdapter(getSupportFragmentManager());
 
@@ -53,11 +53,6 @@ public class SlideActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            /*SlideFragment slideF = new SlideFragment();
-            Bundle b = new Bundle();
-            b.putString("url", getNextURL());
-            slideF.setArguments(b);
-            return slideF;*/
             return fragments.get(position);
         }
 
