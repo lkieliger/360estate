@@ -146,26 +146,12 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         Log.d(TAG, "Update scene");
 
         Bitmap b = DataMgmt.getBitmapfromUrl(getContext(), url);
+
         mPanoSphere.detachPanoramaComponents(mPicker);
         mPanoSphere.setPhotoTexture(b);
         mPanoSphere.attachPanoramaComponents(mHouseManager.getNeighborsFromId(id), mPicker);
 
     }
-
-    /* TRANSITION ZOOM FEATURE
-        1. On click: camera zoom in and rotate towards clicked object
-        2. Load the new panorama
-        3. Reset the zoom (no need to zoom out)
-
-        To zoom in, update the camera field of view
-        To rotate towards objects, perform SLERP
-
-        Since current quaternion is given by userRot + sensorRot and we want to go to targetRot
-         -> disable sensorRot
-         -> set userRot to userRot + sensorRot
-         -> get target quaternion using q.lookAt(pickedObject, upaxis);
-         -> lerp towards target
-     */
 
     @Override
     public void onRender(final long elapsedTime, final double deltaTime) {
