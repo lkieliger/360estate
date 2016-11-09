@@ -16,7 +16,7 @@ import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 public final class PanoramaTransitionObject extends PanoramaObject {
 
     private static final String TEXTURE_TAG = "PanoTransitionTex";
-    private static final double DISTANCE = 50.0;
+    private static final double DISTANCE = 80.0;
     private static final int TEXTURE_COLOR = 0x22c8ff;
     private final int Id;
     private final String nextUrl;

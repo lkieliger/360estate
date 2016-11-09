@@ -36,6 +36,8 @@ import static android.content.Context.SENSOR_SERVICE;
 public class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
 
     public static final double SENSITIVITY = 50.0;
+    private static final double LERP_FACTOR = 0.03;
+    private static final Vector3 ORIGIN = new Vector3(0, 0, 0);
     private final String TAG = "Renderer";
     private final Camera mCamera;
     private final double mXdpi;
@@ -45,9 +47,13 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private final boolean mRotSensorAvailable;
     private final Sensor mRotSensor;
     private PanoramaSphere mPanoSphere;
+    private PanoramaObject mLastObjectPicked;
     private Quaternion mUserRot;
     private Quaternion mSensorRot;
+    private Vector3 mTargetPos;
     private double mYaw;
+    private boolean inCameraTransition;
+    private boolean startCameraTransition;
 
     private HouseManager mHouseManager;
     private ObjectColorPicker mPicker;
@@ -85,8 +91,17 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
         mUserRot = new Quaternion();
         mSensorRot = new Quaternion();
+        mYaw = 0;
         mCamera = getCurrentCamera();
         mCamera.setFieldOfView(80);
+
+        mPanoSphere = null;
+
+        inCameraTransition = false;
+        startCameraTransition = false;
+        mLastObjectPicked = null;
+        mTargetPos = ORIGIN;
+
 
         setFrameRate(60);
     }
@@ -140,16 +155,30 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void onRender(final long elapsedTime, final double deltaTime) {
         super.onRender(elapsedTime, deltaTime);
 
-        updateCamera();
-
-        if (BuildConfig.DEBUG) {
-
-            if (debugCounter == 60) {
-                debugCounter = 0;
-                DebugPrinter.printRendererDebug(TAG, this);
-            }
-            debugCounter++;
+        if (startCameraTransition) {
+            inCameraTransition = true;
+            startCameraTransition = false;
         }
+
+        if (inCameraTransition) {
+
+            Vector3 v = new Vector3(mTargetPos.x, 0, mTargetPos.z);
+            Vector3 pos = new Vector3(mCamera.getPosition());
+            mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
+
+            if (mCamera.getPosition().length() > 65) {
+                mCamera.setPosition(ORIGIN);
+                mLastObjectPicked.reactWith(this);
+                inCameraTransition = false;
+            }
+        }
+
+        if (debugCounter == 60) {
+            debugCounter = 0;
+            DebugPrinter.printRendererDebug(TAG, this);
+        }
+        debugCounter++;
+        updateCamera();
     }
 
 
@@ -236,8 +265,9 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     @Override
     public void onObjectPicked(@NonNull Object3D object) {
         Log.d(TAG, "ObjectPicked");
-        PanoramaObject panoObject = (PanoramaObject) object;
-        panoObject.reactWith(this);
+        mTargetPos = object.getWorldPosition();
+        mLastObjectPicked = (PanoramaObject) object;
+        startCameraTransition = true;
     }
 
     @Override
