@@ -36,6 +36,8 @@ import static android.content.Context.SENSOR_SERVICE;
 public class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
 
     public static final double SENSITIVITY = 50.0;
+    private static final double LERP_FACTOR = 0.03;
+    private static final Vector3 ORIGIN = new Vector3(0, 0, 0);
     private final String TAG = "Renderer";
     private final Camera mCamera;
     private final double mXdpi;
@@ -45,7 +47,9 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private final boolean mRotSensorAvailable;
     private final Sensor mRotSensor;
     private PanoramaSphere mPanoSphere;
+    private PanoramaObject mLastObjectPicked;
     private Quaternion mUserRot;
+    private Quaternion absUserRot;
     private Quaternion mSensorRot;
     private Quaternion mSavedRot;
     private Quaternion mTargetRot;
@@ -64,6 +68,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         super(context);
 
         mPicker = new ObjectColorPicker(this);
+
         mPicker.setOnObjectPickedListener(this);
 
         mSensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
@@ -95,6 +100,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         inCameraTransition = false;
         startCameraTransition = false;
         mTargetRot = new Quaternion();
+        mLastObjectPicked = null;
+
 
         setFrameRate(60);
     }
@@ -145,18 +152,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     }
 
-    private void fadeIn() {
-
-        mCamera.setFieldOfView(mCamera.getFieldOfView() - 2);
-
-    }
-
-    private void fadeOut() {
-
-        mCamera.setFieldOfView(mCamera.getFieldOfView() + 2);
-
-    }
-
     /* TRANSITION ZOOM FEATURE
         1. On click: camera zoom in and rotate towards clicked object
         2. Load the new panorama
@@ -179,40 +174,18 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         if (startCameraTransition) {
             inCameraTransition = true;
             startCameraTransition = false;
-            mSavedRot = new Quaternion(mUserRot);
-
-            //Sets user rot to the full camera orientation before transition
-            Log.d(TAG, "User rot before: " + mUserRot.w + "," + mUserRot.x + "," + mUserRot.y + "," + mUserRot.z);
-            Quaternion q = new Quaternion(mSensorRot);
-            Quaternion absUserRot = new Quaternion(Math.abs(mUserRot.w), Math.abs(mUserRot.x), Math.abs(mUserRot.y),
-                    Math.abs(mUserRot.z));
-            mUserRot = new Quaternion(q.multiply(absUserRot));
-
-            /*
-                    1 0 0  OK FOR ^
-                    0 0 0  OK FOR >
-                    0 0 0  OK FOR <
-                    0 0 0  OK FOR v
-             */
-            Vector3 upAxis = new Vector3(1.0, 0, 0);
-            upAxis.rotateY(mYaw);
-            Log.d(TAG, "UPAxis: " + upAxis.x + "," + upAxis.y + "," + upAxis.z);
-
-            mTargetRot = Quaternion.lookAtAndCreate(mTargetPos.invertAndCreate(), upAxis);
-
-            Log.d(TAG, "RotY: " + mUserRot.getRotationX() + "," + mUserRot.getRotationY() + "," + mUserRot.getRotationZ());
         }
 
         if (inCameraTransition) {
-            fadeIn();
-            mUserRot = Quaternion.nlerp(mUserRot, mTargetRot, 0.05, true);
 
-            if (mCamera.getFieldOfView() < 20) {
-                mCamera.setFieldOfView(80);
+            Vector3 v = new Vector3(mTargetPos.x, 0, mTargetPos.z);
+            Vector3 pos = new Vector3(mCamera.getPosition());
+            mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
+
+            if (mCamera.getPosition().length() > 65) {
+                mCamera.setPosition(ORIGIN);
+                mLastObjectPicked.reactWith(this);
                 inCameraTransition = false;
-                mUserRot = new Quaternion(mSavedRot);
-                //TODO: Use target rot as resulting orientation
-                Log.d(TAG, "User rot after: " + mUserRot.w + "," + mUserRot.x + "," + mUserRot.y + "," + mUserRot.z);
             }
         }
 
@@ -221,8 +194,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             DebugPrinter.printRendererDebug(TAG, this);
         }
         debugCounter++;
-
-
         updateCamera();
     }
 
@@ -241,8 +212,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void updateCameraRotation(float dx, float dy) {
         double xComp = (dx / mXdpi) * SENSITIVITY;
         double yComp = (dy / mYdpi) * SENSITIVITY;
-
-        Log.d(TAG, "ROLL FROM SENSOR" + mYaw);
 
         double phi = (Math.cos(mYaw) * xComp) + (Math.sin(mYaw) * yComp);
 
@@ -297,8 +266,9 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * </p>
      */
     public void updateCamera() {
-        Quaternion q = (inCameraTransition) ? new Quaternion() : new Quaternion(mSensorRot);
+        Quaternion q = new Quaternion(mSensorRot);
         mCamera.setCameraOrientation(q.multiply(mUserRot));
+
     }
 
 
@@ -311,9 +281,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void onObjectPicked(@NonNull Object3D object) {
         Log.d(TAG, "ObjectPicked");
         mTargetPos = object.getWorldPosition();
-
-        PanoramaObject panoObject = (PanoramaObject) object;
-        //panoObject.reactWith(this);
+        mLastObjectPicked = (PanoramaObject) object;
         startCameraTransition = true;
     }
 
