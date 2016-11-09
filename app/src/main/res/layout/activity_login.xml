@@ -16,8 +16,7 @@
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.71"
+        android:layout_height="match_parent"
         tools:ignore="UnusedIds,UselessParent">
 
         <LinearLayout
@@ -77,44 +76,67 @@
                 tools:ignore="UnusedIds"
                 />
 
-            <LinearLayout
+            <Space
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="10.97"
-                android:orientation="vertical">
+                android:layout_height="60dp" />
 
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp" />
+            <TextView
+                android:id="@+id/register_suggestion_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/register_suggestion"
+                android:textAlignment="center"
+                android:layout_marginBottom="5dp"
+                tools:ignore="UnusedIds"
 
-                <TextView
-                    android:id="@+id/register_suggestion_message"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/register_suggestion"
-                    android:textAlignment="center"
-                    android:layout_marginBottom="5dp"
-                    tools:ignore="UnusedIds"
+                />
 
-                    />
+            <Button
+                android:id="@+id/goto_registration_button"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/button_shape"
+                android:fontFamily="sans-serif"
+                android:onClick="proceedToRegistration"
+                android:text="@string/action_goto_registration"
+                android:textAllCaps="false"
+                android:textColor="#55CACF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:ignore="UnusedIds"
+                />
 
-                <Button
-                    android:id="@+id/goto_registration_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginBottom="1dp"
-                    android:background="@drawable/button_shape"
-                    android:fontFamily="sans-serif"
-                    android:onClick="proceedToRegistration"
-                    android:text="@string/action_goto_registration"
-                    android:textAllCaps="false"
-                    android:textColor="#55CACF"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:ignore="UnusedIds"
-                    />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/password_forgotten"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/reset_suggestion"
+                android:textAlignment="center"
+                android:layout_marginBottom="5dp"
+                tools:ignore="UnusedIds"
+
+                />
+
+            <Button
+                android:id="@+id/goto_reset_password"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/button_shape"
+                android:fontFamily="sans-serif"
+                android:onClick="proceedToReset"
+                android:text="@string/action_goto_reset_password"
+                android:textAllCaps="false"
+                android:textColor="#55CACF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:ignore="UnusedIds"
+                />
 
         </LinearLayout>
     </ScrollView>
