@@ -29,11 +29,7 @@ public class PhotoSphereData {
         JSONArray neighborsJsonArray = new JSONArray();
         try {
             for (AngleMapping elem : getNeighborsList()) {
-                JSONObject angleMapping = new JSONObject();
-                angleMapping.put(thetaTag, elem.getTheta());
-                angleMapping.put(phiTag, elem.getPhi());
-                angleMapping.put(idTag, elem.getId());
-                angleMapping.put(urlTag, elem.getUrl());
+                JSONObject angleMapping = elem.toJSONObject();
                 neighborsJsonArray.put(angleMapping);
             }
         } catch (JSONException e) {

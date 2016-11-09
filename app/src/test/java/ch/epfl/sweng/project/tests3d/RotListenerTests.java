@@ -14,7 +14,7 @@ import org.robolectric.annotation.Config;
 import java.util.Arrays;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.engine3d.RotSensorListener;
+import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
 
 import static ch.epfl.sweng.project.util.UnitTestUtilityFunctions.wait250ms;
 import static junit.framework.Assert.assertFalse;

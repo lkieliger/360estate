@@ -1,9 +1,11 @@
-package ch.epfl.sweng.project.engine3d;
+package ch.epfl.sweng.project.engine3d.components;
 
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.util.ObjectColorPicker;
+
+import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
 
 public abstract class PanoramaObject extends Plane {

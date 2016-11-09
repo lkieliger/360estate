@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.engine3d;
+package ch.epfl.sweng.project.engine3d.components;
 
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -15,12 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.project.data.AngleMapping;
+import ch.epfl.sweng.project.data.TransitionObject;
 
 
 /**
  * Represent the panoramic Spere containing the image.
  */
-final class PanoramaSphere extends Sphere {
+public final class PanoramaSphere extends Sphere {
 
     public static final String TEXTURE_TAG = "PhotoTexture";
     private static final int INITIAL_COMPONENTLIST_SIZE = 10;
@@ -39,7 +40,7 @@ final class PanoramaSphere extends Sphere {
      * bitmap associated with a texture can change but the texture instance remains unique. Therefore subsequent
      * panorama photo changes should call the texture setter as it will handle the bitmap replacement
      */
-    PanoramaSphere() {
+    public PanoramaSphere() {
         super(100, 48, 48);
 
         mComponentList = new ArrayList<>(INITIAL_COMPONENTLIST_SIZE);
@@ -63,7 +64,7 @@ final class PanoramaSphere extends Sphere {
     /**
      * Call this method to dissociate all UI components that were previously defined as children of the panorama sphere
      */
-    void detachPanoramaComponents(ObjectColorPicker p) {
+    public void detachPanoramaComponents(ObjectColorPicker p) {
         for (PanoramaObject pc : mComponentList) {
             pc.unregisterComponentFromPicker(p);
             pc.detachFromParentAndDie();
@@ -79,26 +80,23 @@ final class PanoramaSphere extends Sphere {
      *
      * @param b A bitmap file that contain the panorama photograph
      */
-    void setPhotoTexture(Bitmap b) {
+    public void setPhotoTexture(Bitmap b) {
         mPhotoTexture.setBitmap(b);
         TextureManager.getInstance().replaceTexture(mPhotoTexture);
     }
 
-    void attachPanoramaComponents(Iterable<AngleMapping> l, ObjectColorPicker p) {
+    public void attachPanoramaComponents(Iterable<AngleMapping> l, ObjectColorPicker p) {
         Log.d(TAG, "Call to attach panorama");
         for (AngleMapping am : l) {
 
-            Log.d(TAG, "Adding a transition object");
-            PanoramaTransitionObject transitionObject = new PanoramaTransitionObject(
-                    am.getTheta(),
-                    am.getPhi(),
-                    am.getId(),
-                    am.getUrl());
-            transitionObject.registerComponentAtPicker(p);
-            transitionObject.setPickingColor(mComponentIndex);
+            PanoramaObject panoramaObject = am.toPanoramaObject();
+
+            panoramaObject.registerComponentAtPicker(p);
+            panoramaObject.setPickingColor(mComponentIndex);
+
             mComponentIndex++;
-            addChild(transitionObject);
-            mComponentList.add(transitionObject);
+            addChild(panoramaObject);
+            mComponentList.add(panoramaObject);
         }
     }
 }

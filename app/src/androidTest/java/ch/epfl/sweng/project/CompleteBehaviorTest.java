@@ -83,6 +83,9 @@ public class CompleteBehaviorTest {
 
     @Test
     public void testFullApp() {
+
+        logUserOut();
+
         wait1s(TAG);
 
         String testUserMail = "test@" + randomString(6) + ".org";
@@ -105,7 +108,7 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.login_password)).perform(typeText(testUserPassword), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
 
-        wait500ms(TAG);
+        wait1s(TAG);
 
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
         wait1s(TAG);
@@ -114,7 +117,7 @@ public class CompleteBehaviorTest {
 
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
 
-        // wait 5s for the images to load
+        // wait 3s for the images to load
         waitNms(TAG, 3000);
 
         ViewInteraction img0 = onView(childAtPosition(withId(R.id.scroll), 0));
@@ -132,6 +135,7 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.action_launch_panorama)).perform(click());
 
         wait250ms(TAG);
+        logUserOut();
 
     }
 

@@ -21,8 +21,8 @@ import java.util.Locale;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
-import ch.epfl.sweng.project.engine3d.PanoramaTouchListener;
-import ch.epfl.sweng.project.engine3d.RotSensorListener;
+import ch.epfl.sweng.project.engine3d.listeners.PanoramaTouchListener;
+import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
 import ch.epfl.sweng.project.user.LoginActivity;
 
 import static android.view.MotionEvent.ACTION_CANCEL;
@@ -85,22 +85,24 @@ public class PanoramaTests {
 
 
 
-    /*
-     *  * cameraSensitivityIsCorrect test
-     * The camera sensitivity should depend on the dpi of the device
-     * so that a swipe has the same effect regardless of the dx or dy
-     * reported by the touch listener
-     */
+        /*
+         * CameraSensitivityIsCorrect test
+         * The camera sensitivity should depend on the dpi of the device
+         * so that a swipe has the same effect regardless of the dx or dy
+         * reported by the touch listener
+         */
 
-        double angleChange = Math.cos(angleToPixelDelta(90, true));
-
+        double angleChange = 91;
+        //Rotate the camera counter clockwise to simulate a swipe to the right
         Quaternion newRot = panoramaRenderer.getUserRotation().
-                multiplyLeft(new Quaternion().fromAngleAxis(Vector3.Axis.Y, -90));
+                multiplyLeft(new Quaternion().fromAngleAxis(Vector3.Axis.Y, -angleChange));
         wait500ms(TAG);
 
-
-        float dx = angleToPixelDelta(90 / Math.cos(panoramaRenderer.getSensorRot().getRotationZ()),
-                true);
+        /*
+             formula
+             angle = (Math.cos(yaw) * xComp) + (Math.sin(yaw) * yComp);
+         */
+        float dx = angleToPixelDelta(angleChange / Math.cos(panoramaRenderer.getDeviceYaw()), true);
         panoramaRenderer.updateCameraRotation(dx, 0);
 
         wait1s(TAG);
@@ -145,6 +147,13 @@ public class PanoramaTests {
         }
     }
 
+    /**
+     * Compute the number of pixels needed for a user swipe to turn the camera a given angle
+     *
+     * @param angle
+     * @param isAlongXAxis true if the swipe is along x axis, false otherwise
+     * @return The pixel number
+     */
     private float angleToPixelDelta(double angle, boolean isAlongXAxis) {
         if (isAlongXAxis) {
             return (float) ((angle / PanoramaRenderer.SENSITIVITY) * metrics.xdpi);

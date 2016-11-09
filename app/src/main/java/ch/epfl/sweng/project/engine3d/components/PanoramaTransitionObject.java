@@ -1,16 +1,17 @@
-package ch.epfl.sweng.project.engine3d;
+package ch.epfl.sweng.project.engine3d.components;
 
 import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.AlphaMapTexture;
 import org.rajawali3d.math.vector.Vector3;
 
 import ch.epfl.sweng.project.R;
+import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
 /**
  * Represent the object permitting transition to the next panoramicSphere. Each of those object will stock the next id
  * and url to load it directly.
  */
-class PanoramaTransitionObject extends PanoramaObject {
+public final class PanoramaTransitionObject extends PanoramaObject {
 
     private final static String TEXTURE_TAG = "PanoTransitionTex";
     private final static double DISTANCE = 50.0;
@@ -26,7 +27,7 @@ class PanoramaTransitionObject extends PanoramaObject {
      * @param id      The unique identifier of this transition object, used to find it in the transition table
      * @param nextUrl The url of the panorama to show after the transition
      */
-    PanoramaTransitionObject(double theta, double phi, int id, String nextUrl) {
+    public PanoramaTransitionObject(double theta, double phi, int id, String nextUrl) {
         super();
         enableLookAt();
         AlphaMapTexture alphamap = new AlphaMapTexture(TEXTURE_TAG, R.drawable
@@ -48,11 +49,11 @@ class PanoramaTransitionObject extends PanoramaObject {
         mLookAt = new Vector3(0, 0, 0);
     }
 
-    int getId() {
+    public int getId() {
         return Id;
     }
 
-    String getNextUrl() {
+    public String getNextUrl() {
         return nextUrl;
     }
 

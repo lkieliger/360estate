@@ -4,7 +4,6 @@ package ch.epfl.sweng.project.util;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
-import org.rajawali3d.cameras.Camera;
 import org.rajawali3d.math.Quaternion;
 
 import ch.epfl.sweng.project.R;
@@ -25,10 +24,10 @@ public final class DebugPrinter {
     @SuppressLint("LogConditional")
     public static void printRendererDebug(String tag, PanoramaRenderer pr) {
 
-        Camera cam = pr.getCurrentCamera();
+
         Quaternion sensorRot = pr.getSensorRot();
 
-        Quaternion q = cam.getOrientation();
+        Quaternion q = pr.getUserRotation();
         double camRX = q.getRotationX();
         double camRY = q.getRotationY();
         double camRZ = q.getRotationZ();

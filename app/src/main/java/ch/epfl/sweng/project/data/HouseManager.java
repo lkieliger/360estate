@@ -7,9 +7,9 @@ import java.util.List;
 
 /**
  * House Manager represent the interaction of the different rooms (i.e
- * {@link ch.epfl.sweng.project.engine3d.PanoramaSphere}) of the all house using the logic of a graph.
+ * {@link ch.epfl.sweng.project.engine3d.components.PanoramaSphere}) of the all house using the logic of a graph.
  * It contain a starting url that will be used to load the first panoramaSphere image. The id, is used to load all
- * the neighbors ( i.e {@link ch.epfl.sweng.project.engine3d.PanoramaTransitionObject}) on the panoramaSphere.
+ * the neighbors (i.e {@link ch.epfl.sweng.project.engine3d.components.PanoramaTransitionObject}) on the panoramaSphere.
  * It contain also a SparseArray ( an optimized map from integer to objects), that will be used to stock the "graph".
  * The SparseArray will be used to map an Id to an list of {@link AngleMapping} representing the neighbors of the id.
  */
@@ -19,13 +19,13 @@ public class HouseManager {
     private final String startingUrl;
     private final int startingId;
 
-    public HouseManager(SparseArray<List<AngleMapping>> extSparseArray, int extStartingId, String extStartingUrl ) {
+    public HouseManager(SparseArray<List<AngleMapping>> extSparseArray, int extStartingId, String extStartingUrl) {
         sparseArray = extSparseArray;
         startingUrl = extStartingUrl;
         startingId = extStartingId;
     }
 
-    public List<AngleMapping> getNeighborsFromId(int id){
+    public List<AngleMapping> getNeighborsFromId(int id) {
         return new ArrayList<>(sparseArray.get(id));
     }
 

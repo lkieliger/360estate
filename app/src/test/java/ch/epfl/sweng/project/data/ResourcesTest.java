@@ -37,14 +37,6 @@ public class ResourcesTest {
     @Test
     public void throwsJsonError() {
 
-        List<AngleMapping> neighborsList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            neighborsList.add(new AngleMapping(
-                    new Tuple<>(0.14d + i / 1000d, 0.10d + i / 1000d),
-                    i,
-                    i + ".jpg"));
-        }
-
         Resources resources = new Resources();
 
         resources.put(JSONTags.picturesListTag, "ThisIsNotAnArry");
@@ -64,7 +56,7 @@ public class ResourcesTest {
 
         List<AngleMapping> neighborsList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            neighborsList.add(new AngleMapping(
+            neighborsList.add(new TransitionObject(
                     new Tuple<>(0.14d + i / 1000d, 0.10d + i / 1000d),
                     i,
                     i + ".jpg"));

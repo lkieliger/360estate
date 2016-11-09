@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.engine3d;
+package ch.epfl.sweng.project.engine3d.listeners;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -9,6 +9,8 @@ import android.view.Surface;
 
 import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
+
+import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
 
 public class RotSensorListener implements SensorEventListener {
@@ -61,25 +63,19 @@ public class RotSensorListener implements SensorEventListener {
     }
 
     public void sensorChanged(float[] values) {
-
-        if (!isIsolatedFromApp) {
-            mScreenRotation = mDisplay.getRotation();
-        }
-
         values[3] = -values[3];
-
-        /*if (BuildConfig.DEBUG)
-            Log.d(TAG, String.format("Before: %1$.2f, %2$.2f, %3$.2f, %4$.2f",
-                   values[3], values[0], values[1], values[2]));*/
 
         SensorManager.getRotationMatrixFromVector(mRotationMatrixIn, values);
         SensorManager.remapCoordinateSystem(mRotationMatrixIn, SensorManager.AXIS_X, SensorManager.AXIS_MINUS_Z,
                 mRotationMatrixOut);
 
+        //This is needed so the UnitTests don't have to initalise a renderer juste for testing the listener logic
+        if (!isIsolatedFromApp) {
+            mScreenRotation = mDisplay.getRotation();
+            mRenderer.setDeviceYaw(Math.atan2(mRotationMatrixOut[1], mRotationMatrixOut[5]));
+        }
+
         Quaternion q = new Quaternion().fromMatrix(floatToDoubleArray(mRotationMatrixOut));
-        /*if (BuildConfig.DEBUG)
-            Log.d(TAG, String.format("After: %1$.2f, %2$.2f, %3$.2f, %4$.2f",
-                    q.w, q.x, q.y, q.z));*/
 
         switch (mScreenRotation) {
             case Surface.ROTATION_0:

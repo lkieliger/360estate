@@ -24,7 +24,7 @@ public class PhotoSphereDataTests {
     public void correctEqualsBehavior() {
         List<AngleMapping> neighborsList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            neighborsList.add(new AngleMapping(
+            neighborsList.add(new TransitionObject(
                     new Tuple<>(0.14d + i / 1000d, 0.10d + i / 1000d),
                     i,
                     i + ".jpg"));
@@ -52,7 +52,7 @@ public class PhotoSphereDataTests {
 
 
         List<AngleMapping> neighborsList2 = new ArrayList<>(neighborsList);
-        neighborsList2.set(0, new AngleMapping(new Tuple<>(1.4, 2.8), 13, "url"));
+        neighborsList2.set(0, new TransitionObject(new Tuple<>(1.4, 2.8), 13, "url"));
         PhotoSphereData pData6 = new PhotoSphereData.Builder(14).
                 setNeighborsList(neighborsList2).
                 build();
@@ -72,7 +72,7 @@ public class PhotoSphereDataTests {
     public void correcthashCodeBehavior() {
         List<AngleMapping> neighborsList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            neighborsList.add(new AngleMapping(
+            neighborsList.add(new TransitionObject(
                     new Tuple<>(0.14d + i / 1000d, 0.10d + i / 1000d),
                     i,
                     i + ".jpg"));
