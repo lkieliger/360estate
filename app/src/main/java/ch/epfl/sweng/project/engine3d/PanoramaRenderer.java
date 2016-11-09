@@ -49,10 +49,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private PanoramaSphere mPanoSphere;
     private PanoramaObject mLastObjectPicked;
     private Quaternion mUserRot;
-    private Quaternion absUserRot;
     private Quaternion mSensorRot;
-    private Quaternion mSavedRot;
-    private Quaternion mTargetRot;
     private Vector3 mTargetPos;
     private double mYaw;
     private boolean inCameraTransition;
@@ -95,12 +92,16 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
         mUserRot = new Quaternion();
         mSensorRot = new Quaternion();
+        mYaw = 0;
         mCamera = getCurrentCamera();
         mCamera.setFieldOfView(80);
+
+        mPanoSphere = null;
+
         inCameraTransition = false;
         startCameraTransition = false;
-        mTargetRot = new Quaternion();
         mLastObjectPicked = null;
+        mTargetPos = ORIGIN;
 
 
         setFrameRate(60);
@@ -275,7 +276,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void onNoObjectPicked() {
 
     }
-
 
     @Override
     public void onTouchEvent(MotionEvent event) {
