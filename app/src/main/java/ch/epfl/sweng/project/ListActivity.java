@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +12,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.parse.ParseUser;
 
@@ -25,6 +28,7 @@ import ch.epfl.sweng.project.data.Item;
 import ch.epfl.sweng.project.data.ItemAdapter;
 import ch.epfl.sweng.project.filter.EraseButtonListener;
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
+import ch.epfl.sweng.project.user.Favorites;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -32,7 +36,9 @@ public class ListActivity extends AppCompatActivity {
             "Geneve", "Renens", "Lausanne"
     };
 
+    private Boolean isFavoriteToggle = false;
     private StateOfPopUpLayout stateOfPopUpLayout = null;
+    private final String idUser = ParseUser.getCurrentUser().getObjectId();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +68,7 @@ public class ListActivity extends AppCompatActivity {
         });
 
 
-        DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout);
+        DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout,isFavoriteToggle,idUser);
         // Assign adapter to ListView
         listView.setAdapter(itemAdapter);
         // ListView Item Click Listener
@@ -74,10 +80,26 @@ public class ListActivity extends AppCompatActivity {
 
                 // ListView Clicked item index
                 Item itemValue = (Item) listView.getItemAtPosition(i);
-                intent.putExtra("id", itemValue.getId());
+                intent.putExtra("idItem", itemValue.getId());
                 startActivity(intent);
             }
         });
+
+
+
+        final Favorites f = DataMgmt.getFavoriteFromId(idUser);
+        f.synchronizeFromServer();
+
+        ToggleButton favoriteButton = (ToggleButton) findViewById(R.id.FavoriteButton);
+
+        favoriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                isFavoriteToggle = b;
+                DataMgmt.getItemList(itemList,itemAdapter,stateOfPopUpLayout,isFavoriteToggle,idUser);
+            }
+        });
+
     }
 
 
@@ -168,7 +190,7 @@ public class ListActivity extends AppCompatActivity {
                         maxSurface.getText().toString(),
                         minSurface.getText().toString()
                 );
-                DataMgmt.getItemList(itemCollection, itemAdapter, stateOfPopUpLayout);
+                DataMgmt.getItemList(itemCollection, itemAdapter, stateOfPopUpLayout,isFavoriteToggle,idUser);
                 listView.setAdapter(itemAdapter);
                 helpDialog.dismiss();
             }

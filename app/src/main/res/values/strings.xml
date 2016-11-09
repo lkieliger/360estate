@@ -87,5 +87,7 @@
     <string name="prix">Prix</string>
     <string name="rooms_filter">Rooms</string>
     <string name="favorites">Favorites</string>
+    <string name="addToFavorites">Add to Favorites</string>
+    <string name="All">All</string>
 
 </resources>

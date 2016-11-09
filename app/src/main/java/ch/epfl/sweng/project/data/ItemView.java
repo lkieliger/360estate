@@ -4,19 +4,26 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.parse.ParseUser;
+
+import java.util.Set;
+
 import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
+import ch.epfl.sweng.project.user.Favorites;
+import ch.epfl.sweng.project.user.OnCheckedFavorite;
 
 
 public class ItemView extends RelativeLayout {
     private TextView locationSurfaceRooms;
     private TextView priceType;
     private ImageView img;
-    //private ImageView mImageView;
+    private CheckBox checkBox;
 
     public ItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -28,6 +35,7 @@ public class ItemView extends RelativeLayout {
         locationSurfaceRooms = (TextView) findViewById(R.id.location_surface_rooms);
         priceType = (TextView) findViewById(R.id.price_type);
         img = (ImageView) findViewById(R.id.miniature);
+        checkBox = (CheckBox) findViewById(R.id.favoriteCheckBox);
     }
 
     public static ItemView inflate(ViewGroup parent) {
@@ -59,5 +67,18 @@ public class ItemView extends RelativeLayout {
         }else {
             DataMgmt.getImgFromUrlIntoView(getContext(),url,img);
         }
+
+        String idUser = ParseUser.getCurrentUser().getObjectId();
+        Favorites f = DataMgmt.getFavoriteFromId(idUser);
+
+
+        if(f.containsUrl(item.getId())){
+            checkBox.setChecked(true);
+        }else{
+            checkBox.setChecked(false);
+        }
+
+
+        checkBox.setOnClickListener(new OnCheckedFavorite(f,item.getId(),idUser,checkBox));
     }
 }

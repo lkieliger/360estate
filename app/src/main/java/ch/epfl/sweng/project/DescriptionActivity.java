@@ -3,18 +3,22 @@ package ch.epfl.sweng.project;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.parse.ParseUser;
+
 import java.util.ArrayList;
 
 import ch.epfl.sweng.project.ScreenSlide.SlideActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
+import ch.epfl.sweng.project.user.Favorites;
+import ch.epfl.sweng.project.user.OnCheckedFavorite;
 
 import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;
 
@@ -29,10 +33,12 @@ public class DescriptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_description);
 
         Bundle b = getIntent().getExtras();
-        String id = b.getString("id");
+        final String idItem = b.getString("idItem");
+
         final ArrayList<String> imagesURL = new ArrayList<>();
-        String description = DataMgmt.getDataForDescription(id, imagesURL);
-        Log.d("description ", description);
+        StringBuilder descriptionBuilder = new StringBuilder();
+        DataMgmt.getDataForDescription(idItem, imagesURL, descriptionBuilder);
+        String description = descriptionBuilder.toString();
 
         TextView txt = (TextView) findViewById(R.id.description_text);
         txt.setText(description.toCharArray(), 0, description.length());
@@ -48,7 +54,6 @@ public class DescriptionActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         };
-
 
 
         final LinearLayout scrollImg = (LinearLayout) findViewById(R.id.imgs);
@@ -69,11 +74,26 @@ public class DescriptionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
                 Intent intentFromList = getIntent();
-                String id = intentFromList.getStringExtra("id");
-                intentToPanorama.putExtra("id",id);
+                String id = intentFromList.getStringExtra("idItem");
+                intentToPanorama.putExtra("id", id);
                 startActivity(intentToPanorama);
             }
         });
-    }
 
+        CheckBox checkBoxFavorite = (CheckBox) findViewById(R.id.addToFavorites);
+        final String idUser = ParseUser.getCurrentUser().getObjectId();
+
+        final Favorites f = DataMgmt.getFavoriteFromId(idUser);
+
+        if (f.containsUrl(idItem)) {
+            checkBoxFavorite.setChecked(true);
+        }else{
+            checkBoxFavorite.setChecked(false);
+        }
+
+       checkBoxFavorite.setOnClickListener(new OnCheckedFavorite(f,idItem,idUser,checkBoxFavorite));
+
+    }
 }
+
+

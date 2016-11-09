@@ -3,15 +3,17 @@ package ch.epfl.sweng.project.user;
 import android.util.Log;
 
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.DataMgmt;
 
 
 @ParseClassName("Favorites")
@@ -19,59 +21,91 @@ public class Favorites extends ParseObject {
 
     private static final String TAG = "Favorites";
 
-    private List<String> favorites = null;
+    private Set<String> favorites = null;
 
-    public Favorites(){
+    public Favorites() {
 
     }
 
-    public Favorites(List<String> extFavorites, int idUser){
+    public Favorites(HashSet<String> extFavorites) {
         favorites = extFavorites;
-        setFavorites(favorites);
+    }
+
+    public Favorites(HashSet<String> extFavorites, String idUser) {
+        setFavorites(extFavorites);
         setIdUser(idUser);
     }
 
-    public void setIdUser(int idUser) {
+    public void setIdUser(String idUser) {
         put("idUser", idUser);
     }
 
-    public void setFavorites(List<String> favorites) {
+    public void setFavorites(Set<String> favorites) {
         JSONArray jsonFavorites = new JSONArray(favorites);
         put("favorites", jsonFavorites);
+        try {
+            save();
+        } catch (ParseException e) {
+            Log.d(TAG,e.getMessage());
+        }
     }
 
-    String getIdUser() {
+    public String getIdUser() {
         return getString("idUser");
     }
 
-    List<String> getFavorites() {
+    public Set<String> getFavoritesFromLocal() {
+        return favorites;
+    }
+
+    public boolean containsUrl(String url){
+        return favorites.contains(url);
+    }
+
+    public void addUrlToLocal(String newUrl){
+        favorites.add(newUrl);
+    }
+
+    public void deleteUrlToLocal(String url){
+        favorites.remove(url);
+    }
+
+    public Set<String> getFavoritesFromServer() {
         JSONArray urlArray = getJSONArray("favorites");
-        List<String> favoritesList = new ArrayList<>();
+        Set<String> favoritesSet = new HashSet<>();
 
         if (urlArray == null) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Error parsing the favoritesList array from JSON");
             }
-            return favoritesList;
+            return favoritesSet;
         }
 
         for (int i = 0; i < urlArray.length(); i++) {
             try {
-                favoritesList.add(urlArray.getString(i));
+                favoritesSet.add(urlArray.getString(i));
             } catch (JSONException e) {
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, e.getMessage());
                 }
             }
         }
-        return favoritesList;
+        return favoritesSet;
     }
 
-    public void synchronizeFromServer(){
-        favorites = getFavorites();
+    public void synchronizeFromServer() {
+        favorites = getFavoritesFromServer();
     }
 
-    public void synchronizeServer(){
-        setFavorites(favorites);
+    public void synchronizeFromServer(String idUser) {
+        favorites = getFavoritesFromServer();
+    }
+
+    public void synchronizeServer() {
+        DataMgmt.updateFavorites(getIdUser(),favorites);
+    }
+
+    public void synchronizeServer(String idUser) {
+        DataMgmt.overrideFavorites(idUser,favorites);
     }
 }

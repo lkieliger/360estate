@@ -25,13 +25,14 @@
             android:text="@string/LogOut"
             android:textColor="#55CACF" />
 
-        <Button
+        <ToggleButton
             android:id="@+id/FavoriteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:background="@drawable/button_shape"
-            android:text="@string/favorites"
+            android:textOff="@string/favorites"
+            android:textOn="@string/All"
             android:textColor="#55CACF" />
 
         <Button

@@ -32,4 +32,14 @@
         android:layout_toRightOf="@id/miniature"
         android:text="@string/description_text"
         />
+    <CheckBox
+        android:id="@+id/favoriteCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentRight="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        />
 </merge>
