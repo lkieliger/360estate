@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -55,11 +56,15 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private boolean inCameraTransition;
     private boolean startCameraTransition;
 
+    private Bitmap mNextBitmap = null;
+    private int mNextId = -1;
+    private boolean mNextPanoIsReady = false;
+
     private HouseManager mHouseManager;
+
     private ObjectColorPicker mPicker;
 
     private int debugCounter = 0;
-
 
     public PanoramaRenderer(Context context, Display display, HouseManager houseManager) {
         super(context);
@@ -123,7 +128,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         }
     }
 
-
     @Override
     public void initScene() {
 
@@ -132,23 +136,37 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mCamera.setPosition(new Vector3(0, 0, 0));
         mPanoSphere = new PanoramaSphere();
         getCurrentScene().addChild(mPanoSphere);
-        updateScene(mHouseManager.getStartingUrl(), mHouseManager.getStartingId());
-    }
 
+        prepareScene(DataMgmt.getBitmapFromUrl(getContext(), mHouseManager.getStartingUrl()), mHouseManager
+                .getStartingId());
+        updateScene();
+    }
 
     /**
      * Update the current scene by changing the panorama picture and loading the new PanoramaComponents
-     *
-     * @param url the url of the image that will be loaded and added on the PanoSphere.
-     * @param id  the id used to retrieve the mappings from angle to transition info
      */
-    public void updateScene(String url, int id) {
-        Log.d(TAG, "Update scene");
+    public void updateScene() {
+        Log.d(TAG, "Call to update scene");
 
-        Bitmap b = DataMgmt.getBitmapFromUrl(getContext(), url);
         mPanoSphere.detachPanoramaComponents(mPicker);
-        mPanoSphere.setPhotoTexture(b);
-        mPanoSphere.attachPanoramaComponents(mHouseManager.getNeighborsFromId(id), mPicker);
+        mPanoSphere.setPhotoTexture(mNextBitmap);
+        mPanoSphere.attachPanoramaComponents(mHouseManager.getNeighborsFromId(mNextId), mPicker);
+        mNextPanoIsReady = false;
+
+    }
+
+    private void prepareScene(Bitmap b, int id) {
+        Log.d(TAG, "Call to prepare scene, assigning next bitmap and next id.");
+        mNextBitmap = b;
+        mNextId = id;
+        mNextPanoIsReady = true;
+    }
+
+    public void updatePanorama(String url, int id) {
+        Log.d(TAG, "Call to update panorama, creating new task.");
+        mNextBitmap = null;
+        mNextId = -1;
+        new FetchPhotoTask().execute(url, String.valueOf(id));
     }
 
     @Override
@@ -162,13 +180,16 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
         if (inCameraTransition) {
 
-            Vector3 v = new Vector3(mTargetPos.x, 0, mTargetPos.z);
-            Vector3 pos = new Vector3(mCamera.getPosition());
-            mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
+            double travellingLength = mCamera.getPosition().length();
 
-            if (mCamera.getPosition().length() > 65) {
+            if (travellingLength < 65) {
+                Vector3 v = new Vector3(mTargetPos.x, 0, mTargetPos.z);
+                Vector3 pos = new Vector3(mCamera.getPosition());
+                mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
+            }
+            if (travellingLength >= 65 && mNextPanoIsReady) {
+                updateScene();
                 mCamera.setPosition(ORIGIN);
-                mLastObjectPicked.reactWith(this);
                 inCameraTransition = false;
             }
         }
@@ -180,7 +201,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         debugCounter++;
         updateCamera();
     }
-
 
     /**
      * Use this method to rotate the camera according to the user input.
@@ -197,14 +217,12 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         double xComp = (dx / mXdpi) * SENSITIVITY;
         double yComp = (dy / mYdpi) * SENSITIVITY;
 
-        Log.d(TAG, "ROLL FROM SENSOR" + mYaw);
 
         double phi = (Math.cos(mYaw) * xComp) + (Math.sin(mYaw) * yComp);
 
         Quaternion rotY = new Quaternion().fromAngleAxis(Vector3.Axis.Y, -phi);
         mUserRot.multiplyLeft(rotY);
     }
-
 
     /**
      * This method should be called by the sensor listener in order to inform the renderer
@@ -233,7 +251,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         return new Quaternion(mUserRot);
     }
 
-
     public Quaternion getSensorRot() {
         return new Quaternion(mSensorRot);
     }
@@ -256,17 +273,15 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mCamera.setCameraOrientation(q.multiply(mUserRot));
     }
 
-
     public void getObjectAt(float x, float y) {
         mPicker.getObjectAt(x, y);
     }
-
 
     @Override
     public void onObjectPicked(@NonNull Object3D object) {
         Log.d(TAG, "ObjectPicked");
         mTargetPos = object.getWorldPosition();
-        mLastObjectPicked = (PanoramaObject) object;
+        ((PanoramaObject) object).reactWith(this);
         startCameraTransition = true;
     }
 
@@ -275,12 +290,31 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     }
 
-
     @Override
     public void onTouchEvent(MotionEvent event) {
     }
 
     @Override
     public void onOffsetsChanged(float x, float y, float z, float w, int i, int j) {
+    }
+
+    private class FetchPhotoTask extends AsyncTask<String, Void, Bitmap> {
+
+        private int id;
+        private String url;
+
+        @Override
+        protected Bitmap doInBackground(String... paramses) {
+
+            url = paramses[0];
+            id = Integer.valueOf(paramses[1]);
+
+            return DataMgmt.getBitmapFromUrl(getContext(), paramses[1]);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap b) {
+            prepareScene(b, id);
+        }
     }
 }

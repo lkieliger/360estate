@@ -21,12 +21,12 @@ import java.util.List;
 
 import ch.epfl.sweng.project.data.AngleMapping;
 import ch.epfl.sweng.project.data.HouseManager;
+import ch.epfl.sweng.project.data.Item;
+import ch.epfl.sweng.project.data.ItemAdapter;
 import ch.epfl.sweng.project.data.JSONTags;
 import ch.epfl.sweng.project.data.PhotoSphereData;
 import ch.epfl.sweng.project.data.Resources;
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
-import ch.epfl.sweng.project.data.Item;
-import ch.epfl.sweng.project.data.ItemAdapter;
 
 public final class DataMgmt {
 
@@ -45,13 +45,13 @@ public final class DataMgmt {
     /**
      * Get a bitmap from url using Picasso.
      *
-     * @param mContext
+     * @param context
      * @param url the url to load
      */
-    public static Bitmap getBitmapFromUrl(Context mContext, String url) {
+    public static Bitmap getBitmapFromUrl(Context context, String url) {
 
         Bitmap mBitmap = null;
-        Picasso.Builder builder = new Picasso.Builder(mContext);
+        Picasso.Builder builder = new Picasso.Builder(context);
         builder.listener(new Picasso.Listener() {
             @Override
             public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
@@ -62,13 +62,19 @@ public final class DataMgmt {
         });
 
         try {
-            mBitmap = builder.build().with(mContext).load(url).resize(WIDTH, HEIGHT).get();
+            mBitmap = builder.build().with(context).load(url).resize(WIDTH, HEIGHT).get();
         } catch (IOException e) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, e.getMessage());
             }
         }
         return mBitmap;
+    }
+
+
+    public static void aSyncLoadBitmap(Context context, String url) {
+
+
     }
 
     public static void getItemList(
