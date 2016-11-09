@@ -38,6 +38,10 @@ public class Item extends ParseObject {
         setId(id);
     }
 
+    private void setStartingImageUrl(String url) {
+        put("startingImageUrl", url);
+    }
+
     private void setPrice(int price) {
         put("price", price);
     }
@@ -58,13 +62,21 @@ public class Item extends ParseObject {
         put("surface", surface);
     }
 
-    private void setId(String id){ put("idHouse", id);}
+    private void setId(String id) {
+        put("idHouse", id);
+    }
 
     public HouseType getType() {
         return HouseType.values()[getInt("type")];
     }
 
-    public String getId(){ return getString("idHouse");}
+    public String getId() {
+        return getString("idHouse");
+    }
+
+    String getStartingImageUrl() {
+        return getString("startingImageUrl");
+    }
 
     String getLocation() {
         return getString("location");

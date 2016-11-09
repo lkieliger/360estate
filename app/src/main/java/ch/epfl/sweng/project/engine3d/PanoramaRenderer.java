@@ -130,7 +130,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void updateScene(String url, int id) {
         Log.d(TAG, "Update scene");
 
-        Bitmap b = DataMgmt.getBitmapfromUrl(getContext(), url);
+        Bitmap b = DataMgmt.getBitmapFromUrl(getContext(), url);
         mPanoSphere.detachPanoramaComponents(mPicker);
         mPanoSphere.setPhotoTexture(b);
         mPanoSphere.attachPanoramaComponents(mHouseManager.getNeighborsFromId(id), mPicker);
@@ -253,6 +253,4 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     @Override
     public void onOffsetsChanged(float x, float y, float z, float w, int i, int j) {
     }
-
-
 }

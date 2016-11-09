@@ -2,7 +2,6 @@ package ch.epfl.sweng.project;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,21 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 import ch.epfl.sweng.project.ScreenSlide.SlideActivity;
-import ch.epfl.sweng.project.data.PhotoSphereData;
-import ch.epfl.sweng.project.data.Resources;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 
 import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;
-import static ch.epfl.sweng.project.DataMgmt.getResources;
 
 
 public class DescriptionActivity extends AppCompatActivity {
@@ -41,7 +31,7 @@ public class DescriptionActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         String id = b.getString("id");
         final ArrayList<String> imagesURL = new ArrayList<>();
-        String description = DataMgmt.getResources(id, imagesURL);
+        String description = DataMgmt.getDataForDescription(id, imagesURL);
         Log.d("description ", description);
 
         TextView txt = (TextView) findViewById(R.id.description_text);
@@ -49,10 +39,10 @@ public class DescriptionActivity extends AppCompatActivity {
 
         View.OnClickListener imgListener = new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent intent = new Intent(DescriptionActivity.this, SlideActivity.class);
                 Bundle extras = new Bundle();
-                extras.putString("URL", (String) v.getTag());
+                extras.putString("URL", (String) view.getTag());
                 extras.putStringArrayList("ArrayURL", imagesURL);
                 intent.putExtras(extras);
                 startActivity(intent);
@@ -76,7 +66,7 @@ public class DescriptionActivity extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.action_launch_panorama);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
                 Intent intentFromList = getIntent();
                 String id = intentFromList.getStringExtra("id");

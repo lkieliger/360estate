@@ -8,7 +8,6 @@ import android.util.SparseArray;
 import android.widget.ImageView;
 
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.squareup.picasso.Picasso;
@@ -20,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import ch.epfl.sweng.project.data.PhotoSphereData;
-import ch.epfl.sweng.project.data.Resources;
 import ch.epfl.sweng.project.data.AngleMapping;
 import ch.epfl.sweng.project.data.HouseManager;
 import ch.epfl.sweng.project.data.JSONTags;
@@ -34,6 +31,8 @@ import ch.epfl.sweng.project.data.ItemAdapter;
 public final class DataMgmt {
 
     private static final String TAG = "DataMgmt";
+    private static final int WIDTH = 2048;
+    private static final int HEIGHT = 4096;
 
     private DataMgmt() {
     }
@@ -49,7 +48,7 @@ public final class DataMgmt {
      * @param mContext
      * @param url the url to load
      */
-    public static Bitmap getBitmapfromUrl(Context mContext, String url) {
+    public static Bitmap getBitmapFromUrl(Context mContext, String url) {
 
         Bitmap mBitmap = null;
         Picasso.Builder builder = new Picasso.Builder(mContext);
@@ -63,7 +62,7 @@ public final class DataMgmt {
         });
 
         try {
-            mBitmap = builder.build().with(mContext).load(url).get();
+            mBitmap = builder.build().with(mContext).load(url).resize(WIDTH, HEIGHT).get();
         } catch (IOException e) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, e.getMessage());
@@ -72,7 +71,7 @@ public final class DataMgmt {
         return mBitmap;
     }
 
-    public static void getData(
+    public static void getItemList(
             final Collection<Item> itemList, final ItemAdapter itemAdapter, StateOfPopUpLayout stateOfPopUpLayout) {
         ParseQuery<Item> query;
         if (stateOfPopUpLayout == null) {
@@ -89,30 +88,14 @@ public final class DataMgmt {
                     itemAdapter.notifyDataSetChanged();
 
                 } else {
-                    Log.d("DataMgmt.getData", "Error: " + e.getMessage());
+                    Log.d("DataMgmt.getItemList", "Error: " + e.getMessage());
                 }
             }
         });
     }
 
     public static HouseManager getHouseManager(String id) {
-        ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
-        query.whereEqualTo(JSONTags.idHouseTag, id);
-
-        List<Resources> listResource = new ArrayList<>();
-
-        try {
-            listResource = query.find();
-        } catch (ParseException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d("DataMgmt", "Error: " + e.getMessage());
-            }
-        }
-
-        if (listResource.isEmpty()) Log.d("DataMgmt", "Error: No resource has this id.");
-        if (listResource.size() > 1) Log.d("DataMgmt", "Warning: The same id has different Resources.");
-
-        Resources resources = listResource.get(0);
+        Resources resources = getResourcesObject(id);
         List<PhotoSphereData> photoSphereDataList = new ArrayList<>();
         int startingId = -1;
         String startingUrl = "";
@@ -137,6 +120,19 @@ public final class DataMgmt {
         return new HouseManager(sparseArray, startingId, startingUrl);
     }
 
+    public static String getDataForDescription(String id, final Collection<String> urls){
+        Resources resources = getResourcesObject(id);
+        try {
+            urls.addAll(resources.getPicturesList());
+        } catch (JSONException e) {
+            if(BuildConfig.DEBUG) {
+                Log.d("DataMgmt", "Error: " + e.getMessage());
+            }
+        }
+        return resources.getDescription();
+    }
+
+
     public static Resources getResourcesObject(String id) {
         ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
         query.whereEqualTo(JSONTags.idHouseTag, id);
@@ -158,35 +154,6 @@ public final class DataMgmt {
         if (listResource.size() > 1) Log.d("DataMgmt", "Warning: The same id has different Resources.");
 
         return listResource.get(0);
-    }
-
-
-    public static String getResources(String identifier, final Collection<String> urls){
-        ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
-        query.whereEqualTo(JSONTags.idHouseTag,identifier);
-
-        List<Resources> listResource = new ArrayList<>();
-
-        try {
-            listResource = query.find();
-        } catch (ParseException e) {
-            if(BuildConfig.DEBUG) {
-                Log.d("DataMgmt", "Error: " + e.getMessage());
-            }
-        }
-
-        if(listResource.isEmpty()) Log.d("DataMgmt", "Error: No resource has this id.");
-        if(listResource.size()>1) Log.d("DataMgmt", "Warning: The same id has different Resources.");
-
-        Resources resources = listResource.get(0);
-        try {
-            urls.addAll(resources.getPicturesList());
-        } catch (JSONException e) {
-            if(BuildConfig.DEBUG) {
-                Log.d("DataMgmt", "Error: " + e.getMessage());
-            }
-        }
-        return resources.getDescription();
     }
 }
 

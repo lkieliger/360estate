@@ -40,9 +40,6 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
 
 
-
-
-
         final List<Item> itemList = new ArrayList<>();
         final ItemAdapter itemAdapter = new ItemAdapter(this, itemList);
         final ListView listView = (ListView) findViewById(R.id.houseList);
@@ -56,17 +53,16 @@ public class ListActivity extends AppCompatActivity {
         });
 
         Button logOutButton = (Button) findViewById(R.id.logOutButton);
-        logOutButton.setOnClickListener(new View.OnClickListener(){
+        logOutButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 logOutUser();
             }
         });
 
 
-
-        DataMgmt.getData(itemList, itemAdapter, stateOfPopUpLayout);
+        DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout);
         // Assign adapter to ListView
         listView.setAdapter(itemAdapter);
         // ListView Item Click Listener
@@ -83,9 +79,6 @@ public class ListActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 
 
     /**
@@ -175,7 +168,7 @@ public class ListActivity extends AppCompatActivity {
                         maxSurface.getText().toString(),
                         minSurface.getText().toString()
                 );
-                DataMgmt.getData(itemCollection, itemAdapter, stateOfPopUpLayout);
+                DataMgmt.getItemList(itemCollection, itemAdapter, stateOfPopUpLayout);
                 listView.setAdapter(itemAdapter);
                 helpDialog.dismiss();
             }
@@ -186,7 +179,7 @@ public class ListActivity extends AppCompatActivity {
     public void logOutUser() {
         ParseUser currentUser = ParseUser.getCurrentUser();
 
-        if(currentUser != null) {
+        if (currentUser != null) {
             ParseUser.logOut();
         }
         finish();
