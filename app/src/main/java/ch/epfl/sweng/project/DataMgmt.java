@@ -72,11 +72,6 @@ public final class DataMgmt {
     }
 
 
-    public static void aSyncLoadBitmap(Context context, String url) {
-
-
-    }
-
     public static void getItemList(
             final Collection<Item> itemList, final ItemAdapter itemAdapter, StateOfPopUpLayout stateOfPopUpLayout) {
         ParseQuery<Item> query;

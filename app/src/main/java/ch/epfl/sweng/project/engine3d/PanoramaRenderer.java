@@ -3,14 +3,18 @@ package ch.epfl.sweng.project.engine3d;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.cameras.Camera;
@@ -55,6 +59,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private double mYaw;
     private boolean inCameraTransition;
     private boolean startCameraTransition;
+    private Target mPicassoTarget;
 
     private Bitmap mNextBitmap = null;
     private int mNextId = -1;
@@ -125,6 +130,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         if (mRotSensorAvailable) {
             //This frees unnecessary resources when app does not have focus
             mSensorManager.unregisterListener(mRotListener);
+            Picasso.with(mContext).cancelRequest(mPicassoTarget);
         }
     }
 
@@ -166,7 +172,21 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         Log.d(TAG, "Call to update panorama, creating new task.");
         mNextBitmap = null;
         mNextId = -1;
-        new FetchPhotoTask().execute(url, String.valueOf(id));
+
+        mPicassoTarget = new TargetWithId(id);
+
+        Picasso.Builder builder = new Picasso.Builder(getContext());
+        builder.listener(new Picasso.Listener() {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, exception.getMessage());
+                }
+            }
+        });
+
+        builder.build().with(getContext()).load(url).into(mPicassoTarget);
+
     }
 
     @Override
@@ -298,23 +318,29 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void onOffsetsChanged(float x, float y, float z, float w, int i, int j) {
     }
 
-    private class FetchPhotoTask extends AsyncTask<String, Void, Bitmap> {
 
-        private int id;
-        private String url;
+    private class TargetWithId implements Target {
 
-        @Override
-        protected Bitmap doInBackground(String... paramses) {
+        private int targetId;
 
-            url = paramses[0];
-            id = Integer.valueOf(paramses[1]);
-
-            return DataMgmt.getBitmapFromUrl(getContext(), paramses[1]);
+        public TargetWithId(int id) {
+            targetId = id;
         }
 
         @Override
-        protected void onPostExecute(Bitmap b) {
-            prepareScene(b, id);
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+        }
+
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            prepareScene(bitmap, targetId);
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
         }
     }
+
+    ;
 }
