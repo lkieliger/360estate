@@ -54,7 +54,7 @@ public class DescriptionSlideTest {
     @Test
     public void descriptionDisplayTest() {
         ViewInteraction textView = onView(
-                allOf(withId(R.id.description),
+                allOf(withId(R.id.description_text),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.activity_description),

@@ -2,13 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginLeft="10dp"
+    >
 
 
     <Button
         android:id="@+id/eraseButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="30dp"
         android:layout_gravity="right"
         android:background="@drawable/button_shape"
         android:text="@string/erase"
@@ -19,13 +24,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:orientation="horizontal">
+        android:layout_marginBottom="30dp"
+        android:orientation="horizontal"
+        >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="50"
+            android:layout_marginLeft="10dp"
             android:text="@string/types_of_house"
             android:textSize="18sp"
 
@@ -37,73 +44,149 @@
             android:layout_height="wrap_content"
             android:layout_weight="50"
             android:entries="@array/typeOfHouses"
-            android:spinnerMode="dialog" />
+            android:spinnerMode="dialog"/>
     </LinearLayout>
 
     <AutoCompleteTextView
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="13dp"
-        android:hint="@string/cities" />
+        android:layout_marginBottom="30dp"
+        android:hint="@string/cities"
+        android:gravity="center"
+        />
 
 
-    <EditText
-        android:id="@+id/numberOfRooms"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/number_of_rooms"
-        android:inputType="number" />
+        android:orientation="horizontal"
+        android:layout_marginBottom="30dp"
+        >
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:text="@string/rooms_filter"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:layout_marginRight="20dp"
+            />
+        <EditText
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:id="@+id/MinRooms"
+            android:hint="@string/min"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/trait_union"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="30dp"
+            />
+
+        <EditText
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:id="@+id/MaxRooms"
+            android:hint="@string/max"
+            android:gravity="center"/>
+
+    </LinearLayout>
 
 
-    <EditText
-        android:id="@+id/MaxSurface"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:hint="@string/surfaceMax"
-        android:textSize="18sp"
-        android:inputType="number"/>
+        android:orientation="horizontal"
+        android:layout_marginBottom="30dp"
+        >
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:text="@string/surface"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:layout_marginRight="20dp"
+            />
+        <EditText
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:id="@+id/MinSurface"
+            android:hint="@string/min"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/trait_union"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="30dp"
+            />
 
+        <EditText
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:id="@+id/MaxSurface"
+            android:hint="@string/max"
+            android:gravity="center"/>
 
-    <EditText
-        android:id="@+id/MinSurface"
-        android:layout_width="wrap_content"
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/surfaceMin"
-        android:textSize="18sp"
-        android:inputType="number"/>
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:text="@string/prix"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:layout_marginRight="20dp"
+            />
+        <EditText
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:id="@+id/MinPrice"
+            android:hint="@string/min"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/trait_union"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="30dp"
+            />
 
+        <EditText
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:id="@+id/MaxPrice"
+            android:hint="@string/max"
+            android:gravity="center"/>
 
-    <EditText
-        android:id="@+id/MaxPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:hint="@string/priceMax"
-        android:textSize="18sp"
-        android:inputType="number"/>
-
-
-    <EditText
-        android:id="@+id/MinPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/priceMin"
-        android:textSize="18sp"
-        android:inputType="number"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/filterButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_gravity="center"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/button_shape"
         android:text="@string/Filter"
         android:textAllCaps="false"
         android:textColor="#55CACF"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        />
 
 
 </LinearLayout>

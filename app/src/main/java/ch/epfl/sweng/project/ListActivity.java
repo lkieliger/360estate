@@ -125,7 +125,9 @@ public class ListActivity extends AppCompatActivity {
 
         final Spinner spinner = (Spinner) popupLayout.findViewById(R.id.spinner);
         final AutoCompleteTextView city = (AutoCompleteTextView) popupLayout.findViewById(R.id.location);
-        final TextView numberOfRooms = (TextView) popupLayout.findViewById(R.id.numberOfRooms);
+
+        final TextView maxRooms = (TextView) popupLayout.findViewById(R.id.MaxRooms);
+        final TextView minRooms = (TextView) popupLayout.findViewById(R.id.MinRooms);
         final TextView maxPrice = (TextView) popupLayout.findViewById(R.id.MaxPrice);
         final TextView minPrice = (TextView) popupLayout.findViewById(R.id.MinPrice);
         final TextView maxSurface = (TextView) popupLayout.findViewById(R.id.MaxSurface);
@@ -139,7 +141,8 @@ public class ListActivity extends AppCompatActivity {
         if (stateOfPopUpLayout != null) {
             spinner.setSelection(stateOfPopUpLayout.getPositionSpinner());
             city.setText(stateOfPopUpLayout.getCity());
-            numberOfRooms.setText(stateOfPopUpLayout.getNumberOfRooms());
+            maxRooms.setText(stateOfPopUpLayout.getMaxRooms());
+            minRooms.setText(stateOfPopUpLayout.getMinRooms());
             maxPrice.setText(stateOfPopUpLayout.getMaxPrice());
             minPrice.setText(stateOfPopUpLayout.getMinPrice());
             maxSurface.setText(stateOfPopUpLayout.getMaxSurface());
@@ -151,7 +154,7 @@ public class ListActivity extends AppCompatActivity {
 
         Button eraseButton = (Button) popupLayout.findViewById(R.id.eraseButton);
         eraseButton.setOnClickListener(new EraseButtonListener(
-                spinner, city, numberOfRooms, maxPrice, minPrice, maxSurface, minSurface));
+                spinner, city, maxRooms, minRooms, maxPrice, minPrice, maxSurface, minSurface));
 
         Button filterButton = (Button) popupLayout.findViewById(R.id.filterButton);
         filterButton.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +168,8 @@ public class ListActivity extends AppCompatActivity {
                         spinner.getSelectedItemPosition(),
                         spinner.getSelectedItemPosition(),
                         city.getText().toString(),
-                        numberOfRooms.getText().toString(),
+                        maxRooms.getText().toString(),
+                        minRooms.getText().toString(),
                         maxPrice.getText().toString(),
                         minPrice.getText().toString(),
                         maxSurface.getText().toString(),

@@ -16,7 +16,8 @@ public class StateOfPopUpLayout {
     private int typeSpinner;
     private int positionSpinner;
     private String city;
-    private String numberOfRooms;
+    private String maxRooms;
+    private String minRooms;
     private String maxPrice;
     private String minPrice;
     private String maxSurface;
@@ -26,19 +27,21 @@ public class StateOfPopUpLayout {
      * @param typeSpinner        The type entered.
      * @param positionSpinner    The position of the selected item in the spinner.
      * @param city               The city entered.
-     * @param numberOfRooms      The number of rooms entered.
+     * @param maxRooms           The max number of rooms entered.
+     * @param minRooms           The min number of rooms entered.
      * @param maxPrice           The maximum price entered.
      * @param minPrice           The minimum price entered.
      * @param maxSurface         The maximum Surface entered.
      * @param minSurface         The minimum Surface entered.
      */
-    public StateOfPopUpLayout(int typeSpinner, int positionSpinner, String city, String numberOfRooms,
+    public StateOfPopUpLayout(int typeSpinner, int positionSpinner, String city, String maxRooms, String minRooms,
                               String maxPrice, String minPrice, String maxSurface,String minSurface) {
         this.minSurface = minSurface;
         this.typeSpinner = typeSpinner;
         this.positionSpinner = positionSpinner;
         this.city = city;
-        this.numberOfRooms = numberOfRooms;
+        this.maxRooms = maxRooms;
+        this.minRooms = minRooms;
         this.maxPrice = maxPrice;
         this.minPrice = minPrice;
         this.maxSurface = maxSurface;
@@ -53,8 +56,12 @@ public class StateOfPopUpLayout {
         return city;
     }
 
-    public String getNumberOfRooms() {
-        return numberOfRooms;
+    public String getMaxRooms() {
+        return maxRooms;
+    }
+
+    public String getMinRooms() {
+        return minRooms;
     }
 
     public String getMaxPrice() {
@@ -83,7 +90,8 @@ public class StateOfPopUpLayout {
 
         Boolean isTypeFiltered = typeSpinner != 0;
         Boolean isCityFiltered = !city.equals("");
-        Boolean isNbrOfRoomsFiltered = !numberOfRooms.equals("");
+        Boolean isMaxRoomsFiltered = !maxRooms.equals("");
+        Boolean isMinRoomsFiltered = !minRooms.equals("");
         Boolean isMaxPriceFiltered = !maxPrice.equals("");
         Boolean isMinPriceFiltered = !minPrice.equals("");
         Boolean isMaxSurfaceFiltered = !maxSurface.equals("");
@@ -99,10 +107,9 @@ public class StateOfPopUpLayout {
         }
 
         try {
-            if (isNbrOfRoomsFiltered) {
-                query.whereEqualTo("rooms", Integer.parseInt(numberOfRooms));
-            }
 
+            filterWithMax(isMaxRoomsFiltered,"rooms",maxRooms,query);
+            filterWithMin(isMinRoomsFiltered,"rooms",minRooms,query);
             filterWithMax(isMaxPriceFiltered,"price",maxPrice,query);
             filterWithMin(isMinPriceFiltered,"price",minPrice,query);
             filterWithMax(isMaxSurfaceFiltered,"surface",maxSurface,query);

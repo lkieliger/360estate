@@ -6,7 +6,7 @@
     <string name="title_texte" translatable="false">title text</string>
     <string name="description_text">description text</string>
     <string name="rooms">rooms</string>
-    <string name="types_of_house">Types of house:</string>
+    <string name="types_of_house">Types of house</string>
     <string name="cities">Cities</string>
     <string name="number_of_rooms">Number of rooms</string>
     <string name="priceMax">Max Price:</string>
@@ -48,7 +48,7 @@
     <string name="action_login">Sign in</string>
     <string name="action_goto_registration">Register</string>
     <string name="register_suggestion">Not yet registered ?</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_in_short">Sign In</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password" tools:ignore="UnusedResources">This password is incorrect</string>
@@ -80,5 +80,11 @@
 
     <!-- Strings related to descriptions -->
     <string name="description_slide">Slide with property pictures</string>
+    <string name="surface">Surface</string>
+    <string name="trait_union">-</string>
+    <string name="min">min</string>
+    <string name="max">max</string>
+    <string name="prix">Prix</string>
+    <string name="rooms_filter">Rooms</string>
 
 </resources>

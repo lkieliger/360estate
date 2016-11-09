@@ -8,6 +8,7 @@ import android.util.SparseArray;
 import android.widget.ImageView;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.squareup.picasso.Picasso;
@@ -19,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import ch.epfl.sweng.project.data.PhotoSphereData;
+import ch.epfl.sweng.project.data.Resources;
 import ch.epfl.sweng.project.data.AngleMapping;
 import ch.epfl.sweng.project.data.HouseManager;
 import ch.epfl.sweng.project.data.JSONTags;
@@ -42,6 +45,9 @@ public final class DataMgmt {
 
     /**
      * Get a bitmap from url using Picasso.
+     *
+     * @param mContext
+     * @param url the url to load
      */
     public static Bitmap getBitmapfromUrl(Context mContext, String url) {
 
@@ -84,7 +90,7 @@ public final class DataMgmt {
                     itemAdapter.notifyDataSetChanged();
 
                 } else {
-                    Log.d("DataMgmt", "Error: " + e.getMessage());
+                    Log.d("DataMgmt.getData", "Error: " + e.getMessage());
                 }
             }
         });
@@ -131,4 +137,35 @@ public final class DataMgmt {
 
        return new HouseManager(sparseArray,startingId,startingUrl);
     }
+
+
+    public static String getResources(String identifier, final Collection<String> urls){
+        ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
+        query.whereEqualTo(JSONTags.idHouse,identifier);
+
+        List<Resources> listResource = new ArrayList<>();
+
+        try {
+            listResource = query.find();
+        } catch (ParseException e) {
+            if(BuildConfig.DEBUG) {
+                Log.d("DataMgmt", "Error: " + e.getMessage());
+            }
+        }
+
+        if(listResource.isEmpty()) Log.d("DataMgmt", "Error: No resource has this id.");
+        if(listResource.size()>1) Log.d("DataMgmt", "Warning: The same id has different Resources.");
+
+        Resources resources = listResource.get(0);
+        try {
+            urls.addAll(resources.getPicturesList());
+        } catch (JSONException e) {
+            if(BuildConfig.DEBUG) {
+                Log.d("DataMgmt", "Error: " + e.getMessage());
+            }
+        }
+        return resources.getDescription();
+    }
 }
+
+

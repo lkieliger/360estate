@@ -2,19 +2,31 @@ package ch.epfl.sweng.project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import ch.epfl.sweng.project.ScreenSlide.SlideActivity;
+import ch.epfl.sweng.project.data.PhotoSphereData;
+import ch.epfl.sweng.project.data.Resources;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 
 import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;
+import static ch.epfl.sweng.project.DataMgmt.getResources;
 
 
 public class DescriptionActivity extends AppCompatActivity {
@@ -27,13 +39,13 @@ public class DescriptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_description);
 
         Bundle b = getIntent().getExtras();
-        //TODO: get imgUrls list from Parse and put it into imagesUrl
+        String id = b.getString("id");
         final ArrayList<String> imagesURL = new ArrayList<>();
-        imagesURL.add("https://360.astutus.org/estate/chaton1.jpg");
-        imagesURL.add("https://360.astutus.org/estate/chaton2.jpg");
-        imagesURL.add("https://360.astutus.org/estate/chaton3.jpg");
-        imagesURL.add("https://360.astutus.org/estate/chaton4.jpg");
-        imagesURL.add("https://360.astutus.org/estate/houseSmall.jpg");
+        String description = DataMgmt.getResources(id, imagesURL);
+        Log.d("description ", description);
+
+        TextView txt = (TextView) findViewById(R.id.description_text);
+        txt.setText(description.toCharArray(), 0, description.length());
 
         View.OnClickListener imgListener = new View.OnClickListener() {
             @Override
@@ -46,6 +58,7 @@ public class DescriptionActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         };
+
 
 
         final LinearLayout scrollImg = (LinearLayout) findViewById(R.id.imgs);
@@ -72,4 +85,5 @@ public class DescriptionActivity extends AppCompatActivity {
             }
         });
     }
+
 }

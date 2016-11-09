@@ -146,7 +146,8 @@ public class FilterActivityTest {
         wait1s(TAG);
 
         onView(withId(R.id.filterButtonPopUp)).perform(click());
-        onView(withId(R.id.numberOfRooms)).perform(typeText("3"), closeSoftKeyboard());
+        onView(withId(R.id.MaxRooms)).perform(typeText("3"), closeSoftKeyboard());
+        onView(withId(R.id.MinRooms)).perform(typeText("3"), closeSoftKeyboard());
         onView(withId(R.id.MaxSurface)).perform(typeText("2000000"), closeSoftKeyboard());
         onView(withId(R.id.MinSurface)).perform(typeText("2000000"), closeSoftKeyboard());
 

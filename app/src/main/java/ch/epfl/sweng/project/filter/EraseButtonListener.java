@@ -13,17 +13,19 @@ public class EraseButtonListener implements View.OnClickListener {
 
     private Spinner typeSpinner;
     private AutoCompleteTextView city;
-    private TextView numberOfRooms;
+    private TextView maxRooms;
+    private TextView minRooms;
     private TextView maxPrice;
     private TextView minPrice;
     private TextView maxSurface;
     private TextView minSurface;
 
-    public EraseButtonListener(Spinner typeSpinner, AutoCompleteTextView city, TextView numberOfRooms,
-                               TextView maxPrice, TextView minPrice, TextView maxSurface, TextView minSurface) {
+    public EraseButtonListener(Spinner typeSpinner, AutoCompleteTextView city, TextView maxRooms, TextView
+            minRooms, TextView maxPrice, TextView minPrice, TextView maxSurface, TextView minSurface) {
         this.typeSpinner = typeSpinner;
         this.city = city;
-        this.numberOfRooms = numberOfRooms;
+        this.maxRooms = maxRooms;
+        this.minRooms = minRooms;
         this.maxPrice = maxPrice;
         this.minPrice = minPrice;
         this.maxSurface = maxSurface;
@@ -34,7 +36,8 @@ public class EraseButtonListener implements View.OnClickListener {
     public void onClick(View view) {
         typeSpinner.setSelection(0);
         city.setText("");
-        numberOfRooms.setText("");
+        maxRooms.setText("");
+        minRooms.setText("");
         maxPrice.setText("");
         minPrice.setText("");
         maxSurface.setText("");

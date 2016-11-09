@@ -22,6 +22,7 @@ import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.ListActivity;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.Item;
+import ch.epfl.sweng.project.data.Resources;
 
 import static ch.epfl.sweng.project.user.InputValidityChecker.emailIsValid;
 import static ch.epfl.sweng.project.user.InputValidityChecker.passwordIsValid;
@@ -61,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             parseNotInitialized = false;
         }
         ParseObject.registerSubclass(Item.class);
+        ParseObject.registerSubclass(Resources.class);
 
         mEmail = (TextView) findViewById(R.id.login_email);
         mPassword = (TextView) findViewById(R.id.login_password);
