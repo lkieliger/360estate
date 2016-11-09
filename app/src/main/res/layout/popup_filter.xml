@@ -35,7 +35,6 @@
             android:layout_marginLeft="10dp"
             android:text="@string/types_of_house"
             android:textSize="18sp"
-
             />
 
         <Spinner

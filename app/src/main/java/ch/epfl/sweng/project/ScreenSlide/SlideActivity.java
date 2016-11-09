@@ -16,7 +16,6 @@ public class SlideActivity extends FragmentActivity {
     private static int NUM_PAGES;
     private ViewPager vPager;
     private PagerAdapter adapter;
-    private int size;
     int urlIndex = 0;
     ArrayList<String> urls;
     @Override
@@ -41,8 +40,8 @@ public class SlideActivity extends FragmentActivity {
 
         public SlidePagerAdapter(FragmentManager fm) {
             super(fm);
-            this.fragments = new ArrayList<>();
-            for(int i= 0; i< size; i++){
+            fragments = new ArrayList<>();
+            for(int i= 0; i < NUM_PAGES; i++){
                 SlideFragment slideF = new SlideFragment();
                 Bundle b = new Bundle();
                 b.putString("url", getNextURL());
