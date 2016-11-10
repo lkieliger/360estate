@@ -49,7 +49,7 @@ public final class PanoramaTransitionObject extends PanoramaObject {
         setZ(DISTANCE * Math.sin(phi) * Math.sin(theta));
         setY(DISTANCE * Math.cos(phi));
 
-        mLookAt = new Vector3(0, 0, 0);
+        setLookAt(new Vector3(0, 1000, 0));
     }
 
     public int getId() {

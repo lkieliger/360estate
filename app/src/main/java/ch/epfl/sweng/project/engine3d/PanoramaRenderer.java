@@ -65,6 +65,51 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private ObjectColorPicker mPicker;
     private int debugCounter = 0;
 
+    /**
+     * Use this rendering when nothing special need to be done. In other words just allowing the camera to look
+     * around and print some debug informations.
+     */
+    private RenderingLogic mIdleRendering = new RenderingLogic() {
+        @Override
+        public void render() {
+            if (debugCounter == 60) {
+                debugCounter = 0;
+                DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
+            }
+            debugCounter++;
+
+        }
+    };
+    /**
+     * Use this rendering logic to change the panorama photo after a scene transition
+     */
+    private RenderingLogic mTransitioningRendering = new RenderingLogic() {
+        @Override
+        public void render() {
+            updateScene();
+            mCamera.setPosition(ORIGIN);
+            mRenderLogic = mIdleRendering;
+        }
+    };
+    /**
+     * Use this rendering logic to gradually move the camera toward the TransitionObject target
+     */
+    private RenderingLogic mSlidingRendering = new RenderingLogic() {
+        @Override
+        public void render() {
+            double travellingLength = mCamera.getPosition().length();
+
+            if (travellingLength < 65) {
+                Vector3 v = new Vector3(mTargetPos.x, 0, mTargetPos.z);
+                Vector3 pos = new Vector3(mCamera.getPosition());
+                mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
+            }
+            if (travellingLength >= 65 && NextPanoramaDataBuilder.isReady()) {
+                mRenderLogic = mTransitioningRendering;
+            }
+        }
+    };
+
     public PanoramaRenderer(Context context, Display display, HouseManager houseManager) {
         super(context);
 
@@ -101,7 +146,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
         mPanoSphere = null;
 
-        mRenderLogic = new NormalPanorama();
+        mRenderLogic = mIdleRendering;
         mTargetPos = ORIGIN;
 
 
@@ -251,7 +296,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         Log.d(TAG, "ObjectPicked");
         mTargetPos = object.getWorldPosition();
         ((PanoramaObject) object).reactWith(this);
-        mRenderLogic = new MovingPanorama();
+        mRenderLogic = mSlidingRendering;
     }
 
     @Override
@@ -371,53 +416,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         @Override
         protected void onPostExecute(Bitmap b) {
             prepareScene(b, id);
-        }
-    }
-
-    /**
-     * Use this rendering when nothing special need to be done. In other words just allowing the camera to look
-     * around and print some debug informations.
-     */
-    private class NormalPanorama implements RenderingLogic {
-        @Override
-        public void render() {
-            if (debugCounter == 60) {
-                debugCounter = 0;
-                DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
-            }
-            debugCounter++;
-        }
-    }
-
-    /**
-     * Use this rendering logic to gradually move the camera toward the TransitionObject target
-     */
-    private class MovingPanorama implements RenderingLogic {
-        @Override
-        public void render() {
-            double travellingLength = mCamera.getPosition().length();
-
-            if (travellingLength < 65) {
-                Vector3 v = new Vector3(mTargetPos.x, 0, mTargetPos.z);
-                Vector3 pos = new Vector3(mCamera.getPosition());
-                mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
-            }
-            if (travellingLength >= 65 && NextPanoramaDataBuilder.isReady()) {
-                mRenderLogic = new TransitioningPanorama();
-            }
-        }
-    }
-
-    /**
-     * Use this rendering logic to change the panorama photo after a scene transition
-     */
-    private class TransitioningPanorama implements RenderingLogic {
-        @Override
-        public void render() {
-
-            updateScene();
-            mCamera.setPosition(ORIGIN);
-            mRenderLogic = new NormalPanorama();
         }
     }
 }
