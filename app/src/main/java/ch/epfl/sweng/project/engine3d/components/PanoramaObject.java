@@ -10,22 +10,22 @@ import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
 public abstract class PanoramaObject extends Plane {
 
-    public PanoramaObject() {
+    PanoramaObject() {
         super(10, 10, 2, 2, Vector3.Axis.Z);
 
         mMaterial = new Material();
     }
 
-    public void unregisterComponentFromPicker(ObjectColorPicker p) {
+    void unregisterComponentFromPicker(ObjectColorPicker p) {
         p.unregisterObject(this);
     }
 
-    public void registerComponentAtPicker(ObjectColorPicker p) {
+    void registerComponentAtPicker(ObjectColorPicker p) {
         p.registerObject(this);
         this.setPickingColor(0);
     }
 
-    public void detachFromParentAndDie() {
+    void detachFromParentAndDie() {
         if (mParent == null) {
             throw new IllegalStateException("Trying to detach PanoramaTransitionObject from a null " +
                     "parent !");
