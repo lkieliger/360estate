@@ -1,7 +1,5 @@
-# sweng-team-the360estate BACKLOG
-
-##Top priority features
-
+#THE 360ESTATE BACKLOG
+#Top priority features
 ### User support
 
   1. Registration: the user should be able to register by entering the field below. Data should be sent using TLS
@@ -33,7 +31,7 @@
   5. Clicking an item in the list open a descriptive page.
   6. Once in the description page, the user can open the panorama 
 
-## Additional features
+# Nice-to-have features
 ### User support
   1. The user can log and register on the app.
   1. Once logged the user should not be required to log again at each time the app is launched
