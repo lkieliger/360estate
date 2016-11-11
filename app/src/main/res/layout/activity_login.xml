@@ -65,7 +65,8 @@
                 style="?android:textAppearanceSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/button_shape"
                 android:onClick="attemptLogin"
                 android:text="@string/action_login"
@@ -73,12 +74,11 @@
                 android:textColor="#55CACF"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                tools:ignore="UnusedIds"
-                />
+                tools:ignore="UnusedIds" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="60dp" />
+                android:layout_height="50dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -92,21 +92,26 @@
                     android:layout_width="145dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:layout_weight="0.74"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="0.50"
                     android:text="@string/register_suggestion"
-                    android:textAlignment="center"
 
+                    android:textAlignment="center"
                     tools:ignore="UnusedIds" />
 
                 <Button
                     android:id="@+id/goto_registration_button"
-                    android:layout_width="111dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginBottom="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="0.27"
                     android:background="@drawable/button_shape"
                     android:fontFamily="sans-serif"
                     android:onClick="proceedToRegistration"
                     android:text="@string/action_goto_registration"
+                    android:textAlignment="center"
                     android:textAllCaps="false"
                     android:textColor="#55CACF"
                     android:textSize="20sp"
@@ -117,30 +122,34 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_height="12dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="1">
 
                 <TextView
                     android:id="@+id/password_forgotten"
-                    android:layout_width="186dp"
+                    android:layout_width="145dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="0.50"
+
                     android:text="@string/reset_suggestion"
                     android:textAlignment="center"
-                    tools:ignore="UnusedIds"
-
-                    />
+                    tools:ignore="UnusedIds" />
 
                 <Button
                     android:id="@+id/goto_reset_password"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginBottom="1dp"
-                    android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="0.31"
                     android:background="@drawable/button_shape"
                     android:fontFamily="sans-serif"
                     android:onClick="proceedToReset"
