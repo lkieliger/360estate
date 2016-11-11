@@ -1,11 +1,42 @@
 # sweng-team-the360estate
 
 ###Backlog:
-  1. register: (opens a child activity that allows you to enter: user name, pswd, phone n, address(p1). Data sent via SSL, verification e-mail sent, password must be written twice). 
+
+##Top priority features
+
+### User support
+
+  1. Registration: the user should be able to register by entering the field below. Data should be sent using TLS
+     Password must be written twice.
+      * User name
+      * Password
+      * Phone number
+      
+  2. Login: user should be able to log in by entering his username and his password
+
+  3. Favorites: the user should be able to save its favorites goods
   
-  2. login (p1 feature: the pass and user are saved and loaded when user launches app)  
+
+### Phone sensors
+
+### DB Access
+
+### Misc
+
+  1. Once logged in, the user can use an interface which displays a list of houses
+  2. Each item is clickable, the user should be able to filter the results using various.
+
+##Additional features
+
+### User support
   
-  3. Once logged in, the user finds an interface displaying a list of houses (first empty, later his favorites)  
+  1. Once logged the user should not be required to log again at each time the app is launched
+  
+### Phone sensors
+
+### DB Access
+
+### Automated test suite  
 
   4. Each item is clickable, there's a 'filter' button on the top-right edge of the layout.  
 
