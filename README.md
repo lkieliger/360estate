@@ -10,7 +10,7 @@
       
   2. [✓] Login: user should be able to log in by entering his username and his password
 
-  3.     Favorites: the user should be able to save its favorites goods
+  3. Favorites: the user should be able to save its favorites goods
   
 ### Phone sensors
   1. [✓] The phone sensor will be used to see to navigate in the panorama and change where the user is looking at.
@@ -38,10 +38,10 @@
 ### Phone sensors
 ### DB Access
 
-  1.     User will be able to store in a local database the filter he used.
-  2.     User will also be able to store his favorites houses.
+  1. User will be able to store in a local database the filter he used.
+  2. User will also be able to store his favorites houses.
 
 ### Panorama
-  1.     The user can display additional information about the room he's visiting by clicking an icon with a plus sign
+  1. The user can display additional information about the room he's visiting by clicking an icon with a plus sign
 
 ### General features
