@@ -32,6 +32,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ch.epfl.sweng.project.user.LoginActivity" />
         </activity>
+        <activity
+            android:name=".user.ResetActivity"
+            android:label="@string/title_activity_reset"
+            android:parentActivityName=".user.LoginActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ch.epfl.sweng.project.user.LoginActivity" />
+        </activity>
         <activity android:name=".DescriptionActivity"/>
         <activity android:name=".ScreenSlide.SlideActivity"/><!-- ATTENTION: This was auto-generated to add
          Google Play services to your project for
