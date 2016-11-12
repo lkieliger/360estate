@@ -7,7 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 
 
-import android.os.Build;
+
 
 
 import android.util.Log;
@@ -38,6 +38,7 @@ import ch.epfl.sweng.project.data.Resources;
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
 
 import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
+import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 public final class DataMgmt {
 
@@ -95,6 +96,7 @@ public final class DataMgmt {
         }
 
         if (!isInternetAvailable(context)) {
+            shortToast(context, "Internet is not available");
             query.fromLocalDatastore();
         }
         query.findInBackground(new FindCallback<Item>() {
@@ -116,6 +118,8 @@ public final class DataMgmt {
             }
         });
     }
+
+
 
     /**
      *
@@ -177,6 +181,7 @@ public final class DataMgmt {
         List<Resources> listResource = new ArrayList<>();
 
         if (!isInternetAvailable(context)) {
+            shortToast(context, "Internet is not available");
             query.fromLocalDatastore();
         }
 

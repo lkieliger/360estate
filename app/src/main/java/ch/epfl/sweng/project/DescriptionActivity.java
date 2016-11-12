@@ -1,7 +1,6 @@
 package ch.epfl.sweng.project;
 
-import android.annotation.TargetApi;
-import android.content.Context;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +20,7 @@ import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;
 import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
 import static ch.epfl.sweng.project.util.Toaster.longToast;
+
 
 
 public class DescriptionActivity extends AppCompatActivity {
@@ -74,6 +74,7 @@ public class DescriptionActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (isInternetAvailable(getApplicationContext())) {
+
                         Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
                         Intent intentFromList = getIntent();
                         String id = intentFromList.getStringExtra("id");
