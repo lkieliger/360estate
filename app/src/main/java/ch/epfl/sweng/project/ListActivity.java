@@ -1,5 +1,6 @@
 package ch.epfl.sweng.project;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -33,11 +34,13 @@ public class ListActivity extends AppCompatActivity {
     };
 
     private StateOfPopUpLayout stateOfPopUpLayout = null;
+    private Context mContext = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        mContext = getApplicationContext();
 
 
         final List<Item> itemList = new ArrayList<>();
@@ -62,7 +65,7 @@ public class ListActivity extends AppCompatActivity {
         });
 
 
-        DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout);
+        DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout,mContext);
         // Assign adapter to ListView
         listView.setAdapter(itemAdapter);
         // ListView Item Click Listener
@@ -168,7 +171,7 @@ public class ListActivity extends AppCompatActivity {
                         maxSurface.getText().toString(),
                         minSurface.getText().toString()
                 );
-                DataMgmt.getItemList(itemCollection, itemAdapter, stateOfPopUpLayout);
+                DataMgmt.getItemList(itemCollection, itemAdapter, stateOfPopUpLayout, mContext );
                 listView.setAdapter(itemAdapter);
                 helpDialog.dismiss();
             }
