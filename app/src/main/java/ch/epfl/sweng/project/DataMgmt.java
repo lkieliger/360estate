@@ -40,6 +40,7 @@ import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
 import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
+
 public final class DataMgmt {
 
     private static final String TAG = "DataMgmt";
@@ -96,7 +97,7 @@ public final class DataMgmt {
         }
 
         if (!isInternetAvailable(context)) {
-            shortToast(context, "Internet is not available");
+            shortToast(context, context.getResources().getText(R.string.no_internet_acces));
             query.fromLocalDatastore();
         }
         query.findInBackground(new FindCallback<Item>() {
@@ -181,7 +182,7 @@ public final class DataMgmt {
         List<Resources> listResource = new ArrayList<>();
 
         if (!isInternetAvailable(context)) {
-            shortToast(context, "Internet is not available");
+            shortToast(context, context.getResources().getText(R.string.no_internet_acces));
             query.fromLocalDatastore();
         }
 
