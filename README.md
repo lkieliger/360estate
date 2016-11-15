@@ -1,36 +1,47 @@
-# sweng-team-the360estate
+#THE 360ESTATE BACKLOG
+#Top priority features
+### User support
 
-###Backlog:
-  1. register: (opens a child activity that allows you to enter: user name, pswd, phone n, address(p1). Data sent via SSL, verification e-mail sent, password must be written twice). 
+  1. [✓] Registration: the user should be able to register by entering the field below. Data should be sent using TLS
+     Password must be written twice.
+      * User name
+      * Password
+      * Phone number
+      
+  2. [✓] Login: user should be able to log in by entering his username and his password
+
+  3. Favorites: the user should be able to save its favorites goods
   
-  2. login (p1 feature: the pass and user are saved and loaded when user launches app)  
+### Phone sensors
+  1. [✓] The phone sensor will be used to see to navigate in the panorama and change where the user is looking at.
   
-  3. Once logged in, the user finds an interface displaying a list of houses (first empty, later his favorites)  
+### DB Access
+  1. [✓] The list of objects should be retrieved on a distant server.
+  2. [✓] The user favorites should be stored in a local database to allow for an offline mode
+  
+### Panorama
+  1. [✓] The user can switch between panoramic pictures by clicking an arrow on its screen
 
-  4. Each item is clickable, there's a 'filter' button on the top-right edge of the layout.  
+### General features
+  1. [✓] Once logged in, the user can use an interface which displays a list of houses
+  2. [✓] Each item is clickable, the user should be able to filter the results using various criteria.
+    * Location, price, building type, surface area.    
+  3. [✓] When the user clicks an item on the list, a new layout opens with one or two images of the good, a text description, panoramic photos he can open by clicking them (same for the photos).
+  4. [✓] When done with the filtering settings the user can display a new list based on its selection
+  5. [✓] Clicking an item in the list open a descriptive page.
+  6. [✓] Once in the description page, the user can open the panorama 
 
-  5. The panoramic view will allow the user to see the house at 360, using panoramic images.
+# Nice-to-have features
+### User support
+  1. [✓] Once logged the user should not be required to log again at each time the app is launched
  
-  6. Loading the next panoramic image with a simple click.  
- 
-  6. onClick, the filter button displays a pop-up window that lets you chose the max price and min surface of the goods in the form of movable button over a line.  
+### Phone sensors
+### DB Access
 
-  7. There's also an entry to type the location, featuring auto-completion and one to type the number of rooms.    
+  1. User will be able to store in a local database the filter he used.
+  2. User will also be able to store his favorites houses.
 
-  8. A spinner with the different types of building possible.  
+### Panorama
+  1. The user can display additional information about the room he's visiting by clicking an icon with a plus sign
 
-  9. Once he's done filtering, the user can click some 'valid' button to display a list(new list in case of favorites) of results.
-  
-  10. When the user clicks an item on the list, a new layout opens with one or two images of the good, a text description, panoramic photos he can open by clicking them (same for the photos).
-
-
-
-  12. There will also be a button that permit the user to save the house in favorite. 
-  
-  13. User will be able to store in a local database the filter he used.
-
-  14. User will also be able to store his favorites houses.
-
-  15. 'account forgot' clickable text (sends an e-mail that allows you to change your pass) 
-
-  16. More information on nearby infrastructure will be available (transport, schools, shops)
+### General features
