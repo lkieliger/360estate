@@ -324,11 +324,13 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     /**
      * Builder for the data needed to transition between panoramas.
      */
-    private static final class NextPanoramaDataBuilder {
-        private static Integer nextPanoId = -1;
-        private static Bitmap nextPanoBitmap = null;
+    public static final class NextPanoramaDataBuilder {
+        public static final int INVALID_ID = -1;
+        public static Bitmap INVALID_BITMAP = null;
+        private static Integer nextPanoId = INVALID_ID;
+        private static Bitmap nextPanoBitmap = INVALID_BITMAP;
 
-        static boolean isReady() {
+        public static boolean isReady() {
             return (nextPanoId != -1 && nextPanoBitmap != null);
         }
 
@@ -338,8 +340,11 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
          * @param i the next id
          * @throws IllegalStateException if the id is set more than once
          */
-        static void setNextPanoId(Integer i) {
-            if (isReady()) {
+        public static void setNextPanoId(Integer i) {
+            if (i == null) {
+                throw new IllegalArgumentException("Null id");
+            }
+            if (nextPanoId != INVALID_ID) {
                 throw new IllegalStateException("Next panorama id should not be set multiple times");
             }
             nextPanoId = i;
@@ -351,8 +356,11 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
          * @param b The bitmap file
          * @throws IllegalStateException if the bitmap is set more than once
          */
-        static void setNextPanoBitmap(Bitmap b) {
-            if (isReady()) {
+        public static void setNextPanoBitmap(Bitmap b) {
+            if (b == null) {
+                throw new IllegalArgumentException("Null bitmap");
+            }
+            if (nextPanoBitmap != INVALID_BITMAP) {
                 throw new IllegalStateException("Next panorama id should not be set multiple times");
             }
             nextPanoBitmap = b;
@@ -362,16 +370,24 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
          * @return the built PanoramaData
          * @throws IllegalStateException if the PanoramaData is incomplete
          */
-        static Tuple<Integer, Bitmap> build() {
+        public static Tuple<Integer, Bitmap> build() {
             if (!isReady()) {
                 throw new IllegalStateException("Next panorama data is incomplete, cannot build");
             }
 
             Tuple<Integer, Bitmap> result = new Tuple<>(nextPanoId, nextPanoBitmap);
-            nextPanoId = -1;
-            nextPanoBitmap = null;
+            resetData();
 
             return result;
+        }
+
+        /**
+         * This method should not be used out side this class except in JUnit tests to ensure builder state
+         * before each tests
+         */
+        public static void resetData() {
+            nextPanoId = INVALID_ID;
+            nextPanoBitmap = INVALID_BITMAP;
         }
     }
 

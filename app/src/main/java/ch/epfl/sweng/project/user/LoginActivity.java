@@ -8,15 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
-
-
 import com.parse.ParseUser;
-
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.ListActivity;
@@ -33,9 +29,9 @@ import static ch.epfl.sweng.project.util.Toaster.shortToast;
  */
 public class LoginActivity extends AppCompatActivity {
 
+    public static final String APP_ID = "360ESTATE";
     private static final String TAG = "LoginActivity";
     private static boolean parseNotInitialized = true;
-    public static final String APP_ID = "360ESTATE";
     private TextView mEmail = null;
     private TextView mPassword = null;
     private Context mAppContext = null;
