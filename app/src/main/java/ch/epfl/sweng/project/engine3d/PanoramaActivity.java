@@ -49,7 +49,6 @@ public class PanoramaActivity extends Activity {
         // Add mSurface to root view
         addContentView(mSurface, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
         HouseManager houseManager = DataMgmt.getHouseManager(getIntent().getStringExtra("id"));
-
         mRenderer = new PanoramaRenderer(this, getWindowManager().getDefaultDisplay(), houseManager);
         mSurface.setSurfaceRenderer(mRenderer);
 

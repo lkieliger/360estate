@@ -44,7 +44,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 23)
 
-public class PanoramaTests {
+public class PanoramaRendererTests {
 
     private static final String TAG = "Panorama unit tests";
     private static double errorEpsilon = 0.1d;
@@ -129,8 +129,6 @@ public class PanoramaTests {
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_MOVE)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_OUTSIDE)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_POINTER_DOWN)));
-
-
     }
 
 
