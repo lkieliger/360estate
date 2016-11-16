@@ -150,7 +150,7 @@ public class PanoramaTests {
     /**
      * Compute the number of pixels needed for a user swipe to turn the camera a given angle
      *
-     * @param angle
+     * @param angle in degrees
      * @param isAlongXAxis true if the swipe is along x axis, false otherwise
      * @return The pixel number
      */

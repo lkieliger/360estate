@@ -22,7 +22,7 @@ public abstract class PanoramaObject extends Plane {
 
     void registerComponentAtPicker(ObjectColorPicker p) {
         p.registerObject(this);
-        this.setPickingColor(0);
+        setPickingColor(0);
     }
 
     void detachFromParentAndDie() {
@@ -31,7 +31,7 @@ public abstract class PanoramaObject extends Plane {
                     "parent !");
         }
         mParent.removeChild(this);
-        this.destroy();
+        destroy();
     }
 
     public abstract void reactWith(PanoramaRenderer p);

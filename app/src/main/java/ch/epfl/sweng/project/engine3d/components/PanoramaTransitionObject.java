@@ -39,7 +39,7 @@ public final class PanoramaTransitionObject extends PanoramaObject {
         try {
             mMaterial.addTexture(alphamap);
         } catch (ATexture.TextureException e) {
-            Log.d("Texture error", e.getMessage());
+            Log.e("Texture error", e.getMessage());
         }
 
         Id = id;

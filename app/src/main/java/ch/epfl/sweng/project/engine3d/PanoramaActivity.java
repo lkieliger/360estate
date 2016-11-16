@@ -13,7 +13,6 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.parse.ParseObject;
 
 import org.rajawali3d.view.ISurface;
 import org.rajawali3d.view.SurfaceView;
@@ -21,7 +20,6 @@ import org.rajawali3d.view.SurfaceView;
 import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.HouseManager;
-import ch.epfl.sweng.project.data.Resources;
 import ch.epfl.sweng.project.engine3d.listeners.PanoramaTouchListener;
 
 import static android.view.View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -124,5 +122,6 @@ public class PanoramaActivity extends Activity {
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        finish();
     }
 }

@@ -2,7 +2,6 @@ package ch.epfl.sweng.project.filter;
 
 import android.view.View;
 import android.widget.AutoCompleteTextView;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 

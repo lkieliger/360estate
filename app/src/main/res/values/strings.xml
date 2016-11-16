@@ -93,7 +93,8 @@
         This will send you an email with a password reset link that will let you change your password.
     </string>
     <string name="info_reset_successful">The reset procedure was successful. Check your mail !</string>
-    <string name="error_reset_unsuccessful">An error has occured during the password reset procedure. Please make sure you have a working internet connection</string>
+    <string name="error_reset_unsuccessful">An error has occurred during the password reset procedure. Please make
+        sure you have a working internet connection</string>
     <string name="title_activity_reset">Reset</string>
     <string name="error_reset_no_email_matching">There does not exist an account with this email on the server.</string>
 

@@ -68,7 +68,7 @@
             android:layout_marginRight="20dp"
             android:gravity="center"
             android:text="@string/rooms_filter"
-            android:textSize="18dp"
+            android:textSize="18sp"
             />
         <EditText
             android:id="@+id/MinRooms"
@@ -84,7 +84,7 @@
             android:layout_weight="2"
             android:gravity="center"
             android:text="@string/trait_union"
-            android:textSize="30dp"
+            android:textSize="30sp"
             />
 
         <EditText
@@ -111,7 +111,7 @@
             android:layout_marginRight="20dp"
             android:gravity="center"
             android:text="@string/surface"
-            android:textSize="18dp"
+            android:textSize="18sp"
             />
         <EditText
             android:id="@+id/MinSurface"
@@ -127,7 +127,7 @@
             android:layout_weight="2"
             android:gravity="center"
             android:text="@string/trait_union"
-            android:textSize="30dp"
+            android:textSize="30sp"
             />
 
         <EditText
@@ -153,7 +153,7 @@
             android:layout_marginRight="20dp"
             android:gravity="center"
             android:text="@string/prix"
-            android:textSize="18dp"
+            android:textSize="18sp"
             />
         <EditText
             android:id="@+id/MinPrice"
@@ -169,7 +169,7 @@
             android:layout_weight="2"
             android:gravity="center"
             android:text="@string/trait_union"
-            android:textSize="30dp"
+            android:textSize="30sp"
             />
 
         <EditText
