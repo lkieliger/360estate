@@ -27,10 +27,6 @@ public class Favorites extends ParseObject {
 
     }
 
-    public Favorites(HashSet<String> extFavorites) {
-        favorites = extFavorites;
-    }
-
     public Favorites(HashSet<String> extFavorites, String idUser) {
         setFavorites(extFavorites);
         setIdUser(idUser);
@@ -104,16 +100,8 @@ public class Favorites extends ParseObject {
         hasLocalDataChanged = true;
     }
 
-    public void synchronizeFromServer(String idUser) {
-        favorites = getFavoritesFromServer();
-    }
-
     public void synchronizeServer() {
         DataMgmt.overrideFavorites(getIdUser(),favorites);
         hasLocalDataChanged = false;
-    }
-
-    public void synchronizeServer(String idUser) {
-        DataMgmt.overrideFavorites(idUser,favorites);
     }
 }

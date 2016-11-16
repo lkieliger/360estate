@@ -112,13 +112,15 @@ public class CompleteBehaviorTest {
 
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
         wait1s(TAG);
-        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(2).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
         onView(withId(R.id.addToFavorites)).perform(click());
         pressBack();
-        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(2).perform(click());
+        onView(withId(R.id.FavoriteButton)).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
         wait500ms(TAG);
         onView(withId(R.id.addToFavorites)).perform(click());
         pressBack();
+        onView(withId(R.id.FavoriteButton)).perform(click());
 
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(2).perform(click());
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
@@ -140,10 +142,6 @@ public class CompleteBehaviorTest {
 
         onView(withId(R.id.action_launch_panorama)).perform(click());
 
-        wait250ms(TAG);
-        pressBack();
-        pressBack();
-        onView(withId(R.id.FavoriteButton)).perform(click());
         logUserOut();
 
     }

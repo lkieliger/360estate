@@ -4,6 +4,7 @@ package ch.epfl.sweng.project.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaTransitionObject;
@@ -56,7 +57,8 @@ public class TransitionObject extends AngleMapping {
 
     @Override
     public PanoramaObject toPanoramaObject() {
-        return new PanoramaTransitionObject(getTheta(), getPhi(), getId(), getUrl());
+        Tuple<Double, Double> thetaPhi = getThetaPhi();
+        return new PanoramaTransitionObject(thetaPhi.getX(), thetaPhi.getY(), getId(), getUrl());
     }
 
     @Override
@@ -68,15 +70,14 @@ public class TransitionObject extends AngleMapping {
         TransitionObject transitionObject = (TransitionObject) obj;
         return getId() == transitionObject.getId() &&
                 getUrl().equals(transitionObject.getUrl()) &&
-                (Double.compare(getTheta(), transitionObject.getTheta()) == 0) &&
-                (Double.compare(getPhi(), transitionObject.getPhi()) == 0);
+                super.equals(obj);
     }
 
     @Override
     public int hashCode() {
         int result = mId;
         result = 31 * result + (mUrl != null ? mUrl.hashCode() : 0);
-        result = 31 * result + getThetaPhi().hashCode();
+        result = 31 * result + super.hashCode();
         return result;
     }
 }

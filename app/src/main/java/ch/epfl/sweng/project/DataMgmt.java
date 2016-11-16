@@ -199,13 +199,6 @@ public final class DataMgmt {
     }
 
 
-    public static void updateFavorites(String idUser, Collection<String> list) {
-        Favorites f = getFavoriteFromId(idUser);
-        Set<String> listToPut = f.getFavoritesFromServer();
-        listToPut.addAll(list);
-        f.setFavorites(listToPut);
-    }
-
     public static void overrideFavorites(String idUser, Collection<String> list) {
         Favorites f = getFavoriteFromId(idUser);
         f.setFavorites((Set<String>) list);
