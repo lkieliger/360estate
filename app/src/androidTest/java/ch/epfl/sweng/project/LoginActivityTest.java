@@ -57,6 +57,7 @@ public class LoginActivityTest {
                 .getWindow().getDecorView())))).check(matches(isDisplayed()));
 
         wait1s(TAG);
+        wait1s(TAG);
 
         onView(withId(R.id.login_email)).perform(clearText()).
                 perform(typeText(TEST_USER_MAIL));
