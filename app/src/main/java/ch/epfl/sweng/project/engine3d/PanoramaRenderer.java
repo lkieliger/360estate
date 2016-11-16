@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
@@ -179,8 +178,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mPanoSphere = new PanoramaSphere();
         getCurrentScene().addChild(mPanoSphere);
 
-        prepareScene(DataMgmt.getBitmapFromUrl(getContext(), mHouseManager.getStartingUrl()), mHouseManager
-                .getStartingId());
+        NextPanoramaDataBuilder.setNextPanoId(mHouseManager.getStartingId());
+        prepareScene(DataMgmt.getBitmapFromUrl(getContext(), mHouseManager.getStartingUrl()));
         updateScene();
     }
 
@@ -197,16 +196,16 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mPanoSphere.attachPanoramaComponents(mHouseManager.getNeighborsFromId(panoData.getX()), mPicker);
     }
 
-    private void prepareScene(Bitmap b, int id) {
+    private void prepareScene(Bitmap b) {
         Log.d(TAG, "Call to prepare scene, assigning next bitmap and next id.");
 
         NextPanoramaDataBuilder.setNextPanoBitmap(b);
-        NextPanoramaDataBuilder.setNextPanoId(id);
     }
 
     public void updatePanorama(String url, int id) {
         Log.d(TAG, "Call to update panorama, creating new task.");
-        new FetchPhotoTask().execute(url, String.valueOf(id));
+        NextPanoramaDataBuilder.setNextPanoId(id);
+        new FetchPhotoTask().execute(url);
     }
 
     @Override
@@ -287,6 +286,10 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         return new Quaternion(mSensorRot);
     }
 
+    public PanoramaSphere getPanoramaSphere() {
+        return mPanoSphere;
+    }
+
     public void getObjectAt(float x, float y) {
         mPicker.getObjectAt(x, y);
     }
@@ -331,7 +334,11 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         private static Bitmap nextPanoBitmap = INVALID_BITMAP;
 
         public static boolean isReady() {
-            return (nextPanoId != -1 && nextPanoBitmap != null);
+            return (nextPanoId != INVALID_ID && nextPanoBitmap != INVALID_BITMAP);
+        }
+
+        public static boolean isReset() {
+            return (nextPanoId == INVALID_ID && nextPanoBitmap == INVALID_BITMAP);
         }
 
         /**
@@ -399,28 +406,16 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      */
     private class FetchPhotoTask extends AsyncTask<String, Void, Bitmap> {
 
-        private int id;
         private String url;
 
         @Override
         protected Bitmap doInBackground(String... paramses) {
 
             url = paramses[0];
-            id = Integer.valueOf(paramses[1]);
-
-            Picasso.Builder builder = new Picasso.Builder(getContext());
-            builder.listener(new Picasso.Listener() {
-                @Override
-                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, exception.getMessage());
-                    }
-                }
-            });
-
+            Log.d("bla", url);
             Bitmap ret = null;
             try {
-                ret = builder.build().with(getContext()).load(url).resize(2048, 4096).get();
+                ret = Picasso.with(getContext()).load(url).resize(2048, 4096).get();
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
             }
@@ -431,7 +426,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
         @Override
         protected void onPostExecute(Bitmap b) {
-            prepareScene(b, id);
+            prepareScene(b);
         }
     }
 }
