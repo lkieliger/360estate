@@ -28,8 +28,6 @@ public class SplashActivity extends AppCompatActivity {
 
         if (parseNotInitialized) {
             //Initialize connection with the parse server
-
-
             Parse.initialize(new Parse.Configuration.Builder(this)
                     // The network interceptor is used to debug the communication between server/client
                     //.addNetworkInterceptor(new ParseLogInterceptor())
@@ -48,8 +46,6 @@ public class SplashActivity extends AppCompatActivity {
         if (userAlreadyLoggedIn()) {
             Intent intent = new Intent(this, ListActivity.class);
             startActivity(intent);
-
-            finish();
         }
     }
 
@@ -89,7 +85,6 @@ public class SplashActivity extends AppCompatActivity {
             } else {
                 if (BuildConfig.DEBUG)
                     Log.d(TAG, "The user is not authenticated");
-
             }
         }
 

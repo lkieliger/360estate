@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
-                android:onClick="proceedToLogin"
+                android:onClick="proceedToRegistration"
                 android:text="@string/action_goto_registration" />
 
         </LinearLayout>
