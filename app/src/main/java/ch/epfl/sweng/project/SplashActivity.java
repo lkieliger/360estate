@@ -6,19 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.parse.Parse;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-import ch.epfl.sweng.project.data.Item;
-import ch.epfl.sweng.project.data.Resources;
 import ch.epfl.sweng.project.itemDisplayer.ListActivity;
-import ch.epfl.sweng.project.user.Favorites;
 import ch.epfl.sweng.project.user.LoginActivity;
 import ch.epfl.sweng.project.user.RegisterActivity;
+import ch.epfl.sweng.project.util.ParseInitialiser;
 
 public class SplashActivity extends AppCompatActivity {
-    public static final String APP_ID = "360ESTATE";
     public static final String TAG = "SplashScreen";
     private static boolean parseNotInitialized = true;
 
@@ -28,22 +23,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        if (parseNotInitialized) {
-            //Initialize connection with the parse server
-            Parse.initialize(new Parse.Configuration.Builder(this)
-                    // The network interceptor is used to debug the communication between server/client
-                    //.addNetworkInterceptor(new ParseLogInterceptor())
-                    .applicationId(APP_ID)
-                    .server("https://360.astutus.org/parse/")
-                    .enableLocalDataStore()  // enable the Offline Mode
-                    .build()
-            );
-            //noinspection AssignmentToStaticFieldFromInstanceMethod
-            parseNotInitialized = false;
-        }
-        ParseObject.registerSubclass(Item.class);
-        ParseObject.registerSubclass(Resources.class);
-        ParseObject.registerSubclass(Favorites.class);
+        ParseInitialiser.INSTANCE.initParse(this);
 
         // Check if the user is already logged in in the localDatastore, and jump to the ListActivity accordingly
         if (userAlreadyLoggedIn()) {
