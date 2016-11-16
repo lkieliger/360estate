@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.project.itemDisplayer.ListActivity;
+import ch.epfl.sweng.project.user.LoginActivity;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -37,7 +38,7 @@ public class FilterActivityTest {
     private static final String TAG = "FilterActivityTest: ";
 
     @Rule
-    public ActivityTestRule<ListActivity> mActivityTestRule = new ActivityTestRule<>(ListActivity.class);
+    public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
     @After
     public void finishActivity() {
@@ -138,6 +139,14 @@ public class FilterActivityTest {
     public void filterTest() {
         wait1s(TAG);
 
+        onView(withId(R.id.login_email)).perform(typeText("test@astutus.org"), closeSoftKeyboard());
+        onView(withId(R.id.login_password)).perform(typeText("12345"), closeSoftKeyboard());
+        onView(withId(R.id.login_button)).perform(click());
+
+        wait1s(TAG);
+        wait1s(TAG);
+
+
         onView(withId(R.id.filterButtonPopUp)).perform(click());
         onView(withId(R.id.MaxRooms)).perform(typeText("3"), closeSoftKeyboard());
         onView(withId(R.id.MinRooms)).perform(typeText("3"), closeSoftKeyboard());
@@ -182,6 +191,8 @@ public class FilterActivityTest {
         onView(withId(R.id.filterButtonPopUp)).perform(click());
         wait250ms(TAG);
         onView(withId(R.id.eraseButton)).perform(click());
+        onView(withId(R.id.filterButton)).perform(click());
+        onView(withId(R.id.logOutButton)).perform(click());
     }
 
     private String getString(int id) {
