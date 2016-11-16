@@ -49,15 +49,12 @@ public class LoginActivityTests {
         loginButton.performClick();
 
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(activity.getString(R.string.error_invalid_password)));
-
-        passwordText.append("def");
-        loginButton.performClick();
     }
 
 
     @Test
     public void registerActivityIsLaunched() {
-        LoginActivity activity = Robolectric.buildActivity(LoginActivity.class).create().get();
+        SplashActivity activity = Robolectric.buildActivity(SplashActivity.class).create().get();
         Button registrationButton = (Button) activity.findViewById(R.id.goto_registration_button);
         registrationButton.performClick();
 
