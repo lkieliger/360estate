@@ -273,7 +273,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     /**
      * Updates the device yaw needed to compute the camera rotation for a user swipe
      *
-     * @param y
+     * @param y yaw
      */
     public void setDeviceYaw(double y) {
         mYaw = y;

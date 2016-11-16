@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Maison 360°</string>
+    <string name="app_name">360Estate</string>
     <string name="rooms">pièces</string>
     <string name="Filter">Filtre</string>
     <string name="action_goto_registration">S\'enregistrer</string>

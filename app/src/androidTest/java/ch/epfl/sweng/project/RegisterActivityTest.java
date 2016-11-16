@@ -36,7 +36,7 @@ public class RegisterActivityTest {
     private static final String TAG = "RegisterActivityTest: ";
 
     @Rule
-    public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
+    public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
 
     @After
     public void finishActivity() {
@@ -46,19 +46,10 @@ public class RegisterActivityTest {
 
     }
 
-    private void initTest(){
-        wait1s(TAG);
-
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.goto_registration_button), withText(mActivityTestRule.getActivity().
-                        getString(R.string.action_goto_registration))));
-        appCompatButton.perform(scrollTo(), click());
-    }
-
     @Test
     public void userAlreadyPresent() {
-        initTest();
 
+        onView(withId(R.id.goto_registration_button)).perform(click());
         ViewInteraction appCompatTextView = onView(
                 withId(R.id.registration_email));
         appCompatTextView.perform(scrollTo(), replaceText("test@astutus.org"), closeSoftKeyboard());
