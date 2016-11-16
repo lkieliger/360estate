@@ -46,7 +46,7 @@ public class CompleteBehaviorTest {
     private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static SecureRandom rnd = new SecureRandom();
     @Rule
-    public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
+    public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
 
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
@@ -102,8 +102,8 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.register_button)).perform(click());
 
         wait1s(TAG);
-        wait1s(TAG);
 
+        onView(withId(R.id.goto_login_button)).perform(click());
         onView(withId(R.id.login_email)).perform(typeText(testUserMail), closeSoftKeyboard());
         onView(withId(R.id.login_password)).perform(typeText(testUserPassword), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());

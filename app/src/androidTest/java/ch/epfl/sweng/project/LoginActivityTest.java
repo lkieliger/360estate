@@ -35,7 +35,7 @@ public class LoginActivityTest {
     private static final String TEST_USER_PASSWORD = "12345";
 
     @Rule
-    public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
+    public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
 
     @After
     public void finishActivity() {
@@ -46,6 +46,7 @@ public class LoginActivityTest {
     @Test
     public void testUserLogin() {
 
+        onView(withId(R.id.goto_login_button)).perform(click());
         onView(withId(R.id.login_email)).perform(typeText("HolaSenior@Shanchez.co"), closeSoftKeyboard());
         onView(withId(R.id.login_password)).perform(typeText("PortesTriEstate"), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
