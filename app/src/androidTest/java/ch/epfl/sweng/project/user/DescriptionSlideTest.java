@@ -16,6 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sweng.project.SplashActivity;
 import ch.epfl.sweng.project.itemDisplayer.DescriptionActivity;
 import ch.epfl.sweng.project.R;
 
@@ -40,7 +41,7 @@ public class DescriptionSlideTest {
 
 
     @Rule
-    public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
+    public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
 
     @After
     public void finishActivity() {
@@ -70,6 +71,7 @@ public class DescriptionSlideTest {
     @Test
     public void descriptionDisplayTest() {
 
+        onView(withId(R.id.goto_login_button)).perform(click());
         onView(withId(R.id.login_email)).perform(typeText("test@astutus.org"), closeSoftKeyboard());
         onView(withId(R.id.login_password)).perform(typeText("12345"), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());

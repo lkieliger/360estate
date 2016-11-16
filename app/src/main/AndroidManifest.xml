@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListActivity" />
+        <activity android:name=".itemDisplayer.ListActivity" />
         <activity android:name=".engine3d.PanoramaActivity" />
         <activity
             android:name=".user.LoginActivity"

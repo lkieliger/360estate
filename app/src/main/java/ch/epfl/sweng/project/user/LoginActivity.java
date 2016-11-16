@@ -13,8 +13,8 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.ListActivity;
 import ch.epfl.sweng.project.R;
+import ch.epfl.sweng.project.itemDisplayer.ListActivity;
 
 import static ch.epfl.sweng.project.user.InputValidityChecker.emailIsValid;
 import static ch.epfl.sweng.project.user.InputValidityChecker.passwordIsValid;

@@ -12,6 +12,8 @@ import com.parse.ParseUser;
 
 import ch.epfl.sweng.project.data.Item;
 import ch.epfl.sweng.project.data.Resources;
+import ch.epfl.sweng.project.itemDisplayer.ListActivity;
+import ch.epfl.sweng.project.user.Favorites;
 import ch.epfl.sweng.project.user.LoginActivity;
 import ch.epfl.sweng.project.user.RegisterActivity;
 
@@ -41,6 +43,7 @@ public class SplashActivity extends AppCompatActivity {
         }
         ParseObject.registerSubclass(Item.class);
         ParseObject.registerSubclass(Resources.class);
+        ParseObject.registerSubclass(Favorites.class);
 
         // Check if the user is already logged in in the localDatastore, and jump to the ListActivity accordingly
         if (userAlreadyLoggedIn()) {

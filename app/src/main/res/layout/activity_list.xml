@@ -32,12 +32,14 @@
         <ToggleButton
             android:id="@+id/FavoriteButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:background="@drawable/button_shape"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/style_toggle_button"
+            android:gravity="center"
             android:textOff="@string/favorites"
             android:textOn="@string/All"
-            android:textColor="#55CACF" />
+            android:textAllCaps="false"
+           />
 
         <Button
             android:id="@+id/filterButtonPopUp"
