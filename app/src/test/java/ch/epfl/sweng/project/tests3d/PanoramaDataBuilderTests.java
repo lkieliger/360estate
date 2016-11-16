@@ -48,6 +48,20 @@ public class PanoramaDataBuilderTests {
         assertFalse(NextPanoramaDataBuilder.isReady());
     }
 
+    @Test
+    public void isResetIsCorrect() {
+        assertTrue(NextPanoramaDataBuilder.isReset());
+
+        NextPanoramaDataBuilder.setNextPanoId(1);
+        assertFalse(NextPanoramaDataBuilder.isReset());
+
+        NextPanoramaDataBuilder.setNextPanoBitmap(b);
+        assertFalse(NextPanoramaDataBuilder.isReset());
+
+        NextPanoramaDataBuilder.build();
+        assertTrue(NextPanoramaDataBuilder.isReset());
+    }
+
     @Test(expected = IllegalStateException.class)
     public void buildAfterResetThrowsException() {
         NextPanoramaDataBuilder.build();

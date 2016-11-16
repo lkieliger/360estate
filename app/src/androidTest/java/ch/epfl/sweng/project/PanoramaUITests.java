@@ -5,9 +5,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.parse.Parse;
-import com.parse.ParseObject;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,15 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.project.data.AngleMapping;
-import ch.epfl.sweng.project.data.Item;
-import ch.epfl.sweng.project.data.Resources;
 import ch.epfl.sweng.project.data.TransitionObject;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
 import ch.epfl.sweng.project.engine3d.components.PanoramaTransitionObject;
-import ch.epfl.sweng.project.user.Favorites;
+import ch.epfl.sweng.project.util.ParseInitialiser;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -40,19 +35,8 @@ public class PanoramaUITests {
 
     @Before
     public void initParse() {
-        //Initialize connection with the parse server
-        Parse.initialize(new Parse.Configuration.Builder(InstrumentationRegistry.getInstrumentation()
-                .getTargetContext())
-                // The network interceptor is used to debug the communication between server/client
-                //.addNetworkInterceptor(new ParseLogInterceptor())
-                .applicationId("360ESTATE")
-                .server("https://360.astutus.org/parse/")
-                .enableLocalDataStore()  // enable the Offline Mode
-                .build()
-        );
-        ParseObject.registerSubclass(Item.class);
-        ParseObject.registerSubclass(Resources.class);
-        ParseObject.registerSubclass(Favorites.class);
+        ParseInitialiser.INSTANCE.initParse(InstrumentationRegistry.getInstrumentation()
+                .getTargetContext());
     }
 
     /**
