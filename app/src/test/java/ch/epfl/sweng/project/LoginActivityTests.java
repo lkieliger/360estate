@@ -1,8 +1,11 @@
 package ch.epfl.sweng.project;
 
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.parse.ParseUser;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,15 +52,12 @@ public class LoginActivityTests {
         loginButton.performClick();
 
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(activity.getString(R.string.error_invalid_password)));
-
-        passwordText.append("def");
-        loginButton.performClick();
     }
 
 
     @Test
     public void registerActivityIsLaunched() {
-        LoginActivity activity = Robolectric.buildActivity(LoginActivity.class).create().get();
+        SplashActivity activity = Robolectric.buildActivity(SplashActivity.class).create().get();
         Button registrationButton = (Button) activity.findViewById(R.id.goto_registration_button);
         registrationButton.performClick();
 
