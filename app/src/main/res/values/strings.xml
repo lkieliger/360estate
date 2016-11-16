@@ -96,5 +96,8 @@
     <string name="error_reset_unsuccessful">An error has occured during the password reset procedure. Please make sure you have a working internet connection</string>
     <string name="title_activity_reset">Reset</string>
     <string name="error_reset_no_email_matching">There does not exist an account with this email on the server.</string>
+    <string name="favorites">Favorites</string>
+    <string name="addToFavorites">Add to Favorites</string>
+    <string name="All">All</string>
 
 </resources>

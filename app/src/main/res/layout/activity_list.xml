@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="ch.epfl.sweng.project.ListActivity"
+    tools:context="ch.epfl.sweng.project.itemDisplayer.ListActivity"
     tools:ignore="UnusedIds">
 
     <LinearLayout
@@ -28,6 +28,16 @@
             android:text="@string/LogOut"
             android:textAllCaps="false"
             android:gravity="center"
+            android:textColor="#55CACF" />
+
+        <ToggleButton
+            android:id="@+id/FavoriteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:background="@drawable/button_shape"
+            android:textOff="@string/favorites"
+            android:textOn="@string/All"
             android:textColor="#55CACF" />
 
         <Button

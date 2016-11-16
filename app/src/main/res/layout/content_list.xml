@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ch.epfl.sweng.project.ListActivity"
+    tools:context="ch.epfl.sweng.project.itemDisplayer.ListActivity"
     tools:showIn="@layout/activity_list"
     tools:ignore="UnusedResources">
 
