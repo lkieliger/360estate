@@ -68,7 +68,7 @@ public final class DataMgmt {
 
         if(url != null && !url.isEmpty()) {
             try {
-                mBitmap = builder.build().with(mContext).load(url).resize(WIDTH, HEIGHT).get();
+                mBitmap = builder.build().with(context).load(url).resize(WIDTH, HEIGHT).get();
             } catch (IOException e) {
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, e.getMessage());
