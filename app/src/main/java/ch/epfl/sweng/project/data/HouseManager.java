@@ -26,7 +26,10 @@ public class HouseManager {
     }
 
     public List<AngleMapping> getNeighborsFromId(int id) {
-        return new ArrayList<>(sparseArray.get(id));
+        if(sparseArray != null && sparseArray.size() != 0) {
+            return new ArrayList<>(sparseArray.get(id));
+        }
+        return new ArrayList<>();
     }
 
     public int getStartingId() {

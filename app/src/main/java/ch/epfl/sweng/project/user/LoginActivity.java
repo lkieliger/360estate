@@ -19,7 +19,7 @@ import com.parse.ParseUser;
 
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.ListActivity;
+import ch.epfl.sweng.project.itemDisplayer.ListActivity;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.Item;
 import ch.epfl.sweng.project.data.Resources;

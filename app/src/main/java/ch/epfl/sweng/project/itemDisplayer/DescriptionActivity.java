@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project;
+package ch.epfl.sweng.project.itemDisplayer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,14 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.parse.ParseUser;
-
 import java.util.ArrayList;
 
+import ch.epfl.sweng.project.DataMgmt;
+import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.ScreenSlide.SlideActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
-import ch.epfl.sweng.project.user.Favorites;
-import ch.epfl.sweng.project.user.OnCheckedFavorite;
 
 import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;
 
@@ -26,17 +24,20 @@ import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;
 public class DescriptionActivity extends AppCompatActivity {
 
     public static final int cellSize = 300;
+    private boolean isInitiallyInFavorite;
+    private CheckBox checkBoxFavorite;
+    private String idItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_description);
 
-        Bundle b = getIntent().getExtras();
-        final String idItem = b.getString("idItem");
-
+        idItem = getIntent().getStringExtra("idItem");
         final ArrayList<String> imagesURL = new ArrayList<>();
         StringBuilder descriptionBuilder = new StringBuilder();
+
         DataMgmt.getDataForDescription(idItem, imagesURL, descriptionBuilder);
         String description = descriptionBuilder.toString();
 
@@ -73,26 +74,41 @@ public class DescriptionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
-                Intent intentFromList = getIntent();
-                String id = intentFromList.getStringExtra("idItem");
-                intentToPanorama.putExtra("id", id);
+                intentToPanorama.putExtra("id", idItem);
                 startActivity(intentToPanorama);
             }
         });
 
-        CheckBox checkBoxFavorite = (CheckBox) findViewById(R.id.addToFavorites);
-        final String idUser = ParseUser.getCurrentUser().getObjectId();
+        checkBoxFavorite = (CheckBox) findViewById(R.id.addToFavorites);
 
-        final Favorites f = DataMgmt.getFavoriteFromId(idUser);
+        isInitiallyInFavorite = ListActivity.favoriteContainsUrl(idItem);
 
-        if (f.containsUrl(idItem)) {
+        if (isInitiallyInFavorite) {
             checkBoxFavorite.setChecked(true);
-        }else{
+        } else {
             checkBoxFavorite.setChecked(false);
         }
 
-       checkBoxFavorite.setOnClickListener(new OnCheckedFavorite(f,idItem,idUser,checkBoxFavorite));
+        TimeSchedulerSynchronise timeSchedulerSynchronise = new TimeSchedulerSynchronise();
+        timeSchedulerSynchronise.schedule();
 
+        checkBoxFavorite.setOnClickListener(new OnCheckedFavorite(idItem, checkBoxFavorite));
+    }
+
+    @Override
+    public void onBackPressed() {
+        ListActivity.synchronizeServer();
+        if (getIntent().getBooleanExtra("isToggled", false)) {
+            if (isInitiallyInFavorite != checkBoxFavorite.isChecked()) {
+                if (isInitiallyInFavorite) {
+                    ListActivity.removeItem(idItem);
+                } else {
+                    ListActivity.addItem(idItem);
+                }
+            }
+        }
+        ListActivity.notifyItemAdapter();
+        super.onBackPressed();
     }
 }
 

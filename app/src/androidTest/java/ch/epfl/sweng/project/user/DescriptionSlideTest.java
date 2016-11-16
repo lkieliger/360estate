@@ -15,7 +15,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.sweng.project.DescriptionActivity;
+import ch.epfl.sweng.project.itemDisplayer.DescriptionActivity;
 import ch.epfl.sweng.project.R;
 
 import static android.support.test.espresso.Espresso.onView;

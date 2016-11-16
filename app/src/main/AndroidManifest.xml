@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:supportsRtl="false"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".ListActivity" />
+        <activity android:name=".itemDisplayer.ListActivity" />
         <activity android:name=".engine3d.PanoramaActivity" />
         <activity
             android:name=".user.LoginActivity"
@@ -32,7 +32,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ch.epfl.sweng.project.user.LoginActivity" />
         </activity>
-        <activity android:name=".DescriptionActivity"/>
+        <activity android:name=".itemDisplayer.DescriptionActivity"/>
         <activity android:name=".ScreenSlide.SlideActivity"/><!-- ATTENTION: This was auto-generated to add
          Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->

@@ -64,11 +64,13 @@ public final class DataMgmt {
             }
         });
 
-        try {
-            mBitmap = builder.build().with(mContext).load(url).resize(WIDTH, HEIGHT).get();
-        } catch (IOException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, e.getMessage());
+        if(url != null && !url.isEmpty()) {
+            try {
+                mBitmap = builder.build().with(mContext).load(url).resize(WIDTH, HEIGHT).get();
+            } catch (IOException e) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, e.getMessage());
+                }
             }
         }
         return mBitmap;
@@ -81,7 +83,7 @@ public final class DataMgmt {
 
         if (isFavoriteToggle) {
             Set<String> listId = DataMgmt.getFavoriteFromId(idUser).getFavoritesFromLocal();
-            if(!listId.isEmpty()) {
+            if (!listId.isEmpty()) {
                 for (String s : listId) {
                     ParseQuery<Item> queryTemp = ParseQuery.getQuery(Item.class);
                     if (stateOfPopUpLayout != null) {
@@ -90,18 +92,18 @@ public final class DataMgmt {
                     queryTemp.whereEqualTo("idHouse", s);
                     queries.add(queryTemp);
                 }
-            }else{
-                fetchItems(null,itemList,itemAdapter);
+            } else {
+                fetchItems(null, itemList, itemAdapter);
                 return;
             }
-        }else {
-            if(stateOfPopUpLayout != null) {
+        } else {
+            if (stateOfPopUpLayout != null) {
                 queries.add(stateOfPopUpLayout.filterQuery());
             }
         }
 
         if (queries.isEmpty()) {
-            fetchItems(new ParseQuery<>(Item.class),itemList,itemAdapter);
+            fetchItems(new ParseQuery<>(Item.class), itemList, itemAdapter);
         } else {
             fetchItems(ParseQuery.or(queries), itemList, itemAdapter);
         }
@@ -187,7 +189,8 @@ public final class DataMgmt {
             throw new IllegalArgumentException("DataMgmt Error: No resource has this id.");
 
         }
-        if (listResource.size() > 1) Log.d("DataMgmt", "Warning: The same id has different Resources.");
+        if (listResource.size() > 1)
+            Log.d("DataMgmt", "Warning: The same id has different Resources.");
 
         return listResource.get(0);
     }
@@ -203,11 +206,7 @@ public final class DataMgmt {
     public static void overrideFavorites(String idUser, Collection<String> list) {
         Favorites f = getFavoriteFromId(idUser);
         f.setFavorites((Set<String>) list);
-    }
 
-
-    public static Set<String> getListItemsFromId(String idUser) {
-        return getFavoriteFromId(idUser).getFavoritesFromLocal();
     }
 
     public static Favorites getFavoriteFromId(String idUser) {
@@ -224,14 +223,15 @@ public final class DataMgmt {
             }
         }
 
-        if (listFavorites.size() > 1) Log.d("DataMgmt", "Warning: The same id has different Favorites.");
+        if (listFavorites.size() > 1)
+            Log.d("DataMgmt", "Warning: The same id has different Favorites.");
 
         Favorites f;
         if (listFavorites.isEmpty()) {
             f = saveNewFavorites(idUser);
+            f.synchronizeFromServer();
         } else {
             f = listFavorites.get(0);
-            f.synchronizeFromServer();
         }
 
         return f;
@@ -249,6 +249,25 @@ public final class DataMgmt {
         return f;
     }
 
+    public static Item getItemFromId(String id) {
+        ParseQuery<Item> query = new ParseQuery<>(Item.class);
+        query.whereEqualTo("idHouse",id);
+
+        List<Item> listItems = new ArrayList<>();
+        try {
+            listItems = query.find();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (listItems.isEmpty()) {
+            throw new IllegalArgumentException("DataMgmt Error: No Item has this id.");
+
+        }
+        if (listItems.size() > 1)
+            Log.d("DataMgmt", "Warning: The same id has different Item.");
+
+        return listItems.get(0);
+    }
 }
 
 

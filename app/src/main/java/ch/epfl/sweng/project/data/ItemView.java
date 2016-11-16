@@ -9,14 +9,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.parse.ParseUser;
-
-import java.util.Set;
-
 import ch.epfl.sweng.project.DataMgmt;
+import ch.epfl.sweng.project.itemDisplayer.ListActivity;
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.user.Favorites;
-import ch.epfl.sweng.project.user.OnCheckedFavorite;
+import ch.epfl.sweng.project.itemDisplayer.OnCheckedFavorite;
 
 
 public class ItemView extends RelativeLayout {
@@ -68,17 +64,14 @@ public class ItemView extends RelativeLayout {
             DataMgmt.getImgFromUrlIntoView(getContext(),url,img);
         }
 
-        String idUser = ParseUser.getCurrentUser().getObjectId();
-        Favorites f = DataMgmt.getFavoriteFromId(idUser);
 
-
-        if(f.containsUrl(item.getId())){
+        if(ListActivity.favoriteContainsUrl(item.getId())){
             checkBox.setChecked(true);
         }else{
             checkBox.setChecked(false);
         }
 
 
-        checkBox.setOnClickListener(new OnCheckedFavorite(f,item.getId(),idUser,checkBox));
+        checkBox.setOnClickListener(new OnCheckedFavorite(item.getId(),checkBox));
     }
 }
