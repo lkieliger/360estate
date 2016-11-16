@@ -62,18 +62,13 @@
 
             <Button
                 android:id="@+id/login_button"
-                style="?android:textAppearanceSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/button_shape"
                 android:onClick="attemptLogin"
                 android:text="@string/action_login"
-                android:textAllCaps="false"
-                android:textColor="#55CACF"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:textAppearance="@style/EstateButtonTextAppearance"
                 tools:ignore="UnusedIds" />
 
             <Space
@@ -83,7 +78,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="right"
                 android:layout_weight="1.34"
+                android:gravity="right"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
@@ -93,9 +90,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:layout_marginRight="10dp"
-                    android:layout_weight="0.50"
-                    android:text="@string/register_suggestion"
+                    android:layout_weight="0"
+                    android:gravity="left"
 
+                    android:text="@string/register_suggestion"
                     android:textAlignment="center"
                     tools:ignore="UnusedIds" />
 
@@ -105,17 +103,9 @@
                     android:layout_height="30dp"
                     android:layout_marginBottom="1dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="0.27"
                     android:background="@drawable/button_shape"
-                    android:fontFamily="sans-serif"
                     android:onClick="proceedToRegistration"
                     android:text="@string/action_goto_registration"
-                    android:textAlignment="center"
-                    android:textAllCaps="false"
-                    android:textColor="#55CACF"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
                     tools:ignore="UnusedIds" />
 
             </LinearLayout>
@@ -127,6 +117,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:gravity="right"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
@@ -135,11 +127,10 @@
                     android:layout_width="145dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="0.50"
 
+                    android:layout_marginRight="10dp"
+                    android:elevation="1dp"
                     android:text="@string/reset_suggestion"
-                    android:textAlignment="center"
                     tools:ignore="UnusedIds" />
 
                 <Button
@@ -148,15 +139,12 @@
                     android:layout_height="30dp"
                     android:layout_marginBottom="1dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="0.31"
+                    android:layout_weight="0"
                     android:background="@drawable/button_shape"
                     android:fontFamily="sans-serif"
                     android:onClick="proceedToReset"
                     android:text="@string/action_goto_reset_password"
                     android:textAllCaps="false"
-                    android:textColor="#55CACF"
-                    android:textSize="20sp"
                     android:textStyle="bold"
                     tools:ignore="UnusedIds" />
 

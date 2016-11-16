@@ -25,10 +25,8 @@
             android:layout_height="30dp"
             android:layout_weight="1"
             android:background="@drawable/button_shape"
-            android:text="@string/LogOut"
-            android:textAllCaps="false"
             android:gravity="center"
-            android:textColor="#55CACF" />
+            android:text="@string/LogOut" />
 
         <Button
             android:id="@+id/filterButtonPopUp"
@@ -36,10 +34,9 @@
             android:layout_height="30dp"
             android:layout_weight="1"
             android:background="@drawable/button_shape"
-            android:text="@string/Filter"
-            android:textAllCaps="false"
             android:gravity="center"
-            android:textColor="#55CACF" />
+            android:text="@string/Filter"
+            android:textAllCaps="false" />
     </LinearLayout>
 
 
