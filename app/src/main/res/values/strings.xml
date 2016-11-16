@@ -97,4 +97,7 @@
     <string name="title_activity_reset">Reset</string>
     <string name="error_reset_no_email_matching">There does not exist an account with this email on the server.</string>
 
+    <!-- Strings related to image content description -->
+    <string name="description_logo">Application logo</string>
+
 </resources>

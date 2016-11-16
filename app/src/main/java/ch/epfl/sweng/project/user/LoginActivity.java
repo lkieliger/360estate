@@ -9,16 +9,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.ListActivity;
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.data.Item;
-import ch.epfl.sweng.project.data.Resources;
 
 import static ch.epfl.sweng.project.user.InputValidityChecker.emailIsValid;
 import static ch.epfl.sweng.project.user.InputValidityChecker.passwordIsValid;
@@ -29,9 +25,8 @@ import static ch.epfl.sweng.project.util.Toaster.shortToast;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String APP_ID = "360ESTATE";
     private static final String TAG = "LoginActivity";
-    private static boolean parseNotInitialized = true;
+
     private TextView mEmail = null;
     private TextView mPassword = null;
     private Context mAppContext = null;
@@ -41,36 +36,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
-        if (parseNotInitialized) {
-            //Initialize connection with the parse server
-
-
-            Parse.initialize(new Parse.Configuration.Builder(this)
-                    // The network interceptor is used to debug the communication between server/client
-                    //.addNetworkInterceptor(new ParseLogInterceptor())
-                    .applicationId(APP_ID)
-                    .server("https://360.astutus.org/parse/")
-                    .enableLocalDataStore()  // enable the Offline Mode
-                    .build()
-            );
-            //noinspection AssignmentToStaticFieldFromInstanceMethod
-            parseNotInitialized = false;
-        }
-        ParseObject.registerSubclass(Item.class);
-        ParseObject.registerSubclass(Resources.class);
-
         mEmail = (TextView) findViewById(R.id.login_email);
         mPassword = (TextView) findViewById(R.id.login_password);
         mAppContext = getApplicationContext();
-
-        // Check if the user is already logged in in the localDatastore, and jump to the ListActivity accordingly
-        if (userAlreadyLoggedIn()) {
-            Intent intent = new Intent(LoginActivity.this, ListActivity.class);
-            startActivity(intent);
-
-            finish();
-        }
     }
 
     /**
@@ -106,16 +74,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * This method is called when the user wants to register a new account
-     * instead of directly logging in the app
-     *
-     * @param view The view from which the event was generated
-     */
-    public void proceedToRegistration(View view) {
-        Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
-    }
 
     /**
      * This method is called when the user wants to reset his password
@@ -126,7 +84,6 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ResetActivity.class);
         startActivity(intent);
     }
-
 
 
     /**
@@ -161,28 +118,6 @@ public class LoginActivity extends AppCompatActivity {
                     getResources().getText(R.string.error_empty_field));
         }
         return filled;
-    }
-
-    /**
-     * @return true if user's information is already cached.
-     */
-    private boolean userAlreadyLoggedIn() {
-        ParseUser currentUser = ParseUser.getCurrentUser();
-
-        if (currentUser != null) {
-            if (currentUser.isAuthenticated()) {
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "The user is already logged in");
-
-                return true;
-            } else {
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "The user is not authenticated");
-
-            }
-        }
-
-        return false;
     }
 
 }
