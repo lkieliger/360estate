@@ -20,7 +20,6 @@ import ch.epfl.sweng.project.DataMgmt;
 public class Favorites extends ParseObject {
 
     private static final String TAG = "Favorites";
-    private Boolean hasLocalDataChanged = false;
     private Set<String> favorites = new HashSet<>();
 
     public Favorites() {
@@ -36,9 +35,6 @@ public class Favorites extends ParseObject {
         put("idUser", idUser);
     }
 
-    public Boolean getHasLocalDataChanged() {
-        return hasLocalDataChanged;
-    }
 
     public void setFavorites(Set<String> favorites) {
         JSONArray jsonFavorites = new JSONArray(favorites);
@@ -64,12 +60,10 @@ public class Favorites extends ParseObject {
 
     public void addUrlToLocal(String newUrl){
         favorites.add(newUrl);
-        hasLocalDataChanged = true;
     }
 
     public void deleteUrlToLocal(String url){
         favorites.remove(url);
-        hasLocalDataChanged = true;
     }
 
     public Set<String> getFavoritesFromServer() {
@@ -97,11 +91,9 @@ public class Favorites extends ParseObject {
 
     public void synchronizeFromServer() {
         favorites = getFavoritesFromServer();
-        hasLocalDataChanged = true;
     }
 
     public void synchronizeServer() {
         DataMgmt.overrideFavorites(getIdUser(),favorites);
-        hasLocalDataChanged = false;
     }
 }
