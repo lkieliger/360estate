@@ -35,32 +35,70 @@ import ch.epfl.sweng.project.user.Favorites;
 public class ListActivity extends AppCompatActivity {
 
 
-
+    private static ItemAdapter itemAdapter = null;
+    private static List<Item> itemList = new ArrayList<>();
+    private static Favorites f = null;
     private final String[] cities = new String[]{
             "Geneve", "Renens", "Lausanne"
     };
-
+    private final String idUser = ParseUser.getCurrentUser().getObjectId();
     private Boolean isFavoriteToggle = false;
     private StateOfPopUpLayout stateOfPopUpLayout = null;
-    private final String idUser = ParseUser.getCurrentUser().getObjectId();
 
-    private static ItemAdapter itemAdapter;
-    private static List<Item> itemList = new ArrayList<>();
-    private static Favorites f;
+    private static void setFavorites(Favorites extFavorites) {
+        ListActivity.f = extFavorites;
+    }
 
+    private static void setItemAdapter(ItemAdapter extItemAdapter) {
+        ListActivity.itemAdapter = extItemAdapter;
+    }
+
+    public static void addIdItemToFavorite(String idItem) {
+        f.addUrlToLocal(idItem);
+    }
+
+    public static void removeIdItemToFavorite(String idItem) {
+        f.deleteUrlToLocal(idItem);
+    }
+
+    public static Boolean favoriteContainsUrl(String idItem) {
+        return f.containsUrl(idItem);
+    }
+
+    static void synchronizeServer() {
+        f.synchronizeServer();
+    }
+
+    static void notifyItemAdapter() {
+        itemAdapter.notifyDataSetChanged();
+    }
+
+    static void addItem(String id) {
+        Item i = DataMgmt.getItemFromId(id);
+        itemList.add(i);
+    }
+
+    static void removeItem(String id) {
+
+        int i = 0;
+        while (i < itemList.size() && !Objects.equals(itemList.get(i).getId(), id)) {
+            ++i;
+        }
+        if (i < itemList.size()) {
+            itemList.remove(i);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        f = DataMgmt.getFavoriteFromId(idUser);
+        setFavorites(DataMgmt.getFavoriteFromId(idUser));
         f.synchronizeFromServer();
-        itemAdapter = new ItemAdapter(this, itemList);
+        setItemAdapter(new ItemAdapter(this, itemList));
         final ListView listView = (ListView) findViewById(R.id.houseList);
 
-        TimeSchedulerSynchronise timeSchedulerSynchronise = new TimeSchedulerSynchronise();
-        timeSchedulerSynchronise.schedule();
 
         Button popupButton = (Button) findViewById(R.id.filterButtonPopUp);
         popupButton.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +113,7 @@ public class ListActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
+                //    ListActivity.synchronizeServer();
                 logOutUser();
             }
         });
@@ -95,7 +134,6 @@ public class ListActivity extends AppCompatActivity {
                 intent.putExtra("isToggled", isFavoriteToggle);
                 intent.putExtra("idUser", idUser);
                 intent.putExtra("idItem", itemValue.getId());
-                f.synchronizeServer();
                 startActivity(intent);
             }
         });
@@ -112,47 +150,6 @@ public class ListActivity extends AppCompatActivity {
         });
 
     }
-
-    public static void addIdItemToFavorite(String idItem){
-        f.addUrlToLocal(idItem);
-    }
-
-    public static void removeIdItemToFavorite(String idItem){
-        f.deleteUrlToLocal(idItem);
-    }
-
-    public static Boolean favoriteContainsUrl(String idItem){
-        return f.containsUrl(idItem);
-    }
-
-    static void synchronizeServer(){
-        f.synchronizeServer();
-    }
-
-    static Boolean hasLocalDataChange(){
-        return f.getHasLocalDataChanged();
-    }
-
-    static void notifyItemAdapter() {
-        itemAdapter.notifyDataSetChanged();
-    }
-
-    static void addItem(String id) {
-        Item i = DataMgmt.getItemFromId(id);
-        itemList.add(i);
-    }
-
-    static void removeItem(String id) {
-
-        int i = 0;
-        while (i<itemList.size() && !Objects.equals(itemList.get(i).getId(), id) ) {
-            ++i;
-        }
-        if(i < itemList.size()){
-            itemList.remove(i);
-        }
-    }
-
 
     /**
      * @return A inflated layout of the popup.
@@ -248,7 +245,6 @@ public class ListActivity extends AppCompatActivity {
         });
     }
 
-
     public void logOutUser() {
         ParseUser currentUser = ParseUser.getCurrentUser();
 
@@ -258,5 +254,9 @@ public class ListActivity extends AppCompatActivity {
         finish();
     }
 
-
+    @Override
+    protected void onStop() {
+        ListActivity.synchronizeServer();
+        super.onStop();
+    }
 }

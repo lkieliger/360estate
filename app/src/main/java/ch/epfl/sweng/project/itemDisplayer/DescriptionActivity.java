@@ -89,8 +89,6 @@ public class DescriptionActivity extends AppCompatActivity {
             checkBoxFavorite.setChecked(false);
         }
 
-        TimeSchedulerSynchronise timeSchedulerSynchronise = new TimeSchedulerSynchronise();
-        timeSchedulerSynchronise.schedule();
 
         checkBoxFavorite.setOnClickListener(new OnCheckedFavorite(idItem, checkBoxFavorite));
     }
@@ -109,6 +107,12 @@ public class DescriptionActivity extends AppCompatActivity {
         }
         ListActivity.notifyItemAdapter();
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onStop() {
+        ListActivity.synchronizeServer();
+        super.onStop();
     }
 }
 
