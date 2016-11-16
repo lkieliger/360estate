@@ -114,7 +114,13 @@ public class CompleteBehaviorTest {
         wait1s(TAG);
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(2).perform(click());
         onView(withId(R.id.addToFavorites)).perform(click());
+        pressBack();
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(2).perform(click());
+        wait500ms(TAG);
+        onView(withId(R.id.addToFavorites)).perform(click());
+        pressBack();
 
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(2).perform(click());
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
 
         // wait 3s for the images to load
