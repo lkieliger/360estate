@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.util.ObjectColorPicker;
 
 import java.util.ArrayList;
@@ -25,13 +27,19 @@ import ch.epfl.sweng.project.util.ParseInitialiser;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class PanoramaUITests {
 
+    private static final Integer TEST_ID = 4;
+    private static final String TEST_URL = "https://360.astutus.org/estate/1/photoMaisonBacu4.jpg";
+    private static final String TAG = "UnitTest";
     @Rule
     public ActivityTestRule<PanoramaActivity> mActivityRule;
+    private PanoramaRenderer mRenderer;
 
     @Before
     public void initParse() {
@@ -51,15 +59,16 @@ public class PanoramaUITests {
                 .getTargetContext(), PanoramaActivity.class);
         intent.putExtra("id", "1");
         mActivityRule.launchActivity(intent);
-        PanoramaRenderer renderer = mActivityRule.getActivity().getAssociatedRenderer();
+        mRenderer = mActivityRule.getActivity().getAssociatedRenderer();
 
-        /**
-         * TEST PANORAMA SPHERE
-         */
+        testPanoramaSphere();
+        testPanoramaTransitionObjects();
+        testRenderingLogics();
+    }
 
-        //ADDING CHILDREN
-        ObjectColorPicker cp = new ObjectColorPicker(renderer);
-        PanoramaSphere panoSphere = renderer.getPanoramaSphere();
+    private void testPanoramaSphere() {
+        ObjectColorPicker cp = new ObjectColorPicker(mRenderer);
+        PanoramaSphere panoSphere = mRenderer.getPanoramaSphere();
         List<AngleMapping> l = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
@@ -73,14 +82,10 @@ public class PanoramaUITests {
         //REMOVING CHILDREN
         panoSphere.detachPanoramaComponents(cp);
         assertEquals(0, panoSphere.getNumChildren());
+    }
 
-
-        /**
-         * PANORAMA TRANSITION OBJECT
-         */
-        Integer testId = 4;
-        String testUrl = "https://360.astutus.org/estate/1/photoMaisonBacu4.jpg";
-        PanoramaObject panoTransition = new PanoramaTransitionObject(0, 0, testId, testUrl);
+    private void testPanoramaTransitionObjects() {
+        PanoramaObject panoTransition = new PanoramaTransitionObject(0, 0, TEST_ID, TEST_URL);
 
         //TEST FOR EXCEPTION THROWN BECAUSE LACKS PARENT (LIKE BATMAN)
         boolean threwException = false;
@@ -93,8 +98,34 @@ public class PanoramaUITests {
         }
 
         PanoramaRenderer.NextPanoramaDataBuilder.resetData();
-        panoTransition.reactWith(renderer);
+        panoTransition.reactWith(mRenderer);
         assertFalse(PanoramaRenderer.NextPanoramaDataBuilder.isReset());
+        mRenderer.cancelPanoramaUpdate();
+        assertTrue(PanoramaRenderer.NextPanoramaDataBuilder.isReset());
+    }
 
+    private void testRenderingLogics() {
+
+        PanoramaRenderer.RenderingLogic renderingLogic = mRenderer.getCurrentRenderingLogic();
+        assertSame(renderingLogic, mRenderer.getCurrentRenderingLogic());
+        PanoramaObject dummyTransition = new PanoramaTransitionObject(Math.PI / 2.0, 0, TEST_ID, TEST_URL);
+        dummyTransition.setPosition(new Vector3(100, 0, 0));
+        mRenderer.onObjectPicked(dummyTransition);
+        assertNotSame(renderingLogic, mRenderer.getCurrentRenderingLogic());
+
+        Vector3 pos = mRenderer.getCurrentCamera().getPosition();
+
+        Log.i(TAG, mRenderer.getCurrentCamera().getPosition().toString());
+
+        //Compute 60 frames
+        for (int i = 0; i < 60; i++) {
+            try {
+                Thread.sleep(16);
+                mRenderer.onRender(0, 16);
+                Log.i("Test", mRenderer.getCurrentCamera().getPosition().toString());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

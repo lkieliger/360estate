@@ -59,6 +59,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private Vector3 mTargetPos;
     private double mYaw;
 
+    private FetchPhotoTask mTaskManager;
     private HouseManager mHouseManager;
     private RenderingLogic mRenderLogic;
     private ObjectColorPicker mPicker;
@@ -205,7 +206,13 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void updatePanorama(String url, int id) {
         Log.d(TAG, "Call to update panorama, creating new task.");
         NextPanoramaDataBuilder.setNextPanoId(id);
-        new FetchPhotoTask().execute(url);
+        mTaskManager = new FetchPhotoTask();
+        mTaskManager.execute(url);
+    }
+
+    public void cancelPanoramaUpdate() {
+        mTaskManager.cancel(false);
+        NextPanoramaDataBuilder.resetData();
     }
 
     @Override
@@ -290,6 +297,10 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         return mPanoSphere;
     }
 
+    public RenderingLogic getCurrentRenderingLogic() {
+        return mRenderLogic;
+    }
+
     public void getObjectAt(float x, float y) {
         mPicker.getObjectAt(x, y);
     }
@@ -320,7 +331,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * displaying a transition for example.
      */
 
-    private interface RenderingLogic {
+    public interface RenderingLogic {
         void render();
     }
 
@@ -412,7 +423,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         protected Bitmap doInBackground(String... paramses) {
 
             url = paramses[0];
-            Log.d("bla", url);
             Bitmap ret = null;
             try {
                 ret = Picasso.with(getContext()).load(url).resize(2048, 4096).get();
@@ -426,7 +436,9 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
         @Override
         protected void onPostExecute(Bitmap b) {
-            prepareScene(b);
+            if (!isCancelled()) {
+                prepareScene(b);
+            }
         }
     }
 }
