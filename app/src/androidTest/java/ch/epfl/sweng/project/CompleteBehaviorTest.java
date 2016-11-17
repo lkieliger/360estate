@@ -1,7 +1,12 @@
 package ch.epfl.sweng.project;
 
 
+import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.action.GeneralClickAction;
+import android.support.test.espresso.action.GeneralLocation;
+import android.support.test.espresso.action.Press;
+import android.support.test.espresso.action.Tap;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +21,10 @@ import org.junit.Test;
 
 import java.security.SecureRandom;
 
-import ch.epfl.sweng.project.user.LoginActivity;
-
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
+import static android.support.test.espresso.action.ViewActions.actionWithAssertions;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
@@ -59,10 +63,10 @@ public class CompleteBehaviorTest {
             }
 
             @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
+            public boolean matchesSafely(View item) {
+                ViewParent parent = item.getParent();
                 return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
+                        && item.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
     }
@@ -81,12 +85,22 @@ public class CompleteBehaviorTest {
         logUserOut();
     }
 
+
+    private void login(String testUserMail,String testUserPassword){
+        wait1s(TAG);
+
+        onView(withId(R.id.goto_login_button)).perform(click());
+        onView(withId(R.id.login_email)).perform(typeText(testUserMail), closeSoftKeyboard());
+        onView(withId(R.id.login_password)).perform(typeText(testUserPassword), closeSoftKeyboard());
+        onView(withId(R.id.login_button)).perform(click());
+    }
     @Test
     public void testFullApp() {
+        wait500ms(TAG);
 
         logUserOut();
 
-        wait1s(TAG);
+        wait500ms(TAG);
 
         String testUserMail = "test@" + randomString(6) + ".org";
         String testUserPassword = "12345";
@@ -101,28 +115,25 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.registration_phone)).perform(typeText(testUserPhone), closeSoftKeyboard());
         onView(withId(R.id.register_button)).perform(click());
 
-        wait1s(TAG);
-
-        onView(withId(R.id.goto_login_button)).perform(click());
-        onView(withId(R.id.login_email)).perform(typeText(testUserMail), closeSoftKeyboard());
-        onView(withId(R.id.login_password)).perform(typeText(testUserPassword), closeSoftKeyboard());
-        onView(withId(R.id.login_button)).perform(click());
+        login(testUserMail,testUserPassword);
 
         wait1s(TAG);
 
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
-        wait1s(TAG);
-        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
-        onView(withId(R.id.addToFavorites)).perform(click());
-        pressBack();
-        onView(withId(R.id.FavoriteButton)).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
         wait500ms(TAG);
-        onView(withId(R.id.addToFavorites)).perform(click());
-        pressBack();
+        addToFavorite();
+        onView(withId(R.id.FavoriteButton)).perform(click());
+        addToFavorite();
+        onView(withId(R.id.FavoriteButton)).perform(click());
+        addToFavorite();
         onView(withId(R.id.FavoriteButton)).perform(click());
 
-        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(2).perform(click());
+        onView(withId(R.id.logOutButton)).perform(click());
+        wait500ms(TAG);
+        login(testUserMail,testUserPassword);
+
+        wait500ms(TAG);
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(7).perform(click());
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
 
         // wait 3s for the images to load
@@ -141,9 +152,16 @@ public class CompleteBehaviorTest {
         wait250ms(TAG);
 
         onView(withId(R.id.action_launch_panorama)).perform(click());
-
+        ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE,GeneralLocation.VISIBLE_CENTER, Press.FINGER);
+        onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
         logUserOut();
 
     }
 
+
+    private void addToFavorite(){
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
+        onView(withId(R.id.addToFavorites)).perform(click());
+        pressBack();
+    }
 }
