@@ -38,6 +38,7 @@ import static android.view.MotionEvent.ACTION_UP;
 import static ch.epfl.sweng.project.util.UnitTestUtilityFunctions.wait1s;
 import static ch.epfl.sweng.project.util.UnitTestUtilityFunctions.wait250ms;
 import static ch.epfl.sweng.project.util.UnitTestUtilityFunctions.wait500ms;
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -129,6 +130,11 @@ public class PanoramaRendererTests {
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_HOVER_MOVE)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_OUTSIDE)));
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_POINTER_DOWN)));
+
+
+        //Tests yaw
+        panoramaRenderer.setDeviceYaw(123.456);
+        assertEquals(123.456, panoramaRenderer.getDeviceYaw());
     }
 
 
