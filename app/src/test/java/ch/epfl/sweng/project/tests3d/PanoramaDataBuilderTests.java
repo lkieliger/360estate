@@ -55,9 +55,11 @@ public class PanoramaDataBuilderTests {
         NextPanoramaDataBuilder.setNextPanoId(1);
         assertFalse(NextPanoramaDataBuilder.isReset());
 
+        NextPanoramaDataBuilder.resetData();
         NextPanoramaDataBuilder.setNextPanoBitmap(b);
         assertFalse(NextPanoramaDataBuilder.isReset());
 
+        NextPanoramaDataBuilder.setNextPanoId(1);
         NextPanoramaDataBuilder.build();
         assertTrue(NextPanoramaDataBuilder.isReset());
     }

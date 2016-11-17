@@ -1,11 +1,14 @@
 package ch.epfl.sweng.project;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,14 +40,22 @@ public class PanoramaUITests {
     private static final Integer TEST_ID = 4;
     private static final String TEST_URL = "https://360.astutus.org/estate/1/photoMaisonBacu4.jpg";
     private static final String TAG = "UnitTest";
+    private static final int FRAME_TIME_MILLIS = 16;
     @Rule
     public ActivityTestRule<PanoramaActivity> mActivityRule;
+    private long elapsedTime = 0;
     private PanoramaRenderer mRenderer;
 
     @Before
     public void initParse() {
         ParseInitialiser.INSTANCE.initParse(InstrumentationRegistry.getInstrumentation()
                 .getTargetContext());
+    }
+
+    @After
+    public void closeTests() {
+        mActivityRule.getActivity().finish();
+        sleepDuring(2000);
     }
 
     /**
@@ -62,8 +73,9 @@ public class PanoramaUITests {
         mRenderer = mActivityRule.getActivity().getAssociatedRenderer();
 
         testPanoramaSphere();
-        testPanoramaTransitionObjects();
+        panoramaTransitionObjectsThrowsException();
         testRenderingLogics();
+        testAsyncTask();
     }
 
     private void testPanoramaSphere() {
@@ -84,7 +96,7 @@ public class PanoramaUITests {
         assertEquals(0, panoSphere.getNumChildren());
     }
 
-    private void testPanoramaTransitionObjects() {
+    private void panoramaTransitionObjectsThrowsException() {
         PanoramaObject panoTransition = new PanoramaTransitionObject(0, 0, TEST_ID, TEST_URL);
 
         //TEST FOR EXCEPTION THROWN BECAUSE LACKS PARENT (LIKE BATMAN)
@@ -96,36 +108,89 @@ public class PanoramaUITests {
         } finally {
             assertTrue(threwException);
         }
-
-        PanoramaRenderer.NextPanoramaDataBuilder.resetData();
-        panoTransition.reactWith(mRenderer);
-        assertFalse(PanoramaRenderer.NextPanoramaDataBuilder.isReset());
-        mRenderer.cancelPanoramaUpdate();
-        assertTrue(PanoramaRenderer.NextPanoramaDataBuilder.isReset());
     }
 
     private void testRenderingLogics() {
+        //Allows the renderer to settle
+        sleepDuring(1500);
 
-        PanoramaRenderer.RenderingLogic renderingLogic = mRenderer.getCurrentRenderingLogic();
-        assertSame(renderingLogic, mRenderer.getCurrentRenderingLogic());
+        //Compute 120 frames in idle
+        for (int i = 0; i < 120; i++) {
+            computeFrame();
+        }
+
         PanoramaObject dummyTransition = new PanoramaTransitionObject(Math.PI / 2.0, 0, TEST_ID, TEST_URL);
         dummyTransition.setPosition(new Vector3(100, 0, 0));
+
+        //Check if goes out from idle mode
+        PanoramaRenderer.RenderingLogic renderingLogic = mRenderer.getCurrentRenderingLogic();
+        PanoramaRenderer.RenderingLogic initialRenderingLogic = renderingLogic;
+
+        assertSame(renderingLogic, mRenderer.getCurrentRenderingLogic());
         mRenderer.onObjectPicked(dummyTransition);
+        mRenderer.cancelPanoramaUpdate();
         assertNotSame(renderingLogic, mRenderer.getCurrentRenderingLogic());
 
-        Vector3 pos = mRenderer.getCurrentCamera().getPosition();
-
-        Log.i(TAG, mRenderer.getCurrentCamera().getPosition().toString());
-
-        //Compute 60 frames
+        //Compute 60 frames in transition
         for (int i = 0; i < 60; i++) {
-            try {
-                Thread.sleep(16);
-                mRenderer.onRender(0, 16);
-                Log.i("Test", mRenderer.getCurrentCamera().getPosition().toString());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            computeFrame();
+            Log.i(TAG, mRenderer.getCurrentCamera().getPosition().toString());
+        }
+
+        //Check if camera moved the expected amout
+        assertTrue(mRenderer.getCurrentCamera().getPosition().x > PanoramaRenderer.CAM_TRAVEL_DISTANCE);
+        assertTrue(mRenderer.getCurrentCamera().getPosition().x < PanoramaRenderer.CAM_TRAVEL_DISTANCE + 10);
+
+        //Prepare for panorama transition
+        Bitmap b = BitmapFactory.decodeResource(mActivityRule.getActivity().getResources(), R.drawable.panotest);
+
+        assertFalse(PanoramaRenderer.NextPanoramaDataBuilder.isReady());
+        PanoramaRenderer.NextPanoramaDataBuilder.setNextPanoBitmap(b);
+        PanoramaRenderer.NextPanoramaDataBuilder.setNextPanoId(TEST_ID);
+        assertTrue(PanoramaRenderer.NextPanoramaDataBuilder.isReady());
+
+        renderingLogic = mRenderer.getCurrentRenderingLogic();
+        assertSame(renderingLogic, mRenderer.getCurrentRenderingLogic());
+        mRenderer.onRender(1016, 16); //SLIDING -> TRANSITIONING
+        mRenderer.onRender(1032, 16); //TRANSITIONING: RESET CAM -> IDLE
+        assertNotSame(renderingLogic, mRenderer.getCurrentRenderingLogic());
+
+        //Camera should be at origin again
+        assertEquals(PanoramaRenderer.ORIGIN, mRenderer.getCurrentCamera().getPosition());
+        assertTrue(PanoramaRenderer.NextPanoramaDataBuilder.isReset());
+
+        //Rendering should be at idle again
+        mRenderer.onRender(1048, 16);
+        assertSame(initialRenderingLogic, mRenderer.getCurrentRenderingLogic());
+    }
+
+    private void testAsyncTask() {
+        sleepDuring(1500);
+        int timeout = 100;
+        PanoramaRenderer.NextPanoramaDataBuilder.resetData();
+        mRenderer.initiatePanoramaTransition(TEST_URL, TEST_ID);
+
+        while (!PanoramaRenderer.NextPanoramaDataBuilder.isReady() && timeout > 0) {
+            Log.d(TAG, "Waiting 100ms for fetch image task to be completed");
+            timeout -= 1;
+            sleepDuring(100);
+        }
+        assertTrue(timeout > 0);
+
+
+    }
+
+    private void computeFrame() {
+        elapsedTime += FRAME_TIME_MILLIS;
+        sleepDuring(FRAME_TIME_MILLIS);
+        mRenderer.onRender(elapsedTime, FRAME_TIME_MILLIS);
+    }
+
+    private void sleepDuring(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
