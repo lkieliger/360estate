@@ -75,7 +75,8 @@ public class PanoramaUITests {
         testPanoramaSphere();
         panoramaTransitionObjectsThrowsException();
         testRenderingLogics();
-        testAsyncTask();
+        testFetchPhotoTask(TEST_URL);
+        testFetchPhotoTask("idontexpectthistobeavalidurl");
     }
 
     private void testPanoramaSphere() {
@@ -164,20 +165,18 @@ public class PanoramaUITests {
         assertSame(initialRenderingLogic, mRenderer.getCurrentRenderingLogic());
     }
 
-    private void testAsyncTask() {
-        sleepDuring(1500);
+    private void testFetchPhotoTask(String url) {
+        sleepDuring(1000);
         int timeout = 100;
         PanoramaRenderer.NextPanoramaDataBuilder.resetData();
-        mRenderer.initiatePanoramaTransition(TEST_URL, TEST_ID);
+        mRenderer.initiatePanoramaTransition(url, TEST_ID);
 
-        while (!PanoramaRenderer.NextPanoramaDataBuilder.isReady() && timeout > 0) {
+        while (!PanoramaRenderer.NextPanoramaDataBuilder.isReset() && timeout > 0) {
             Log.d(TAG, "Waiting 100ms for fetch image task to be completed");
             timeout -= 1;
             sleepDuring(100);
         }
         assertTrue(timeout > 0);
-
-
     }
 
     private void computeFrame() {
