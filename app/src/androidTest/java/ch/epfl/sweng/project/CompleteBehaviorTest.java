@@ -1,7 +1,12 @@
 package ch.epfl.sweng.project;
 
 
+import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.action.CoordinatesProvider;
+import android.support.test.espresso.action.GeneralClickAction;
+import android.support.test.espresso.action.Press;
+import android.support.test.espresso.action.Tap;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,8 +113,6 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.register_button)).perform(click());
 
         wait250ms(TAG);
-        onView(withText(R.string.error_user_already_exists)).inRoot(withDecorView(not(is(mActivityTestRule.
-                getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
 
         onView(withId(R.id.registration_email)).perform(replaceText(testUserMail), closeSoftKeyboard());
         onView(withId(R.id.registration_password)).perform(replaceText(testUserPassword), closeSoftKeyboard());
@@ -216,6 +219,9 @@ public class CompleteBehaviorTest {
 
         onView(withId(R.id.action_launch_panorama)).perform(click());
 
+        waitNms(TAG, 3000);
+        pressBack();
+
         logUserOut();
 
     }
@@ -242,6 +248,34 @@ public class CompleteBehaviorTest {
             counts[0] = listView.getCount();
             return true;
         }
+    }
+
+    /**
+     *  This method enables us to perform a click at a fixed location. Imported from here:
+     *  http://stackoverflow.com/a/22798043
+     *
+     * @param x the x coordinate of the click
+     * @param y the y coordinate of the click
+     * @return The ViewAction that corresponds to a single tap at the click coordinates
+     */
+    private static ViewAction clickXY(final int x, final int y){
+        return new GeneralClickAction(
+                Tap.SINGLE,
+                new CoordinatesProvider() {
+                    @Override
+                    public float[] calculateCoordinates(View view) {
+
+                        final int[] screenPos = new int[2];
+                        view.getLocationOnScreen(screenPos);
+
+                        final float screenX = screenPos[0] + x;
+                        final float screenY = screenPos[1] + y;
+                        float[] coordinates = {screenX, screenY};
+
+                        return coordinates;
+                    }
+                },
+                Press.FINGER);
     }
 
 }
