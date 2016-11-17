@@ -209,8 +209,14 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * @param b The panorama picture as a Bitmap
      */
     private void prepareScene(Bitmap b) {
-        Log.d(TAG, "Call to prepare scene, assigning next bitmap.");
-        NextPanoramaDataBuilder.setNextPanoBitmap(b);
+        if (b == null) {
+            Log.e(TAG, "There was a problem with the PhotoFetch task, returned bitmap was null");
+            NextPanoramaDataBuilder.resetData();
+            mRenderLogic = mIdleRendering;
+        } else {
+            Log.d(TAG, "Call to prepare scene, assigning next bitmap.");
+            NextPanoramaDataBuilder.setNextPanoBitmap(b);
+        }
     }
 
 
@@ -432,6 +438,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * <p>
      * We tried to use directly the Picasso feature for retrieving bitmap asynchronously and storing them in a Target
      * object but this did not work. This class acts in the same way however.
+     * Will return a null Bitmap if the query was unsuccessful
      */
     private class FetchPhotoTask extends AsyncTask<String, Void, Bitmap> {
 
@@ -446,10 +453,9 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
                 ret = Picasso.with(getContext()).load(url).resize(2048, 4096).get();
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
+            } finally {
+                return ret;
             }
-
-            //TODO: perform some extensives checks for null pointers
-            return ret;
         }
 
         @Override
