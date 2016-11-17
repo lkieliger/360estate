@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.itemDisplayer;
+package ch.epfl.sweng.project.user.display;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.ScreenSlide.SlideActivity;
+import ch.epfl.sweng.project.slider.SlideActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 
 import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;

@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.ScreenSlide;
+package ch.epfl.sweng.project.slider;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

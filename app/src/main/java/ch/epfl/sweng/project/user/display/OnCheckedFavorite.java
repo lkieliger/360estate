@@ -1,9 +1,7 @@
-package ch.epfl.sweng.project.itemDisplayer;
+package ch.epfl.sweng.project.user.display;
 
 import android.view.View;
 import android.widget.CheckBox;
-
-import ch.epfl.sweng.project.itemDisplayer.ListActivity;
 
 public class OnCheckedFavorite implements View.OnClickListener {
 

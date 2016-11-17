@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.itemDisplayer;
+package ch.epfl.sweng.project.user.display;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -62,7 +62,7 @@ public class ListActivity extends AppCompatActivity {
         Button popupButton = (Button) findViewById(R.id.filterButtonPopUp);
         popupButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 initPopUpFilter(itemList, itemAdapter, listView);
             }
         });

@@ -407,7 +407,9 @@
     </inspection_tool>
     <inspection_tool class="ResourceParameter" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="RestSignature" enabled="false" level="ERROR" enabled_by_default="false" />
-    <inspection_tool class="ResultOfObjectAllocationIgnored" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="ResultOfObjectAllocationIgnored" enabled="true" level="WARNING" enabled_by_default="true">
+      <scope name="Tests" level="WARNING" enabled="false" />
+    </inspection_tool>
     <inspection_tool class="ResultSetIndexZero" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ReturnOfInnerClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="RuntimeExec" enabled="true" level="ERROR" enabled_by_default="true" />

@@ -10,9 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ch.epfl.sweng.project.DataMgmt;
-import ch.epfl.sweng.project.itemDisplayer.ListActivity;
+import ch.epfl.sweng.project.user.display.ListActivity;
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.itemDisplayer.OnCheckedFavorite;
+import ch.epfl.sweng.project.user.display.OnCheckedFavorite;
 
 
 public class ItemView extends RelativeLayout {
