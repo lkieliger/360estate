@@ -54,7 +54,6 @@ public class PanoramaUITests {
 
     @After
     public void closeTests() {
-        mActivityRule.getActivity().finish();
         sleepDuring(2000);
     }
 
