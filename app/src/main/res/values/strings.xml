@@ -8,11 +8,6 @@
     <string name="rooms">rooms</string>
     <string name="types_of_house">Types of house</string>
     <string name="cities">Cities</string>
-    <string name="number_of_rooms">Number of rooms</string>
-    <string name="priceMax">Max Price:</string>
-    <string name="priceMin">Min Price:</string>
-    <string name="surfaceMax">Max Surface:</string>
-    <string name="surfaceMin">Min Surface:</string>
     <string name="Filter">Filter</string>
     <array name="typeOfHouses">
         <item>@string/all</item>
