@@ -34,25 +34,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="100dp"
-            android:layout_weight="0"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/goto_login_button"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
                 android:layout_weight="1"
+                android:layout_marginRight="5dp"
                 android:onClick="proceedToLogin"
                 android:text="@string/action_login"
                 tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/goto_registration_button"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:layout_weight="1"
+                android:layout_marginLeft="5dp"
                 android:onClick="proceedToRegistration"
                 android:text="@string/action_goto_registration"
                 tools:ignore="ButtonStyle" />
