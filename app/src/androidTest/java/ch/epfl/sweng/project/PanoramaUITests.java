@@ -71,6 +71,8 @@ public class PanoramaUITests {
         mActivityRule.launchActivity(intent);
         mRenderer = mActivityRule.getActivity().getAssociatedRenderer();
 
+        sleepDuring(1500);
+
         testPanoramaSphere();
         panoramaTransitionObjectsThrowsException();
         testRenderingLogics();
@@ -87,13 +89,10 @@ public class PanoramaUITests {
             l.add(new TransitionObject((double) i, (double) i, 0, ""));
         }
 
+        panoSphere.detachPanoramaComponents(cp);
         assertEquals(0, panoSphere.getNumChildren());
         panoSphere.attachPanoramaComponents(l, cp);
         assertEquals(10, panoSphere.getNumChildren());
-
-        //REMOVING CHILDREN
-        panoSphere.detachPanoramaComponents(cp);
-        assertEquals(0, panoSphere.getNumChildren());
     }
 
     private void panoramaTransitionObjectsThrowsException() {
