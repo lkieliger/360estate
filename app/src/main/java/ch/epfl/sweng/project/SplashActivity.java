@@ -12,7 +12,7 @@ import com.parse.ParseUser;
 
 import ch.epfl.sweng.project.data.Item;
 import ch.epfl.sweng.project.data.Resources;
-import ch.epfl.sweng.project.itemDisplayer.ListActivity;
+import ch.epfl.sweng.project.user.display.ListActivity;
 import ch.epfl.sweng.project.user.Favorites;
 import ch.epfl.sweng.project.user.LoginActivity;
 import ch.epfl.sweng.project.user.RegisterActivity;
