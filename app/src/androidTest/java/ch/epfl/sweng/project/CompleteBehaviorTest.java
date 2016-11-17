@@ -22,9 +22,11 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -38,11 +40,12 @@ import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 
 public class CompleteBehaviorTest {
 
-    private static final String TAG = "LoginActivityTest";
+    private static final String TAG = "CompleteBehaviorTest";
     /*
  Random string, for the registration.
  Source:
@@ -90,9 +93,7 @@ public class CompleteBehaviorTest {
     @Test
     public void testFullApp() {
 
-        logUserOut();
-
-        wait1s(TAG);
+        wait500ms(TAG);
 
         String testUserMail = "test@" + randomString(6) + ".org";
         String testUserPassword = "12345";
@@ -101,23 +102,40 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.goto_registration_button)).perform(closeSoftKeyboard()).perform(click());
         wait500ms(TAG);
 
-        onView(withId(R.id.registration_email)).perform(typeText(testUserMail), closeSoftKeyboard());
-        onView(withId(R.id.registration_password)).perform(typeText(testUserPassword), closeSoftKeyboard());
-        onView(withId(R.id.registration_password_bis)).perform(typeText(testUserPassword), closeSoftKeyboard());
-        onView(withId(R.id.registration_phone)).perform(typeText(testUserPhone), closeSoftKeyboard());
+        onView(withId(R.id.registration_email)).perform(replaceText("test@astutus.org"), closeSoftKeyboard());
+        onView(withId(R.id.registration_password)).perform(replaceText("abcdef"), closeSoftKeyboard());
+        onView(withId(R.id.registration_password_bis)).perform(replaceText("abcdef"), closeSoftKeyboard());
+        onView(withId(R.id.register_button)).perform(click());
+
+        wait250ms(TAG);
+        onView(withText(R.string.error_user_already_exists)).inRoot(withDecorView(not(is(mActivityTestRule.
+                getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+
+        onView(withId(R.id.registration_email)).perform(replaceText(testUserMail), closeSoftKeyboard());
+        onView(withId(R.id.registration_password)).perform(replaceText(testUserPassword), closeSoftKeyboard());
+        onView(withId(R.id.registration_password_bis)).perform(replaceText(testUserPassword), closeSoftKeyboard());
+        onView(withId(R.id.registration_phone)).perform(replaceText(testUserPhone), closeSoftKeyboard());
         onView(withId(R.id.register_button)).perform(click());
 
         wait1s(TAG);
 
         onView(withId(R.id.goto_login_button)).perform(click());
-        onView(withId(R.id.login_email)).perform(typeText(testUserMail), closeSoftKeyboard());
-        onView(withId(R.id.login_password)).perform(typeText(testUserPassword), closeSoftKeyboard());
+
+
+
+
+        onView(withId(R.id.login_email)).perform(typeText("HolaSenior@Shanchez.co"), closeSoftKeyboard());
+        onView(withId(R.id.login_password)).perform(typeText("PortesTriEstate"), closeSoftKeyboard());
+        onView(withId(R.id.login_button)).perform(click());
+        wait250ms(TAG);
+
+
+        onView(withId(R.id.login_email)).perform(replaceText(testUserMail), closeSoftKeyboard());
+        onView(withId(R.id.login_password)).perform(replaceText(testUserPassword), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
 
         wait1s(TAG);
-
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
-        wait1s(TAG);
 
         // Incorporated the Filter tests
 
