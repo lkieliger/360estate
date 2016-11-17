@@ -3,6 +3,10 @@ package ch.epfl.sweng.project;
 
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.action.GeneralClickAction;
+import android.support.test.espresso.action.GeneralLocation;
+import android.support.test.espresso.action.Press;
+import android.support.test.espresso.action.Tap;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.Press;
@@ -25,6 +29,7 @@ import java.security.SecureRandom;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
+import static android.support.test.espresso.action.ViewActions.actionWithAssertions;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
@@ -95,8 +100,20 @@ public class CompleteBehaviorTest {
         logUserOut();
     }
 
+
+    private void login(String testUserMail,String testUserPassword){
+        wait1s(TAG);
+
+        onView(withId(R.id.goto_login_button)).perform(click());
+        onView(withId(R.id.login_email)).perform(typeText(testUserMail), closeSoftKeyboard());
+        onView(withId(R.id.login_password)).perform(typeText(testUserPassword), closeSoftKeyboard());
+        onView(withId(R.id.login_button)).perform(click());
+    }
     @Test
     public void testFullApp() {
+        wait500ms(TAG);
+
+        logUserOut();
 
         wait500ms(TAG);
 
@@ -120,6 +137,7 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.registration_phone)).perform(replaceText(testUserPhone), closeSoftKeyboard());
         onView(withId(R.id.register_button)).perform(click());
 
+        login(testUserMail,testUserPassword);
         wait1s(TAG);
 
         onView(withId(R.id.goto_login_button)).perform(click());
@@ -195,11 +213,19 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.FavoriteButton)).perform(click());
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
         wait500ms(TAG);
-        onView(withId(R.id.addToFavorites)).perform(click());
-        pressBack();
+        addToFavorite();
+        onView(withId(R.id.FavoriteButton)).perform(click());
+        addToFavorite();
+        onView(withId(R.id.FavoriteButton)).perform(click());
+        addToFavorite();
         onView(withId(R.id.FavoriteButton)).perform(click());
 
-        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(2).perform(click());
+        onView(withId(R.id.logOutButton)).perform(click());
+        wait500ms(TAG);
+        login(testUserMail,testUserPassword);
+
+        wait500ms(TAG);
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(7).perform(click());
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
 
         // wait 3s for the images to load
@@ -222,10 +248,18 @@ public class CompleteBehaviorTest {
         waitNms(TAG, 3000);
         pressBack();
 
+        ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE,GeneralLocation.VISIBLE_CENTER, Press.FINGER);
+        onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
         logUserOut();
 
     }
 
+
+    private void addToFavorite(){
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
+        onView(withId(R.id.addToFavorites)).perform(click());
+        pressBack();
+    }
 
     private String getString(int id) {
         return mActivityTestRule.getActivity().getString(id);
@@ -248,34 +282,6 @@ public class CompleteBehaviorTest {
             counts[0] = listView.getCount();
             return true;
         }
-    }
-
-    /**
-     *  This method enables us to perform a click at a fixed location. Imported from here:
-     *  http://stackoverflow.com/a/22798043
-     *
-     * @param x the x coordinate of the click
-     * @param y the y coordinate of the click
-     * @return The ViewAction that corresponds to a single tap at the click coordinates
-     */
-    private static ViewAction clickXY(final int x, final int y){
-        return new GeneralClickAction(
-                Tap.SINGLE,
-                new CoordinatesProvider() {
-                    @Override
-                    public float[] calculateCoordinates(View view) {
-
-                        final int[] screenPos = new int[2];
-                        view.getLocationOnScreen(screenPos);
-
-                        final float screenX = screenPos[0] + x;
-                        final float screenY = screenPos[1] + y;
-                        float[] coordinates = {screenX, screenY};
-
-                        return coordinates;
-                    }
-                },
-                Press.FINGER);
     }
 
 }
