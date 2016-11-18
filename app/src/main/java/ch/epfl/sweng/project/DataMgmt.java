@@ -9,6 +9,8 @@ import android.widget.ImageView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.squareup.picasso.Picasso;
 
@@ -33,6 +35,10 @@ import ch.epfl.sweng.project.data.Item;
 import ch.epfl.sweng.project.data.ItemAdapter;
 import ch.epfl.sweng.project.user.Favorites;
 
+import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
+import static ch.epfl.sweng.project.util.Toaster.shortToast;
+
+
 public final class DataMgmt {
 
     private static final String TAG = "DataMgmt";
@@ -50,8 +56,8 @@ public final class DataMgmt {
     /**
      * Get a bitmap from url using Picasso.
      *
-     * @param context
-     * @param url the url to load
+     * @param context the current context of the activity.
+     * @param url     the url to load
      */
     public static Bitmap getBitmapFromUrl(Context context, String url) {
 
@@ -81,7 +87,7 @@ public final class DataMgmt {
 
     public static void getItemList(
             final Collection<Item> itemList, final ItemAdapter itemAdapter, StateOfPopUpLayout stateOfPopUpLayout,
-            Boolean isFavoriteToggle, String idUser) {
+            Boolean isFavoriteToggle, String idUser, final Context context) {
         List<ParseQuery<Item>> queries = new ArrayList<>();
 
         if (isFavoriteToggle) {
@@ -116,6 +122,12 @@ public final class DataMgmt {
     private static void fetchItems(ParseQuery<Item> query, final Collection<Item> itemList,
                                    final ItemAdapter itemAdapter) {
         if (query != null) {
+
+            if (!isInternetAvailable(context)) {
+                shortToast(context, context.getResources().getText(R.string.no_internet_acces));
+                query.fromLocalDatastore();
+            }
+
             query.findInBackground(new FindCallback<Item>() {
                 public void done(List<Item> objects, ParseException e) {
                     if (e == null) {
@@ -124,6 +136,15 @@ public final class DataMgmt {
                         itemList.addAll(objects);
                         itemAdapter.notifyDataSetChanged();
 
+
+                        if (isInternetAvailable(context)) {
+
+                            ParseObject.pinAllInBackground(objects);
+                        }
+
+
+
+                    } else {
                     } else {
                         Log.d("DataMgmt.getItemList", "Error: " + e.getMessage());
                     }
@@ -135,8 +156,14 @@ public final class DataMgmt {
         }
     }
 
-    public static HouseManager getHouseManager(String id) {
-        Resources resources = getResourcesObject(id);
+
+
+    /**
+     *
+     * @note this function is called only if internet is available.
+     */
+    public static HouseManager getHouseManager(String id, final Context context) {
+        Resources resources = getResourcesObject(id, context).get(0); //
         List<PhotoSphereData> photoSphereDataList = new ArrayList<>();
         int startingId = -1;
         String startingUrl = "";
@@ -161,27 +188,50 @@ public final class DataMgmt {
         return new HouseManager(sparseArray, startingId, startingUrl);
     }
 
-    public static void getDataForDescription(String id, final Collection<String> urls, StringBuilder description) {
-        Resources resources = getResourcesObject(id);
-        try {
-            urls.addAll(resources.getPicturesList());
-        } catch (JSONException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d("DataMgmt", "Error: " + e.getMessage());
+    public static void getDataForDescription(String id, final Collection<String> urls, final Context context) {
+        List<Resources> resourcesList = getResourcesObject(id, context);
+
+
+
+        String description = null;
+
+        if(!resourcesList.isEmpty()) {
+            Resources resource = resourcesList.get(0);
+            try {
+                urls.addAll(resource.getPicturesList());
+            } catch (JSONException e) {
+                if (BuildConfig.DEBUG) {
+                    Log.d("DataMgmt", "Error: " + e.getMessage());
+                }
             }
+
+            description.append(resource.getDescription());
         }
-        description.append(resources.getDescription());
+
     }
 
 
-    public static Resources getResourcesObject(String id) {
+    public static List<Resources> getResourcesObject(String id, final Context context) {
         ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
         query.whereEqualTo(JSONTags.idHouseTag, id);
 
         List<Resources> listResource = new ArrayList<>();
 
+        if (!isInternetAvailable(context)) {
+            shortToast(context, context.getResources().getText(R.string.no_internet_acces));
+            query.fromLocalDatastore();
+        }
+
+
         try {
             listResource = query.find();
+
+            if (isInternetAvailable(context)) {
+
+                ParseObject.pinAllInBackground(listResource);
+            }
+
+
         } catch (ParseException e) {
             if (BuildConfig.DEBUG) {
                 Log.d("DataMgmt", "Error: " + e.getMessage());
@@ -195,7 +245,7 @@ public final class DataMgmt {
         if (listResource.size() > 1)
             Log.d("DataMgmt", "Warning: The same id has different Resources.");
 
-        return listResource.get(0);
+        return listResource;
     }
 
 

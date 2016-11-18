@@ -1,5 +1,6 @@
 package ch.epfl.sweng.project.user.display;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -41,6 +42,7 @@ public class ListActivity extends AppCompatActivity {
 
     private Boolean isFavoriteToggle = false;
     private StateOfPopUpLayout stateOfPopUpLayout = null;
+    private Context mContext = null;
     private final String idUser = ParseUser.getCurrentUser().getObjectId();
 
     private static ItemAdapter itemAdapter = null;
@@ -52,12 +54,12 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        mContext = getApplicationContext();
 
         setFavorites(DataMgmt.getFavoriteFromId(idUser));
         f.synchronizeFromServer();
         setItemAdapter(new ItemAdapter(this, itemList));
         final ListView listView = (ListView) findViewById(R.id.houseList);
-
 
         Button popupButton = (Button) findViewById(R.id.filterButtonPopUp);
         popupButton.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +80,8 @@ public class ListActivity extends AppCompatActivity {
         });
 
 
-        DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser);
+        DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser,m
+        );
         // Assign adapter to ListView
         listView.setAdapter(itemAdapter);
         // ListView Item Click Listener
@@ -197,7 +200,7 @@ public class ListActivity extends AppCompatActivity {
                         maxSurface.getText().toString(),
                         minSurface.getText().toString()
                 );
-                DataMgmt.getItemList(itemCollection, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser);
+                DataMgmt.getItemList(itemCollection, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser,mContext);
                 listView.setAdapter(itemAdapter);
                 helpDialog.dismiss();
             }
