@@ -51,8 +51,12 @@
     <string name="info_reset_successful">"La réinitialisation du mot de passe a abouti! Vous pouvez vérifier vos courriels!"</string>
     <string name="password_reset_procedure">Si vous avez oublié votre mot de passe, vous pouvez l\'entrer dans le champs ci-dessous et cliquer sur le bouton de réinitialisation du mot de passe. \n\nCela vous enverra un courriel contenant un lien pour réinitialiser votre mot de passe.\n</string>
     <string name="addToFavorites">Ajouter aux favoris</string>
-    <string name="description_slide">Diapo avec les images de propriété</string>
-    <string name="favorites">Favoris</string>
-    <string name="title_activity_reset">Réinitialiser</string>
     <string name="All">Tout</string>
+    <string name="description_logo"></string>
+    <string name="description_slide">Diapo avec les propriétés des images</string>
+    <string name="no_internet_access">Accès internet indisponible</string>
+    <string name="no_panorama_view">La vue panoramique est indosponible en mode hors connexion</string>
+    <string name="prix"></string>
+    <string name="title_activity_reset">Réinitialisation</string>
+    <string name="favorites">Favoris</string>
 </resources>
