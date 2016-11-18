@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "ch.epfl.sweng.project"
-        minSdkVersion 24
+        minSdkVersion 21
         targetSdkVersion 25
 
         versionCode 1

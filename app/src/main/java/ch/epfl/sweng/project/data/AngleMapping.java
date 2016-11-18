@@ -24,10 +24,6 @@ public abstract class AngleMapping {
         thetaPhi = extThetaPhi;
     }
 
-    AngleMapping(Double extTheta, Double extPhi) {
-        thetaPhi = new Tuple<>(extTheta, extPhi);
-    }
-
     public abstract PanoramaComponentType getType();
 
     public Tuple<Double, Double> getThetaPhi() {

@@ -38,13 +38,14 @@ import static android.view.MotionEvent.ACTION_UP;
 import static ch.epfl.sweng.project.util.UnitTestUtilityFunctions.wait1s;
 import static ch.epfl.sweng.project.util.UnitTestUtilityFunctions.wait250ms;
 import static ch.epfl.sweng.project.util.UnitTestUtilityFunctions.wait500ms;
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 23)
 
-public class PanoramaTests {
+public class PanoramaRendererTests {
 
     private static final String TAG = "Panorama unit tests";
     private static double errorEpsilon = 0.1d;
@@ -131,6 +132,9 @@ public class PanoramaTests {
         assertFalse(touchListener.onTouch(view, genEvent(ACTION_POINTER_DOWN)));
 
 
+        //Tests yaw
+        panoramaRenderer.setDeviceYaw(123.456);
+        assertEquals(123.456, panoramaRenderer.getDeviceYaw());
     }
 
 

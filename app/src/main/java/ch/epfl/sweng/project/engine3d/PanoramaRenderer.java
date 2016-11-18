@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
@@ -43,8 +42,9 @@ import static android.content.Context.SENSOR_SERVICE;
 public class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
 
     public static final double SENSITIVITY = 50.0;
+    public static final double CAM_TRAVEL_DISTANCE = 65.0;
+    public static final Vector3 ORIGIN = new Vector3(0, 0, 0);
     private static final double LERP_FACTOR = 0.03;
-    private static final Vector3 ORIGIN = new Vector3(0, 0, 0);
 
     private final String TAG = "Renderer";
     private final Camera mCamera;
@@ -60,6 +60,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private Vector3 mTargetPos;
     private double mYaw;
 
+    private FetchPhotoTask mTaskManager;
     private HouseManager mHouseManager;
     private RenderingLogic mRenderLogic;
     private ObjectColorPicker mPicker;
@@ -99,12 +100,12 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         public void render() {
             double travellingLength = mCamera.getPosition().length();
 
-            if (travellingLength < 65) {
+            if (travellingLength < CAM_TRAVEL_DISTANCE) {
                 Vector3 v = new Vector3(mTargetPos.x, 0, mTargetPos.z);
                 Vector3 pos = new Vector3(mCamera.getPosition());
                 mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
             }
-            if (travellingLength >= 65 && NextPanoramaDataBuilder.isReady()) {
+            if (travellingLength >= CAM_TRAVEL_DISTANCE && NextPanoramaDataBuilder.isReady()) {
                 mRenderLogic = mTransitioningRendering;
             }
         }
@@ -179,34 +180,64 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mPanoSphere = new PanoramaSphere();
         getCurrentScene().addChild(mPanoSphere);
 
-        prepareScene(DataMgmt.getBitmapFromUrl(getContext(), mHouseManager.getStartingUrl()), mHouseManager
-                .getStartingId());
+        NextPanoramaDataBuilder.setNextPanoId(mHouseManager.getStartingId());
+        prepareScene(DataMgmt.getBitmapFromUrl(getContext(), mHouseManager.getStartingUrl()));
+        Log.d(TAG, "Updating scene from initscene");
         updateScene();
     }
 
     /**
-     * Update the current scene by changing the panorama picture and loading the new PanoramaComponents
+     * This method is called to initiate the panorama transition. The camera will start
+     * sliding towards the next panorama and a task will be launched to retrieve
+     * asynchronously the next bitmap
+     *
+     * @param url URL of the next Bitmap to load
+     * @param id  Id of the next Panorama to load
+     */
+    public void initiatePanoramaTransition(String url, int id) {
+        Log.d(TAG, "Call to initiate panorama transition, creating new task and setting next id.");
+        mRenderLogic = mSlidingRendering;
+
+        NextPanoramaDataBuilder.setNextPanoId(id);
+        mTaskManager = new FetchPhotoTask();
+        mTaskManager.execute(url);
+    }
+
+    /**
+     * This method is called by the asynchronous task that fetched the panorama picture
+     *
+     * @param b The panorama picture as a Bitmap
+     */
+    private void prepareScene(Bitmap b) {
+        if (b == null) {
+            Log.e(TAG, "There was a problem with the PhotoFetch task, returned bitmap was null");
+            NextPanoramaDataBuilder.resetData();
+            mRenderLogic = mIdleRendering;
+        } else {
+            Log.d(TAG, "Call to prepare scene, assigning next bitmap.");
+            NextPanoramaDataBuilder.setNextPanoBitmap(b);
+        }
+    }
+
+
+    /**
+     * Actually updates the current scene by changing the panorama picture and loading the new PanoramaComponents
      */
     public void updateScene() {
-        Log.d(TAG, "Call to update scene");
 
         Tuple<Integer, Bitmap> panoData = NextPanoramaDataBuilder.build();
+        Log.d(TAG, "Call to update scene, changing panorama photo and attaching new components. Pano id is: " +
+                "" + panoData.getX());
 
         mPanoSphere.detachPanoramaComponents(mPicker);
         mPanoSphere.setPhotoTexture(panoData.getY());
         mPanoSphere.attachPanoramaComponents(mHouseManager.getNeighborsFromId(panoData.getX()), mPicker);
     }
 
-    private void prepareScene(Bitmap b, int id) {
-        Log.d(TAG, "Call to prepare scene, assigning next bitmap and next id.");
 
-        NextPanoramaDataBuilder.setNextPanoBitmap(b);
-        NextPanoramaDataBuilder.setNextPanoId(id);
-    }
-
-    public void updatePanorama(String url, int id) {
-        Log.d(TAG, "Call to update panorama, creating new task.");
-        new FetchPhotoTask().execute(url, String.valueOf(id));
+    public void cancelPanoramaUpdate() {
+        mTaskManager.cancel(true);
+        NextPanoramaDataBuilder.resetData();
     }
 
     @Override
@@ -287,6 +318,14 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         return new Quaternion(mSensorRot);
     }
 
+    public PanoramaSphere getPanoramaSphere() {
+        return mPanoSphere;
+    }
+
+    public RenderingLogic getCurrentRenderingLogic() {
+        return mRenderLogic;
+    }
+
     public void getObjectAt(float x, float y) {
         mPicker.getObjectAt(x, y);
     }
@@ -296,7 +335,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         Log.d(TAG, "ObjectPicked");
         mTargetPos = object.getWorldPosition();
         ((PanoramaObject) object).reactWith(this);
-        mRenderLogic = mSlidingRendering;
     }
 
     @Override
@@ -317,7 +355,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * displaying a transition for example.
      */
 
-    private interface RenderingLogic {
+    public interface RenderingLogic {
         void render();
     }
 
@@ -331,7 +369,11 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         private static Bitmap nextPanoBitmap = INVALID_BITMAP;
 
         public static boolean isReady() {
-            return (nextPanoId != -1 && nextPanoBitmap != null);
+            return (nextPanoId != INVALID_ID && nextPanoBitmap != INVALID_BITMAP);
+        }
+
+        public static boolean isReset() {
+            return (nextPanoId == INVALID_ID && nextPanoBitmap == INVALID_BITMAP);
         }
 
         /**
@@ -361,7 +403,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
                 throw new IllegalArgumentException("Null bitmap");
             }
             if (nextPanoBitmap != INVALID_BITMAP) {
-                throw new IllegalStateException("Next panorama id should not be set multiple times");
+                throw new IllegalStateException("Next panorama bitmap should not be set multiple times");
             }
             nextPanoBitmap = b;
         }
@@ -396,42 +438,35 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * <p>
      * We tried to use directly the Picasso feature for retrieving bitmap asynchronously and storing them in a Target
      * object but this did not work. This class acts in the same way however.
+     * Will return a null Bitmap if the query was unsuccessful
      */
     private class FetchPhotoTask extends AsyncTask<String, Void, Bitmap> {
 
-        private int id;
         private String url;
 
         @Override
         protected Bitmap doInBackground(String... paramses) {
 
             url = paramses[0];
-            id = Integer.valueOf(paramses[1]);
-
-            Picasso.Builder builder = new Picasso.Builder(getContext());
-            builder.listener(new Picasso.Listener() {
-                @Override
-                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, exception.getMessage());
-                    }
-                }
-            });
-
             Bitmap ret = null;
             try {
-                ret = builder.build().with(getContext()).load(url).resize(2048, 4096).get();
+                ret = Picasso.with(getContext()).load(url).resize(2048, 4096).get();
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
+            } finally {
+                return ret;
             }
-
-            //TODO: perform some extensives checks for null pointers
-            return ret;
         }
 
         @Override
         protected void onPostExecute(Bitmap b) {
-            prepareScene(b, id);
+            prepareScene(b);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            Log.d("AsyncTask", "Task cancelled");
         }
     }
 }

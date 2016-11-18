@@ -4,7 +4,6 @@ package ch.epfl.sweng.project.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaTransitionObject;
@@ -40,9 +39,7 @@ public class TransitionObject extends AngleMapping {
      * @param extUrl the url of the referenced node
      */
     public TransitionObject(Double extTheta, Double extPhi, int extId, String extUrl) {
-        super(extTheta, extPhi);
-        mId = extId;
-        mUrl = extUrl;
+        this(new Tuple<Double, Double>(extTheta, extPhi), extId, extUrl);
     }
 
     public int getId() {

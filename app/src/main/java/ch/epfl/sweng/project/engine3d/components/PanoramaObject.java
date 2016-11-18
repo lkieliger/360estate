@@ -25,7 +25,7 @@ public abstract class PanoramaObject extends Plane {
         setPickingColor(0);
     }
 
-    void detachFromParentAndDie() {
+    public void detachFromParentAndDie() {
         if (mParent == null) {
             throw new IllegalStateException("Trying to detach PanoramaTransitionObject from a null " +
                     "parent !");
