@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class PhotoSphereData {
      */
     public PhotoSphereData(int extId, List<AngleMapping> extNeighborsList) {
         mId = extId;
-        mNeighborsList = extNeighborsList;
+        mNeighborsList = Collections.unmodifiableList(new ArrayList<>(extNeighborsList));
     }
 
     /**

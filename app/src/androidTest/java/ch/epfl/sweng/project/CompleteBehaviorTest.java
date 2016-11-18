@@ -123,7 +123,7 @@ public class CompleteBehaviorTest {
 
         registerNewUser(testUserMail, testUserPassword, testUserPhone);
 
-        wait500ms(TAG);
+        waitNms(TAG, 3000);
         onView(withId(R.id.goto_login_button)).perform(click());
 
         //Tests invalid login
