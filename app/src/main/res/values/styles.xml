@@ -6,6 +6,7 @@
         <item name="colorPrimaryDark">@color/appGray</item>
         <item name="colorAccent">@color/appBlue</item>
         <item name="android:buttonStyle">@style/EstateButton</item>
+        <item name="android:buttonStyleToggle">@style/EstateButton</item>
         <item name="android:background">@color/appWhite</item>
     </style>
     <style name="FullScreenDialogTheme" parent="android:Theme.Material.NoActionBar.Fullscreen"/>

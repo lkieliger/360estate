@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
-
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.squareup.picasso.Picasso;
@@ -139,7 +138,6 @@ public final class DataMgmt {
 
                             ParseObject.pinAllInBackground(objects);
                         }
-
 
                     } else {
                         Log.d("DataMgmt.getItemList", "Error: " + e.getMessage());

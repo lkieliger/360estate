@@ -17,12 +17,11 @@ import java.util.ArrayList;
 
 import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.slider.SlideActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
+import ch.epfl.sweng.project.slider.SlideActivity;
 
 import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;
 import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
-
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 
@@ -111,8 +110,6 @@ public class DescriptionActivity extends AppCompatActivity {
         } else {
             checkBoxFavorite.setChecked(false);
         }
-
-
         checkBoxFavorite.setOnClickListener(new OnCheckedFavorite(idItem, checkBoxFavorite));
     }
 
@@ -120,9 +117,6 @@ public class DescriptionActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (isInternetAvailable(mContext)) {
             ListActivity.synchronizeServer();
-
-
-
             if (getIntent().getBooleanExtra("isToggled", false)) {
                 if (isInitiallyInFavorite != checkBoxFavorite.isChecked()) {
                     if (isInitiallyInFavorite) {
@@ -132,10 +126,8 @@ public class DescriptionActivity extends AppCompatActivity {
                     }
                 }
             }
-
-
         }
-
+        ListActivity.notifyItemAdapter();
         super.onBackPressed();
     }
 

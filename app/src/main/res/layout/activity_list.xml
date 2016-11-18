@@ -21,9 +21,8 @@
 
         <Button
             android:id="@+id/logOutButton"
-            android:layout_width="wrap_content"
+            android:layout_width="131dp"
             android:layout_height="30dp"
-            android:layout_weight="1"
             android:background="@drawable/button_shape"
             android:gravity="center"
             android:text="@string/LogOut"
@@ -34,11 +33,10 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:background="@drawable/style_toggle_button"
             android:gravity="center"
+            android:textAllCaps="false"
             android:textOff="@string/favorites"
             android:textOn="@string/All"
-            android:textAllCaps="false"
            />
 
         <Button

@@ -39,7 +39,7 @@
     <string name="types_of_house">Types de maison</string>
     <string name="error_user_already_exists">Le nom d\'utilisateur existe déjà sur le serveur.</string>
     <string name="all">Tout</string>
-    <string name="LogOut">Se déconnecter</string>
+    <string name="LogOut">Déconnexion</string>
     <string name="surface">Surface</string>
     <string name="rooms_filter">Pièces</string>
     <string name="reset_suggestion">Mot de passe oublié ?</string>
