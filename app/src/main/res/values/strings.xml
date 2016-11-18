@@ -1,3 +1,4 @@
+<!--suppress LongLine -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Strings related to goods listing -->
@@ -76,29 +77,26 @@
     <!-- Strings related to descriptions -->
     <string name="description_slide">Slide with property pictures</string>
     <string name="surface">Surface</string>
-    <string name="trait_union">-</string>
+    <string name="trait_union" translatable="false">-</string>
     <string name="min" translatable="false">min</string>
     <string name="max" translatable="false">max</string>
     <string name="prix">Prix</string>
     <string name="rooms_filter">Rooms</string>
     <string name="action_goto_reset_password">Reset password</string>
     <string name="reset_suggestion">Password forgotten ?</string>
-    <string name="password_reset_procedure">If you have forgotten your password, you can enter your email in
-        here and click the Reset password button.\n\n
-        This will send you an email with a password reset link that will let you change your password.
-    </string>
+    <string name="password_reset_procedure">"If you have forgotten your password, you can enter your email in here and click the Reset password button.\n\nThis will send you an email with a password reset link that will let you change your password.\n    "</string>
     <string name="info_reset_successful">The reset procedure was successful. Check your mail !</string>
     <string name="error_reset_unsuccessful">An error has occurred during the password reset procedure. Please make
         sure you have a working internet connection</string>
     <string name="title_activity_reset">Reset</string>
     <string name="error_reset_no_email_matching">There does not exist an account with this email on the server.</string>
-    <string name="no_internet_acces">Internet is not available</string>
+    <string name="no_internet_access">Internet is not available</string>
     <string name="favorites">Favorites</string>
     <string name="addToFavorites">Add to Favorites</string>
     <string name="All">All</string>
     <string name = "no_panorama_view">The panoramic view is not available offline.</string>
 
     <!-- Strings related to image content description -->
-    <string name="description_logo">Application logo</string>
+    <string name="description_logo" translatable="false">Application logo</string>
 
 </resources>

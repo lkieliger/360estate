@@ -30,7 +30,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -130,6 +129,9 @@ public class CompleteBehaviorTest {
         login("HolaSenior@Shanchez.co", "PortesTriEstate");
         wait250ms(TAG);
 
+        onView(withId(R.id.goto_reset_button)).perform(click());
+        testResetFunctionality();
+        
         //logs valid user in
         login(testUserMail,testUserPassword);
         wait1s(TAG);
@@ -255,6 +257,21 @@ public class CompleteBehaviorTest {
         wait250ms(TAG);
 
         pressBack();
+    }
+
+    private void testResetFunctionality() {
+        // Invalid mail
+        onView(withId(R.id.reset_email)).perform(replaceText("test@invalidMail"), closeSoftKeyboard());
+        onView(withId(R.id.reset_button)).perform(click());
+
+        // Error "no email matching"
+        onView(withId(R.id.reset_email)).perform(replaceText("UnkownEmail@astutus.org"), closeSoftKeyboard());
+        onView(withId(R.id.reset_button)).perform(click());
+
+        // perform real reset
+        onView(withId(R.id.reset_email)).perform(replaceText("test@astutus.org"), closeSoftKeyboard());
+        onView(withId(R.id.reset_button)).perform(click());
+
     }
 
 
