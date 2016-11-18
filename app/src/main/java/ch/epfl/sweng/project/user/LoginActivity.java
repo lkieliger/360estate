@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.parse.LogInCallback;
@@ -30,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView mEmail = null;
     private TextView mPassword = null;
     private Context mAppContext = null;
+    private int failedLoginCount = 0;
+    private boolean resetButtonDisplayed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,23 @@ public class LoginActivity extends AppCompatActivity {
      */
     public void attemptLogin(View view) {
 
+        if (failedLoginCount > 0 && !resetButtonDisplayed) {
+
+            Button resetButton = new Button(this);
+            resetButton.setText(getString(R.string.reset_suggestion));
+            resetButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    proceedToReset(view);
+                }
+            });
+
+            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.email_login_form);
+
+            linearLayout.addView(resetButton);
+            resetButtonDisplayed = true;
+        }
+
         if (fieldsAreFilled() && userDataIsValid()) {
 
             ParseUser.logInInBackground(mEmail.getText().toString(),
@@ -66,9 +87,11 @@ public class LoginActivity extends AppCompatActivity {
                                 finish();
 
                             } else {
+                                failedLoginCount++;
                                 shortToast(getApplicationContext(),
                                         getResources().getText(R.string.error_login_unsuccessful));
                             }
+
                         }
                     });
         }
