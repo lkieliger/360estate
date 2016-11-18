@@ -118,7 +118,7 @@ public class PanoramaUITests {
             computeFrame();
         }
 
-        PanoramaObject dummyTransition = new PanoramaTransitionObject(Math.PI / 2.0, 0, TEST_ID, TEST_URL);
+        PanoramaObject dummyTransition = new PanoramaTransitionObject(0, 0, TEST_ID, TEST_URL);
         dummyTransition.setPosition(new Vector3(100, 0, 0));
 
         //Check if goes out from idle mode
@@ -137,8 +137,8 @@ public class PanoramaUITests {
         }
 
         //Check if camera moved the expected amout
-        assertTrue(mRenderer.getCurrentCamera().getPosition().x > PanoramaRenderer.CAM_TRAVEL_DISTANCE);
-        assertTrue(mRenderer.getCurrentCamera().getPosition().x < PanoramaRenderer.CAM_TRAVEL_DISTANCE + 10);
+        assertTrue(mRenderer.getCurrentCamera().getPosition().length() > PanoramaRenderer.CAM_TRAVEL_DISTANCE);
+        assertTrue(mRenderer.getCurrentCamera().getPosition().length() < PanoramaRenderer.CAM_TRAVEL_DISTANCE + 10);
 
         //Prepare for panorama transition
         Bitmap b = BitmapFactory.decodeResource(mActivityRule.getActivity().getResources(), R.drawable.panotest);

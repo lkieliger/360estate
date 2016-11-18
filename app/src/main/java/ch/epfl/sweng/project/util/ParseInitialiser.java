@@ -29,6 +29,7 @@ public enum ParseInitialiser {
                     .enableLocalDataStore()  // enable the Offline Mode
                     .build()
             );
+
             ParseObject.registerSubclass(Item.class);
             ParseObject.registerSubclass(Resources.class);
             ParseObject.registerSubclass(Favorites.class);
