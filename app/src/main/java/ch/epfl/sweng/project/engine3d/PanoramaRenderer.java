@@ -144,6 +144,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mYaw = 0;
         mCamera = getCurrentCamera();
         mCamera.setFieldOfView(80);
+        mCamera.setFarPlane(220);
 
         mPanoSphere = null;
 
