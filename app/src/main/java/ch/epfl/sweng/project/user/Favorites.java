@@ -42,7 +42,7 @@ public class Favorites extends ParseObject {
         try {
             save();
         } catch (ParseException e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         }
     }
 
@@ -54,15 +54,15 @@ public class Favorites extends ParseObject {
         return favorites;
     }
 
-    public boolean containsUrl(String url){
+    public boolean containsUrl(String url) {
         return favorites.contains(url);
     }
 
-    public void addUrlToLocal(String newUrl){
+    public void addUrlToLocal(String newUrl) {
         favorites.add(newUrl);
     }
 
-    public void deleteUrlToLocal(String url){
+    public void deleteUrlToLocal(String url) {
         favorites.remove(url);
     }
 
@@ -94,6 +94,6 @@ public class Favorites extends ParseObject {
     }
 
     public void synchronizeServer() {
-        DataMgmt.overrideFavorites(getIdUser(),favorites);
+        DataMgmt.overrideFavorites(getIdUser(), favorites);
     }
 }

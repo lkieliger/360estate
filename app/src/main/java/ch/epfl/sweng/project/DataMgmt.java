@@ -187,8 +187,6 @@ public final class DataMgmt {
         List<Resources> resourcesList = getResourcesObject(id, context);
 
 
-
-
         if (!resourcesList.isEmpty()) {
             Resources resource = resourcesList.get(0);
             try {
@@ -233,10 +231,10 @@ public final class DataMgmt {
         }
 
         /**
-        if (listResource.isEmpty()) {
-            throw new IllegalArgumentException("DataMgmt Error: No resource has this id.");
+         if (listResource.isEmpty()) {
+         throw new IllegalArgumentException("DataMgmt Error: No resource has this id.");
 
-        }
+         }
          **/
         if (listResource.size() > 1)
             Log.d("DataMgmt", "Warning: The same id has different Resources.");
@@ -256,7 +254,6 @@ public final class DataMgmt {
         query.whereEqualTo("idUser", idUser);
 
         List<Favorites> listFavorites = new ArrayList<>();
-
 
 
         try {
@@ -303,7 +300,8 @@ public final class DataMgmt {
         } catch (ParseException e) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, e.getMessage());
-            }        }
+            }
+        }
         if (listItems.isEmpty()) {
             throw new IllegalArgumentException("DataMgmt Error: No Item has this id.");
 

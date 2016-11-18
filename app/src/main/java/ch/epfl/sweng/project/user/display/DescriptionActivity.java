@@ -122,7 +122,6 @@ public class DescriptionActivity extends AppCompatActivity {
             ListActivity.synchronizeServer();
 
 
-
             if (getIntent().getBooleanExtra("isToggled", false)) {
                 if (isInitiallyInFavorite != checkBoxFavorite.isChecked()) {
                     if (isInitiallyInFavorite) {
@@ -133,7 +132,7 @@ public class DescriptionActivity extends AppCompatActivity {
                 }
             }
 
-
+            ListActivity.notifyItemAdapter();
         }
 
         super.onBackPressed();
