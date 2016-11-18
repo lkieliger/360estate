@@ -29,8 +29,6 @@ import ch.epfl.sweng.project.data.JSONTags;
 import ch.epfl.sweng.project.data.PhotoSphereData;
 import ch.epfl.sweng.project.data.Resources;
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
-import ch.epfl.sweng.project.data.Item;
-import ch.epfl.sweng.project.data.ItemAdapter;
 import ch.epfl.sweng.project.user.Favorites;
 
 public final class DataMgmt {
@@ -144,7 +142,7 @@ public final class DataMgmt {
         try {
             photoSphereDataList = resources.getPhotoSphereDatas();
             startingId = resources.getStartingId();
-            startingUrl = resources.getStartingIString();
+            startingUrl = resources.getStartingUrl();
         } catch (JSONException e) {
             if (BuildConfig.DEBUG) {
                 Log.d("DataMgmt", "Error: " + e.getMessage());
@@ -253,14 +251,15 @@ public final class DataMgmt {
         try {
             listItems = query.find();
         } catch (ParseException e) {
-            e.printStackTrace();
-        }
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, e.getMessage());
+            }        }
         if (listItems.isEmpty()) {
             throw new IllegalArgumentException("DataMgmt Error: No Item has this id.");
 
         }
         if (listItems.size() > 1)
-            Log.d("DataMgmt", "Warning: The same id has different Item.");
+            Log.d(TAG, "Warning: The same id has different Items.");
 
         return listItems.get(0);
     }

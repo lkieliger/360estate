@@ -1,5 +1,8 @@
 package ch.epfl.sweng.project.data;
 
+/**
+ * Class containing the tags used in the JSON objects
+ */
 public interface JSONTags {
 
     String neighborsListTag = "neighborsList";

@@ -30,7 +30,7 @@
             tools:ignore="ButtonStyle" />
 
         <ToggleButton
-            android:id="@+id/FavoriteButton"
+            android:id="@+id/FavoritesButton"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_weight="1"
