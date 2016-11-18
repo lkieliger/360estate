@@ -1,8 +1,10 @@
 package ch.epfl.sweng.project.user.display;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,8 +22,8 @@ import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 
 import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;
 import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
-import static ch.epfl.sweng.project.util.Toaster.longToast;
 
+import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 
 public class DescriptionActivity extends AppCompatActivity {
@@ -30,21 +32,27 @@ public class DescriptionActivity extends AppCompatActivity {
     private boolean isInitiallyInFavorite = false;
     private CheckBox checkBoxFavorite = null;
     private String idItem = null;
+    private Context mContext = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_description);
 
+        mContext = getApplicationContext();
+
+
         idItem = getIntent().getStringExtra("idItem");
         final ArrayList<String> imagesURL = new ArrayList<>();
         StringBuilder descriptionBuilder = new StringBuilder();
 
-        DataMgmt.getDataForDescription(idItem, imagesURL, descriptionBuilder,getApplicationContext());
+        DataMgmt.getDataForDescription(idItem, imagesURL, descriptionBuilder, mContext);
         String description = descriptionBuilder.toString();
 
 
-        if (description != null) {
+        if (!description.equals("")) {
+
+
             Log.d("description ", description);
 
             TextView txt = (TextView) findViewById(R.id.description_text);
@@ -81,14 +89,15 @@ public class DescriptionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (isInternetAvailable(getApplicationContext())) {
-                Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
-                intentToPanorama.putExtra("id", idItem);
-                startActivity(intentToPanorama);
+                if (isInternetAvailable(mContext)) {
+                    Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
+                    intentToPanorama.putExtra("id", idItem);
+                    startActivity(intentToPanorama);
 
 
                 } else {
-                    longToast(getApplicationContext(), "Panorama view is not available without internet.");
+
+                    shortToast(mContext, mContext.getResources().getText(R.string.no_panorama_view));
                 }
             }
         });
@@ -109,23 +118,32 @@ public class DescriptionActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        ListActivity.synchronizeServer();
-        if (getIntent().getBooleanExtra("isToggled", false)) {
-            if (isInitiallyInFavorite != checkBoxFavorite.isChecked()) {
-                if (isInitiallyInFavorite) {
-                    ListActivity.removeItem(idItem);
-                } else {
-                    ListActivity.addItem(idItem);
+        if (isInternetAvailable(mContext)) {
+            ListActivity.synchronizeServer();
+
+
+
+            if (getIntent().getBooleanExtra("isToggled", false)) {
+                if (isInitiallyInFavorite != checkBoxFavorite.isChecked()) {
+                    if (isInitiallyInFavorite) {
+                        ListActivity.removeItem(idItem);
+                    } else {
+                        ListActivity.addItem(idItem);
+                    }
                 }
             }
+
+
         }
-        ListActivity.notifyItemAdapter();
+
         super.onBackPressed();
     }
 
     @Override
     protected void onStop() {
-        ListActivity.synchronizeServer();
+        if (isInternetAvailable(mContext)) {
+            ListActivity.synchronizeServer();
+        }
         super.onStop();
     }
 }

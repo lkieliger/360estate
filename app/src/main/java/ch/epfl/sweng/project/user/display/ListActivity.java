@@ -80,7 +80,7 @@ public class ListActivity extends AppCompatActivity {
         });
 
 
-        DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser,m
+        DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser,mContext
         );
         // Assign adapter to ListView
         listView.setAdapter(itemAdapter);
@@ -107,7 +107,7 @@ public class ListActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 f.synchronizeServer();
                 isFavoriteToggle = b;
-                DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser);
+                DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser,mContext);
             }
         });
 
@@ -200,7 +200,8 @@ public class ListActivity extends AppCompatActivity {
                         maxSurface.getText().toString(),
                         minSurface.getText().toString()
                 );
-                DataMgmt.getItemList(itemCollection, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser,mContext);
+                DataMgmt.getItemList(itemCollection, itemAdapter, stateOfPopUpLayout, isFavoriteToggle
+                        , idUser,mContext);
                 listView.setAdapter(itemAdapter);
                 helpDialog.dismiss();
             }
@@ -267,4 +268,9 @@ public class ListActivity extends AppCompatActivity {
         ListActivity.synchronizeServer();
         super.onStop();
     }
+
+
+
+
+
 }

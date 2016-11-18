@@ -96,6 +96,7 @@
     <string name="favorites">Favorites</string>
     <string name="addToFavorites">Add to Favorites</string>
     <string name="All">All</string>
+    <string name = "no_panorama_view">The panoramic view is not available offline.</string>
 
     <!-- Strings related to image content description -->
     <string name="description_logo">Application logo</string>

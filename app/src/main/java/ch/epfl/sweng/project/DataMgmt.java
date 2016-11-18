@@ -70,7 +70,7 @@ public final class DataMgmt {
             }
         });
 
-        if(url != null && !url.isEmpty()) {
+        if (url != null && !url.isEmpty()) {
             try {
                 mBitmap = builder.build().with(context).load(url).resize(WIDTH, HEIGHT).get();
             } catch (IOException e) {
@@ -100,7 +100,7 @@ public final class DataMgmt {
                     queries.add(queryTemp);
                 }
             } else {
-                fetchItems(null, itemList, itemAdapter);
+                fetchItems(null, itemList, itemAdapter, context);
                 return;
             }
         } else {
@@ -110,15 +110,15 @@ public final class DataMgmt {
         }
 
         if (queries.isEmpty()) {
-            fetchItems(new ParseQuery<>(Item.class), itemList, itemAdapter);
+            fetchItems(new ParseQuery<>(Item.class), itemList, itemAdapter, context);
         } else {
-            fetchItems(ParseQuery.or(queries), itemList, itemAdapter);
+            fetchItems(ParseQuery.or(queries), itemList, itemAdapter, context);
         }
     }
 
 
     private static void fetchItems(ParseQuery<Item> query, final Collection<Item> itemList,
-                                   final ItemAdapter itemAdapter) {
+                                   final ItemAdapter itemAdapter, final Context context) {
         if (query != null) {
 
             if (!isInternetAvailable(context)) {
@@ -141,8 +141,6 @@ public final class DataMgmt {
                         }
 
 
-
-                    } else {
                     } else {
                         Log.d("DataMgmt.getItemList", "Error: " + e.getMessage());
                     }
@@ -155,9 +153,7 @@ public final class DataMgmt {
     }
 
 
-
     /**
-     *
      * @note this function is called only if internet is available.
      */
     public static HouseManager getHouseManager(String id, final Context context) {
@@ -186,14 +182,14 @@ public final class DataMgmt {
         return new HouseManager(sparseArray, startingId, startingUrl);
     }
 
-    public static void getDataForDescription(String id, final Collection<String> urls, final Context context) {
+    public static void getDataForDescription(String id, final Collection<String> urls, StringBuilder description
+            , final Context context) {
         List<Resources> resourcesList = getResourcesObject(id, context);
 
 
 
-        String description = null;
 
-        if(!resourcesList.isEmpty()) {
+        if (!resourcesList.isEmpty()) {
             Resources resource = resourcesList.get(0);
             try {
                 urls.addAll(resource.getPicturesList());
@@ -236,10 +232,12 @@ public final class DataMgmt {
             }
         }
 
+        /**
         if (listResource.isEmpty()) {
             throw new IllegalArgumentException("DataMgmt Error: No resource has this id.");
 
         }
+         **/
         if (listResource.size() > 1)
             Log.d("DataMgmt", "Warning: The same id has different Resources.");
 
@@ -258,6 +256,8 @@ public final class DataMgmt {
         query.whereEqualTo("idUser", idUser);
 
         List<Favorites> listFavorites = new ArrayList<>();
+
+
 
         try {
             listFavorites = query.find();
@@ -295,7 +295,7 @@ public final class DataMgmt {
 
     public static Item getItemFromId(String id) {
         ParseQuery<Item> query = new ParseQuery<>(Item.class);
-        query.whereEqualTo("idHouse",id);
+        query.whereEqualTo("idHouse", id);
 
         List<Item> listItems = new ArrayList<>();
         try {
