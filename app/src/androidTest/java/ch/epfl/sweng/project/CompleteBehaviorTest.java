@@ -133,7 +133,7 @@ public class CompleteBehaviorTest {
         login(testUserMail,testUserPassword);
 
         wait500ms(TAG);
-        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(7).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(5).perform(click());
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
 
         // wait 3s for the images to load
@@ -154,6 +154,7 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.action_launch_panorama)).perform(click());
         ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE,GeneralLocation.VISIBLE_CENTER, Press.FINGER);
         onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
+        wait500ms(TAG);
         logUserOut();
 
     }

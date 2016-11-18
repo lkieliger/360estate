@@ -27,9 +27,9 @@ import static ch.epfl.sweng.project.util.Toaster.longToast;
 public class DescriptionActivity extends AppCompatActivity {
 
     public static final int cellSize = 300;
-    private boolean isInitiallyInFavorite;
-    private CheckBox checkBoxFavorite;
-    private String idItem;
+    private boolean isInitiallyInFavorite = false;
+    private CheckBox checkBoxFavorite = null;
+    private String idItem = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
