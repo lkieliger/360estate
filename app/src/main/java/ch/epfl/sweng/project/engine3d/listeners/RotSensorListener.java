@@ -19,24 +19,10 @@ public class RotSensorListener implements SensorEventListener {
 
     private final PanoramaRenderer mRenderer;
     private final Display mDisplay;
-    private final boolean isIsolatedFromApp;
     private float[] mRotationMatrixIn;
     private float[] mRotationMatrixOut;
     private Quaternion mDummyRotation;
     private int mScreenRotation = 0;
-
-    /**
-     * A constructor for testing purposes
-     */
-    public RotSensorListener() {
-        mRenderer = null;
-        mDisplay = null;
-        mScreenRotation = Surface.ROTATION_0;
-        isIsolatedFromApp = true;
-        mDummyRotation = new Quaternion();
-        mRotationMatrixIn = new float[16];
-        mRotationMatrixOut = new float[16];
-    }
 
     public RotSensorListener(Display display, PanoramaRenderer renderer) {
         if (renderer == null) {
@@ -47,7 +33,9 @@ public class RotSensorListener implements SensorEventListener {
         mRotationMatrixIn = new float[16];
         mRotationMatrixOut = new float[16];
         mDummyRotation = new Quaternion();
-        isIsolatedFromApp = false;
+        //Screen rotation is locked once the panorama is started
+        //TODO: remove unnecessary display reference
+        mScreenRotation = mDisplay.getRotation();
     }
 
     @Override
@@ -69,11 +57,7 @@ public class RotSensorListener implements SensorEventListener {
         SensorManager.remapCoordinateSystem(mRotationMatrixIn, SensorManager.AXIS_X, SensorManager.AXIS_MINUS_Z,
                 mRotationMatrixOut);
 
-        //This is needed so the UnitTests don't have to initalise a renderer juste for testing the listener logic
-        if (!isIsolatedFromApp) {
-            mScreenRotation = mDisplay.getRotation();
-            mRenderer.setDeviceYaw(Math.atan2(mRotationMatrixOut[1], mRotationMatrixOut[5]));
-        }
+        mRenderer.setDeviceYaw(Math.atan2(mRotationMatrixOut[1], mRotationMatrixOut[5]));
 
         Quaternion q = new Quaternion().fromMatrix(floatToDoubleArray(mRotationMatrixOut));
 
@@ -91,12 +75,7 @@ public class RotSensorListener implements SensorEventListener {
                 break;
         }
 
-
-        if (isIsolatedFromApp) {
-            mDummyRotation = new Quaternion(q);
-        } else {
-            mRenderer.setSensorRotation(q);
-        }
+        mRenderer.setSensorRotation(q);
     }
 
     public Quaternion getDummyRotation() {
