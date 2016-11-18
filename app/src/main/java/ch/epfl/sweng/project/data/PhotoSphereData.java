@@ -7,12 +7,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import static ch.epfl.sweng.project.data.JSONTags.*;
 
-
+/**
+ * class that provides method to simplify the conversion of the data between the Java and the JSON representation
+ * It contains the data for every PhotoSphere (the neighbors list and the it's ID)
+ */
 public class PhotoSphereData {
 
     private final int mId;
@@ -20,11 +25,20 @@ public class PhotoSphereData {
 
     private static final String TAG = "PhotoSphereData";
 
+    /**
+     * PhotoSphereData simple constructor
+     * @param extId the Id of the PhotoSphereData
+     * @param extNeighborsList the neighbors list of the PhotoSphereData
+     */
     public PhotoSphereData(int extId, List<AngleMapping> extNeighborsList) {
         mId = extId;
-        mNeighborsList = extNeighborsList;
+        mNeighborsList = Collections.unmodifiableList(new ArrayList<>(extNeighborsList));
     }
 
+    /**
+     *
+     * @return the JSON array encoded as the data representation requires
+     */
     private JSONArray getNeighborsJsonArray() {
         JSONArray neighborsJsonArray = new JSONArray();
         try {
@@ -40,6 +54,10 @@ public class PhotoSphereData {
         return neighborsJsonArray;
     }
 
+    /**
+     *
+     * @return the neighbor Object corresponding to the PhotoSphere data
+     */
     JSONObject getNeighborObject() {
         JSONObject neighborObject = new JSONObject();
 
@@ -63,6 +81,10 @@ public class PhotoSphereData {
         return mNeighborsList;
     }
 
+    /**
+     * An inner builder that simplifies the building of a PhotoSphereData object
+     */
+    @SuppressWarnings("PackageVisibleInnerClass")
     static class Builder {
         private int mId;
         private List<AngleMapping> mNeighborsList = null;
@@ -71,16 +93,29 @@ public class PhotoSphereData {
             mId = id;
         }
 
+        /**
+         *
+         * @param neighborsList the neighbors list of the PhotoSphere
+         * @return the builder containing this list
+         */
         Builder setNeighborsList(List<AngleMapping> neighborsList) {
             mNeighborsList = neighborsList;
             return this;
         }
 
+        /**
+         * @return the built PhotoSphereData object
+         */
         PhotoSphereData build() {
             return new PhotoSphereData(mId, mNeighborsList);
         }
     }
 
+    /**
+     *
+     * @param obj the object to compare to
+     * @return true iff the two objects are equal
+     */
     @Override
     public boolean equals(Object obj) {
         if ((obj == null) || (getClass() != obj.getClass())) {
@@ -103,6 +138,10 @@ public class PhotoSphereData {
         return true;
     }
 
+    /**
+     *
+     * @return the hashcode of the current object.
+     */
     @Override
     public int hashCode() {
         int result = mId;

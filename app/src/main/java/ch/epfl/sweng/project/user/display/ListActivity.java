@@ -74,7 +74,7 @@ public class ListActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-            //    ListActivity.synchronizeServer();
+                ListActivity.synchronizeServer();
                 logOutUser();
             }
         });
@@ -101,7 +101,7 @@ public class ListActivity extends AppCompatActivity {
         });
 
 
-        ToggleButton favoriteButton = (ToggleButton) findViewById(R.id.FavoriteButton);
+        ToggleButton favoriteButton = (ToggleButton) findViewById(R.id.FavoritesButton);
         favoriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
