@@ -19,7 +19,6 @@ public abstract class AngleMapping {
 
     private final Tuple<Double, Double> thetaPhi;
 
-
     AngleMapping(Tuple<Double, Double> extThetaPhi) {
         thetaPhi = new Tuple<>(extThetaPhi.getX(), extThetaPhi.getY());
     }

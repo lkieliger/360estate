@@ -209,6 +209,10 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mTaskManager.execute(url);
     }
 
+    public void displayText(String textInfo) {
+
+    }
+
     /**
      * This method is called by the asynchronous task that fetched the panorama picture
      *
