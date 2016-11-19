@@ -3,6 +3,9 @@ package ch.epfl.sweng.project.engine3d;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
@@ -16,8 +19,12 @@ import com.squareup.picasso.Picasso;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.cameras.Camera;
+import org.rajawali3d.materials.Material;
+import org.rajawali3d.materials.textures.ATexture;
+import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
+import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.renderer.Renderer;
 import org.rajawali3d.util.ObjectColorPicker;
 import org.rajawali3d.util.OnObjectPickedListener;
@@ -26,6 +33,7 @@ import java.io.IOException;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.DataMgmt;
+import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.HouseManager;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
@@ -44,6 +52,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public static final double SENSITIVITY = 50.0;
     public static final double CAM_TRAVEL_DISTANCE = 65.0;
     public static final Vector3 ORIGIN = new Vector3(0, 0, 0);
+    public static final int TEXTURE_COLOR = 0x0022c8ff;
     private static final double LERP_FACTOR = 0.03;
 
     private final String TAG = "Renderer";
@@ -209,8 +218,55 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mTaskManager.execute(url);
     }
 
-    public void displayText(String textInfo) {
 
+    private Bitmap textAsBitmap(String text) {
+        Paint paint = new Paint();
+
+        int textSize = 20;
+        int width = 512;
+        int height = 512;
+        int epsilon = 30;
+
+        paint.setTextSize(textSize);
+
+
+        Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(image);
+
+        paint.setColor(getContext().getColor(R.color.appBlue));
+        canvas.drawRect(0, 0, 1024, 512, paint);
+
+        paint.setColor(Color.WHITE);
+        canvas.drawRect(epsilon, epsilon, width - epsilon, height - epsilon, paint);
+        paint.setColor(Color.BLACK);
+        canvas.drawText(text, epsilon + 5, epsilon + 5 + textSize, paint);
+        return image;
+    }
+
+    public void displayText(String textInfo) {
+        Log.d(TAG, "Call to display text information.");
+        Bitmap bitmap = textAsBitmap(textInfo);
+
+        Plane plane = new Plane(30, 30, 2, 2, Vector3.Axis.Z);
+
+        plane.setZ(35);
+
+        plane.setLookAt(new Vector3(0, 0, 0));
+        Material material = new Material();
+
+        material.setColor(0);
+
+        Texture texture = new Texture(TAG, bitmap);
+        plane.enableLookAt();
+
+        try {
+            material.addTexture(texture);
+        } catch (ATexture.TextureException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+        plane.setMaterial(material);
+        getCurrentScene().addChild(plane);
     }
 
     /**

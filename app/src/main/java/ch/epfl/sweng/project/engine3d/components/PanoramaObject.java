@@ -15,7 +15,7 @@ import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 public abstract class PanoramaObject extends Plane {
 
     private static final double DISTANCE = 80.0;
-    private static final int TEXTURE_COLOR = 0x22c8ff;
+    private static final int TEXTURE_COLOR = PanoramaRenderer.TEXTURE_COLOR;
 
 
     PanoramaObject() {

@@ -29,7 +29,6 @@ public final class PanoramaTransitionObject extends PanoramaObject {
         enableLookAt();
         Id = id;
         this.nextUrl = nextUrl;
-
         setLookAt(new Vector3(0, 1000, 0));
     }
 
