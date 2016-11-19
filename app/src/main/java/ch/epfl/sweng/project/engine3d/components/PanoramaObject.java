@@ -24,6 +24,15 @@ public abstract class PanoramaObject extends Plane {
         mMaterial = new Material();
     }
 
+    PanoramaObject(double theta, double phi, int width, int height) {
+        super(width, height, width / 5, height / 5);
+
+        setX(DISTANCE / 2 * Math.sin(phi) * Math.cos(theta));
+        setZ(DISTANCE / 2 * Math.sin(phi) * Math.sin(theta));
+        setY(DISTANCE / 2 * Math.cos(phi));
+        mMaterial = new Material();
+    }
+
     PanoramaObject(double theta, double phi, String tag, int iconIndex) {
         super(10, 10, 2, 2, Vector3.Axis.Z);
         mMaterial = new Material();
