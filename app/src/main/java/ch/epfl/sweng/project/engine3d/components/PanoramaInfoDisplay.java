@@ -11,9 +11,6 @@ import org.rajawali3d.math.vector.Vector3;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.StringAdapter;
 
-/**
- * Created by Quentin on 19/11/2016.
- */
 
 public class PanoramaInfoDisplay extends PanoramaObject {
 
@@ -25,7 +22,7 @@ public class PanoramaInfoDisplay extends PanoramaObject {
         Material material = new Material();
 
         StringAdapter stringAdapter = new StringAdapter(text);
-        Bitmap bitmap = stringAdapter.textAsBitmap(text, colorIndex);
+        Bitmap bitmap = stringAdapter.textToBitmap(20, 512, colorIndex);
 
         material.setColor(0);
         Texture texture = new Texture(TAG, bitmap);

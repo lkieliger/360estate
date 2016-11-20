@@ -31,6 +31,7 @@ public abstract class PanoramaObject extends Plane {
         setZ(DISTANCE / 2 * Math.sin(phi) * Math.sin(theta));
         setY(DISTANCE / 2 * Math.cos(phi));
         mMaterial = new Material();
+
     }
 
     PanoramaObject(double theta, double phi, String tag, int iconIndex) {

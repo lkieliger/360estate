@@ -216,8 +216,9 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     public void displayText(String textInfo) {
         Log.d(TAG, "Call to display text information.");
-        PanoramaInfoDisplay panoInfoDisplay = new PanoramaInfoDisplay(1.5, 1.5, 30, 30, textInfo, getContext().getColor
-                (R.color.appBlue));
+        PanoramaInfoDisplay panoInfoDisplay = new PanoramaInfoDisplay(1.5, 1.5, 30, 30,
+                textInfo,
+                getContext().getColor(R.color.appBlue));
         getCurrentScene().addChild(panoInfoDisplay);
     }
 
