@@ -24,12 +24,12 @@ public abstract class PanoramaObject extends Plane {
         mMaterial = new Material();
     }
 
-    PanoramaObject(double theta, double phi, int width, int height) {
+    PanoramaObject(double theta, double phi, int width, int height, int distance) {
         super(width, height, width / 5, height / 5);
 
-        setX(DISTANCE / 2 * Math.sin(phi) * Math.cos(theta));
-        setZ(DISTANCE / 2 * Math.sin(phi) * Math.sin(theta));
-        setY(DISTANCE / 2 * Math.cos(phi));
+        setX(distance * Math.sin(phi) * Math.cos(theta));
+        setZ(distance * Math.sin(phi) * Math.sin(theta));
+        setY(distance * Math.cos(phi));
         mMaterial = new Material();
 
     }
@@ -42,8 +42,16 @@ public abstract class PanoramaObject extends Plane {
         setZ(DISTANCE * Math.sin(phi) * Math.sin(theta));
         setY(DISTANCE * Math.cos(phi));
 
+        setIcon(tag, iconIndex);
+    }
+
+    public void setIcon(String tag, int iconIndex) {
+        setIcon(tag, iconIndex, TEXTURE_COLOR);
+    }
+
+    public void setIcon(String tag, int iconIndex, int colorIndex) {
         AlphaMapTexture alphaMap = new AlphaMapTexture(tag, iconIndex);
-        mMaterial.setColor(TEXTURE_COLOR);
+        mMaterial.setColor(colorIndex);
 
         try {
             mMaterial.addTexture(alphaMap);

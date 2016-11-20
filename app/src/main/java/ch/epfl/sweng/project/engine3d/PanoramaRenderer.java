@@ -28,6 +28,7 @@ import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.HouseManager;
+import ch.epfl.sweng.project.engine3d.components.PanoramaInfoCloser;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoDisplay;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
@@ -215,10 +216,21 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     public void displayText(String textInfo, double theta, double phi) {
         Log.d(TAG, "Call to display text information.");
-        PanoramaInfoDisplay panoInfoDisplay = new PanoramaInfoDisplay(theta, phi, 30, 30,
-                textInfo,
+        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, 30, 60, textInfo,
                 getContext().getColor(R.color.appBlue));
-        getCurrentScene().addChild(panoInfoDisplay);
+
+        int shiftZ = 15;
+        int shiftY = 15;
+
+        PanoramaInfoCloser panoramaInfoCloser = new PanoramaInfoCloser(theta, 1.5, 5, 5);
+
+        panoramaInfoCloser.setZ(panoramaInfoCloser.getZ() + shiftZ);
+        panoramaInfoCloser.setX(panoramaInfoCloser.getX() + 3);
+        panoramaInfoCloser.setY(panoramaInfoCloser.getY() + shiftY);
+
+        getCurrentScene().addChild(panoramaInfoDisplay);
+        getCurrentScene().addChild(panoramaInfoCloser);
+
     }
 
     /**
