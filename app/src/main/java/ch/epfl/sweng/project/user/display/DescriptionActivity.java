@@ -37,12 +37,16 @@ public class DescriptionActivity extends AppCompatActivity {
         idItem = getIntent().getStringExtra("idItem");
         final ArrayList<String> imagesURL = new ArrayList<>();
         StringBuilder descriptionBuilder = new StringBuilder();
-
-        DataMgmt.getDataForDescription(idItem, imagesURL, descriptionBuilder);
+        StringBuilder titleBuilder = new StringBuilder();
+        DataMgmt.getDataForDescription(idItem, imagesURL, descriptionBuilder, titleBuilder);
         String description = descriptionBuilder.toString();
+        String title = titleBuilder.toString();
 
-        TextView txt = (TextView) findViewById(R.id.description_text);
-        txt.setText(description.toCharArray(), 0, description.length());
+        TextView descriptionView = (TextView) findViewById(R.id.description_text);
+        descriptionView.setText(description.toCharArray(), 0, description.length());
+
+        TextView titleView = (TextView) findViewById(R.id.description_title);
+        titleView.setText(title.toCharArray(), 0, title.length());
 
         View.OnClickListener imgListener = new View.OnClickListener() {
             @Override
@@ -56,15 +60,15 @@ public class DescriptionActivity extends AppCompatActivity {
             }
         };
 
-
         final LinearLayout scrollImg = (LinearLayout) findViewById(R.id.imgs);
         for (String url : imagesURL) {
             ImageView imgV = new ImageView(this);
             imgV.setTag(url);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(cellSize, cellSize);
-            params.setMargins(0, 0, 10, 0);
-            imgV.setLayoutParams(params);
             getImgFromUrlIntoView(this, url, imgV);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(cellSize, cellSize);
+            params.setMargins(0, 0, 0, 0);
+            imgV.setLayoutParams(params);
+            imgV.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imgV.setOnClickListener(imgListener);
             scrollImg.addView(imgV);
         }

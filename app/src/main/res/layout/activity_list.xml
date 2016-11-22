@@ -19,46 +19,45 @@
         android:divider="@drawable/divider"
         android:showDividers="middle">
 
-        <Button
+        <ImageButton
             android:id="@+id/logOutButton"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
+            android:background="@color/colorBackground"
+            android:contentDescription="@string/LogOut"
+            android:src="@drawable/logout"
             android:layout_weight="1"
-            android:background="@drawable/button_shape"
-            android:gravity="center"
-            android:text="@string/LogOut"
-            tools:ignore="ButtonStyle" />
+            />
 
         <ToggleButton
+            android:layout_marginTop="3dp"
             android:id="@+id/FavoriteButton"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
+            android:drawableTop="@drawable/star_selector"
+            android:background="@color/colorBackground"
             android:layout_weight="1"
-            android:background="@drawable/style_toggle_button"
-            android:gravity="center"
-            android:textOff="@string/favorites"
-            android:textOn="@string/All"
-            android:textAllCaps="false"
-           />
+            />
 
-        <Button
+        <ImageButton
             android:id="@+id/filterButtonPopUp"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_shape"
-            android:gravity="center"
-            android:text="@string/Filter"
-            android:textAllCaps="false"
-            tools:ignore="ButtonStyle" />
+            android:contentDescription="@string/Filter"
+            android:layout_height="50dp"
+            android:background="@color/colorBackground"
+            android:src="@drawable/filter"
+            android:adjustViewBounds="true"
+            android:layout_weight="1"/>
     </LinearLayout>
-
 
     <ListView
         android:id="@+id/houseList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_height="match_parent"
+        android:listSelector="@drawable/item_selector"
+        android:divider="@color/colorBackground"
+        android:dividerHeight="6dp"
+        />
 
 </LinearLayout>
 

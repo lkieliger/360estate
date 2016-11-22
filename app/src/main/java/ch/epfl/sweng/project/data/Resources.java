@@ -66,6 +66,9 @@ public class Resources extends ParseObject {
         return getString(descriptionTag);
     }
 
+    public String getTitle(){
+        return getString(titleTag);
+    }
     public String getId() {
         return getString(idHouseTag);
     }

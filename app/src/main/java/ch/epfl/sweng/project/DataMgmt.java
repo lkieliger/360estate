@@ -161,7 +161,8 @@ public final class DataMgmt {
         return new HouseManager(sparseArray, startingId, startingUrl);
     }
 
-    public static void getDataForDescription(String id, final Collection<String> urls, StringBuilder description) {
+    public static void getDataForDescription(String id, final Collection<String> urls, StringBuilder description,
+                                             StringBuilder title) {
         Resources resources = getResourcesObject(id);
         try {
             urls.addAll(resources.getPicturesList());
@@ -171,6 +172,7 @@ public final class DataMgmt {
             }
         }
         description.append(resources.getDescription());
+        title.append(resources.getTitle());
     }
 
 

@@ -31,7 +31,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            tools:ignore="UnusedIds">
+            tools:ignore="UnusedIds"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            >
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -59,8 +62,6 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
                     android:imeActionId="1410"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1" />
 
@@ -89,14 +90,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_phone_number"
+                    android:imeActionLabel="Register"
+                    android:imeOptions="actionDone"
                     android:inputType="phone" />
             </android.support.design.widget.TextInputLayout>
 
             <Button
                 android:id="@+id/register_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="30dp"
                 android:onClick="attemptRegistration"
                 android:text="@string/action_register"
                 android:textStyle="bold"
