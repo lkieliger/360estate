@@ -23,6 +23,8 @@ import org.rajawali3d.util.ObjectColorPicker;
 import org.rajawali3d.util.OnObjectPickedListener;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.DataMgmt;
@@ -49,7 +51,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public static final Vector3 ORIGIN = new Vector3(0, 0, 0);
     public static final int TEXTURE_COLOR = 0x0022c8ff;
     private static final double LERP_FACTOR = 0.03;
-
     private final String TAG = "Renderer";
     private final Camera mCamera;
     private final double mXdpi;
@@ -58,6 +59,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private final RotSensorListener mRotListener;
     private final boolean mRotSensorAvailable;
     private final Sensor mRotSensor;
+    Map<PanoramaInfoCloser, PanoramaInfoDisplay> panoramaInfoDisplayMap = new HashMap<>();
     private PanoramaSphere mPanoSphere;
     private Quaternion mUserRot;
     private Quaternion mSensorRot;
@@ -216,21 +218,37 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     public void displayText(String textInfo, double theta, double phi) {
         Log.d(TAG, "Call to display text information.");
-        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, 30, 60, textInfo,
-                getContext().getColor(R.color.appBlue));
 
-        int shiftZ = 15;
-        int shiftY = 15;
+        int heightInfoDisplay = 30;
+        int widthInfoDisplay = 30;
 
-        PanoramaInfoCloser panoramaInfoCloser = new PanoramaInfoCloser(theta, 1.5, 5, 5);
+        int heightInfoClose = 5;
+        int widthInfoClose = 5;
 
-        panoramaInfoCloser.setZ(panoramaInfoCloser.getZ() + shiftZ);
-        panoramaInfoCloser.setX(panoramaInfoCloser.getX() + 3);
+        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
+                , heightInfoDisplay, textInfo, getContext().getColor(R.color.appBlue));
+
+        int shiftY = (int) ((heightInfoClose) / 2.0);
+        int shiftZ = (int) (widthInfoDisplay / 2.0);
+
+        PanoramaInfoCloser panoramaInfoCloser = new PanoramaInfoCloser(theta, 1.5, widthInfoClose
+                , heightInfoClose, panoramaInfoDisplay);
+        //panoramaInfoDisplay.addChild(panoramaInfoCloser);
+
         panoramaInfoCloser.setY(panoramaInfoCloser.getY() + shiftY);
+        // panoramaInfoCloser.setX(panoramaInfoCloser.getX()+shiftZ*Math.cos(theta));
+        // panoramaInfoCloser.setZ(panoramaInfoCloser.getZ()+shiftZ*Math.sin(theta));
 
-        getCurrentScene().addChild(panoramaInfoDisplay);
-        getCurrentScene().addChild(panoramaInfoCloser);
+        mPanoSphere.attachPanoramaComponent(panoramaInfoDisplay, mPicker);
+        mPanoSphere.attachPanoramaComponent(panoramaInfoCloser, mPicker);
 
+        panoramaInfoDisplayMap.put(panoramaInfoCloser, panoramaInfoDisplay);
+    }
+
+    public void deleteInfo(PanoramaInfoDisplay panoDisplay, PanoramaInfoCloser panoCloser) {
+        Log.d("TOT", "aaa");
+        mPanoSphere.detachPanoramaComponent(mPicker, panoCloser);
+        mPanoSphere.detachPanoramaComponent(mPicker, panoDisplay);
     }
 
     /**

@@ -18,6 +18,10 @@ public class StringAdapter {
         this.text = text;
     }
 
+    public static int get(String text) {
+        return 1;
+    }
+
     public Bitmap textAsBitmap(int colorIndex) {
         Paint paint = new Paint();
 
@@ -41,7 +45,6 @@ public class StringAdapter {
         canvas.drawText(text, epsilon + 5, epsilon + 5 + textSize, paint);
         return image;
     }
-
 
     private List<String> textToList(int textSize, int widthBitmap, int epsilon) {
 
@@ -86,7 +89,6 @@ public class StringAdapter {
         return list;
     }
 
-
     public Bitmap textToBitmap(int textSize, int widthBitmap, int colorIndex, int epsilon) {
 
         List<String> list = textToList(textSize, widthBitmap, epsilon);
@@ -109,10 +111,10 @@ public class StringAdapter {
         paint.setColor(colorIndex);
         canvas.drawRect(0, 0, widthBitmap, heightBitmap, paint);
 
-        paint.setColor(Color.WHITE);
+        paint.setColor(0xff9C9C9C);
         canvas.drawRect(epsilon, epsilon, widthBitmap - epsilon, heightBitmap - epsilon, paint);
 
-        paint.setColor(Color.BLACK);
+        paint.setColor(Color.WHITE);
         for (int i = 0; i < list.size(); i++) {
             canvas.drawText(list.get(i), epsilon, epsilon + (i + 1) * heightTemp, paint);
         }

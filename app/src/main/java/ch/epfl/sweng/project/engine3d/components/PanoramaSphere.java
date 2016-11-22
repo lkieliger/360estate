@@ -72,6 +72,13 @@ public final class PanoramaSphere extends Sphere {
         mComponentList.clear();
     }
 
+    public void detachPanoramaComponent(ObjectColorPicker p, PanoramaObject panoramaObject) {
+        panoramaObject.unregisterComponentFromPicker(p);
+        mComponentList.remove(panoramaObject);
+        mComponentIndex--;
+        panoramaObject.detachFromParentAndDie();
+    }
+
     /**
      * Call this method to replace the currently shown panorama. The
      * method will then call the texture manager and update the bitmap
@@ -97,5 +104,17 @@ public final class PanoramaSphere extends Sphere {
             addChild(panoramaObject);
             mComponentList.add(panoramaObject);
         }
+    }
+
+
+    public void attachPanoramaComponent(PanoramaObject panoramaObject, ObjectColorPicker p) {
+        Log.d(TAG, "Call to attach panorama");
+
+        panoramaObject.registerComponentAtPicker(p);
+        panoramaObject.setPickingColor(mComponentIndex);
+
+        mComponentIndex++;
+        addChild(panoramaObject);
+        mComponentList.add(panoramaObject);
     }
 }
