@@ -107,6 +107,7 @@ public final class PanoramaSphere extends Sphere {
     }
 
 
+
     public void attachPanoramaComponent(PanoramaObject panoramaObject, ObjectColorPicker p) {
         Log.d(TAG, "Call to attach panorama");
 

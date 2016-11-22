@@ -12,8 +12,7 @@ public final class PanoramaInfoObject extends PanoramaObject {
     private static final int ICON_INDEX = R.drawable.info_tex;
     private final String textInfo;
     private final double theta;
-    private final double phi;
-
+    private boolean isTriggered;
 
     public PanoramaInfoObject(double theta, double phi, String textInfo) {
         super(theta, phi, TEXTURE_TAG, ICON_INDEX);
@@ -21,12 +20,19 @@ public final class PanoramaInfoObject extends PanoramaObject {
         enableLookAt();
         setLookAt(new Vector3(0, 0, 0));
         this.theta = theta;
-        this.phi = phi;
+        isTriggered = false;
     }
 
 
     @Override
     public void reactWith(PanoramaRenderer p) {
-        p.displayText(textInfo, theta, phi);
+        if (!isTriggered) {
+            p.displayText(textInfo, theta, this);
+        }
+        isTriggered = true;
+    }
+
+    public void unTrigger() {
+        isTriggered = false;
     }
 }
