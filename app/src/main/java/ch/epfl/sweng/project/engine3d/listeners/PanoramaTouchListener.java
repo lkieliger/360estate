@@ -82,10 +82,11 @@ public class PanoramaTouchListener implements View.OnTouchListener {
 
             case MotionEvent.ACTION_POINTER_UP:
                 final int pointerId = event.getPointerId(pointerIndex);
-
+                Log.i(TAG, "Detected a pointer up");
                 if (pointerId == mActivePointerId) {
                     // This was our active pointer going up. Choose a new
                     // active pointer and adjust accordingly.
+                    Log.i(TAG, "Changing pointer index");
                     final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
                     mLastTouchX = event.getX();
                     mLastTouchY = event.getY();

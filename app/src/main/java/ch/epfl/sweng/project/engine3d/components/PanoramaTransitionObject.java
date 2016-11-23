@@ -66,6 +66,6 @@ public final class PanoramaTransitionObject extends PanoramaObject {
      */
     @Override
     public void reactWith(PanoramaRenderer p) {
-        p.updatePanorama(getNextUrl(), getId());
+        p.initiatePanoramaTransition(getNextUrl(), getId());
     }
 }

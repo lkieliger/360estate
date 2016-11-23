@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.parse.LogInCallback;
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private AutoCompleteTextView mEmail = null;
     private EditText mPassword = null;
     private Context mAppContext = null;
+    private boolean resetButtonInvisible = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
     /**
      * This method is called when the user clicks on the login button
      * after having entered his credentials
@@ -93,7 +94,16 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 shortToast(getApplicationContext(),
                                         getResources().getText(R.string.error_login_unsuccessful));
+
+                                if (resetButtonInvisible) {
+
+                                    Button resetButton = (Button) findViewById(R.id.goto_reset_button);
+                                    resetButton.setVisibility(View.VISIBLE);
+
+                                    resetButtonInvisible = false;
+                                }
                             }
+
                         }
                     });
         }

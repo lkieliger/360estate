@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="10dp"
     android:orientation="vertical">
 
 
@@ -55,7 +54,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginBottom="5sp"
         android:orientation="horizontal">
 
         <TextView
@@ -98,7 +97,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginBottom="5sp"
         android:orientation="horizontal">
 
         <TextView
@@ -106,7 +105,6 @@
             android:layout_height="match_parent"
             android:layout_marginRight="20dp"
             android:gravity="center"
-            android:inputType="number"
             android:text="@string/surface"
             android:textSize="18sp" />
 
@@ -141,7 +139,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginBottom="5sp"
         android:orientation="horizontal">
 
         <TextView
@@ -180,23 +178,16 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/filterButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/filterButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/button_shape"
-            android:text="@string/Filter"
-            android:textAllCaps="false"
-            android:textSize="20sp" />
-    </RelativeLayout>
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/button_shape"
+        android:text="@string/Filter"
+        android:textAllCaps="false"
+        android:layout_gravity="center"
+        android:textSize="20sp" />
 
 </LinearLayout>

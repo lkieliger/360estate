@@ -19,11 +19,16 @@ import ch.epfl.sweng.project.util.Tuple;
 
 import static ch.epfl.sweng.project.data.JSONTags.*;
 
+/**
+ * ParseObject class that provides the interface for storing objects on the server
+ */
+@SuppressWarnings("WeakerAccess")
 @ParseClassName("Resources")
 public class Resources extends ParseObject {
 
     private static final String TAG = "Resources class";
 
+    @SuppressWarnings("RedundantNoArgConstructor")
     public Resources() {
         // Default constructor needed for Parse objects
     }
@@ -36,13 +41,21 @@ public class Resources extends ParseObject {
         put(idHouseTag, id);
     }
 
-
+    /**
+     *
+     * @param picturesUrlList the URLs to be displayed in the description activity
+     */
     public void setPicturesUrlList(Collection<String> picturesUrlList) {
         JSONArray urlArray = new JSONArray(picturesUrlList);
         put(picturesListTag, urlArray);
     }
 
-
+    /**
+     * updates the content of the Parse object with the parameters values
+     * @param photoSphereList the list of PhotoSphere informations (one entry in the list = one room)
+     * @param startingId the Id of the first room
+     * @param startingUrl the Url of the first room
+     */
     public void setPhotoSphereDatas(Iterable<PhotoSphereData> photoSphereList, int startingId, String startingUrl) {
         JSONObject photoSphereDatas = new JSONObject();
 
@@ -73,7 +86,11 @@ public class Resources extends ParseObject {
         return getString(idHouseTag);
     }
 
-
+    /**
+     *
+     * @return the list of the picures to be displayed on the description activity
+     * @throws JSONException
+     */
     public List<String> getPicturesList() throws JSONException {
         JSONArray urlArray = getJSONArray(picturesListTag);
         List<String> picturesList = new ArrayList<>();
@@ -92,6 +109,11 @@ public class Resources extends ParseObject {
         return picturesList;
     }
 
+    /**
+     *
+     * @return the list of all PhotoSphereData that are contained in the Parse object
+     * @throws JSONException
+     */
     public List<PhotoSphereData> getPhotoSphereDatas() throws JSONException {
         JSONArray photoSphereDataArray = getJSONObject(panoSphereDatasTag).getJSONArray(panoramaRoomsTag);
         List<PhotoSphereData> photoSphereDatas = new ArrayList<>(photoSphereDataArray.length());
@@ -104,17 +126,34 @@ public class Resources extends ParseObject {
         return photoSphereDatas;
     }
 
+    /**
+     *
+     * @return the ID of the first room to be displayed
+     * @throws JSONException
+     */
     public int getStartingId() throws JSONException {
         JSONObject panoSphereData = getJSONObject(panoSphereDatasTag);
         return panoSphereData.getInt(startingIdTag);
     }
 
-    public String getStartingIString() throws JSONException {
+    /**
+     *
+     * @return the starting Url (first image to be displayed)
+     * @throws JSONException
+     */
+    public String getStartingUrl() throws JSONException {
         JSONObject panoSphereData = getJSONObject(panoSphereDatasTag);
         return panoSphereData.getString(startingUrlTag);
     }
 
 
+    /**
+     * used to retrieve information from the PanoramaRooms list 's elements
+     *
+     * @param photoSphereObject one entry of the PanoramaRooms list
+     * @return a photosphere data with the parsed data
+     * @throws JSONException
+     */
     private static PhotoSphereData parsePhotoSphereData(JSONObject photoSphereObject) throws JSONException {
 
         List<AngleMapping> neighborsList = new ArrayList<>();

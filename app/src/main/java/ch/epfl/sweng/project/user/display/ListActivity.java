@@ -1,5 +1,6 @@
 package ch.epfl.sweng.project.user.display;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -42,6 +43,7 @@ public class ListActivity extends AppCompatActivity {
 
     private Boolean isFavoriteToggle = false;
     private StateOfPopUpLayout stateOfPopUpLayout = null;
+    private Context mContext = null;
     private final String idUser = ParseUser.getCurrentUser().getObjectId();
 
     private static ItemAdapter itemAdapter = null;
@@ -53,6 +55,7 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        mContext = getApplicationContext();
 
         setFavorites(DataMgmt.getFavoriteFromId(idUser));
         f.synchronizeFromServer();
@@ -73,18 +76,16 @@ public class ListActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-            //    ListActivity.synchronizeServer();
+                ListActivity.synchronizeServer();
                 logOutUser();
             }
         });
 
 
-        DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser);
-
+        DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser,mContext
+        );
         // Assign adapter to ListView
         listView.setAdapter(itemAdapter);
-
-
         // ListView Item Click Listener
         final Intent intent = new Intent(this, DescriptionActivity.class);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -101,13 +102,14 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
-        ToggleButton favoriteButton = (ToggleButton) findViewById(R.id.FavoriteButton);
+
+        ToggleButton favoriteButton = (ToggleButton) findViewById(R.id.FavoritesButton);
         favoriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 f.synchronizeServer();
                 isFavoriteToggle = b;
-                DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser);
+                DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser,mContext);
             }
         });
     }
@@ -197,7 +199,8 @@ public class ListActivity extends AppCompatActivity {
                         maxSurface.getText().toString(),
                         minSurface.getText().toString()
                 );
-                DataMgmt.getItemList(itemCollection, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser);
+                DataMgmt.getItemList(itemCollection, itemAdapter, stateOfPopUpLayout, isFavoriteToggle
+                        , idUser,mContext);
                 listView.setAdapter(itemAdapter);
                 helpDialog.dismiss();
             }

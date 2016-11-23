@@ -53,6 +53,7 @@ public class ResetActivity extends AppCompatActivity {
                     if (e == null) {
                         longToast(getApplicationContext(),
                                 getResources().getString(R.string.info_reset_successful));
+                        finish();
                     } else {
                         switch (e.getCode()) {
                             case NO_EMAIL_MATCHING:

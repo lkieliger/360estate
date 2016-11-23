@@ -90,8 +90,8 @@ public class PhotoSphereDataTests {
         assertTrue(pData.hashCode() == pData2.hashCode());
 
 
-
         PhotoSphereData pData4 = new PhotoSphereData.Builder(14).
+                setNeighborsList(new ArrayList<>(neighborsList.subList(0, 1))).
                 build();
 
         assertFalse(pData.hashCode() == pData4.hashCode());

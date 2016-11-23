@@ -4,7 +4,6 @@ package ch.epfl.sweng.project.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaTransitionObject;
@@ -20,17 +19,27 @@ public class TransitionObject extends AngleMapping {
     private final String mUrl;
     private final PanoramaComponentType mType = PanoramaComponentType.TRANSITION;
 
-
+    /**
+     *
+     * @param extThetaPhi the theta, phi values
+     * @param extId the id of the referenced node
+     * @param extUrl the url of the referenced node
+     */
     public TransitionObject(Tuple<Double, Double> extThetaPhi, int extId, String extUrl) {
         super(extThetaPhi);
         mId = extId;
         mUrl = extUrl;
     }
 
+    /**
+     *
+     * @param extTheta the theta value
+     * @param extPhi the phi value
+     * @param extId the id of the referenced node
+     * @param extUrl the url of the referenced node
+     */
     public TransitionObject(Double extTheta, Double extPhi, int extId, String extUrl) {
-        super(extTheta, extPhi);
-        mId = extId;
-        mUrl = extUrl;
+        this(new Tuple<Double, Double>(extTheta, extPhi), extId, extUrl);
     }
 
     public int getId() {
@@ -46,6 +55,11 @@ public class TransitionObject extends AngleMapping {
         return mType;
     }
 
+    /**
+     *
+     * @return the transition object in its JSON representation
+     * @throws JSONException
+     */
     @Override
     public JSONObject toJSONObject() throws JSONException {
         JSONObject jsonTransition = super.toJSONObject();
@@ -55,12 +69,21 @@ public class TransitionObject extends AngleMapping {
         return jsonTransition;
     }
 
+    /**
+     *
+     * @return the Panorama transition object created with this object's attributes
+     */
     @Override
     public PanoramaObject toPanoramaObject() {
         Tuple<Double, Double> thetaPhi = getThetaPhi();
         return new PanoramaTransitionObject(thetaPhi.getX(), thetaPhi.getY(), getId(), getUrl());
     }
 
+    /**
+     *
+     * @param obj the object to compare to
+     * @return true iff the two objects are equal
+     */
     @Override
     public boolean equals(Object obj) {
         if ((obj == null) || (getClass() != obj.getClass())) {
@@ -73,6 +96,10 @@ public class TransitionObject extends AngleMapping {
                 super.equals(obj);
     }
 
+    /**
+     *
+     * @return the hashcode of this object
+     */
     @Override
     public int hashCode() {
         int result = mId;

@@ -11,6 +11,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.ListView;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -27,21 +28,27 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.actionWithAssertions;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.logUserOut;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait250ms;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait500ms;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.waitNms;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.AllOf.allOf;
 
 public class CompleteBehaviorTest {
 
-    private static final String TAG = "LoginActivityTest";
+    private static final String TAG = "CompleteBehaviorTest";
     /*
  Random string, for the registration.
  Source:
@@ -52,6 +59,7 @@ public class CompleteBehaviorTest {
     @Rule
     public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
 
+    @SuppressWarnings("AnonymousInnerClassWithTooManyMethods")
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
@@ -87,11 +95,10 @@ public class CompleteBehaviorTest {
 
 
     private void login(String testUserMail,String testUserPassword){
-        wait1s(TAG);
+        wait250ms(TAG);
 
-        onView(withId(R.id.goto_login_button)).perform(click());
-        onView(withId(R.id.login_email)).perform(typeText(testUserMail), closeSoftKeyboard());
-        onView(withId(R.id.login_password)).perform(typeText(testUserPassword), closeSoftKeyboard());
+        onView(withId(R.id.login_email)).perform(replaceText(testUserMail), closeSoftKeyboard());
+        onView(withId(R.id.login_password)).perform(replaceText(testUserPassword), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
     }
     @Test
@@ -102,38 +109,55 @@ public class CompleteBehaviorTest {
 
         wait500ms(TAG);
 
-        String testUserMail = "test@" + randomString(6) + ".org";
+        String testUserMail = randomString(8) + "@astutus.org";
         String testUserPassword = "12345";
         String testUserPhone = "+078888888";
 
         onView(withId(R.id.goto_registration_button)).perform(closeSoftKeyboard()).perform(click());
         wait500ms(TAG);
+        testAlreadyRegisteredUser();
 
-        onView(withId(R.id.registration_email)).perform(typeText(testUserMail), closeSoftKeyboard());
-        onView(withId(R.id.registration_password)).perform(typeText(testUserPassword), closeSoftKeyboard());
-        onView(withId(R.id.registration_password_bis)).perform(typeText(testUserPassword), closeSoftKeyboard());
-        onView(withId(R.id.registration_phone)).perform(typeText(testUserPhone), closeSoftKeyboard());
-        onView(withId(R.id.register_button)).perform(click());
+        onView(withId(R.id.goto_registration_button)).perform(closeSoftKeyboard()).perform(click());
+        wait500ms(TAG);
 
+        registerNewUser(testUserMail, testUserPassword, testUserPhone);
+
+        waitNms(TAG, 3000);
+        onView(withId(R.id.goto_login_button)).perform(click());
+
+        //Tests invalid login
+        login("HolaSenior@Shanchez.co", "PortesTriEstate");
+        wait250ms(TAG);
+
+        onView(withId(R.id.goto_reset_button)).perform(click());
+        testResetFunctionality();
+        
+        //logs valid user in
         login(testUserMail,testUserPassword);
-
         wait1s(TAG);
 
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
-        wait500ms(TAG);
+
+        filterTest();
+
+
+        // tests the favorites function
         addToFavorite();
-        onView(withId(R.id.FavoriteButton)).perform(click());
         addToFavorite();
-        onView(withId(R.id.FavoriteButton)).perform(click());
         addToFavorite();
-        onView(withId(R.id.FavoriteButton)).perform(click());
+
+        onView(withId(R.id.FavoritesButton)).perform(click());
 
         onView(withId(R.id.logOutButton)).perform(click());
         wait500ms(TAG);
-        login(testUserMail,testUserPassword);
 
+        onView(withId(R.id.goto_login_button)).perform(click());
+        login("qwert@qwert.org","12345");
         wait500ms(TAG);
-        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(7).perform(click());
+
+        onView(withId(R.id.FavoritesButton)).perform(click());
+
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
 
         // wait 3s for the images to load
@@ -152,9 +176,101 @@ public class CompleteBehaviorTest {
         wait250ms(TAG);
 
         onView(withId(R.id.action_launch_panorama)).perform(click());
+
+        waitNms(TAG, 5000);
+
         ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE,GeneralLocation.VISIBLE_CENTER, Press.FINGER);
         onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
+
+        waitNms(TAG, 3000);
+        pressBack();
+
         logUserOut();
+
+    }
+
+    private void filterTest() {
+
+        onView(withId(R.id.filterButtonPopUp)).perform(click());
+        onView(withId(R.id.MaxRooms)).perform(replaceText("3"), closeSoftKeyboard());
+        onView(withId(R.id.MinRooms)).perform(replaceText("3"), closeSoftKeyboard());
+        onView(withId(R.id.MaxSurface)).perform(replaceText("2000000"), closeSoftKeyboard());
+        onView(withId(R.id.MinSurface)).perform(replaceText("2000000"), closeSoftKeyboard());
+
+        onView(withId(R.id.MaxPrice)).perform(replaceText("100"), closeSoftKeyboard());
+        onView(withId(R.id.MinPrice)).perform(replaceText("100"), closeSoftKeyboard());
+
+        onView(withId(R.id.location)).perform(replaceText("Renens"), closeSoftKeyboard());
+        onView(withId(R.id.spinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(getString(R.string.building)))).perform(click());
+
+        onView(withId(R.id.filterButton)).perform(click());
+        wait250ms(TAG);
+
+        final int[] counts = {0};
+        onView(withId(R.id.houseList)).check(matches(new ViewTypeSafeMatcher(counts)));
+
+        for (int i = 0; i < counts[0]; i++) {
+            onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(i).
+                    check(matches(hasDescendant(withText(containsString(
+                            String.format(
+                                    getString(R.string.text_location_surface),
+                                    "Renens",
+                                    "2'000'000",
+                                    "3",
+                                    getString(R.string.rooms)
+                            ))))));
+            onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(i).
+                    check(matches(hasDescendant(withText(containsString(
+                            String.format(
+                                    getString(R.string.text_price_type),
+                                    "100",
+                                    getString(R.string.text_currency),
+                                    getString(R.string.building)
+                            ))))));
+        }
+
+        onView(withId(R.id.filterButtonPopUp)).perform(click());
+        wait250ms(TAG);
+        onView(withId(R.id.eraseButton)).perform(click());
+        onView(withId(R.id.filterButton)).perform(click());
+        wait250ms(TAG);
+
+
+    }
+
+    private void registerNewUser(String testUserMail, String testUserPassword, String testUserPhone) {
+
+        onView(withId(R.id.registration_email)).perform(replaceText(testUserMail), closeSoftKeyboard());
+        onView(withId(R.id.registration_password)).perform(replaceText(testUserPassword), closeSoftKeyboard());
+        onView(withId(R.id.registration_password_bis)).perform(replaceText(testUserPassword), closeSoftKeyboard());
+        onView(withId(R.id.registration_phone)).perform(replaceText(testUserPhone), closeSoftKeyboard());
+        onView(withId(R.id.register_button)).perform(click());
+    }
+
+    private void testAlreadyRegisteredUser() {
+        onView(withId(R.id.registration_email)).perform(replaceText("test@astutus.org"), closeSoftKeyboard());
+        onView(withId(R.id.registration_password)).perform(replaceText("abcdef"), closeSoftKeyboard());
+        onView(withId(R.id.registration_password_bis)).perform(replaceText("abcdef"), closeSoftKeyboard());
+        onView(withId(R.id.register_button)).perform(click());
+        // Causes an error because the user is already registered
+        wait250ms(TAG);
+
+        pressBack();
+    }
+
+    private void testResetFunctionality() {
+        // Invalid mail
+        onView(withId(R.id.reset_email)).perform(replaceText("test@invalidMail"), closeSoftKeyboard());
+        onView(withId(R.id.reset_button)).perform(click());
+
+        // Error "no email matching"
+        onView(withId(R.id.reset_email)).perform(replaceText("UnkownEmail@astutus.org"), closeSoftKeyboard());
+        onView(withId(R.id.reset_button)).perform(click());
+
+        // perform real reset
+        onView(withId(R.id.reset_email)).perform(replaceText("test@astutus.org"), closeSoftKeyboard());
+        onView(withId(R.id.reset_button)).perform(click());
 
     }
 
@@ -164,4 +280,28 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.addToFavorites)).perform(click());
         pressBack();
     }
+
+    private String getString(int id) {
+        return mActivityTestRule.getActivity().getString(id);
+    }
+
+    private static class ViewTypeSafeMatcher extends TypeSafeMatcher<View> {
+        private final int[] counts;
+
+        ViewTypeSafeMatcher(int[] extCounts) {
+            counts = extCounts;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+        }
+
+        @Override
+        public boolean matchesSafely(View item) {
+            ListView listView = (ListView) item;
+            counts[0] = listView.getCount();
+            return true;
+        }
+    }
+
 }
