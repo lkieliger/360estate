@@ -69,46 +69,48 @@ public class DescriptionActivity extends AppCompatActivity {
                 }
             };
 
-        final LinearLayout scrollImg = (LinearLayout) findViewById(R.id.imgs);
-        for (String url : imagesURL) {
-            ImageView imgV = new ImageView(this);
-            imgV.setTag(url);
-            getImgFromUrlIntoView(this, url, imgV);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(cellSize, cellSize);
-            params.setMargins(0, 0, 0, 0);
-            imgV.setLayoutParams(params);
-            imgV.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imgV.setOnClickListener(imgListener);
-            scrollImg.addView(imgV);
-        }
-
-        Button button = (Button) findViewById(R.id.action_launch_panorama);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (isInternetAvailable(mContext)) {
-                    Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
-                    intentToPanorama.putExtra("id", idItem);
-                    startActivity(intentToPanorama);
-                } else {
-
-                    shortToast(mContext, mContext.getResources().getText(R.string.no_panorama_view));
-                }
+            final LinearLayout scrollImg = (LinearLayout) findViewById(R.id.imgs);
+            for (String url : imagesURL) {
+                ImageView imgV = new ImageView(this);
+                imgV.setTag(url);
+                getImgFromUrlIntoView(this, url, imgV);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(cellSize, cellSize);
+                params.setMargins(0, 0, 10, 0);
+                imgV.setLayoutParams(params);
+                imgV.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imgV.setOnClickListener(imgListener);
+                scrollImg.addView(imgV);
             }
-        });
 
-        checkBoxFavorite = (CheckBox) findViewById(R.id.addToFavorites);
+            Button button = (Button) findViewById(R.id.action_launch_panorama);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-        isInitiallyInFavorite = ListActivity.favoriteContainsUrl(idItem);
+                    if (isInternetAvailable(mContext)) {
+                        Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
+                        intentToPanorama.putExtra("id", idItem);
+                        startActivity(intentToPanorama);
+                    } else {
 
-        if (isInitiallyInFavorite) {
-            checkBoxFavorite.setChecked(true);
-        } else {
-            checkBoxFavorite.setChecked(false);
+                        shortToast(mContext, mContext.getResources().getText(R.string.no_panorama_view));
+                    }
+                }
+            });
+
+            checkBoxFavorite = (CheckBox) findViewById(R.id.addToFavorites);
+
+            isInitiallyInFavorite = ListActivity.favoriteContainsUrl(idItem);
+
+            if (isInitiallyInFavorite) {
+                checkBoxFavorite.setChecked(true);
+            } else {
+                checkBoxFavorite.setChecked(false);
+            }
+            checkBoxFavorite.setOnClickListener(new OnCheckedFavorite(idItem, checkBoxFavorite));
         }
-        checkBoxFavorite.setOnClickListener(new OnCheckedFavorite(idItem, checkBoxFavorite));
     }
+
 
     @Override
     public void onBackPressed() {

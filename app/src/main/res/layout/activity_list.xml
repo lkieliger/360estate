@@ -31,7 +31,7 @@
 
         <ToggleButton
             android:layout_marginTop="3dp"
-            android:id="@+id/FavoriteButton"
+            android:id="@+id/FavoritesButton"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:drawableTop="@drawable/star_selector"

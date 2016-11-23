@@ -76,6 +76,18 @@
                 android:text="@string/action_login"
                 android:textAppearance="@style/EstateButtonTextAppearance"
                 tools:ignore="UnusedIds" />
+
+            <Button
+                android:id="@+id/goto_reset_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:onClick="proceedToReset"
+                android:text="@string/reset_suggestion"
+                android:textAppearance="@style/EstateButtonTextAppearance"
+                android:visibility="invisible"
+                tools:ignore="UnusedIds" />
         </LinearLayout>
     </ScrollView>
 
