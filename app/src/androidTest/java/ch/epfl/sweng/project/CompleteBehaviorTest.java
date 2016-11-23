@@ -125,8 +125,8 @@ public class CompleteBehaviorTest {
         wait500ms(TAG);
 
         registerNewUser(testUserMail, testUserPassword, testUserPhone);
+        waitNms(TAG, 6000);
 
-        waitNms(TAG, 3000);
         onView(withId(R.id.goto_login_button)).perform(click());
 
         //Tests invalid login
@@ -137,6 +137,7 @@ public class CompleteBehaviorTest {
         testResetFunctionality();
 
         //logs valid user in
+        wait500ms(TAG);
         login(testUserMail,testUserPassword);
         wait1s(TAG);
 
@@ -282,7 +283,7 @@ public class CompleteBehaviorTest {
         // perform real reset
         onView(withId(R.id.reset_email)).perform(replaceText("test@astutus.org"), closeSoftKeyboard());
         onView(withId(R.id.reset_button)).perform(click());
-
+        pressBack();
         wait250ms(TAG);
     }
 
