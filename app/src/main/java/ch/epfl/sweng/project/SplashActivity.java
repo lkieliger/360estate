@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 
 import com.parse.ParseUser;
 
@@ -17,12 +18,14 @@ public class SplashActivity extends AppCompatActivity {
     public static final String APP_ID = "360ESTATE";
     public static final String TAG = "SplashScreen";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ParseInitialiser.INSTANCE.initParse(this);
+
+        WebView wv = (WebView) findViewById(R.id.webview);
+        wv.loadUrl("file:///android_asset/logo_gif_xxhdpi.gif");
 
         // Check if the user is already logged in in the localDatastore, and jump to the ListActivity accordingly
         if (userAlreadyLoggedIn()) {

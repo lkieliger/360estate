@@ -21,67 +21,44 @@
         android:orientation="vertical"
         tools:ignore="UselessParent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.8"
-            android:gravity="center">
+        <WebView
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="50dp"
+            android:id="@+id/webview"
+            android:layout_width="336dp"
+            android:layout_height="211dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.54" />
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:contentDescription="@string/description_logo"
-                app:srcCompat="@drawable/logo" />
-        </RelativeLayout>
-    <LinearLayout
+        <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
             android:gravity="center"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             >
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            >
+
 
             <Button
                 android:id="@+id/goto_login_button"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:onClick="proceedToLogin"
-                android:text="@string/action_login" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            >
+                android:text="@string/action_login"
+                android:layout_marginBottom="60dp"
+                />
 
             <Button
+
                 android:id="@+id/goto_registration_button"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:onClick="proceedToRegistration"
                 android:text="@string/action_goto_registration" />
 
-        </RelativeLayout>
     </LinearLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2.25"
-            android:gravity="center" />
-
 
     </LinearLayout>
 
