@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
-
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.squareup.picasso.Picasso;
@@ -122,14 +121,14 @@ public final class DataMgmt {
         if (query != null) {
 
             if (!isInternetAvailable(context)) {
-                shortToast(context, context.getResources().getText(R.string.no_internet_acces));
+                shortToast(context, context.getResources().getText(R.string.no_internet_access));
                 query.fromLocalDatastore();
             }
 
             query.findInBackground(new FindCallback<Item>() {
                 public void done(List<Item> objects, ParseException e) {
                     if (e == null) {
-                        Log.d("DataMgmt", "Retrieved " + objects.size() + " house items");
+                        Log.d(TAG, "Retrieved " + objects.size() + " house items");
                         itemList.clear();
                         itemList.addAll(objects);
                         itemAdapter.notifyDataSetChanged();
@@ -154,7 +153,7 @@ public final class DataMgmt {
 
 
     /**
-     * @note this function is called only if internet is available.
+     * this function should only be called if internet is available.
      */
     public static HouseManager getHouseManager(String id, final Context context) {
         Resources resources = getResourcesObject(id, context).get(0); //
@@ -168,7 +167,7 @@ public final class DataMgmt {
             startingUrl = resources.getStartingUrl();
         } catch (JSONException e) {
             if (BuildConfig.DEBUG) {
-                Log.d("DataMgmt", "Error: " + e.getMessage());
+                Log.d(TAG, "Error: " + e.getMessage());
             }
         }
 
@@ -187,13 +186,15 @@ public final class DataMgmt {
         List<Resources> resourcesList = getResourcesObject(id, context);
 
 
+
+
         if (!resourcesList.isEmpty()) {
             Resources resource = resourcesList.get(0);
             try {
                 urls.addAll(resource.getPicturesList());
             } catch (JSONException e) {
                 if (BuildConfig.DEBUG) {
-                    Log.d("DataMgmt", "Error: " + e.getMessage());
+                    Log.d(TAG, "Error: " + e.getMessage());
                 }
             }
 
@@ -210,7 +211,7 @@ public final class DataMgmt {
         List<Resources> listResource = new ArrayList<>();
 
         if (!isInternetAvailable(context)) {
-            shortToast(context, context.getResources().getText(R.string.no_internet_acces));
+            shortToast(context, context.getResources().getText(R.string.no_internet_access));
             query.fromLocalDatastore();
         }
 
@@ -226,18 +227,12 @@ public final class DataMgmt {
 
         } catch (ParseException e) {
             if (BuildConfig.DEBUG) {
-                Log.d("DataMgmt", "Error: " + e.getMessage());
+                Log.d(TAG, "Error: " + e.getMessage());
             }
         }
 
-        /**
-         if (listResource.isEmpty()) {
-         throw new IllegalArgumentException("DataMgmt Error: No resource has this id.");
-
-         }
-         **/
         if (listResource.size() > 1)
-            Log.d("DataMgmt", "Warning: The same id has different Resources.");
+            Log.d(TAG, "Warning: The same id has different Resources.");
 
         return listResource;
     }
@@ -256,6 +251,7 @@ public final class DataMgmt {
         List<Favorites> listFavorites = new ArrayList<>();
 
 
+
         try {
             listFavorites = query.find();
         } catch (ParseException e) {
@@ -265,7 +261,7 @@ public final class DataMgmt {
         }
 
         if (listFavorites.size() > 1)
-            Log.d("DataMgmt", "Warning: The same id has different Favorites.");
+            Log.d(TAG, "Warning: The same id has different Favorites.");
 
         Favorites f;
         if (listFavorites.isEmpty()) {

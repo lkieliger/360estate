@@ -5,19 +5,26 @@
         <item name="colorPrimary">@color/appGray</item>
         <item name="colorPrimaryDark">@color/appGray</item>
         <item name="colorAccent">@color/appBlue</item>
-        <item name="android:buttonStyle">@style/EstateButton</item>
-        <item name="android:background">@color/appWhite</item>
+        <item name="android:buttonStyle">@style/MyButton</item>
+        <item name="android:buttonStyleToggle">@style/MyButton</item>
+        <item name="android:autoCompleteTextViewStyle">@style/AutoTextView</item>
+        <item name="android:background">@color/colorBackground</item>
+
     </style>
     <style name="FullScreenDialogTheme" parent="android:Theme.Material.NoActionBar.Fullscreen"/>
 
+    <style name="AutoTextView" parent="android:Widget.AutoCompleteTextView">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@color/colorBlack</item>
+
+    </style>
     <style name="EstateButtonTextAppearance" parent="@android:style/TextAppearance.Medium">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">bold</item>
 
     </style>
-
-    <style name="EstateButton" parent="android:style/Widget.Button">
-        <item name="android:background">@drawable/button_shape</item>
+    <style name="MyButton" parent="android:style/Widget.Button">
+        <item name="android:background">@drawable/button_selector</item>
         <item name="android:textAppearance">@style/EstateButtonTextAppearance</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/appWhite</item>

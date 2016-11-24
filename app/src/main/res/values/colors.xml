@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorBackground">#FFFFFFFF</color>
+    <color name="buttonColor">#33B5E5</color>
+    <color name="colorPressed">#E08fe7fd</color>
+    <color name="colorItemPressed">#C08fe7fd</color>
+    <color name="colorSelected">#F0FFFFFF</color>
+    <color name="colorTransparent">#C08fe7fd</color>
+    <color name="colorItem">#f0faff</color>
+    <color name="colorTrueTransparent">#00FFFFFF</color>
+    <color name="colorAccent">#FF4081</color>
     <color name="appWhite">#FFFFFF</color>
     <color name="appBlue">#03BBF6</color>
     <color name="appGray">#8a8a8a</color>
 </resources>
+<!--
+<color name="colorBackground">#8fe7fd</color>
+    <
+    "colorItem">#508fe7fd bleuté
+    "colorItem">#e6edef gris1
+    "colorItem">#f0f7f9 gris2
+    "colorItem">#f5f5f5 material gris
+    "colorItem">#e0ebf0 un peu plus bleu
+    "colorItem">#e9f6fc bleu très clair
+    "colorItem">#f0faff bleu très très clair <- itemColor
+    "colorItem">#f6fdff bleu suggéré
+    "colorItem">#f8f8f8 gris un peu moins clair mais très clair
+-->

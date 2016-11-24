@@ -4,7 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.parse.ParseException;
@@ -45,6 +47,25 @@ public class RegisterActivity extends AppCompatActivity {
         mPasswordBis = (TextView) findViewById(R.id.registration_password_bis);
         mPhoneNumber = (TextView) findViewById(R.id.registration_phone);
         mAppContext = getApplicationContext();
+
+        mPhoneNumber.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                // If triggered by an enter key, this is the event; otherwise, this is null.
+                if (event != null) {
+                    // if shift key is down, then we want to insert the '\n' char in the TextView;
+                    // otherwise, the default action is to send the message.
+                    if (!event.isShiftPressed()) {
+                        attemptRegistration(v);
+                        return true;
+                    }
+                    return false;
+                }
+
+                attemptRegistration(v);
+                return true;
+            }
+        });
     }
 
 

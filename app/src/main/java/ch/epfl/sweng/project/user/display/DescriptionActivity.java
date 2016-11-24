@@ -19,6 +19,7 @@ import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.slider.SlideActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
+import ch.epfl.sweng.project.slider.SlideActivity;
 
 import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;
 import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
@@ -75,53 +76,49 @@ public class DescriptionActivity extends AppCompatActivity {
             for (String url : imagesURL) {
                 ImageView imgV = new ImageView(this);
                 imgV.setTag(url);
+                getImgFromUrlIntoView(this, url, imgV);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(cellSize, cellSize);
                 params.setMargins(0, 0, 10, 0);
                 imgV.setLayoutParams(params);
-                getImgFromUrlIntoView(this, url, imgV);
+                imgV.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imgV.setOnClickListener(imgListener);
                 scrollImg.addView(imgV);
             }
-        }
 
-        Button button = (Button) findViewById(R.id.action_launch_panorama);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            Button button = (Button) findViewById(R.id.action_launch_panorama);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                if (isInternetAvailable(mContext)) {
-                    Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
-                    intentToPanorama.putExtra("id", idItem);
-                    startActivity(intentToPanorama);
+                    if (isInternetAvailable(mContext)) {
+                        Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
+                        intentToPanorama.putExtra("id", idItem);
+                        startActivity(intentToPanorama);
+                    } else {
 
-
-                } else {
-
-                    shortToast(mContext, mContext.getResources().getText(R.string.no_panorama_view));
+                        shortToast(mContext, mContext.getResources().getText(R.string.no_panorama_view));
+                    }
                 }
+            });
+
+            checkBoxFavorite = (CheckBox) findViewById(R.id.addToFavorites);
+
+            isInitiallyInFavorite = ListActivity.favoriteContainsUrl(idItem);
+
+            if (isInitiallyInFavorite) {
+                checkBoxFavorite.setChecked(true);
+            } else {
+                checkBoxFavorite.setChecked(false);
             }
-        });
-
-        checkBoxFavorite = (CheckBox) findViewById(R.id.addToFavorites);
-
-        isInitiallyInFavorite = ListActivity.favoriteContainsUrl(idItem);
-
-        if (isInitiallyInFavorite) {
-            checkBoxFavorite.setChecked(true);
-        } else {
-            checkBoxFavorite.setChecked(false);
+            checkBoxFavorite.setOnClickListener(new OnCheckedFavorite(idItem, checkBoxFavorite));
         }
-
-
-        checkBoxFavorite.setOnClickListener(new OnCheckedFavorite(idItem, checkBoxFavorite));
     }
+
 
     @Override
     public void onBackPressed() {
         if (isInternetAvailable(mContext)) {
             ListActivity.synchronizeServer();
-
-
             if (getIntent().getBooleanExtra("isToggled", false)) {
                 if (isInitiallyInFavorite != checkBoxFavorite.isChecked()) {
                     if (isInitiallyInFavorite) {
@@ -131,10 +128,8 @@ public class DescriptionActivity extends AppCompatActivity {
                     }
                 }
             }
-
-            ListActivity.notifyItemAdapter();
         }
-
+        ListActivity.notifyItemAdapter();
         super.onBackPressed();
     }
 

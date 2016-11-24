@@ -73,6 +73,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private RenderingLogic mIdleRendering = new RenderingLogic() {
         @Override
         public void render() {
+            //Log.i(TAG, "Rendering logic is set to idle");
             if (debugCounter == 60) {
                 debugCounter = 0;
                 DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
@@ -87,6 +88,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private RenderingLogic mTransitioningRendering = new RenderingLogic() {
         @Override
         public void render() {
+            //Log.i(TAG, "Rendering logic is set to transitioning");
             updateScene();
             mCamera.setPosition(ORIGIN);
             mRenderLogic = mIdleRendering;
@@ -98,13 +100,15 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private RenderingLogic mSlidingRendering = new RenderingLogic() {
         @Override
         public void render() {
+            //Log.i(TAG, "Rendering logic is set to sliding");
             double travellingLength = mCamera.getPosition().length();
 
             if (travellingLength < CAM_TRAVEL_DISTANCE) {
-                Vector3 v = new Vector3(mTargetPos.x, 0, mTargetPos.z);
+                Vector3 v = new Vector3(mTargetPos.x, mTargetPos.y + 25, mTargetPos.z);
                 Vector3 pos = new Vector3(mCamera.getPosition());
                 mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
             }
+
             if (travellingLength >= CAM_TRAVEL_DISTANCE && NextPanoramaDataBuilder.isReady()) {
                 mRenderLogic = mTransitioningRendering;
             }
@@ -113,6 +117,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     public PanoramaRenderer(Context context, Display display, HouseManager houseManager) {
         super(context);
+
+        NextPanoramaDataBuilder.resetData();
 
         mPicker = new ObjectColorPicker(this);
         mPicker.setOnObjectPickedListener(this);
@@ -150,7 +156,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
         mRenderLogic = mIdleRendering;
         mTargetPos = ORIGIN;
-
 
         setFrameRate(60);
     }
@@ -333,9 +338,11 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     @Override
     public void onObjectPicked(@NonNull Object3D object) {
-        Log.d(TAG, "ObjectPicked");
-        mTargetPos = object.getWorldPosition();
-        ((PanoramaObject) object).reactWith(this);
+        if (mRenderLogic == mIdleRendering) {
+            Log.d(TAG, "ObjectPicked");
+            mTargetPos = object.getWorldPosition();
+            ((PanoramaObject) object).reactWith(this);
+        }
     }
 
     @Override
@@ -365,7 +372,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      */
     public static final class NextPanoramaDataBuilder {
         public static final int INVALID_ID = -1;
-        public static Bitmap INVALID_BITMAP = null;
+        public static final Bitmap INVALID_BITMAP = null;
+        private static final String TAG = "NextPanoDataBuilder";
         private static Integer nextPanoId = INVALID_ID;
         private static Bitmap nextPanoBitmap = INVALID_BITMAP;
 
@@ -391,6 +399,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
                 throw new IllegalStateException("Next panorama id should not be set multiple times");
             }
             nextPanoId = i;
+            logStatus();
         }
 
         /**
@@ -407,6 +416,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
                 throw new IllegalStateException("Next panorama bitmap should not be set multiple times");
             }
             nextPanoBitmap = b;
+            logStatus();
         }
 
         /**
@@ -420,7 +430,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
             Tuple<Integer, Bitmap> result = new Tuple<>(nextPanoId, nextPanoBitmap);
             resetData();
-
             return result;
         }
 
@@ -431,6 +440,11 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         public static void resetData() {
             nextPanoId = INVALID_ID;
             nextPanoBitmap = INVALID_BITMAP;
+            logStatus();
+        }
+
+        private static void logStatus() {
+            Log.i(TAG, "ID: " + nextPanoId + ", Bitmap@" + nextPanoBitmap);
         }
     }
 
