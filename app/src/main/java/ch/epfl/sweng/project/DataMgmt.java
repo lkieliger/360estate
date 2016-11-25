@@ -88,7 +88,7 @@ public final class DataMgmt {
         List<ParseQuery<Item>> queries = new ArrayList<>();
 
         if (isFavoriteToggle) {
-            Set<String> listId = DataMgmt.getFavoriteFromId(idUser,context).getFavoritesFromLocal();
+            Set<String> listId = DataMgmt.getFavoriteFromId(idUser, context).getFavoritesFromLocal();
             if (!listId.isEmpty()) {
                 for (String s : listId) {
                     ParseQuery<Item> queryTemp = ParseQuery.getQuery(Item.class);
@@ -186,8 +186,6 @@ public final class DataMgmt {
         List<Resources> resourcesList = getResourcesObject(id, context);
 
 
-
-
         if (!resourcesList.isEmpty()) {
             Resources resource = resourcesList.get(0);
             try {
@@ -239,7 +237,7 @@ public final class DataMgmt {
 
 
     public static void overrideFavorites(String idUser, Collection<String> list, Context context) {
-        Favorites f = getFavoriteFromId(idUser,context);
+        Favorites f = getFavoriteFromId(idUser, context);
         f.setFavorites((Set<String>) list);
 
     }
@@ -250,22 +248,17 @@ public final class DataMgmt {
 
         List<Favorites> listFavorites = new ArrayList<>();
 
-        if(!isInternetAvailable(context)){
+        if (!isInternetAvailable(context)) {
             query.fromLocalDatastore();
         }
-
-
-
-
 
 
         try {
 
 
-
             listFavorites = query.find();
 
-            if(isInternetAvailable(context)){
+            if (isInternetAvailable(context)) {
                 ParseObject.pinAllInBackground(listFavorites);
             }
         } catch (ParseException e) {
@@ -280,15 +273,12 @@ public final class DataMgmt {
         Favorites f;
         if (listFavorites.isEmpty()) {
             f = saveNewFavorites(idUser);
-            if(isInternetAvailable(context)) {
+            if (isInternetAvailable(context)) {
                 f.synchronizeFromServer(); // fetch local set.
             }
         } else {
             f = listFavorites.get(0);
-            if(!isInternetAvailable(context)){
-                System.out.println("Favorite is cached. ");
 
-            }
         }
 
         return f;

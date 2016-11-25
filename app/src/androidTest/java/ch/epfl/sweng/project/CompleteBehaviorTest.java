@@ -138,10 +138,12 @@ public class CompleteBehaviorTest {
 
         //logs valid user in
         wait500ms(TAG);
-        login(testUserMail,testUserPassword);
+        login(testUserMail, testUserPassword);
         wait1s(TAG);
 
+
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
+
 
         filterTest();
 
@@ -191,7 +193,8 @@ public class CompleteBehaviorTest {
 
         waitNms(TAG, 5000);
 
-        ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE, GeneralLocation.VISIBLE_CENTER, Press.FINGER);
+        ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE, GeneralLocation.VISIBLE_CENTER
+                , Press.FINGER);
         onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
 
         waitNms(TAG, 3000);

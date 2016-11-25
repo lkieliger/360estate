@@ -60,22 +60,13 @@ public class ListActivity extends AppCompatActivity {
         mContext = getApplicationContext();
 
 
-        System.out.println("The number of element  of itemList before favorite syncronization : " + itemList.size());
-
-
         setFavorites(DataMgmt.getFavoriteFromId(idUser, mContext));
 
 
         // if there is no Internet , the local list is empty.
-        if(isInternetAvailable(mContext)) {
+        if (isInternetAvailable(mContext)) {
             f.synchronizeFromServer();
         }
-
-
-
-
-
-        System.out.println("The number of element of itemList after favorite syncronization : " + itemList.size());
 
 
         setItemAdapter(new ItemAdapter(this, itemList));
@@ -95,7 +86,7 @@ public class ListActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                if(isInternetAvailable(mContext)) {
+                if (isInternetAvailable(mContext)) {
                     ListActivity.synchronizeServer(mContext);
                 }
                 logOutUser();
@@ -128,7 +119,7 @@ public class ListActivity extends AppCompatActivity {
         favoriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(isInternetAvailable(mContext)) {
+                if (isInternetAvailable(mContext)) {
                     f.synchronizeServer(mContext);
                 }
                 isFavoriteToggle = b;
@@ -290,15 +281,10 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        if(isInternetAvailable(mContext)) {
+        if (isInternetAvailable(mContext)) {
             ListActivity.synchronizeServer(mContext);
         }
         super.onStop();
-    }
-
-    @Override
-    public void onBackPressed() {
-        //avoid to get back in SplashActivity.
     }
 
 
