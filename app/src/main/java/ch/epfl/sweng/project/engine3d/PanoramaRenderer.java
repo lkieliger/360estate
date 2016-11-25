@@ -26,7 +26,11 @@ import java.io.IOException;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.DataMgmt;
+import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.HouseManager;
+import ch.epfl.sweng.project.engine3d.components.PanoramaInfoCloser;
+import ch.epfl.sweng.project.engine3d.components.PanoramaInfoDisplay;
+import ch.epfl.sweng.project.engine3d.components.PanoramaInfoObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
 import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
@@ -44,6 +48,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public static final double SENSITIVITY = 50.0;
     public static final double CAM_TRAVEL_DISTANCE = 65.0;
     public static final Vector3 ORIGIN = new Vector3(0, 0, 0);
+    public static final int TEXTURE_COLOR = 0x0022c8ff;
     private static final double LERP_FACTOR = 0.03;
 
     private final String TAG = "Renderer";
@@ -209,6 +214,17 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mTaskManager.execute(url);
     }
 
+
+    public void displayText(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
+        Log.d(TAG, "Call to display text information.");
+        mPanoSphere.setTextToDisplay(textInfo, theta, panoramaInfoObject, getContext().getColor(R.color.appBlue), mPicker);
+    }
+
+    public void deleteInfo(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser) {
+        Log.d(TAG, "Call to delete text information.");
+        mPanoSphere.deleteTextToDisplay(panoramaInfoDisplay, panoramaInfoCloser, mPicker);
+    }
+
     /**
      * This method is called by the asynchronous task that fetched the panorama picture
      *
@@ -347,7 +363,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     @Override
     public void onNoObjectPicked() {
-
     }
 
     @Override

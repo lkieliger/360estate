@@ -39,7 +39,7 @@ public class TransitionObject extends AngleMapping {
      * @param extUrl the url of the referenced node
      */
     public TransitionObject(Double extTheta, Double extPhi, int extId, String extUrl) {
-        this(new Tuple<Double, Double>(extTheta, extPhi), extId, extUrl);
+        this(new Tuple<>(extTheta, extPhi), extId, extUrl);
     }
 
     public int getId() {

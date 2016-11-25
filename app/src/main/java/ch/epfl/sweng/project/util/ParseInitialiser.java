@@ -33,6 +33,7 @@ public enum ParseInitialiser {
             ParseObject.registerSubclass(Item.class);
             ParseObject.registerSubclass(Resources.class);
             ParseObject.registerSubclass(Favorites.class);
+            ParseObject.registerSubclass(ClientRequest.class);
             parseInitialized = true;
         }
     }

@@ -17,6 +17,7 @@ public interface JSONTags {
     String startingIdTag = "startingId";
     String startingUrlTag = "startingUrl";
     String typeTag = "type";
+    String textInfoTag = "textInfo";
 
     String thetaTag = "theta";
     String phiTag = "phi";
