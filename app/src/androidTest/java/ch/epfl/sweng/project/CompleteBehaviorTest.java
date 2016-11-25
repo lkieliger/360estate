@@ -165,18 +165,23 @@ public class CompleteBehaviorTest {
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
 
-        /* TODO: Debug this part of the test
 
+        /*
         // wait 3s for the images to load
         waitNms(TAG, 3000);
+
+        ViewInteraction img0 = onView(childAtPosition(withId(R.id.scroll), 0));
+
 
         ViewInteraction img0 = onView(childAtPosition(
                 withParent(Matchers.allOf(withId(R.id.imgs),
                         withParent(withId(R.id.scroll)))), 0));
 
 
-        wait500ms(TAG);
 
+
+
+        wait500ms(TAG);
         img0.perform(scrollTo());
         wait250ms(TAG);
         img0.perform(click());
