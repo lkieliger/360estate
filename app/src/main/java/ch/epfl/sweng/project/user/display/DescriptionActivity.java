@@ -1,5 +1,6 @@
 package ch.epfl.sweng.project.user.display;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +18,10 @@ import java.util.ArrayList;
 
 import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
+import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.slider.SlideActivity;
+import ch.epfl.sweng.project.user.fragments.ContactMeDialogFragment;
 
 import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;
 import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
@@ -111,6 +114,15 @@ public class DescriptionActivity extends AppCompatActivity {
         }
     }
 
+
+    public void confirmContactRequest(View v) {
+        DialogFragment contactDialog = new ContactMeDialogFragment();
+        Bundle additionalInfo = new Bundle();
+        additionalInfo.putString(ClientRequest.LOOKFOR_TAG, idItem);
+        contactDialog.setArguments(additionalInfo);
+
+        contactDialog.show(getFragmentManager(), ContactMeDialogFragment.TAG);
+    }
 
     @Override
     public void onBackPressed() {

@@ -1,7 +1,11 @@
-var query = new Parse.Query(ClientRequest);
+Parse.initialize("360ESTATE");
+Parse.serverURL = 'https://360.astutus.org/parse/'
+
+var Resources = Parse.Object.extend("Resources");
+var query = new Parse.Query(Resources);
 query.find({
 	success : function(results) {
-
+		alert('sucessfully retrieved resource list');
 		// Find a <table> element with id="myTable":
 		var table = document.getElementById("resources-table");
 
@@ -13,8 +17,14 @@ query.find({
 
 			var row = table.insertRow(rowIndex);
 			var nameCell = row.insertCell(0);
+			var actionCell = row.insertCell(1);
 
 			nameCell.innerHTML = obj.id;
+			
+			var button = document.createElement("button");
+			button.innerHTML = "Delete";
+			//button.onclick = deleteParseObject;
+			
 			
 			})(object, table.rows.length);
 		}

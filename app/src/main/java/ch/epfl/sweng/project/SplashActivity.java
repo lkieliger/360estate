@@ -12,25 +12,14 @@ import android.webkit.WebView;
 
 import com.parse.ParseUser;
 
+import ch.epfl.sweng.project.data.parse.ParseInitialiser;
 import ch.epfl.sweng.project.user.LoginActivity;
 import ch.epfl.sweng.project.user.RegisterActivity;
 import ch.epfl.sweng.project.user.display.ListActivity;
-import ch.epfl.sweng.project.util.ParseInitialiser;
 
 public class SplashActivity extends AppCompatActivity {
     public static final String APP_ID = "360ESTATE";
     public static final String TAG = "SplashScreen";
-
-    private String getDpi(){
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        int density = dm.densityDpi;
-        if(density>580) return "xxhdpi";
-        if(density <= 580 && density >400) return "xxhdpi";
-        if(density <= 400 && density >270) return "xhdpi";
-        if(density <= 270 && density >190) return "hdpi";
-        return "mdpi";
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +29,17 @@ public class SplashActivity extends AppCompatActivity {
 
         WebView wv = (WebView) findViewById(R.id.webview);
 
-        wv.loadUrl("file:///android_asset/logo_gif-xxhdpi.gif");
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        float density = dm.xdpi;
+
+        String dpi;
+        if(density > 480) dpi = "xxxhpi";
+        else if(density > 320) dpi = "xxhpi";
+        else if(density > 240) dpi = "xhpi";
+        else if(density > 160) dpi = "hpi";
+        else dpi = "mdpi";
+
+        wv.loadUrl("file:///android_asset/logo_gif-"+dpi+".gif");
 
         // Check if the user is already logged in in the localDatastore, and jump to the ListActivity accordingly
         if (userAlreadyLoggedIn()) {
