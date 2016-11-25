@@ -160,7 +160,7 @@ public final class DataMgmt {
     public static HouseManager getHouseManager(String id, final Context context) {
         Resources resources = getResourcesObject(id, context).get(0); //
         List<PhotoSphereData> photoSphereDataList = new ArrayList<>();
-        int startingId = -1;
+        int startingId;
         String startingUrl = "";
 
         try {
@@ -171,6 +171,8 @@ public final class DataMgmt {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Error: " + e.getMessage());
             }
+            //If there is a problem during the parsiong of the data, we set the ID to -1
+            startingId = -1;
         }
 
         SparseArray<List<SpatialData>> sparseArray = new SparseArray<>();
