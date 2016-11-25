@@ -28,11 +28,15 @@ import java.util.Objects;
 
 import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
+import ch.epfl.sweng.project.data.Item;
 import ch.epfl.sweng.project.data.ItemAdapter;
 import ch.epfl.sweng.project.data.parse.objects.Favorites;
 import ch.epfl.sweng.project.data.parse.objects.Item;
 import ch.epfl.sweng.project.filter.EraseButtonListener;
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
+import ch.epfl.sweng.project.user.Favorites;
+
+import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -47,6 +51,11 @@ public class ListActivity extends AppCompatActivity {
     private Boolean isFavoriteToggle = false;
     private StateOfPopUpLayout stateOfPopUpLayout = null;
     private Context mContext = null;
+    private final String idUser = ParseUser.getCurrentUser().getObjectId();
+
+    private static ItemAdapter itemAdapter = null;
+    private static List<Item> itemList = new ArrayList<>();
+    private static Favorites f = null;
     private ListView listView;
 
     private static void setFavorites(Favorites extFavorites) {
@@ -99,8 +108,16 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
         mContext = getApplicationContext();
 
-        setFavorites(DataMgmt.getFavoriteFromId(idUser));
-        f.synchronizeFromServer();
+
+        setFavorites(DataMgmt.getFavoriteFromId(idUser, mContext));
+
+
+        // if there is no Internet , the local list is empty.
+        if (isInternetAvailable(mContext)) {
+            f.synchronizeFromServer();
+        }
+
+
         setItemAdapter(new ItemAdapter(this, itemList));
         listView = (ListView) findViewById(R.id.houseList);
 
@@ -118,7 +135,9 @@ public class ListActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                ListActivity.synchronizeServer();
+                if (isInternetAvailable(mContext)) {
+                    ListActivity.synchronizeServer(mContext);
+                }
                 logOutUser();
             }
         });
@@ -149,9 +168,11 @@ public class ListActivity extends AppCompatActivity {
         favoriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                f.synchronizeServer();
+                if (isInternetAvailable(mContext)) {
+                    f.synchronizeServer(mContext);
+                }
                 isFavoriteToggle = b;
-                DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser,mContext);
+                DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser, mContext);
             }
         });
 
@@ -245,12 +266,13 @@ public class ListActivity extends AppCompatActivity {
                         minSurface.getText().toString()
                 );
                 DataMgmt.getItemList(itemCollection, itemAdapter, stateOfPopUpLayout, isFavoriteToggle
-                        , idUser,mContext);
+                        , idUser, mContext);
                 listView.setAdapter(itemAdapter);
                 helpDialog.dismiss();
             }
         });
     }
+
 
     public void logOutUser() {
         ParseUser currentUser = ParseUser.getCurrentUser();
@@ -263,7 +285,9 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        ListActivity.synchronizeServer();
+        if (isInternetAvailable(mContext)) {
+            ListActivity.synchronizeServer(mContext);
+        }
         super.onStop();
     }
 

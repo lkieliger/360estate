@@ -1,5 +1,6 @@
 package ch.epfl.sweng.project.data.parse.objects;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.parse.ParseClassName;
@@ -90,9 +91,10 @@ public class Favorites extends ParseObject {
 
     public void synchronizeFromServer() {
         favorites = getFavoritesFromServer();
+
     }
 
-    public void synchronizeServer() {
-        DataMgmt.overrideFavorites(getIdUser(), favorites);
+    public void synchronizeServer( Context context) {
+        DataMgmt.overrideFavorites(getIdUser(), favorites, context );
     }
 }

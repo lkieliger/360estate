@@ -127,7 +127,7 @@ public class DescriptionActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (isInternetAvailable(mContext)) {
-            ListActivity.synchronizeServer();
+            ListActivity.synchronizeServer(mContext);
             if (getIntent().getBooleanExtra("isToggled", false)) {
                 if (isInitiallyInFavorite != checkBoxFavorite.isChecked()) {
                     if (isInitiallyInFavorite) {
@@ -145,7 +145,7 @@ public class DescriptionActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         if (isInternetAvailable(mContext)) {
-            ListActivity.synchronizeServer();
+            ListActivity.synchronizeServer(mContext);
         }
         super.onStop();
     }
