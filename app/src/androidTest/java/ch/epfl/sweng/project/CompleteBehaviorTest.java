@@ -136,9 +136,7 @@ public class CompleteBehaviorTest {
         login(testUserMail, testUserPassword);
         wait1s(TAG);
 
-
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
-
 
         filterTest();
 
@@ -162,23 +160,19 @@ public class CompleteBehaviorTest {
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
 
-        /* TODO: Debug this part of the test
 
+        /*
         // wait 3s for the images to load
         waitNms(TAG, 3000);
-
+        ViewInteraction img0 = onView(childAtPosition(withId(R.id.scroll), 0));
         ViewInteraction img0 = onView(childAtPosition(
                 withParent(Matchers.allOf(withId(R.id.imgs),
                         withParent(withId(R.id.scroll)))), 0));
-
-
         wait500ms(TAG);
-
         img0.perform(scrollTo());
         wait250ms(TAG);
         img0.perform(click());
         wait250ms(TAG);
-
         pressBack();
         */
 
@@ -188,13 +182,13 @@ public class CompleteBehaviorTest {
 
         waitNms(TAG, 5000);
 
-        ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE, GeneralLocation.VISIBLE_CENTER
-                , Press.FINGER);
+        ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE,
+                GeneralLocation.VISIBLE_CENTER, Press.FINGER);
         onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
-
+        wait1s(TAG);
+        onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
         waitNms(TAG, 3000);
         pressBack();
-
         logUserOut();
 
     }
@@ -281,8 +275,7 @@ public class CompleteBehaviorTest {
         // perform real reset
         onView(withId(R.id.reset_email)).perform(replaceText("test@astutus.org"), closeSoftKeyboard());
         onView(withId(R.id.reset_button)).perform(click());
-        pressBack();
-        wait250ms(TAG);
+        waitNms(TAG, 6000);
     }
 
 
