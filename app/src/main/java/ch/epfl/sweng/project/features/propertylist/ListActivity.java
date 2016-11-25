@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.DataMgmt;
 import ch.epfl.sweng.project.data.parse.objects.Favorites;
@@ -34,6 +35,8 @@ import ch.epfl.sweng.project.features.propertyDescription.DescriptionActivity;
 import ch.epfl.sweng.project.features.propertylist.adapter.ItemAdapter;
 import ch.epfl.sweng.project.features.propertylist.filter.FilterValues;
 import ch.epfl.sweng.project.features.propertylist.listeners.EraseButtonListener;
+
+import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
 
 public final class ListActivity extends AppCompatActivity {
 
@@ -48,6 +51,7 @@ public final class ListActivity extends AppCompatActivity {
     private Boolean isFavoriteToggle = false;
     private FilterValues filterValues = null;
     private Context mContext = null;
+
 
     private ListView listView;
 
@@ -71,8 +75,8 @@ public final class ListActivity extends AppCompatActivity {
         return f.containsUrl(idItem);
     }
 
-    public static void synchronizeServer() {
-        f.synchronizeServer();
+    public static void synchronizeServer(Context context) {
+        f.synchronizeServer(context);
     }
 
     public static void notifyItemAdapter() {
@@ -259,19 +263,23 @@ public final class ListActivity extends AppCompatActivity {
                         minSurface.getText().toString()
                 );
                 DataMgmt.getItemList(itemCollection, itemAdapter, filterValues, isFavoriteToggle
-                        , idUser,mContext);
+                        , idUser, mContext);
                 listView.setAdapter(itemAdapter);
                 helpDialog.dismiss();
             }
         });
     }
 
+
     public void logOutUser() {
+
         ParseUser currentUser = ParseUser.getCurrentUser();
 
         if (currentUser != null) {
             ParseUser.logOut();
         }
+
+
         finish();
     }
 
@@ -282,4 +290,6 @@ public final class ListActivity extends AppCompatActivity {
         }
         super.onStop();
     }
+
+
 }

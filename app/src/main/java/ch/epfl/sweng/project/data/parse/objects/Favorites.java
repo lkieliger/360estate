@@ -94,7 +94,7 @@ public final class Favorites extends ParseObject {
 
     }
 
-    public void synchronizeServer( Context context) {
-        DataMgmt.overrideFavorites(getIdUser(), favorites, context );
+    public void synchronizeServer(Context context) {
+        DataMgmt.overrideFavorites(getIdUser(), favorites, context);
     }
 }

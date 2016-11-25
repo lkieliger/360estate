@@ -39,7 +39,7 @@ public final class SplashActivity extends AppCompatActivity {
         else if (density > 160) dpi = "hdpi";
         else dpi = "mdpi";
 
-        wv.loadUrl("file:///android_asset/logo_gif-"+dpi+".gif");
+        wv.loadUrl("file:///android_asset/logo_gif-" + dpi + ".gif");
 
         // Check if the user is already logged in in the localDatastore, and jump to the ListActivity accordingly
         if (userAlreadyLoggedIn()) {
