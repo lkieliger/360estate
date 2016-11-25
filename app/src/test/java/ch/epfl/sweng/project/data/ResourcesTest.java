@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.data.panorama.PhotoSphereData;
+import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
+import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
+import ch.epfl.sweng.project.data.parse.objects.JSONTags;
 import ch.epfl.sweng.project.data.parse.objects.Resources;
 import ch.epfl.sweng.project.util.Tuple;
 
@@ -55,7 +59,7 @@ public class ResourcesTest {
 
         Resources testResources = new Resources();
 
-        List<AngleMapping> neighborsList = new ArrayList<>();
+        List<SpatialData> neighborsList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             neighborsList.add(new TransitionObject(
                     new Tuple<>(0.14d + i / 1000d, 0.10d + i / 1000d),

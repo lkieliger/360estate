@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".user.display.ListActivity"
-    tools:showIn="@layout/activity_list"
-    tools:ignore="UnusedResources">
+    tools:context=".features.propertylist.ListActivity"
+    tools:ignore="UnusedResources"
+    tools:showIn="@layout/activity_list">
 
     <ListView
+        android:id="@+id/houseList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/houseList" />
+        android:layout_height="wrap_content" />
 </android.support.v4.widget.NestedScrollView>

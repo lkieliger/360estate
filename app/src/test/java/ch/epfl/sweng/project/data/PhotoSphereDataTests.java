@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.data.panorama.PhotoSphereData;
+import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
+import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
 import ch.epfl.sweng.project.util.Tuple;
 
 import static org.junit.Assert.assertFalse;
@@ -22,7 +25,7 @@ public class PhotoSphereDataTests {
     @SuppressWarnings("ObjectEqualsNull")
     @Test
     public void correctEqualsBehavior() {
-        List<AngleMapping> neighborsList = new ArrayList<>();
+        List<SpatialData> neighborsList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             neighborsList.add(new TransitionObject(
                     new Tuple<>(0.14d + i / 1000d, 0.10d + i / 1000d),
@@ -51,7 +54,7 @@ public class PhotoSphereDataTests {
                 build();
 
 
-        List<AngleMapping> neighborsList2 = new ArrayList<>(neighborsList);
+        List<SpatialData> neighborsList2 = new ArrayList<>(neighborsList);
         neighborsList2.set(0, new TransitionObject(new Tuple<>(1.4, 2.8), 13, "url"));
         PhotoSphereData pData6 = new PhotoSphereData.Builder(14).
                 setNeighborsList(neighborsList2).
@@ -70,7 +73,7 @@ public class PhotoSphereDataTests {
     @SuppressWarnings("ObjectEqualsNull")
     @Test
     public void correcthashCodeBehavior() {
-        List<AngleMapping> neighborsList = new ArrayList<>();
+        List<SpatialData> neighborsList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             neighborsList.add(new TransitionObject(
                     new Tuple<>(0.14d + i / 1000d, 0.10d + i / 1000d),

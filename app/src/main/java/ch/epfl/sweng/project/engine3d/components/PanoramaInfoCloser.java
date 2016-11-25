@@ -6,7 +6,7 @@ import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
 
-public class PanoramaInfoCloser extends PanoramaObject {
+public final class PanoramaInfoCloser extends PanoramaObject {
 
     private static final String TAG = "PanoramaInfoCloser";
     private static final int ICON_CLOSE = R.drawable.close_tex;

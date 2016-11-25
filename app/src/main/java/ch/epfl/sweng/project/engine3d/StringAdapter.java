@@ -9,7 +9,7 @@ import android.graphics.Rect;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StringAdapter {
+public final class StringAdapter {
 
     private final String text;
 

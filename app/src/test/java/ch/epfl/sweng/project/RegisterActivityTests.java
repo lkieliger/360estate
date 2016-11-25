@@ -10,7 +10,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowToast;
 
-import ch.epfl.sweng.project.user.RegisterActivity;
+import ch.epfl.sweng.project.userSupport.activities.RegisterActivity;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;

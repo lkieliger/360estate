@@ -2,7 +2,7 @@ package ch.epfl.sweng.project;
 
 import org.junit.Test;
 
-import ch.epfl.sweng.project.data.TransitionObject;
+import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

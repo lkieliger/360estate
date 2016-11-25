@@ -14,7 +14,7 @@ import org.rajawali3d.util.ObjectColorPicker;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.sweng.project.data.AngleMapping;
+import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
 
 
 /**
@@ -104,9 +104,9 @@ public final class PanoramaSphere extends Sphere {
         TextureManager.getInstance().replaceTexture(mPhotoTexture);
     }
 
-    public void attachPanoramaComponents(Iterable<AngleMapping> l, ObjectColorPicker p) {
+    public void attachPanoramaComponents(Iterable<SpatialData> l, ObjectColorPicker p) {
         Log.d(TAG, "Call to attach panorama");
-        for (AngleMapping am : l) {
+        for (SpatialData am : l) {
 
             PanoramaObject panoramaObject = am.toPanoramaObject();
 

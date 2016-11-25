@@ -13,11 +13,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.DataMgmt;
+import ch.epfl.sweng.project.data.DataMgmt;
 
 
 @ParseClassName("Favorites")
-public class Favorites extends ParseObject {
+public final class Favorites extends ParseObject {
 
     private static final String TAG = "Favorites";
     private Set<String> favorites = new HashSet<>();
