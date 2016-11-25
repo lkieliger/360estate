@@ -92,10 +92,9 @@ function generateData(){
 }
 
 function logoutUser(){
-	Parse.User.logOut().then(() => {
-		  var currentUser = Parse.User.current();  // this will now be null
-		  gotoLogin();
-		});
+	Parse.User.logOut();
+    var currentUser = Parse.User.current();
+    gotoLogin();
 }
 
 var controlPanel = document.getElementById("controlPanel");
