@@ -217,7 +217,9 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
     public void displayText(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
         Log.d(TAG, "Call to display text information.");
-        mPanoSphere.setTextToDisplay(textInfo, theta, panoramaInfoObject, getContext().getColor(R.color.appBlue), mPicker);
+        //noinspection deprecation
+        mPanoSphere.setTextToDisplay(textInfo, theta, panoramaInfoObject, getContext().getResources().getColor(R
+                .color.appBlue), mPicker);
     }
 
     public void deleteInfo(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser) {

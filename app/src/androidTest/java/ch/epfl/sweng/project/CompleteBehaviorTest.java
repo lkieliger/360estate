@@ -196,10 +196,10 @@ public class CompleteBehaviorTest {
         ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE,
                 GeneralLocation.VISIBLE_CENTER, Press.FINGER);
         onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
-
+        wait1s(TAG);
+        onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
         waitNms(TAG, 3000);
         pressBack();
-
         logUserOut();
 
     }
