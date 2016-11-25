@@ -88,7 +88,7 @@ public final class DataMgmt {
         List<ParseQuery<Item>> queries = new ArrayList<>();
 
         if (isFavoriteToggle) {
-            Set<String> listId = DataMgmt.getFavoriteFromId(idUser).getFavoritesFromLocal();
+            Set<String> listId = DataMgmt.getFavoriteFromId(idUser,context).getFavoritesFromLocal();
             if (!listId.isEmpty()) {
                 for (String s : listId) {
                     ParseQuery<Item> queryTemp = ParseQuery.getQuery(Item.class);
@@ -238,22 +238,36 @@ public final class DataMgmt {
     }
 
 
-    public static void overrideFavorites(String idUser, Collection<String> list) {
-        Favorites f = getFavoriteFromId(idUser);
+    public static void overrideFavorites(String idUser, Collection<String> list, Context context) {
+        Favorites f = getFavoriteFromId(idUser,context);
         f.setFavorites((Set<String>) list);
 
     }
 
-    public static Favorites getFavoriteFromId(String idUser) {
+    public static Favorites getFavoriteFromId(String idUser, Context context) {
         ParseQuery<Favorites> query = ParseQuery.getQuery(Favorites.class);
         query.whereEqualTo("idUser", idUser);
 
         List<Favorites> listFavorites = new ArrayList<>();
 
+        if(!isInternetAvailable(context)){
+            query.fromLocalDatastore();
+        }
+
+
+
+
 
 
         try {
+
+
+
             listFavorites = query.find();
+
+            if(isInternetAvailable(context)){
+                ParseObject.pinAllInBackground(listFavorites);
+            }
         } catch (ParseException e) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, e.getMessage());
@@ -266,9 +280,15 @@ public final class DataMgmt {
         Favorites f;
         if (listFavorites.isEmpty()) {
             f = saveNewFavorites(idUser);
-            f.synchronizeFromServer();
+            if(isInternetAvailable(context)) {
+                f.synchronizeFromServer(); // fetch local set.
+            }
         } else {
             f = listFavorites.get(0);
+            if(!isInternetAvailable(context)){
+                System.out.println("Favorite is cached. ");
+
+            }
         }
 
         return f;
@@ -276,13 +296,10 @@ public final class DataMgmt {
 
     private static Favorites saveNewFavorites(String idUser) {
         Favorites f = new Favorites(new HashSet<String>(), idUser);
-        try {
-            f.save();
-        } catch (ParseException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, e.getMessage());
-            }
-        }
+
+        f.saveEventually();
+
+
         return f;
     }
 
@@ -293,6 +310,8 @@ public final class DataMgmt {
         List<Item> listItems = new ArrayList<>();
         try {
             listItems = query.find();
+
+
         } catch (ParseException e) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, e.getMessage());

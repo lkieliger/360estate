@@ -34,6 +34,8 @@ import ch.epfl.sweng.project.filter.EraseButtonListener;
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
 import ch.epfl.sweng.project.user.Favorites;
 
+import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
+
 public class ListActivity extends AppCompatActivity {
 
 
@@ -57,8 +59,25 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
         mContext = getApplicationContext();
 
-        setFavorites(DataMgmt.getFavoriteFromId(idUser));
-        f.synchronizeFromServer();
+
+        System.out.println("The number of element  of itemList before favorite syncronization : " + itemList.size());
+
+
+        setFavorites(DataMgmt.getFavoriteFromId(idUser, mContext));
+
+
+        // if there is no Internet , the local list is empty.
+        if(isInternetAvailable(mContext)) {
+            f.synchronizeFromServer();
+        }
+
+
+
+
+
+        System.out.println("The number of element of itemList after favorite syncronization : " + itemList.size());
+
+
         setItemAdapter(new ItemAdapter(this, itemList));
         listView = (ListView) findViewById(R.id.houseList);
 
@@ -76,7 +95,9 @@ public class ListActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                ListActivity.synchronizeServer();
+                if(isInternetAvailable(mContext)) {
+                    ListActivity.synchronizeServer(mContext);
+                }
                 logOutUser();
             }
         });
@@ -107,9 +128,11 @@ public class ListActivity extends AppCompatActivity {
         favoriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                f.synchronizeServer();
+                if(isInternetAvailable(mContext)) {
+                    f.synchronizeServer(mContext);
+                }
                 isFavoriteToggle = b;
-                DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser,mContext);
+                DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser, mContext);
             }
         });
 
@@ -203,7 +226,7 @@ public class ListActivity extends AppCompatActivity {
                         minSurface.getText().toString()
                 );
                 DataMgmt.getItemList(itemCollection, itemAdapter, stateOfPopUpLayout, isFavoriteToggle
-                        , idUser,mContext);
+                        , idUser, mContext);
                 listView.setAdapter(itemAdapter);
                 helpDialog.dismiss();
             }
@@ -241,8 +264,8 @@ public class ListActivity extends AppCompatActivity {
         return f.containsUrl(idItem);
     }
 
-    static void synchronizeServer() {
-        f.synchronizeServer();
+    static void synchronizeServer(Context context) {
+        f.synchronizeServer(context);
     }
 
     static void notifyItemAdapter() {
@@ -267,12 +290,16 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        ListActivity.synchronizeServer();
+        if(isInternetAvailable(mContext)) {
+            ListActivity.synchronizeServer(mContext);
+        }
         super.onStop();
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+        //avoid to get back in SplashActivity.
+    }
 
 
 }
