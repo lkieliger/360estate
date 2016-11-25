@@ -36,7 +36,7 @@ query.find({
 			nameCell.innerHTML = obj.get('name');
 			lastNameCell.innerHTML = obj.get('lastName');
 			phoneCell.innerHTML = obj.get('phone');
-			houseIdCell.innerHTML = obj.get('houseId');
+			houseIdCell.innerHTML = obj.get('propertyId');
 
 			
 			var deleteParseObject = function(){
@@ -75,7 +75,7 @@ function generateData(){
 		newData.set("name", "Senior");
 		newData.set("lastName", "Sanchez");
 		newData.set("phone", "08001234567");
-		newData.set("houseId", id);
+		newData.set("propertyId", id);
 		
 		newData.save(null, {
 			  		success: function(object) {

@@ -7,11 +7,21 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.parse.ParseUser;
+
 import ch.epfl.sweng.project.R;
+import ch.epfl.sweng.project.util.ClientRequest;
 
 public class ContactMeDialogFragment extends DialogFragment {
 
     public static final String TAG = "ContactRequestDialog";
+
+    private String propertyId;
+
+    @Override
+    public void setArguments(Bundle args) {
+        propertyId = args.getString(ClientRequest.LOOKFOR_TAG);
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -22,6 +32,10 @@ public class ContactMeDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.accept_contact_me, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 Log.i(TAG, "User requested to be contacted");
+                ClientRequest request = new ClientRequest();
+                request.setFromUser(ParseUser.getCurrentUser());
+                request.setInterestedId(propertyId);
+                request.saveInBackground();
             }
         });
         builder.setNegativeButton(R.string.refuse_contact_me, new DialogInterface.OnClickListener() {
