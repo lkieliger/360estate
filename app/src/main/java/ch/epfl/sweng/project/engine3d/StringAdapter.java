@@ -18,10 +18,6 @@ public final class StringAdapter {
         this.text = text;
     }
 
-    public static int get(String text) {
-        return 1;
-    }
-
     private List<String> textToList(int textSize, int widthBitmap, int epsilon) {
 
         Paint paint = new Paint();

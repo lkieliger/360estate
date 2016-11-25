@@ -33,10 +33,10 @@ public final class SplashActivity extends AppCompatActivity {
         float density = dm.xdpi;
 
         String dpi;
-        if(density > 480) dpi = "xxxhpi";
-        else if(density > 320) dpi = "xxhpi";
-        else if(density > 240) dpi = "xhpi";
-        else if(density > 160) dpi = "hpi";
+        if (density > 480) dpi = "xxxhdpi";
+        else if (density > 320) dpi = "xxhdpi";
+        else if (density > 240) dpi = "xhdpi";
+        else if (density > 160) dpi = "hdpi";
         else dpi = "mdpi";
 
         wv.loadUrl("file:///android_asset/logo_gif-"+dpi+".gif");
