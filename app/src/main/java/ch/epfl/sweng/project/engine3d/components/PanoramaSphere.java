@@ -73,10 +73,23 @@ public final class PanoramaSphere extends Sphere {
     }
 
     public void detachPanoramaComponent(ObjectColorPicker p, PanoramaObject panoramaObject) {
-        panoramaObject.unregisterComponentFromPicker(p);
+        Log.d(TAG, "Call to detach component");
+
+        int index = mComponentList.indexOf(panoramaObject);
+        panoramaObject.setPickingColor(-1);
+
+        for (int i = index; i < mComponentList.size(); i++) {
+            mComponentList.get(i).unregisterComponentFromPicker(p);
+            mComponentIndex--;
+        }
+
         mComponentList.remove(panoramaObject);
-        mComponentIndex--;
         panoramaObject.detachFromParentAndDie();
+
+        for (int i = index; i < mComponentList.size(); i++) {
+            mComponentList.get(i).registerComponentAtPicker(p, mComponentIndex);
+            mComponentIndex++;
+        }
     }
 
     /**
@@ -97,8 +110,7 @@ public final class PanoramaSphere extends Sphere {
 
             PanoramaObject panoramaObject = am.toPanoramaObject();
 
-            panoramaObject.registerComponentAtPicker(p);
-            panoramaObject.setPickingColor(mComponentIndex);
+            panoramaObject.registerComponentAtPicker(p, mComponentIndex);
 
             mComponentIndex++;
             addChild(panoramaObject);
@@ -106,16 +118,41 @@ public final class PanoramaSphere extends Sphere {
         }
     }
 
-
-
     public void attachPanoramaComponent(PanoramaObject panoramaObject, ObjectColorPicker p) {
-        Log.d(TAG, "Call to attach panorama");
 
-        panoramaObject.registerComponentAtPicker(p);
-        panoramaObject.setPickingColor(mComponentIndex);
+        Log.d(TAG, "Call to attach component");
+        panoramaObject.registerComponentAtPicker(p, mComponentIndex);
 
         mComponentIndex++;
         addChild(panoramaObject);
         mComponentList.add(panoramaObject);
+    }
+
+    public void setTextToDisplay(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject, int colorIndex,
+                                 ObjectColorPicker picker) {
+
+        int heightInfoDisplay = 30;
+        int widthInfoDisplay = 30;
+        int heightInfoClose = 5;
+        int widthInfoClose = 5;
+
+        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
+                , heightInfoDisplay, textInfo, colorIndex);
+
+        int shiftY = (int) ((widthInfoDisplay) / 2.0 + heightInfoClose * 3 / 4.0);
+
+        PanoramaInfoCloser panoramaInfoCloser = new PanoramaInfoCloser(theta, 1.5, widthInfoClose
+                , heightInfoClose, panoramaInfoDisplay, panoramaInfoObject);
+
+        panoramaInfoCloser.setY(panoramaInfoCloser.getY() + shiftY);
+
+        attachPanoramaComponent(panoramaInfoDisplay, picker);
+        attachPanoramaComponent(panoramaInfoCloser, picker);
+    }
+
+    public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser,
+                                    ObjectColorPicker picker) {
+        detachPanoramaComponent(picker, panoramaInfoDisplay);
+        detachPanoramaComponent(picker, panoramaInfoCloser);
     }
 }

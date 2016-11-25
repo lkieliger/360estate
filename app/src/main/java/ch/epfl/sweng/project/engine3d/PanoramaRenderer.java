@@ -217,33 +217,12 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     public void displayText(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
         Log.d(TAG, "Call to display text information.");
-
-        int heightInfoDisplay = 30;
-        int widthInfoDisplay = 30;
-
-        int heightInfoClose = 5;
-        int widthInfoClose = 5;
-
-        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
-                , heightInfoDisplay, textInfo, getContext().getColor(R.color.appBlue));
-
-        int shiftY = (int) ((widthInfoDisplay) / 2.0 + heightInfoClose * 3 / 4.0);
-        int shiftZ = (int) (heightInfoDisplay / 2.0);
-
-        PanoramaInfoCloser panoramaInfoCloser = new PanoramaInfoCloser(theta, 1.5, widthInfoClose
-                , heightInfoClose, panoramaInfoDisplay, panoramaInfoObject);
-
-        panoramaInfoCloser.setY(panoramaInfoCloser.getY() + shiftY);
-        // panoramaInfoCloser.setX(panoramaInfoCloser.getX()+shiftZ*Math.cos(theta));
-        // panoramaInfoCloser.setZ(panoramaInfoCloser.getZ()+shiftZ*Math.sin(theta));
-
-        mPanoSphere.attachPanoramaComponent(panoramaInfoDisplay, mPicker);
-        mPanoSphere.attachPanoramaComponent(panoramaInfoCloser, mPicker);
+        mPanoSphere.setTextToDisplay(textInfo, theta, panoramaInfoObject, getContext().getColor(R.color.appBlue), mPicker);
     }
 
-    public void deleteInfo(PanoramaInfoDisplay panoDisplay, PanoramaInfoCloser panoCloser) {
-        mPanoSphere.detachPanoramaComponent(mPicker, panoCloser);
-        mPanoSphere.detachPanoramaComponent(mPicker, panoDisplay);
+    public void deleteInfo(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser) {
+        Log.d(TAG, "Call to delete text information.");
+        mPanoSphere.deleteTextToDisplay(panoramaInfoDisplay, panoramaInfoCloser, mPicker);
     }
 
     /**
@@ -384,7 +363,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     @Override
     public void onNoObjectPicked() {
-
     }
 
     @Override

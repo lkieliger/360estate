@@ -64,9 +64,9 @@ public abstract class PanoramaObject extends Plane {
         p.unregisterObject(this);
     }
 
-    void registerComponentAtPicker(ObjectColorPicker p) {
+    void registerComponentAtPicker(ObjectColorPicker p, int colorIndex) {
         p.registerObject(this);
-        setPickingColor(0);
+        setPickingColor(colorIndex);
     }
 
     public void detachFromParentAndDie() {
