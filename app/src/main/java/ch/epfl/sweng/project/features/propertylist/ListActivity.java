@@ -291,5 +291,10 @@ public final class ListActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    @Override
+    public void onBackPressed() {
+        // avoid going back on SplashActivity.
+    }
+
 
 }
