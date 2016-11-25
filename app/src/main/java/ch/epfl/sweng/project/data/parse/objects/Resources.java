@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.data;
+package ch.epfl.sweng.project.data.parse.objects;
 
 import android.util.Log;
 
@@ -14,10 +14,28 @@ import java.util.Collection;
 import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.data.AngleMapping;
+import ch.epfl.sweng.project.data.InformationObject;
+import ch.epfl.sweng.project.data.PhotoSphereData;
+import ch.epfl.sweng.project.data.TransitionObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
 import ch.epfl.sweng.project.util.Tuple;
 
-import static ch.epfl.sweng.project.data.JSONTags.*;
+import static ch.epfl.sweng.project.data.JSONTags.descriptionTag;
+import static ch.epfl.sweng.project.data.JSONTags.idHouseTag;
+import static ch.epfl.sweng.project.data.JSONTags.idTag;
+import static ch.epfl.sweng.project.data.JSONTags.neighborsListTag;
+import static ch.epfl.sweng.project.data.JSONTags.panoSphereDatasTag;
+import static ch.epfl.sweng.project.data.JSONTags.panoramaRoomsTag;
+import static ch.epfl.sweng.project.data.JSONTags.phiTag;
+import static ch.epfl.sweng.project.data.JSONTags.picturesListTag;
+import static ch.epfl.sweng.project.data.JSONTags.startingIdTag;
+import static ch.epfl.sweng.project.data.JSONTags.startingUrlTag;
+import static ch.epfl.sweng.project.data.JSONTags.textInfoTag;
+import static ch.epfl.sweng.project.data.JSONTags.thetaTag;
+import static ch.epfl.sweng.project.data.JSONTags.titleTag;
+import static ch.epfl.sweng.project.data.JSONTags.typeTag;
+import static ch.epfl.sweng.project.data.JSONTags.urlTag;
 
 /**
  * ParseObject class that provides the interface for storing objects on the server

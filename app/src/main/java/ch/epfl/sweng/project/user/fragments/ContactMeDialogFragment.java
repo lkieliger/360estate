@@ -10,7 +10,7 @@ import android.util.Log;
 import com.parse.ParseUser;
 
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.util.ClientRequest;
+import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
 
 public class ContactMeDialogFragment extends DialogFragment {
 

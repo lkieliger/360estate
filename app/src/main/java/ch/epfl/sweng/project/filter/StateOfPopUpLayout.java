@@ -6,7 +6,7 @@ import android.util.Log;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import ch.epfl.sweng.project.data.Item;
+import ch.epfl.sweng.project.data.parse.objects.Item;
 
 /**
  * A state of the popup layout.

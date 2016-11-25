@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.util;
+package ch.epfl.sweng.project.data.parse.objects;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;

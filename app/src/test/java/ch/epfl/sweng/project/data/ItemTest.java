@@ -9,6 +9,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.data.parse.objects.Item;
 
 import static org.junit.Assert.assertEquals;
 
