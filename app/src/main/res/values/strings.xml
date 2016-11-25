@@ -99,4 +99,13 @@
     <!-- Strings related to image content description -->
     <string name="description_logo" translatable="false">Application logo</string>
 
+    <!-- Strings related to dialog windows -->
+    <!-- Contact request -->
+    <string name="button_contact_request">I want more details</string>
+    <string name="dialog_contact_me_title">Contact request</string>
+    <string name="dialog_contact_me_message">By further proceeding you accept that one of our brokers use your personal
+    information in order to contact and provide you with all the details you may need.</string>
+    <string name="accept_contact_me">Contact me</string>
+    <string name="refuse_contact_me">Don\'t contact me</string>
+
 </resources>

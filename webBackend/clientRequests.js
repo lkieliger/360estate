@@ -39,7 +39,7 @@ query.find({
 			houseIdCell.innerHTML = obj.get('houseId');
 
 			
-			var sayHellofunction = function(){
+			var deleteParseObject = function(){
 				obj.destroy({
 					  success: function(myObject) {
 						  location = location;
@@ -52,7 +52,7 @@ query.find({
 			
 			var button = document.createElement("button");
 			button.innerHTML = "Delete";
-			button.onclick = sayHellofunction;
+			button.onclick = deleteParseObject;
 			
 			buttonCell.appendChild(button);
 			})(object, table.rows.length);
