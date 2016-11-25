@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 
 import java.util.List;
 
+import ch.epfl.sweng.project.R;
+
 public class ItemAdapter extends ArrayAdapter<Item> {
 
     public ItemAdapter(Context c, List<Item> items) {
@@ -22,6 +24,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             itemView = ItemView.inflate(parent);
         }
         itemView.setItem(getItem(position));
+        itemView.setBackground(getContext().getDrawable(R.drawable.item_selector));
         return itemView;
     }
 }

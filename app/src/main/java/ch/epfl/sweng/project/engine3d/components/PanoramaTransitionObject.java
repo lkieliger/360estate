@@ -39,7 +39,6 @@ public final class PanoramaTransitionObject extends PanoramaObject {
     public String getNextUrl() {
         return nextUrl;
     }
-
     /**
      * When called this method will update the PanoramaRender so that it reflects a transition to another panorama
      *
@@ -49,6 +48,4 @@ public final class PanoramaTransitionObject extends PanoramaObject {
     public void reactWith(PanoramaRenderer p) {
         p.initiatePanoramaTransition(getNextUrl(), getId());
     }
-
-
 }

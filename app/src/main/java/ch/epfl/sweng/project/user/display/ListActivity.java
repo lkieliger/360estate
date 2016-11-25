@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -48,7 +49,7 @@ public class ListActivity extends AppCompatActivity {
     private static ItemAdapter itemAdapter = null;
     private static List<Item> itemList = new ArrayList<>();
     private static Favorites f = null;
-
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +60,10 @@ public class ListActivity extends AppCompatActivity {
         setFavorites(DataMgmt.getFavoriteFromId(idUser));
         f.synchronizeFromServer();
         setItemAdapter(new ItemAdapter(this, itemList));
-        final ListView listView = (ListView) findViewById(R.id.houseList);
+        listView = (ListView) findViewById(R.id.houseList);
 
-        Button popupButton = (Button) findViewById(R.id.filterButtonPopUp);
+
+        ImageButton popupButton = (ImageButton) findViewById(R.id.filterButtonPopUp);
         popupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,7 +71,7 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
-        Button logOutButton = (Button) findViewById(R.id.logOutButton);
+        ImageButton logOutButton = (ImageButton) findViewById(R.id.logOutButton);
         logOutButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -110,7 +112,6 @@ public class ListActivity extends AppCompatActivity {
                 DataMgmt.getItemList(itemList, itemAdapter, stateOfPopUpLayout, isFavoriteToggle, idUser,mContext);
             }
         });
-
     }
 
     /**
@@ -121,7 +122,6 @@ public class ListActivity extends AppCompatActivity {
         final ViewGroup nullParent = null;
         return inflater.inflate(R.layout.popup_filter, nullParent);
     }
-
     /**
      * @param popupLayout The inflated layout to be displayed.
      * @return The alertDialog actually displaying the layout.
@@ -134,7 +134,6 @@ public class ListActivity extends AppCompatActivity {
         helpDialog.show();
         return helpDialog;
     }
-
     /**
      * Initiate the popup filter.
      *
@@ -268,9 +267,4 @@ public class ListActivity extends AppCompatActivity {
         ListActivity.synchronizeServer();
         super.onStop();
     }
-
-
-
-
-
 }

@@ -1,6 +1,8 @@
 package ch.epfl.sweng.project.data;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -20,7 +22,6 @@ public class ItemView extends RelativeLayout {
     private TextView priceType;
     private ImageView img;
     private CheckBox checkBox;
-
     public ItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.children, this, true);
@@ -29,7 +30,9 @@ public class ItemView extends RelativeLayout {
 
     private void setupChildren() {
         locationSurfaceRooms = (TextView) findViewById(R.id.location_surface_rooms);
+        locationSurfaceRooms.setBackground(getContext().getDrawable(R.color.colorTrueTransparent));
         priceType = (TextView) findViewById(R.id.price_type);
+        priceType.setBackground(getContext().getDrawable(R.color.colorTrueTransparent));
         img = (ImageView) findViewById(R.id.miniature);
         checkBox = (CheckBox) findViewById(R.id.favoriteCheckBox);
     }
@@ -63,6 +66,7 @@ public class ItemView extends RelativeLayout {
         }else {
             DataMgmt.getImgFromUrlIntoView(getContext(),url,img);
         }
+        img.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
 
         if(ListActivity.favoriteContainsUrl(item.getId())){
@@ -71,7 +75,7 @@ public class ItemView extends RelativeLayout {
             checkBox.setChecked(false);
         }
 
-
+        checkBox.setButtonDrawable(ContextCompat.getDrawable(getContext(), R.drawable.star_selector));
         checkBox.setOnClickListener(new OnCheckedFavorite(item.getId(),checkBox));
     }
 }

@@ -3,9 +3,14 @@ package ch.epfl.sweng.project.user;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -28,8 +33,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
-    private TextView mEmail = null;
-    private TextView mPassword = null;
+    private AutoCompleteTextView mEmail = null;
+    private EditText mPassword = null;
     private Context mAppContext = null;
     private boolean resetButtonInvisible = true;
 
@@ -38,9 +43,28 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mEmail = (TextView) findViewById(R.id.login_email);
-        mPassword = (TextView) findViewById(R.id.login_password);
+        mEmail = (AutoCompleteTextView) findViewById(R.id.login_email);
+        mPassword = (EditText) findViewById(R.id.login_password);
         mAppContext = getApplicationContext();
+
+        mPassword.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                // If triggered by an enter key, this is the event; otherwise, this is null.
+                if (event != null) {
+                    // if shift key is down, then we want to insert the '\n' char in the TextView;
+                    // otherwise, the default action is to send the message.
+                    if (!event.isShiftPressed()) {
+                        attemptLogin(v);
+                        return true;
+                    }
+                    return false;
+                }
+
+                attemptLogin(v);
+                return true;
+            }
+        });
     }
 
     /**

@@ -102,7 +102,6 @@ public class Resources extends ParseObject {
 
     /**
      * updates the content of the Parse object with the parameters values
-     *
      * @param photoSphereList the list of PhotoSphere informations (one entry in the list = one room)
      * @param startingId      the Id of the first room
      * @param startingUrl     the Url of the first room
@@ -142,7 +141,12 @@ public class Resources extends ParseObject {
         put(idHouseTag, id);
     }
 
+    public String getTitle(){
+        return getString(titleTag);
+    }
+
     /**
+     *
      * @return the list of the picures to be displayed on the description activity
      * @throws JSONException
      */
@@ -196,5 +200,46 @@ public class Resources extends ParseObject {
     public String getStartingUrl() throws JSONException {
         JSONObject panoSphereData = getJSONObject(panoSphereDatasTag);
         return panoSphereData.getString(startingUrlTag);
+    }
+
+
+    /**
+     * used to retrieve information from the PanoramaRooms list 's elements
+     *
+     * @param photoSphereObject one entry of the PanoramaRooms list
+     * @return a photosphere data with the parsed data
+     * @throws JSONException
+     */
+    private static PhotoSphereData parsePhotoSphereData(JSONObject photoSphereObject) throws JSONException {
+
+        List<AngleMapping> neighborsList = new ArrayList<>();
+        JSONArray neighborsJSONArray = photoSphereObject.getJSONArray(neighborsListTag);
+
+        PhotoSphereData.Builder builder = new PhotoSphereData.Builder(photoSphereObject.getInt(idTag));
+        PanoramaComponentType[] typeValues = PanoramaComponentType.values();
+
+        if (neighborsJSONArray != null) {
+            for (int i = 0; i < neighborsJSONArray.length(); i++) {
+
+                switch (typeValues[neighborsJSONArray.getJSONObject(i).getInt(typeTag)]) {
+                    case TRANSITION:
+                        neighborsList.add(new TransitionObject(
+                                new Tuple<>(
+                                        neighborsJSONArray.getJSONObject(i).getDouble(thetaTag),
+                                        neighborsJSONArray.getJSONObject(i).getDouble(phiTag)
+                                ),
+                                neighborsJSONArray.getJSONObject(i).getInt(idTag),
+                                neighborsJSONArray.getJSONObject(i).getString(urlTag)));
+                        break;
+
+                    case INFORMATION:
+
+                }
+            }
+        }
+
+        builder.setNeighborsList(neighborsList);
+
+        return builder.build();
     }
 }
