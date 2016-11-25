@@ -36,10 +36,10 @@ query.find({
 			nameCell.innerHTML = obj.get('name');
 			lastNameCell.innerHTML = obj.get('lastName');
 			phoneCell.innerHTML = obj.get('phone');
-			houseIdCell.innerHTML = obj.get('houseId');
+			houseIdCell.innerHTML = obj.get('propertyId');
 
 			
-			var sayHellofunction = function(){
+			var deleteParseObject = function(){
 				obj.destroy({
 					  success: function(myObject) {
 						  location = location;
@@ -52,7 +52,7 @@ query.find({
 			
 			var button = document.createElement("button");
 			button.innerHTML = "Delete";
-			button.onclick = sayHellofunction;
+			button.onclick = deleteParseObject;
 			
 			buttonCell.appendChild(button);
 			})(object, table.rows.length);
@@ -75,7 +75,7 @@ function generateData(){
 		newData.set("name", "Senior");
 		newData.set("lastName", "Sanchez");
 		newData.set("phone", "08001234567");
-		newData.set("houseId", id);
+		newData.set("propertyId", id);
 		
 		newData.save(null, {
 			  		success: function(object) {
