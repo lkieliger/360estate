@@ -13,7 +13,7 @@ import org.rajawali3d.math.vector.Vector3;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
 
-public class RotSensorListener implements SensorEventListener {
+public final class RotSensorListener implements SensorEventListener {
 
     private static final String TAG = "RotSensorListener";
 

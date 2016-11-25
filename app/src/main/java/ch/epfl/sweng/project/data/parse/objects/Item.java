@@ -6,7 +6,7 @@ import com.parse.ParseObject;
 import ch.epfl.sweng.project.R;
 
 @ParseClassName("Item")
-public class Item extends ParseObject {
+public final class Item extends ParseObject {
 
     private static final double halfRoom = 0.5;
 

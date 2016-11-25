@@ -9,17 +9,13 @@ import android.graphics.Rect;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StringAdapter {
+public final class StringAdapter {
 
     private final String text;
 
 
     public StringAdapter(String text) {
         this.text = text;
-    }
-
-    public static int get(String text) {
-        return 1;
     }
 
     private List<String> textToList(int textSize, int widthBitmap, int epsilon) {

@@ -22,10 +22,10 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.SplashActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.listeners.PanoramaTouchListener;
 import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
+import ch.epfl.sweng.project.features.SplashActivity;
 
 import static android.view.MotionEvent.ACTION_CANCEL;
 import static android.view.MotionEvent.ACTION_DOWN;

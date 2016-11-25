@@ -25,9 +25,9 @@ import org.rajawali3d.util.OnObjectPickedListener;
 import java.io.IOException;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.data.HouseManager;
+import ch.epfl.sweng.project.data.DataMgmt;
+import ch.epfl.sweng.project.data.panorama.HouseManager;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoCloser;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoDisplay;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoObject;
@@ -43,7 +43,7 @@ import static android.content.Context.SENSOR_SERVICE;
  * This class defines how the 3d engine should be used to
  * render the scene.
  */
-public class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
+public final class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
 
     public static final double SENSITIVITY = 50.0;
     public static final double CAM_TRAVEL_DISTANCE = 65.0;

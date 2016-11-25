@@ -12,31 +12,31 @@
         android:label="@string/app_name"
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
-        <activity android:name=".user.display.ListActivity" />
+        <activity android:name=".features.propertylist.ListActivity" />
         <activity android:name=".engine3d.PanoramaActivity" />
         <activity
-            android:name=".user.LoginActivity"
+            android:name=".userSupport.activities.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
-            android:name=".user.RegisterActivity"
+            android:name=".userSupport.activities.RegisterActivity"
             android:label="@string/title_activity_register"
-            android:parentActivityName=".user.LoginActivity">
+            android:parentActivityName=".userSupport.activities.LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.project.user.LoginActivity" />
+                android:value="ch.epfl.sweng.project.userSupport.activities.LoginActivity" />
         </activity>
         <activity
-            android:name=".user.ResetActivity"
+            android:name=".userSupport.activities.ResetActivity"
             android:label="@string/title_activity_reset"
-            android:parentActivityName=".user.LoginActivity">
+            android:parentActivityName=".userSupport.activities.LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.project.user.LoginActivity" />
+                android:value="ch.epfl.sweng.project.userSupport.activities.LoginActivity" />
         </activity>
-        <activity android:name=".user.display.DescriptionActivity"/>
-        <activity android:name=".slider.SlideActivity"/><!-- ATTENTION: This was auto-generated to add
+        <activity android:name=".features.propertyDescription.DescriptionActivity" />
+        <activity android:name=".features.propertyDescription.slider.SlideActivity" /><!-- ATTENTION: This was auto-generated to add
          Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
         -->
@@ -44,7 +44,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".SplashActivity">
+        <activity android:name=".features.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

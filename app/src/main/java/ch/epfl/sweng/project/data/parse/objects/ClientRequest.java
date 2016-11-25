@@ -5,7 +5,7 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 @ParseClassName("ClientRequest")
-public class ClientRequest extends ParseObject {
+public final class ClientRequest extends ParseObject {
 
     public static final String LOOKFOR_TAG = "propertyId";
     private static final String NAME_TAG = "name";

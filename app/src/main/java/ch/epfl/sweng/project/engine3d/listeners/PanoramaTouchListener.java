@@ -8,7 +8,7 @@ import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
 import static android.view.MotionEvent.INVALID_POINTER_ID;
 
-public class PanoramaTouchListener implements View.OnTouchListener {
+public final class PanoramaTouchListener implements View.OnTouchListener {
 
     private static final String TAG = "PanoramaTouchListener";
     private final PanoramaRenderer mRenderer;

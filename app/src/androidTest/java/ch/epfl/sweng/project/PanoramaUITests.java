@@ -19,8 +19,8 @@ import org.rajawali3d.util.ObjectColorPicker;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.sweng.project.data.AngleMapping;
-import ch.epfl.sweng.project.data.TransitionObject;
+import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
+import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
 import ch.epfl.sweng.project.data.parse.ParseInitialiser;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
@@ -83,7 +83,7 @@ public class PanoramaUITests {
     private void testPanoramaSphere() {
         ObjectColorPicker cp = new ObjectColorPicker(mRenderer);
         PanoramaSphere panoSphere = mRenderer.getPanoramaSphere();
-        List<AngleMapping> l = new ArrayList<>();
+        List<SpatialData> l = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             l.add(new TransitionObject((double) i, (double) i, 0, ""));

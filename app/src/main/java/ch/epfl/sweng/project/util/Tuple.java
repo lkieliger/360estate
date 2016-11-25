@@ -1,6 +1,6 @@
 package ch.epfl.sweng.project.util;
 
-public class Tuple<T,U> {
+public final class Tuple<T, U> {
 
     private final T x;
     private final U y;

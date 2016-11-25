@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".user.display.ListActivity"
+    tools:context=".features.propertylist.ListActivity"
     tools:ignore="UnusedIds">
 
     <LinearLayout
@@ -23,40 +23,40 @@
             android:id="@+id/logOutButton"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="@color/colorBackground"
             android:contentDescription="@string/LogOut"
             android:src="@drawable/logout"
-            android:layout_weight="1"
             />
 
         <ToggleButton
-            android:layout_marginTop="3dp"
             android:id="@+id/FavoritesButton"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:drawableTop="@drawable/star_selector"
-            android:background="@color/colorBackground"
+            android:layout_marginTop="3dp"
             android:layout_weight="1"
+            android:background="@color/colorBackground"
+            android:drawableTop="@drawable/star_selector"
             />
 
         <ImageButton
             android:id="@+id/filterButtonPopUp"
             android:layout_width="wrap_content"
-            android:contentDescription="@string/Filter"
             android:layout_height="50dp"
-            android:background="@color/colorBackground"
-            android:src="@drawable/filter"
+            android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:layout_weight="1"/>
+            android:background="@color/colorBackground"
+            android:contentDescription="@string/Filter"
+            android:src="@drawable/filter" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/houseList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:listSelector="@drawable/item_selector"
         android:divider="@color/colorBackground"
         android:dividerHeight="6dp"
+        android:listSelector="@drawable/item_selector"
         />
 
 </LinearLayout>

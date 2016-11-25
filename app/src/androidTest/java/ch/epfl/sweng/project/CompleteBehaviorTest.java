@@ -21,6 +21,8 @@ import org.junit.Test;
 
 import java.security.SecureRandom;
 
+import ch.epfl.sweng.project.features.SplashActivity;
+
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;

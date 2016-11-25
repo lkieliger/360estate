@@ -1,11 +1,8 @@
 package ch.epfl.sweng.project;
 
 import android.content.Intent;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.parse.ParseUser;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,8 +11,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowToast;
 
-import ch.epfl.sweng.project.user.LoginActivity;
-import ch.epfl.sweng.project.user.RegisterActivity;
+import ch.epfl.sweng.project.features.SplashActivity;
+import ch.epfl.sweng.project.userSupport.activities.LoginActivity;
+import ch.epfl.sweng.project.userSupport.activities.RegisterActivity;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;

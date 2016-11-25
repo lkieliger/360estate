@@ -12,7 +12,7 @@ import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.StringAdapter;
 
 
-public class PanoramaInfoDisplay extends PanoramaObject {
+public final class PanoramaInfoDisplay extends PanoramaObject {
 
     private static final String TAG = "PanoramaInfoDisplay";
 

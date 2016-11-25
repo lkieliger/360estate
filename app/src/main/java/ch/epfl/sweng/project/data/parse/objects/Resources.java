@@ -14,35 +14,35 @@ import java.util.Collection;
 import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.data.AngleMapping;
-import ch.epfl.sweng.project.data.InformationObject;
-import ch.epfl.sweng.project.data.PhotoSphereData;
-import ch.epfl.sweng.project.data.TransitionObject;
+import ch.epfl.sweng.project.data.panorama.PhotoSphereData;
+import ch.epfl.sweng.project.data.panorama.adapters.InformationObject;
+import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
+import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
 import ch.epfl.sweng.project.util.Tuple;
 
-import static ch.epfl.sweng.project.data.JSONTags.descriptionTag;
-import static ch.epfl.sweng.project.data.JSONTags.idHouseTag;
-import static ch.epfl.sweng.project.data.JSONTags.idTag;
-import static ch.epfl.sweng.project.data.JSONTags.neighborsListTag;
-import static ch.epfl.sweng.project.data.JSONTags.panoSphereDatasTag;
-import static ch.epfl.sweng.project.data.JSONTags.panoramaRoomsTag;
-import static ch.epfl.sweng.project.data.JSONTags.phiTag;
-import static ch.epfl.sweng.project.data.JSONTags.picturesListTag;
-import static ch.epfl.sweng.project.data.JSONTags.startingIdTag;
-import static ch.epfl.sweng.project.data.JSONTags.startingUrlTag;
-import static ch.epfl.sweng.project.data.JSONTags.textInfoTag;
-import static ch.epfl.sweng.project.data.JSONTags.thetaTag;
-import static ch.epfl.sweng.project.data.JSONTags.titleTag;
-import static ch.epfl.sweng.project.data.JSONTags.typeTag;
-import static ch.epfl.sweng.project.data.JSONTags.urlTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.descriptionTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.idHouseTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.idTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.neighborsListTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.panoSphereDatasTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.panoramaRoomsTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.phiTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.picturesListTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.startingIdTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.startingUrlTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.textInfoTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.thetaTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.titleTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.typeTag;
+import static ch.epfl.sweng.project.data.parse.objects.JSONTags.urlTag;
 
 /**
  * ParseObject class that provides the interface for storing objects on the server
  */
 @SuppressWarnings("WeakerAccess")
 @ParseClassName("Resources")
-public class Resources extends ParseObject {
+public final class Resources extends ParseObject {
 
     private static final String TAG = "Resources class";
 
@@ -52,7 +52,7 @@ public class Resources extends ParseObject {
     }
 
     /**
-     * used to retrieve information from the PanoramaRooms list 's elements
+     * used to retrieve information from the PanoramaRooms list's elements
      *
      * @param photoSphereObject one entry of the PanoramaRooms list
      * @return a photosphere data with the parsed data
@@ -60,7 +60,7 @@ public class Resources extends ParseObject {
      */
     private static PhotoSphereData parsePhotoSphereData(JSONObject photoSphereObject) throws JSONException {
 
-        List<AngleMapping> neighborsList = new ArrayList<>();
+        List<SpatialData> neighborsList = new ArrayList<>();
         JSONArray neighborsJSONArray = photoSphereObject.getJSONArray(neighborsListTag);
 
         PhotoSphereData.Builder builder = new PhotoSphereData.Builder(photoSphereObject.getInt(idTag));

@@ -17,9 +17,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import org.rajawali3d.view.ISurface;
 import org.rajawali3d.view.SurfaceView;
 
-import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.data.HouseManager;
+import ch.epfl.sweng.project.data.DataMgmt;
+import ch.epfl.sweng.project.data.panorama.HouseManager;
 import ch.epfl.sweng.project.engine3d.listeners.PanoramaTouchListener;
 
 import static android.view.View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -27,7 +27,7 @@ import static android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class PanoramaActivity extends Activity {
+public final class PanoramaActivity extends Activity {
 
     private SurfaceView mSurface = null;
     private PanoramaRenderer mRenderer = null;
