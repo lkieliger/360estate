@@ -17,20 +17,7 @@ import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
 import ch.epfl.sweng.project.util.Tuple;
 
-import static ch.epfl.sweng.project.data.JSONTags.descriptionTag;
-import static ch.epfl.sweng.project.data.JSONTags.idHouseTag;
-import static ch.epfl.sweng.project.data.JSONTags.idTag;
-import static ch.epfl.sweng.project.data.JSONTags.neighborsListTag;
-import static ch.epfl.sweng.project.data.JSONTags.panoSphereDatasTag;
-import static ch.epfl.sweng.project.data.JSONTags.panoramaRoomsTag;
-import static ch.epfl.sweng.project.data.JSONTags.phiTag;
-import static ch.epfl.sweng.project.data.JSONTags.picturesListTag;
-import static ch.epfl.sweng.project.data.JSONTags.startingIdTag;
-import static ch.epfl.sweng.project.data.JSONTags.startingUrlTag;
-import static ch.epfl.sweng.project.data.JSONTags.textInfoTag;
-import static ch.epfl.sweng.project.data.JSONTags.thetaTag;
-import static ch.epfl.sweng.project.data.JSONTags.typeTag;
-import static ch.epfl.sweng.project.data.JSONTags.urlTag;
+import static ch.epfl.sweng.project.data.JSONTags.*;
 
 /**
  * ParseObject class that provides the interface for storing objects on the server
@@ -200,46 +187,5 @@ public class Resources extends ParseObject {
     public String getStartingUrl() throws JSONException {
         JSONObject panoSphereData = getJSONObject(panoSphereDatasTag);
         return panoSphereData.getString(startingUrlTag);
-    }
-
-
-    /**
-     * used to retrieve information from the PanoramaRooms list 's elements
-     *
-     * @param photoSphereObject one entry of the PanoramaRooms list
-     * @return a photosphere data with the parsed data
-     * @throws JSONException
-     */
-    private static PhotoSphereData parsePhotoSphereData(JSONObject photoSphereObject) throws JSONException {
-
-        List<AngleMapping> neighborsList = new ArrayList<>();
-        JSONArray neighborsJSONArray = photoSphereObject.getJSONArray(neighborsListTag);
-
-        PhotoSphereData.Builder builder = new PhotoSphereData.Builder(photoSphereObject.getInt(idTag));
-        PanoramaComponentType[] typeValues = PanoramaComponentType.values();
-
-        if (neighborsJSONArray != null) {
-            for (int i = 0; i < neighborsJSONArray.length(); i++) {
-
-                switch (typeValues[neighborsJSONArray.getJSONObject(i).getInt(typeTag)]) {
-                    case TRANSITION:
-                        neighborsList.add(new TransitionObject(
-                                new Tuple<>(
-                                        neighborsJSONArray.getJSONObject(i).getDouble(thetaTag),
-                                        neighborsJSONArray.getJSONObject(i).getDouble(phiTag)
-                                ),
-                                neighborsJSONArray.getJSONObject(i).getInt(idTag),
-                                neighborsJSONArray.getJSONObject(i).getString(urlTag)));
-                        break;
-
-                    case INFORMATION:
-
-                }
-            }
-        }
-
-        builder.setNeighborsList(neighborsList);
-
-        return builder.build();
     }
 }
