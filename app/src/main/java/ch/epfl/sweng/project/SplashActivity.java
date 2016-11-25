@@ -1,10 +1,13 @@
 package ch.epfl.sweng.project;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebView;
 
 import com.parse.ParseUser;
@@ -18,6 +21,17 @@ public class SplashActivity extends AppCompatActivity {
     public static final String APP_ID = "360ESTATE";
     public static final String TAG = "SplashScreen";
 
+    private String getDpi(){
+        DisplayMetrics dm = new DisplayMetrics();
+        WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        int density = dm.densityDpi;
+        if(density>580) return "xxhdpi";
+        if(density <= 580 && density >400) return "xxhdpi";
+        if(density <= 400 && density >270) return "xhdpi";
+        if(density <= 270 && density >190) return "hdpi";
+        return "mdpi";
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +39,8 @@ public class SplashActivity extends AppCompatActivity {
         ParseInitialiser.INSTANCE.initParse(this);
 
         WebView wv = (WebView) findViewById(R.id.webview);
-        wv.loadUrl("file:///android_asset/logo_gif_xxhdpi.gif");
+
+        wv.loadUrl("file:///android_asset/logo_gif-xxhdpi.gif");
 
         // Check if the user is already logged in in the localDatastore, and jump to the ListActivity accordingly
         if (userAlreadyLoggedIn()) {
