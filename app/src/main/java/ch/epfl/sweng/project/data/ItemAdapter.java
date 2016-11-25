@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import java.util.List;
 
 import ch.epfl.sweng.project.R;
+import ch.epfl.sweng.project.data.parse.objects.Item;
 
 public class ItemAdapter extends ArrayAdapter<Item> {
 

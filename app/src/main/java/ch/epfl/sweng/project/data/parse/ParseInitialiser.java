@@ -1,13 +1,14 @@
-package ch.epfl.sweng.project.util;
+package ch.epfl.sweng.project.data.parse;
 
 import android.content.Context;
 
 import com.parse.Parse;
 import com.parse.ParseObject;
 
-import ch.epfl.sweng.project.data.Item;
-import ch.epfl.sweng.project.data.Resources;
-import ch.epfl.sweng.project.user.Favorites;
+import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
+import ch.epfl.sweng.project.data.parse.objects.Favorites;
+import ch.epfl.sweng.project.data.parse.objects.Item;
+import ch.epfl.sweng.project.data.parse.objects.Resources;
 
 
 /**

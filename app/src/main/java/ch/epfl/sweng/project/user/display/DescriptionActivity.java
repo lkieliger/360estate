@@ -18,15 +18,13 @@ import java.util.ArrayList;
 
 import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.slider.SlideActivity;
+import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.slider.SlideActivity;
 import ch.epfl.sweng.project.user.fragments.ContactMeDialogFragment;
-import ch.epfl.sweng.project.util.ClientRequest;
 
 import static ch.epfl.sweng.project.DataMgmt.getImgFromUrlIntoView;
 import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
-
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 
@@ -73,7 +71,6 @@ public class DescriptionActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             };
-
 
             final LinearLayout scrollImg = (LinearLayout) findViewById(R.id.imgs);
             for (String url : imagesURL) {

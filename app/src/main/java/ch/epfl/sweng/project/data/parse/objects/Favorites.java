@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.user;
+package ch.epfl.sweng.project.data.parse.objects;
 
 import android.util.Log;
 
@@ -31,11 +31,6 @@ public class Favorites extends ParseObject {
         setIdUser(idUser);
     }
 
-    public void setIdUser(String idUser) {
-        put("idUser", idUser);
-    }
-
-
     public void setFavorites(Set<String> favorites) {
         JSONArray jsonFavorites = new JSONArray(favorites);
         put("favorites", jsonFavorites);
@@ -48,6 +43,10 @@ public class Favorites extends ParseObject {
 
     public String getIdUser() {
         return getString("idUser");
+    }
+
+    public void setIdUser(String idUser) {
+        put("idUser", idUser);
     }
 
     public Set<String> getFavoritesFromLocal() {

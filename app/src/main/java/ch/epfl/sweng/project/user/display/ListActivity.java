@@ -28,28 +28,70 @@ import java.util.Objects;
 
 import ch.epfl.sweng.project.DataMgmt;
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.data.Item;
 import ch.epfl.sweng.project.data.ItemAdapter;
+import ch.epfl.sweng.project.data.parse.objects.Favorites;
+import ch.epfl.sweng.project.data.parse.objects.Item;
 import ch.epfl.sweng.project.filter.EraseButtonListener;
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
-import ch.epfl.sweng.project.user.Favorites;
 
 public class ListActivity extends AppCompatActivity {
 
 
-    private final String[] cities = new String[]{
-            "Geneve", "Renens", "Lausanne"
-    };
-
-    private Boolean isFavoriteToggle = false;
-    private StateOfPopUpLayout stateOfPopUpLayout = null;
-    private Context mContext = null;
-    private final String idUser = ParseUser.getCurrentUser().getObjectId();
-
     private static ItemAdapter itemAdapter = null;
     private static List<Item> itemList = new ArrayList<>();
     private static Favorites f = null;
+    private final String[] cities = new String[]{
+            "Geneve", "Renens", "Lausanne"
+    };
+    private final String idUser = ParseUser.getCurrentUser().getObjectId();
+    private Boolean isFavoriteToggle = false;
+    private StateOfPopUpLayout stateOfPopUpLayout = null;
+    private Context mContext = null;
     private ListView listView;
+
+    private static void setFavorites(Favorites extFavorites) {
+        ListActivity.f = extFavorites;
+    }
+
+    private static void setItemAdapter(ItemAdapter extItemAdapter) {
+        ListActivity.itemAdapter = extItemAdapter;
+    }
+
+    public static void addIdItemToFavorite(String idItem) {
+        f.addUrlToLocal(idItem);
+    }
+
+    public static void removeIdItemToFavorite(String idItem) {
+        f.deleteUrlToLocal(idItem);
+    }
+
+    public static Boolean favoriteContainsUrl(String idItem) {
+        return f.containsUrl(idItem);
+    }
+
+    static void synchronizeServer() {
+        f.synchronizeServer();
+    }
+
+    static void notifyItemAdapter() {
+        itemAdapter.notifyDataSetChanged();
+    }
+
+    static void addItem(String id) {
+        Item i = DataMgmt.getItemFromId(id);
+        itemList.add(i);
+    }
+
+    static void removeItem(String id) {
+
+        int i = 0;
+        while (i < itemList.size() && !Objects.equals(itemList.get(i).getId(), id)) {
+            ++i;
+        }
+        if (i < itemList.size()) {
+            itemList.remove(i);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,7 +252,6 @@ public class ListActivity extends AppCompatActivity {
         });
     }
 
-
     public void logOutUser() {
         ParseUser currentUser = ParseUser.getCurrentUser();
 
@@ -218,51 +259,6 @@ public class ListActivity extends AppCompatActivity {
             ParseUser.logOut();
         }
         finish();
-    }
-
-
-    private static void setFavorites(Favorites extFavorites) {
-        ListActivity.f = extFavorites;
-    }
-
-    private static void setItemAdapter(ItemAdapter extItemAdapter) {
-        ListActivity.itemAdapter = extItemAdapter;
-    }
-
-    public static void addIdItemToFavorite(String idItem) {
-        f.addUrlToLocal(idItem);
-    }
-
-    public static void removeIdItemToFavorite(String idItem) {
-        f.deleteUrlToLocal(idItem);
-    }
-
-    public static Boolean favoriteContainsUrl(String idItem) {
-        return f.containsUrl(idItem);
-    }
-
-    static void synchronizeServer() {
-        f.synchronizeServer();
-    }
-
-    static void notifyItemAdapter() {
-        itemAdapter.notifyDataSetChanged();
-    }
-
-    static void addItem(String id) {
-        Item i = DataMgmt.getItemFromId(id);
-        itemList.add(i);
-    }
-
-    static void removeItem(String id) {
-
-        int i = 0;
-        while (i < itemList.size() && !Objects.equals(itemList.get(i).getId(), id)) {
-            ++i;
-        }
-        if (i < itemList.size()) {
-            itemList.remove(i);
-        }
     }
 
     @Override

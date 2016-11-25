@@ -19,7 +19,7 @@ public class InformationObject extends AngleMapping {
     private final PanoramaComponentType mType = PanoramaComponentType.INFORMATION;
     private final String textInfo;
 
-    InformationObject(Tuple<Double, Double> extThetaPhi, String textInfo) {
+    public InformationObject(Tuple<Double, Double> extThetaPhi, String textInfo) {
         super(extThetaPhi);
         this.textInfo = textInfo;
     }

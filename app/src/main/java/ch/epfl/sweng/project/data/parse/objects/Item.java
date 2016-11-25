@@ -1,4 +1,4 @@
-package ch.epfl.sweng.project.data;
+package ch.epfl.sweng.project.data.parse.objects;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
@@ -9,21 +9,6 @@ import ch.epfl.sweng.project.R;
 public class Item extends ParseObject {
 
     private static final double halfRoom = 0.5;
-
-    public enum HouseType {
-        APARTMENT(R.string.apartment), HOUSE(R.string.house),
-        BUILDING(R.string.building);
-
-        private final int description;
-
-        HouseType(int d) {
-            description = d;
-        }
-
-        public int getDescription() {
-            return description;
-        }
-    }
 
     //default constructor necessary for Parse subclass
     public Item() {
@@ -38,67 +23,67 @@ public class Item extends ParseObject {
         setId(id);
     }
 
-    private void setStartingImageUrl(String url) {
-        put("startingImageUrl", url);
-    }
-
-    private void setPrice(int price) {
-        put("price", price);
-    }
-
-    private void setLocation(String location) {
-        put("location", location);
+    public HouseType getType() {
+        return HouseType.values()[getInt("type")];
     }
 
     private void setType(HouseType type) {
         put("type", type.ordinal());
     }
 
-    private void setRooms(double rooms) {
-        put("rooms", rooms);
-    }
-
-    private void setSurface(int surface) {
-        put("surface", surface);
+    public String getId() {
+        return getString("idHouse");
     }
 
     private void setId(String id) {
         put("idHouse", id);
     }
 
-    public HouseType getType() {
-        return HouseType.values()[getInt("type")];
-    }
-
-    public String getId() {
-        return getString("idHouse");
-    }
-
-    String getStartingImageUrl() {
+    public String getStartingImageUrl() {
         return getString("startingImageUrl");
     }
 
-    String getLocation() {
+    private void setStartingImageUrl(String url) {
+        put("startingImageUrl", url);
+    }
+
+    public String getLocation() {
         return getString("location");
     }
 
-    String getRooms() {
+    private void setLocation(String location) {
+        put("location", location);
+    }
+
+    public String getRooms() {
         return formatRooms(getDouble("rooms"));
+    }
+
+    private void setRooms(double rooms) {
+        put("rooms", rooms);
     }
 
     public int getSurface() {
         return getInt("surface");
     }
 
+    private void setSurface(int surface) {
+        put("surface", surface);
+    }
+
     public int getPrice() {
         return getInt("price");
     }
 
-    String printSurface() {
+    private void setPrice(int price) {
+        put("price", price);
+    }
+
+    public String printSurface() {
         return formatInts(getSurface(), 0);
     }
 
-    String printPrice() {
+    public String printPrice() {
         return formatInts(getPrice(), 0);
     }
 
@@ -111,5 +96,20 @@ public class Item extends ParseObject {
         if (price > 9) {
             return formatInts(price / 10, (acc + 1) % 3) + (acc == 2 ? "'" : "") + price % 10;
         } else return "" + price;
+    }
+
+    public enum HouseType {
+        APARTMENT(R.string.apartment), HOUSE(R.string.house),
+        BUILDING(R.string.building);
+
+        private final int description;
+
+        HouseType(int d) {
+            description = d;
+        }
+
+        public int getDescription() {
+            return description;
+        }
     }
 }

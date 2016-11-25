@@ -1,7 +1,6 @@
 package ch.epfl.sweng.project.data;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -12,8 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ch.epfl.sweng.project.DataMgmt;
-import ch.epfl.sweng.project.user.display.ListActivity;
 import ch.epfl.sweng.project.R;
+import ch.epfl.sweng.project.data.parse.objects.Item;
+import ch.epfl.sweng.project.user.display.ListActivity;
 import ch.epfl.sweng.project.user.display.OnCheckedFavorite;
 
 
@@ -28,6 +28,11 @@ public class ItemView extends RelativeLayout {
         setupChildren();
     }
 
+    public static ItemView inflate(ViewGroup parent) {
+        return (ItemView) LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_view, parent, false);
+    }
+
     private void setupChildren() {
         locationSurfaceRooms = (TextView) findViewById(R.id.location_surface_rooms);
         locationSurfaceRooms.setBackground(getContext().getDrawable(R.color.colorTrueTransparent));
@@ -35,11 +40,6 @@ public class ItemView extends RelativeLayout {
         priceType.setBackground(getContext().getDrawable(R.color.colorTrueTransparent));
         img = (ImageView) findViewById(R.id.miniature);
         checkBox = (CheckBox) findViewById(R.id.favoriteCheckBox);
-    }
-
-    public static ItemView inflate(ViewGroup parent) {
-        return (ItemView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_view, parent, false);
     }
 
     public void setItem(Item item) {

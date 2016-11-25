@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.data.parse.objects.Resources;
 import ch.epfl.sweng.project.util.Tuple;
 
 import static org.junit.Assert.assertTrue;

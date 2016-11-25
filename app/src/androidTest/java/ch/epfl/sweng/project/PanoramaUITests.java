@@ -21,12 +21,12 @@ import java.util.List;
 
 import ch.epfl.sweng.project.data.AngleMapping;
 import ch.epfl.sweng.project.data.TransitionObject;
+import ch.epfl.sweng.project.data.parse.ParseInitialiser;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
 import ch.epfl.sweng.project.engine3d.components.PanoramaTransitionObject;
-import ch.epfl.sweng.project.util.ParseInitialiser;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;

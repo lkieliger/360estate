@@ -24,13 +24,13 @@ import java.util.Set;
 
 import ch.epfl.sweng.project.data.AngleMapping;
 import ch.epfl.sweng.project.data.HouseManager;
-import ch.epfl.sweng.project.data.Item;
 import ch.epfl.sweng.project.data.ItemAdapter;
 import ch.epfl.sweng.project.data.JSONTags;
 import ch.epfl.sweng.project.data.PhotoSphereData;
-import ch.epfl.sweng.project.data.Resources;
+import ch.epfl.sweng.project.data.parse.objects.Favorites;
+import ch.epfl.sweng.project.data.parse.objects.Item;
+import ch.epfl.sweng.project.data.parse.objects.Resources;
 import ch.epfl.sweng.project.filter.StateOfPopUpLayout;
-import ch.epfl.sweng.project.user.Favorites;
 
 import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
 import static ch.epfl.sweng.project.util.Toaster.shortToast;

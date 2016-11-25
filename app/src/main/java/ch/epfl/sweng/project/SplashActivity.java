@@ -12,10 +12,10 @@ import android.webkit.WebView;
 
 import com.parse.ParseUser;
 
+import ch.epfl.sweng.project.data.parse.ParseInitialiser;
 import ch.epfl.sweng.project.user.LoginActivity;
 import ch.epfl.sweng.project.user.RegisterActivity;
 import ch.epfl.sweng.project.user.display.ListActivity;
-import ch.epfl.sweng.project.util.ParseInitialiser;
 
 public class SplashActivity extends AppCompatActivity {
     public static final String APP_ID = "360ESTATE";
