@@ -138,7 +138,7 @@ public class CompleteBehaviorTest {
 
         //logs valid user in
         wait500ms(TAG);
-        login(testUserMail,testUserPassword);
+        login(testUserMail, testUserPassword);
         wait1s(TAG);
 
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
@@ -191,7 +191,8 @@ public class CompleteBehaviorTest {
 
         waitNms(TAG, 5000);
 
-        ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE, GeneralLocation.VISIBLE_CENTER, Press.FINGER);
+        ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE,
+                GeneralLocation.VISIBLE_CENTER, Press.FINGER);
         onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
 
         waitNms(TAG, 3000);
@@ -283,8 +284,7 @@ public class CompleteBehaviorTest {
         // perform real reset
         onView(withId(R.id.reset_email)).perform(replaceText("test@astutus.org"), closeSoftKeyboard());
         onView(withId(R.id.reset_button)).perform(click());
-        pressBack();
-        wait250ms(TAG);
+        waitNms(TAG, 6000);
     }
 
 
