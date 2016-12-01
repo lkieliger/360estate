@@ -20,8 +20,42 @@ body {
 	font-size: 35px;
 }
 
+#controlPanel {
+    margin-bottom: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    background: #f2f2f2;
+    text-align: right;
+}
+
+#controlPanel h3 {
+    text-align: left;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 1px;
+}
+
+#controlPanel button {
+    margin-right: 5px;
+}
+
 input {
 	margin-right: 10px;
+}
+
+input[type="checkbox"] {
+    margin-left: 20px;
+}
+
+button.tableHeaderControl {
+    margin-right: 2px;
+    border: none;
+    background: none;
+}
+
+td.actionCell {
+    text-align: right;
 }
 
 table.datagrid , td.datagrid, th.datagrid{
@@ -31,7 +65,12 @@ table.datagrid , td.datagrid, th.datagrid{
 }
 
 tr.topRow th {
-  border-bottom: 2px solid #8a8a8a;
+    padding-top: 5px;
+    border-bottom: 2px solid #8a8a8a;
+}
+
+th.selectionTableHeader {
+    text-align: right;
 }
 
 tbody tr:nth-child(odd) {
