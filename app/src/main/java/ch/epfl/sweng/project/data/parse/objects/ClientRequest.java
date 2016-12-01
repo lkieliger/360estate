@@ -8,6 +8,11 @@ import com.parse.ParseUser;
 public final class ClientRequest extends ParseObject {
 
     public static final String LOOKFOR_TAG = "propertyId";
+    public static final String LOCALISATION_TAG = "localisation";
+    public static final String SURFACE_TAG = "surface";
+    public static final String PRICE_TAG = "price";
+
+
     private static final String NAME_TAG = "name";
     private static final String LASTNAME_TAG = "lastName";
     private static final String EMAIL_TAG = "email";
@@ -29,6 +34,12 @@ public final class ClientRequest extends ParseObject {
 
     public void setInterestedId(String id) {
         put(LOOKFOR_TAG, id);
+    }
+
+    public void setHouseInfo(String localisation, int price, int surface) {
+        put(LOCALISATION_TAG, localisation);
+        put(PRICE_TAG, price);
+        put(SURFACE_TAG, surface);
     }
 
     public void setEmail(String email) {
