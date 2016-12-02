@@ -91,7 +91,7 @@ public final class DataMgmt {
         List<ParseQuery<Item>> queries = new ArrayList<>();
 
         if (isFavoriteToggle) {
-            Set<String> listId = DataMgmt.getFavoriteFromId(idUser).getFavoritesFromLocal();
+            Set<String> listId = DataMgmt.getFavoriteFromId(idUser, context).getFavoritesFromLocal();
             if (!listId.isEmpty()) {
                 for (String s : listId) {
                     ParseQuery<Item> queryTemp = ParseQuery.getQuery(Item.class);
@@ -119,16 +119,17 @@ public final class DataMgmt {
     }
 
 
-    private static void fetchItems(ParseQuery<Item> query, final Collection<Item> itemList,
-                                   final ItemAdapter itemAdapter, final Context context) {
+    private static void fetchItems(ParseQuery<Item> query,
+                                   final Collection<Item> itemList,
+                                   final ItemAdapter itemAdapter,
+                                   final Context context) {
         if (query != null) {
 
-            if (!isInternetAvailable(context)) {
+            if (!ParseProxy.PROXY.internetAvailable()) {
                 shortToast(context, context.getResources().getText(R.string.no_internet_access));
-                query.fromLocalDatastore();
             }
 
-            query.findInBackground(new FindCallback<Item>() {
+            FindCallback<Item> callback = new FindCallback<Item>() {
                 public void done(List<Item> objects, ParseException e) {
                     if (e == null) {
                         Log.d(TAG, "Retrieved " + objects.size() + " house items");
@@ -136,18 +137,19 @@ public final class DataMgmt {
                         itemList.addAll(objects);
                         itemAdapter.notifyDataSetChanged();
 
-
-                        if (isInternetAvailable(context)) {
-
+                        //we only update the localDataStore if internet was available at the time of the query
+                        if (ParseProxy.PROXY.internetAvailable()) {
                             ParseObject.pinAllInBackground(objects);
                         }
 
-
                     } else {
-                        Log.d("DataMgmt.getItemList", "Error: " + e.getMessage());
+                        Log.d("fetchItems", "Error: " + e.getMessage());
                     }
                 }
-            });
+            };
+
+            ParseProxy.PROXY.executeQuery(query, callback, TAG);
+
         } else {
             itemList.clear();
             itemAdapter.notifyDataSetChanged();
@@ -172,7 +174,7 @@ public final class DataMgmt {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Error: " + e.getMessage());
             }
-            //If there is a problem during the parsiong of the data, we set the ID to -1
+            //If there is a problem during the parsing of the data, we set the ID to -1
             startingId = -1;
         }
 
@@ -219,75 +221,61 @@ public final class DataMgmt {
         }
 
 
-        listResource = ParseProxy.PROXY.toQuery(query, TAG);
+        try {
+            listResource = query.find();
+
+            if (isInternetAvailable(context)) {
+
+                ParseObject.pinAllInBackground(listResource);
+            }
 
 
-/**
- try {
- listResource = query.find();
+        } catch (ParseException e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Error: " + e.getMessage());
+            }
+        }
 
- if (isInternetAvailable(context)) {
-
- ParseObject.pinAllInBackground(listResource);
- }
-
-
- } catch (ParseException e) {
- if (BuildConfig.DEBUG) {
- Log.d(TAG, "Error: " + e.getMessage());
- }
- }
-
- if (listResource.size() > 1)
- Log.d(TAG, "Warning: The same id has different Resources.");
-
- **/
+        if (listResource.size() > 1)
+            Log.d(TAG, "Warning: The same id has different Resources.");
 
         return listResource;
     }
 
 
     public static void overrideFavorites(String idUser, Collection<String> list, Context context) {
-        Favorites f = getFavoriteFromId(idUser);
+        Favorites f = getFavoriteFromId(idUser, context);
         f.setFavorites((Set<String>) list);
 
     }
 
-    public static Favorites getFavoriteFromId(String idUser) {
+    public static Favorites getFavoriteFromId(String idUser, Context context) {
         ParseQuery<Favorites> query = ParseQuery.getQuery(Favorites.class);
         query.whereEqualTo("idUser", idUser);
 
-//        List<Favorites> listFavorites = new ArrayList<>();
+        List<Favorites> listFavorites = new ArrayList<>();
+
+        if (!isInternetAvailable(context)) {
+            query.fromLocalDatastore();
+        }
 
 
-        List<Favorites> listFavorites = ParseProxy.toQuery(query, TAG);
+        try {
 
 
-/**
- if (!isInternetAvailable(context)) {
- query.fromLocalDatastore();
- }
+            listFavorites = query.find();
 
+            if (isInternetAvailable(context)) {
+                ParseObject.pinAllInBackground(listFavorites);
+            }
+        } catch (ParseException e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, e.getMessage());
+            }
+        }
 
-
-
- try {
-
-
- listFavorites = query.find();
-
- if (isInternetAvailable(context)) {
- ParseObject.pinAllInBackground(listFavorites);
- }
- } catch (ParseException e) {
- if (BuildConfig.DEBUG) {
- Log.d(TAG, e.getMessage());
- }
- }
-
- if (listFavorites.size() > 1)
- Log.d(TAG, "Warning: The same id has different Favorites.");
- **/
+        if (listFavorites.size() > 1)
+            Log.d(TAG, "Warning: The same id has different Favorites.");
 
         Favorites f;
         if (listFavorites.isEmpty()) {

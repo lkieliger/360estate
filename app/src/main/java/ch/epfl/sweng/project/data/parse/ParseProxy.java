@@ -1,74 +1,42 @@
 package ch.epfl.sweng.project.data.parse;
 
 
-
-
-import android.content.Context;
-import android.util.Log;
-
-import com.parse.ParseException;
+import com.parse.FindCallback;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
-import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.data.parse.util.TimeoutQuery;
 
 
+@SuppressWarnings("ClassNamePrefixedWithPackageName")
 public enum ParseProxy {
+
     PROXY;
 
-    private static Context context = null;
+    private static final long INTERNET_TIMEOUT = 5000L;
+    private static final long QUERY_TIMEOUT = 2514L;
+
+    private long internetUnavailableTime = 0;
 
 
-    public static  void notifyContextChange(Context context){
-        ParseProxy.context = context;
+    public void notifyInternetState(long lastInetUnavailable) {
+        internetUnavailableTime = lastInetUnavailable;
+    }
+
+    public boolean internetAvailable() {
+        return System.currentTimeMillis() - internetUnavailableTime < INTERNET_TIMEOUT;
     }
 
 
-    public static <T extends ParseObject> List<T> toQuery(ParseQuery<T > query, String tag) {
+    public <T extends ParseObject> void executeQuery(ParseQuery<T> query, FindCallback<T> callback, String tag) {
 
-        if(context == null){
-            Log.d(tag, "The context is null. ");
-
-            throw new IllegalStateException();
-        }
-
-        List<T> queryList = new ArrayList<T>();
-
-
-        if (!isInternetAvailable(context)) {
+        // If we haven't had internet since INTERNET_TIMEOUT ms, we make the query locally
+        if (internetAvailable()) {
             query.fromLocalDatastore();
         }
 
-
-
-        try {
-            queryList = query.find();
-
-            if (isInternetAvailable(context)) {
-
-                ParseObject.pinAllInBackground(queryList);
-            }
-
-
-        } catch (ParseException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(tag, "Error: " + e.getMessage());
-            }
-        }
-
-        if (queryList.size() > 1)
-            Log.d(tag, "Warning: The same id has different Resources.");
-
-
-
-        return queryList;
-
+        TimeoutQuery<T> timeoutQuery = new TimeoutQuery<>(query, QUERY_TIMEOUT);
+        timeoutQuery.findInBackground(callback);
     }
-
-
 
 }

@@ -28,8 +28,6 @@ public final class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         ParseInitialiser.INSTANCE.initParse(this);
 
-        ParseProxy.PROXY.notifyContextChange(this);
-
         WebView wv = (WebView) findViewById(R.id.webview);
 
         DisplayMetrics dm = getResources().getDisplayMetrics();

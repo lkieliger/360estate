@@ -104,12 +104,10 @@ public final class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        //mContext = getApplicationContext();
-
-        ParseProxy.notifyContextChange(this);
+        mContext = getApplicationContext();
 
 
-        setFavorites(DataMgmt.getFavoriteFromId(idUser));
+        setFavorites(DataMgmt.getFavoriteFromId(idUser, mContext));
 
 
         // if there is no Internet , the local list is empty.
