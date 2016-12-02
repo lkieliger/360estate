@@ -125,10 +125,6 @@ public final class DataMgmt {
                                    final Context context) {
         if (query != null) {
 
-            if (!ParseProxy.PROXY.internetAvailable()) {
-                shortToast(context, context.getResources().getText(R.string.no_internet_access));
-            }
-
             FindCallback<Item> callback = new FindCallback<Item>() {
                 public void done(List<Item> objects, ParseException e) {
                     if (e == null) {
@@ -144,6 +140,10 @@ public final class DataMgmt {
 
                     } else {
                         Log.d("fetchItems", "Error: " + e.getMessage());
+                    }
+
+                    if (!ParseProxy.PROXY.internetAvailable()) {
+                        shortToast(context, context.getResources().getText(R.string.no_internet_access));
                     }
                 }
             };

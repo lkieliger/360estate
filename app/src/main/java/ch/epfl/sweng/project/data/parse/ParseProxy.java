@@ -13,25 +13,25 @@ public enum ParseProxy {
 
     PROXY;
 
-    private static final long INTERNET_TIMEOUT = 5000L;
-    private static final long QUERY_TIMEOUT = 2514L;
+    private static final long INTERNET_TIMEOUT = 10000L;
+    private static final long QUERY_TIMEOUT = 3014L;
 
     private long internetUnavailableTime = 0;
 
 
-    public void notifyInternetState(long lastInetUnavailable) {
-        internetUnavailableTime = lastInetUnavailable;
+    public void notifyInternetProblem() {
+        internetUnavailableTime = System.currentTimeMillis();
     }
 
     public boolean internetAvailable() {
-        return System.currentTimeMillis() - internetUnavailableTime < INTERNET_TIMEOUT;
+        return System.currentTimeMillis() - internetUnavailableTime > INTERNET_TIMEOUT;
     }
 
 
     public <T extends ParseObject> void executeQuery(ParseQuery<T> query, FindCallback<T> callback, String tag) {
 
         // If we haven't had internet since INTERNET_TIMEOUT ms, we make the query locally
-        if (internetAvailable()) {
+        if (!internetAvailable()) {
             query.fromLocalDatastore();
         }
 
