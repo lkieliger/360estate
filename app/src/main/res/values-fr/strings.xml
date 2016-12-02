@@ -57,4 +57,7 @@
     <string name="no_panorama_view">La vue panoramique est indosponible en mode hors connexion</string>
     <string name="title_activity_reset">Réinitialisation</string>
     <string name="favorites">Favoris</string>
+    <string name="accept_contact_me">Contactez-moi</string>
+    <string name="button_contact_request">J\'aimerais plus de détails</string>
+    <string name="invalid_parse_object">Il y a une erreur sur le serveur: prière de réessayer plus tard</string>
 </resources>

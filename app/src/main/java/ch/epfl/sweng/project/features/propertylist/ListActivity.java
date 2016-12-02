@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.DataMgmt;
 import ch.epfl.sweng.project.data.parse.objects.Favorites;
@@ -156,6 +155,12 @@ public final class ListActivity extends AppCompatActivity {
                 intent.putExtra("isToggled", isFavoriteToggle);
                 intent.putExtra("idUser", idUser);
                 intent.putExtra("idItem", itemValue.getId());
+
+                intent.putExtra("HouseInfoLocalisation", itemValue.getLocation());
+                intent.putExtra("HouseInfoPrice", itemValue.getPrice());
+                intent.putExtra("HouseInfoSurface", itemValue.getSurface());
+
+
                 startActivity(intent);
             }
         });
