@@ -13,6 +13,7 @@ import com.parse.ParseUser;
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.parse.ParseInitialiser;
+import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.features.propertylist.ListActivity;
 import ch.epfl.sweng.project.userSupport.activities.LoginActivity;
 import ch.epfl.sweng.project.userSupport.activities.RegisterActivity;
@@ -26,6 +27,8 @@ public final class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ParseInitialiser.INSTANCE.initParse(this);
+
+        ParseProxy.PROXY.notifyContextChange(this);
 
         WebView wv = (WebView) findViewById(R.id.webview);
 

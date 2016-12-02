@@ -29,6 +29,7 @@ import java.util.Objects;
 
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.DataMgmt;
+import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.data.parse.objects.Favorites;
 import ch.epfl.sweng.project.data.parse.objects.Item;
 import ch.epfl.sweng.project.features.propertyDescription.DescriptionActivity;
@@ -103,10 +104,12 @@ public final class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        mContext = getApplicationContext();
+        //mContext = getApplicationContext();
+
+        ParseProxy.notifyContextChange(this);
 
 
-        setFavorites(DataMgmt.getFavoriteFromId(idUser, mContext));
+        setFavorites(DataMgmt.getFavoriteFromId(idUser));
 
 
         // if there is no Internet , the local list is empty.
