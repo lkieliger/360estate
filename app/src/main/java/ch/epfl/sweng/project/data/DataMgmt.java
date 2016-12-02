@@ -171,7 +171,7 @@ public final class DataMgmt {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Error: " + e.getMessage());
             }
-            //If there is a problem during the parsiong of the data, we set the ID to -1
+            //If there is a problem during the parsing of the data, we set the ID to -1
             startingId = -1;
         }
 

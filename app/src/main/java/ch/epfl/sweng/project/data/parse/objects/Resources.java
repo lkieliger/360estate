@@ -68,8 +68,13 @@ public final class Resources extends ParseObject {
 
         if (neighborsJSONArray != null) {
             for (int i = 0; i < neighborsJSONArray.length(); i++) {
+                int type = neighborsJSONArray.getJSONObject(i).getInt(typeTag);
 
-                switch (typeValues[neighborsJSONArray.getJSONObject(i).getInt(typeTag)]) {
+                if (type >= typeValues.length){
+                    throw new JSONException("Invalid type in the JSON object while parsing a neighbor object");
+                }
+
+                switch (typeValues[type]) {
                     case TRANSITION:
                         neighborsList.add(new TransitionObject(
                                 new Tuple<>(
@@ -88,6 +93,9 @@ public final class Resources extends ParseObject {
                                 ),
                                 neighborsJSONArray.getJSONObject(i).getString(textInfoTag)));
                         break;
+
+                    default:
+                        throw new JSONException("Invalid type");
                 }
             }
         }
