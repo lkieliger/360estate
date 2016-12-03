@@ -24,6 +24,7 @@ public enum ParseProxy {
 
     private static final long INTERNET_TIMEOUT = 10000L;
     private static final long QUERY_TIMEOUT = 3014L;
+    private static final long QUERY_2ND_TIMEOUT = 1014L;
     private static final String TAG = "ParseProxy";
 
     private long internetUnavailableTime = 0;
@@ -63,7 +64,7 @@ public enum ParseProxy {
         Task<List<T>> task = query.findInBackground();
 
         try {
-            task.waitForCompletion(QUERY_TIMEOUT, TimeUnit.MILLISECONDS);
+            task.waitForCompletion(secondTime ? QUERY_2ND_TIMEOUT : QUERY_TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Error in findQuery waitForCompletion execution: \n" + e.getMessage());

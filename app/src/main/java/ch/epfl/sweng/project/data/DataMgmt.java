@@ -35,7 +35,6 @@ import ch.epfl.sweng.project.data.parse.objects.Resources;
 import ch.epfl.sweng.project.features.propertylist.adapter.ItemAdapter;
 import ch.epfl.sweng.project.features.propertylist.filter.FilterValues;
 
-import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 
@@ -192,10 +191,12 @@ public final class DataMgmt {
         return new HouseManager(sparseArray, startingId, startingUrl);
     }
 
-    public static void getDataForDescription(String id, final Collection<String> urls, StringBuilder description
-            , final Context context) {
-        List<Resources> resourcesList = getResourcesObject(id, context);
+    public static void getDataForDescription(String id,
+                                             final Collection<String> urls,
+                                             StringBuilder description,
+                                             final Context context) {
 
+        List<Resources> resourcesList = getResourcesObject(id, context);
 
         if (!resourcesList.isEmpty()) {
             Resources resource = resourcesList.get(0);
@@ -213,31 +214,26 @@ public final class DataMgmt {
     }
 
 
-    public static List<Resources> getResourcesObject(String id, final Context context) {
+    private static List<Resources> getResourcesObject(String id, final Context context) {
         ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
         query.whereEqualTo(JSONTags.idHouseTag, id);
 
         List<Resources> listResource = new ArrayList<>();
 
-        if (!isInternetAvailable(context)) {
-            shortToast(context, context.getResources().getText(R.string.no_internet_access));
-            query.fromLocalDatastore();
-        }
-
-
         try {
-            listResource = query.find();
+            listResource = ParseProxy.PROXY.executeFindQuery(query);
 
-            if (isInternetAvailable(context)) {
-
+            if (ParseProxy.PROXY.internetAvailable()) {
                 ParseObject.pinAllInBackground(listResource);
             }
-
-
         } catch (ParseException e) {
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Error: " + e.getMessage());
+                Log.d(TAG, "Error in Resources query : " + e.getMessage());
             }
+        }
+
+        if (!ParseProxy.PROXY.internetAvailable()) {
+            shortToast(context, context.getResources().getText(R.string.no_internet_access));
         }
 
         if (listResource.size() > 1)
