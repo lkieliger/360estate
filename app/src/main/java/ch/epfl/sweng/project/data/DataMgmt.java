@@ -27,6 +27,7 @@ import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.panorama.HouseManager;
 import ch.epfl.sweng.project.data.panorama.PhotoSphereData;
 import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
+import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.data.parse.objects.Favorites;
 import ch.epfl.sweng.project.data.parse.objects.Item;
 import ch.epfl.sweng.project.data.parse.objects.JSONTags;
@@ -34,7 +35,6 @@ import ch.epfl.sweng.project.data.parse.objects.Resources;
 import ch.epfl.sweng.project.features.propertylist.adapter.ItemAdapter;
 import ch.epfl.sweng.project.features.propertylist.filter.FilterValues;
 
-import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 
@@ -84,12 +84,16 @@ public final class DataMgmt {
     }
 
 
-    public static void getItemList(
-            final Collection<Item> itemList, final ItemAdapter itemAdapter, FilterValues filterValues,
-            Boolean isFavoriteToggle, String idUser, final Context context) {
+    public static void getItemList(final Collection<Item> itemList,
+                                   final ItemAdapter itemAdapter,
+                                   FilterValues filterValues,
+                                   Boolean favoriteToggled,
+                                   String idUser,
+                                   final Context context) {
+
         List<ParseQuery<Item>> queries = new ArrayList<>();
 
-        if (isFavoriteToggle) {
+        if (favoriteToggled) {
             Set<String> listId = DataMgmt.getFavoriteFromId(idUser, context).getFavoritesFromLocal();
             if (!listId.isEmpty()) {
                 for (String s : listId) {
@@ -118,16 +122,13 @@ public final class DataMgmt {
     }
 
 
-    private static void fetchItems(ParseQuery<Item> query, final Collection<Item> itemList,
-                                   final ItemAdapter itemAdapter, final Context context) {
+    private static void fetchItems(ParseQuery<Item> query,
+                                   final Collection<Item> itemList,
+                                   final ItemAdapter itemAdapter,
+                                   final Context context) {
         if (query != null) {
 
-            if (!isInternetAvailable(context)) {
-                shortToast(context, context.getResources().getText(R.string.no_internet_access));
-                query.fromLocalDatastore();
-            }
-
-            query.findInBackground(new FindCallback<Item>() {
+            FindCallback<Item> callback = new FindCallback<Item>() {
                 public void done(List<Item> objects, ParseException e) {
                     if (e == null) {
                         Log.d(TAG, "Retrieved " + objects.size() + " house items");
@@ -135,18 +136,23 @@ public final class DataMgmt {
                         itemList.addAll(objects);
                         itemAdapter.notifyDataSetChanged();
 
-
-                        if (isInternetAvailable(context)) {
-
+                        //we only update the localDataStore if internet was available at the time of the query
+                        if (ParseProxy.PROXY.internetAvailable()) {
                             ParseObject.pinAllInBackground(objects);
                         }
 
-
                     } else {
-                        Log.d("DataMgmt.getItemList", "Error: " + e.getMessage());
+                        Log.d("fetchItems", "Error: " + e.getMessage());
+                    }
+
+                    if (!ParseProxy.PROXY.internetAvailable()) {
+                        shortToast(context, context.getResources().getText(R.string.no_internet_access));
                     }
                 }
-            });
+            };
+
+            ParseProxy.PROXY.executeQuery(query, callback, TAG);
+
         } else {
             itemList.clear();
             itemAdapter.notifyDataSetChanged();
@@ -185,10 +191,12 @@ public final class DataMgmt {
         return new HouseManager(sparseArray, startingId, startingUrl);
     }
 
-    public static void getDataForDescription(String id, final Collection<String> urls, StringBuilder description
-            , final Context context) {
-        List<Resources> resourcesList = getResourcesObject(id, context);
+    public static void getDataForDescription(String id,
+                                             final Collection<String> urls,
+                                             StringBuilder description,
+                                             final Context context) {
 
+        List<Resources> resourcesList = getResourcesObject(id, context);
 
         if (!resourcesList.isEmpty()) {
             Resources resource = resourcesList.get(0);
@@ -206,31 +214,26 @@ public final class DataMgmt {
     }
 
 
-    public static List<Resources> getResourcesObject(String id, final Context context) {
+    private static List<Resources> getResourcesObject(String id, final Context context) {
         ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
         query.whereEqualTo(JSONTags.idHouseTag, id);
 
         List<Resources> listResource = new ArrayList<>();
 
-        if (!isInternetAvailable(context)) {
-            shortToast(context, context.getResources().getText(R.string.no_internet_access));
-            query.fromLocalDatastore();
-        }
-
-
         try {
-            listResource = query.find();
+            listResource = ParseProxy.PROXY.executeFindQuery(query);
 
-            if (isInternetAvailable(context)) {
-
+            if (ParseProxy.PROXY.internetAvailable()) {
                 ParseObject.pinAllInBackground(listResource);
             }
-
-
         } catch (ParseException e) {
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Error: " + e.getMessage());
+                Log.d(TAG, "Error in Resources query : " + e.getMessage());
             }
+        }
+
+        if (!ParseProxy.PROXY.internetAvailable()) {
+            shortToast(context, context.getResources().getText(R.string.no_internet_access));
         }
 
         if (listResource.size() > 1)
@@ -252,37 +255,27 @@ public final class DataMgmt {
 
         List<Favorites> listFavorites = new ArrayList<>();
 
-        if (!isInternetAvailable(context)) {
-            query.fromLocalDatastore();
-        }
-
-
         try {
+            listFavorites = ParseProxy.PROXY.executeFindQuery(query);
 
-
-            listFavorites = query.find();
-
-            if (isInternetAvailable(context)) {
+            if (ParseProxy.PROXY.internetAvailable()) {
                 ParseObject.pinAllInBackground(listFavorites);
             }
         } catch (ParseException e) {
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, e.getMessage());
+                Log.d(TAG, "Error in favorites query : " + e.getMessage());
             }
         }
 
         if (listFavorites.size() > 1)
-            Log.d(TAG, "Warning: The same id has different Favorites.");
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "Warning: The same user id has different Favorites.");
 
         Favorites f;
         if (listFavorites.isEmpty()) {
             f = saveNewFavorites(idUser);
-            if (isInternetAvailable(context)) {
-                f.synchronizeFromServer(); // fetch local set.
-            }
         } else {
             f = listFavorites.get(0);
-
         }
 
         return f;
@@ -290,9 +283,7 @@ public final class DataMgmt {
 
     private static Favorites saveNewFavorites(String idUser) {
         Favorites f = new Favorites(new HashSet<String>(), idUser);
-
         f.saveEventually();
-
 
         return f;
     }

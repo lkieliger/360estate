@@ -28,6 +28,7 @@ import java.util.Objects;
 
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.DataMgmt;
+import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.data.parse.objects.Favorites;
 import ch.epfl.sweng.project.data.parse.objects.Item;
 import ch.epfl.sweng.project.features.propertyDescription.DescriptionActivity;

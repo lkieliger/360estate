@@ -24,15 +24,15 @@ public final class FilterValues {
     private String minSurface;
 
     /**
-     * @param typeSpinner        The type entered.
-     * @param positionSpinner    The position of the selected item in the spinner.
-     * @param city               The city entered.
-     * @param maxRooms           The max number of rooms entered.
-     * @param minRooms           The min number of rooms entered.
-     * @param maxPrice           The maximum price entered.
-     * @param minPrice           The minimum price entered.
-     * @param maxSurface         The maximum Surface entered.
-     * @param minSurface         The minimum Surface entered.
+     * @param typeSpinner     The type entered.
+     * @param positionSpinner The position of the selected item in the spinner.
+     * @param city            The city entered.
+     * @param maxRooms        The max number of rooms entered.
+     * @param minRooms        The min number of rooms entered.
+     * @param maxPrice        The maximum price entered.
+     * @param minPrice        The minimum price entered.
+     * @param maxSurface      The maximum Surface entered.
+     * @param minSurface      The minimum Surface entered.
      */
     public FilterValues(int typeSpinner, int positionSpinner, String city, String maxRooms, String minRooms,
                         String maxPrice, String minPrice, String maxSurface, String minSurface) {
@@ -108,12 +108,12 @@ public final class FilterValues {
 
         try {
 
-            filterWithMax(isMaxRoomsFiltered,"rooms",maxRooms,query);
-            filterWithMin(isMinRoomsFiltered,"rooms",minRooms,query);
-            filterWithMax(isMaxPriceFiltered,"price",maxPrice,query);
-            filterWithMin(isMinPriceFiltered,"price",minPrice,query);
-            filterWithMax(isMaxSurfaceFiltered,"surface",maxSurface,query);
-            filterWithMin(isMinSurfaceFiltered,"surface",minSurface,query);
+            filterWithMax(isMaxRoomsFiltered, "rooms", maxRooms, query);
+            filterWithMin(isMinRoomsFiltered, "rooms", minRooms, query);
+            filterWithMax(isMaxPriceFiltered, "price", maxPrice, query);
+            filterWithMin(isMinPriceFiltered, "price", minPrice, query);
+            filterWithMax(isMaxSurfaceFiltered, "surface", maxSurface, query);
+            filterWithMin(isMinSurfaceFiltered, "surface", minSurface, query);
 
         } catch (NumberFormatException e) {
             if (BuildConfig.DEBUG) {
@@ -124,16 +124,16 @@ public final class FilterValues {
     }
 
     private <T extends ParseObject> void filterWithMax(boolean isFiltered, String paramToFilter,
-                                                       String paramGet, ParseQuery<T> query){
-        if(isFiltered){
+                                                       String paramGet, ParseQuery<T> query) {
+        if (isFiltered) {
             int temp = Integer.parseInt(paramGet);
             query.whereLessThanOrEqualTo(paramToFilter, temp);
         }
     }
 
-    private <T extends ParseObject> void filterWithMin(boolean isFiltered,String paramToFilter,
-                                                       String paramGet,ParseQuery<T> query){
-        if(isFiltered){
+    private <T extends ParseObject> void filterWithMin(boolean isFiltered, String paramToFilter,
+                                                       String paramGet, ParseQuery<T> query) {
+        if (isFiltered) {
             int temp = Integer.parseInt(paramGet);
             query.whereGreaterThanOrEqualTo(paramToFilter, temp);
         }
