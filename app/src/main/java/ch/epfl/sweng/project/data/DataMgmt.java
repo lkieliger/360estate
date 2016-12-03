@@ -85,12 +85,16 @@ public final class DataMgmt {
     }
 
 
-    public static void getItemList(
-            final Collection<Item> itemList, final ItemAdapter itemAdapter, FilterValues filterValues,
-            Boolean isFavoriteToggle, String idUser, final Context context) {
+    public static void getItemList(final Collection<Item> itemList,
+                                   final ItemAdapter itemAdapter,
+                                   FilterValues filterValues,
+                                   Boolean favoriteToggled,
+                                   String idUser,
+                                   final Context context) {
+
         List<ParseQuery<Item>> queries = new ArrayList<>();
 
-        if (isFavoriteToggle) {
+        if (favoriteToggled) {
             Set<String> listId = DataMgmt.getFavoriteFromId(idUser, context).getFavoritesFromLocal();
             if (!listId.isEmpty()) {
                 for (String s : listId) {
@@ -255,37 +259,27 @@ public final class DataMgmt {
 
         List<Favorites> listFavorites = new ArrayList<>();
 
-        if (!isInternetAvailable(context)) {
-            query.fromLocalDatastore();
-        }
-
-
         try {
+            listFavorites = ParseProxy.PROXY.executeFindQuery(query);
 
-
-            listFavorites = query.find();
-
-            if (isInternetAvailable(context)) {
+            if (ParseProxy.PROXY.internetAvailable()) {
                 ParseObject.pinAllInBackground(listFavorites);
             }
         } catch (ParseException e) {
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, e.getMessage());
+                Log.d(TAG, "Error in favorites query : " + e.getMessage());
             }
         }
 
         if (listFavorites.size() > 1)
-            Log.d(TAG, "Warning: The same id has different Favorites.");
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "Warning: The same user id has different Favorites.");
 
         Favorites f;
         if (listFavorites.isEmpty()) {
             f = saveNewFavorites(idUser);
-            if (isInternetAvailable(context)) {
-                f.synchronizeFromServer(); // fetch local set.
-            }
         } else {
             f = listFavorites.get(0);
-
         }
 
         return f;
@@ -293,9 +287,7 @@ public final class DataMgmt {
 
     private static Favorites saveNewFavorites(String idUser) {
         Favorites f = new Favorites(new HashSet<String>(), idUser);
-
         f.saveEventually();
-
 
         return f;
     }
