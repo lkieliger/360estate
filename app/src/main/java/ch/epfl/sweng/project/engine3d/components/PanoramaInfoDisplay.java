@@ -41,7 +41,7 @@ public final class PanoramaInfoDisplay extends PanoramaObject {
     @Override
     public void reactWith(PanoramaRenderer p) {
         if (isFocused) {
-            p.zoomOut();
+            p.zoomOut(theta);
             isFocused = false;
         } else {
             p.zoomOnText(theta, getX(), getZ());

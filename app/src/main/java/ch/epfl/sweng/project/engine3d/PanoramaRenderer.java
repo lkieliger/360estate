@@ -34,7 +34,6 @@ import ch.epfl.sweng.project.engine3d.components.PanoramaInfoObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
 import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
-import ch.epfl.sweng.project.util.DebugPrinter;
 import ch.epfl.sweng.project.util.Tuple;
 
 import static android.content.Context.SENSOR_SERVICE;
@@ -63,6 +62,8 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     private Quaternion mUserRot;
     private Quaternion mSensorRot;
     private Vector3 mTargetPos;
+    private Quaternion mTargetQuaternion;
+    private Quaternion mHelperQuaternion;
 
     private double mYaw;
 
@@ -82,7 +83,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             //Log.i(TAG, "Rendering logic is set to idle");
             if (debugCounter == 60) {
                 debugCounter = 0;
-                DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
+                //       DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
             }
             debugCounter++;
 
@@ -127,11 +128,14 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             //Log.i(TAG, "Rendering logic is set to sliding");
             double travellingLength = mCamera.getPosition().length();
 
+
             if (travellingLength < 12) {
                 Vector3 v = new Vector3(mTargetPos.x, mTargetPos.y + 25, mTargetPos.z);
                 Vector3 pos = new Vector3(mCamera.getPosition());
                 mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
             }
+            mHelperQuaternion = mHelperQuaternion.slerp(mTargetQuaternion, LERP_FACTOR * 5);
+            mCamera.setCameraOrientation(mHelperQuaternion);
         }
     };
 
@@ -148,6 +152,8 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
                 mRenderLogic = mIdleRendering;
                 Log.d(TAG, "Movement Terminated");
             }
+            mHelperQuaternion = mHelperQuaternion.slerp(mTargetQuaternion, LERP_FACTOR * 5);
+            mCamera.setCameraOrientation(mHelperQuaternion);
         }
     };
 
@@ -263,17 +269,21 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         mTargetPos = mTargetPos.setAll(X, 0, Z);
         Log.d(TAG, "Moving to:" + X + " , " + Z);
 
-        mCamera.setCameraPitch(0);
-        mCamera.setCameraRoll(0);
-        mCamera.setCameraYaw(angle * 180 / Math.PI + 71.5);
+        mTargetQuaternion = Quaternion.getIdentity().fromEuler(angle * 180 / Math.PI + 71.5, 0, 0);
 
-        //    mTargetAngle = mTargetAngle.setAll(angle * 180 / Math.PI+ 71.5,0,0);
+        Quaternion q = new Quaternion(mSensorRot);
+        mHelperQuaternion = q.multiply(mUserRot);
         mRenderLogic = mSlidingToTextRendering;
     }
 
-    public void zoomOut() {
+    public void zoomOut(double angle) {
         Log.d(TAG, "Moving Out");
-        // mTargetPos = mTargetPos.setAll(ORIGIN);
+
+        mHelperQuaternion = Quaternion.getIdentity().fromEuler(angle * 180 / Math.PI + 71.5, 0, 0);
+
+        Quaternion q = new Quaternion(mSensorRot);
+        mTargetQuaternion = q.multiply(mUserRot);
+
         mRenderLogic = mSlidingOutOfTextRendering;
     }
 
