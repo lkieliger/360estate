@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
+import ch.epfl.sweng.project.engine3d.StringAdapter;
 
 
 /**
@@ -131,15 +132,21 @@ public final class PanoramaSphere extends Sphere {
     public void setTextToDisplay(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject, int colorIndex,
                                  ObjectColorPicker picker) {
 
-        int heightInfoDisplay = 30;
+        StringAdapter stringAdapter = new StringAdapter(textInfo);
+        int epsilon = 15;
+        Bitmap bitmap = stringAdapter.textToBitmap(22, 512, colorIndex, epsilon);
+
+
+        int heightInfoDisplay = ((int) (Math.log(bitmap.getHeight()) / Math.log(2)) - 7) * 15;
         int widthInfoDisplay = 30;
         int heightInfoClose = 5;
         int widthInfoClose = 5;
 
-        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
-                , heightInfoDisplay, textInfo, colorIndex);
 
-        int shiftY = (int) ((widthInfoDisplay) / 2.0 + heightInfoClose * 3 / 4.0);
+        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
+                , heightInfoDisplay, bitmap, colorIndex);
+
+        int shiftY = (int) ((heightInfoDisplay + heightInfoClose + 4) / 2.0);
 
         PanoramaInfoCloser panoramaInfoCloser = new PanoramaInfoCloser(theta, 1.5, widthInfoClose
                 , heightInfoClose, panoramaInfoDisplay, panoramaInfoObject);
@@ -148,6 +155,8 @@ public final class PanoramaSphere extends Sphere {
 
         attachPanoramaComponent(panoramaInfoDisplay, picker);
         attachPanoramaComponent(panoramaInfoCloser, picker);
+
+
     }
 
     public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser,

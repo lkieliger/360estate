@@ -63,6 +63,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     private Quaternion mUserRot;
     private Quaternion mSensorRot;
     private Vector3 mTargetPos;
+
     private double mYaw;
 
     private FetchPhotoTask mTaskManager;
@@ -120,6 +121,36 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         }
     };
 
+    private RenderingLogic mSlidingToTextRendering = new RenderingLogic() {
+        @Override
+        public void render() {
+            //Log.i(TAG, "Rendering logic is set to sliding");
+            double travellingLength = mCamera.getPosition().length();
+
+            if (travellingLength < 12) {
+                Vector3 v = new Vector3(mTargetPos.x, mTargetPos.y + 25, mTargetPos.z);
+                Vector3 pos = new Vector3(mCamera.getPosition());
+                mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
+            }
+        }
+    };
+
+
+    private RenderingLogic mSlidingOutOfTextRendering = new RenderingLogic() {
+        @Override
+        public void render() {
+            //Log.i(TAG, "Rendering logic is set to sliding");
+            double travellingLength = mCamera.getPosition().length();
+            if (travellingLength > 0.01) {
+                Vector3 pos = new Vector3(mCamera.getPosition());
+                mCamera.setPosition(pos.lerp(ORIGIN, LERP_FACTOR * 5));
+            } else {
+                mRenderLogic = mIdleRendering;
+                Log.d(TAG, "Movement Terminated");
+            }
+        }
+    };
+
     public PanoramaRenderer(Context context, Display display, HouseManager houseManager) {
         super(context);
 
@@ -156,6 +187,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         mCamera = getCurrentCamera();
         mCamera.setFieldOfView(80);
         mCamera.setFarPlane(220);
+        mCamera.setLookAt(1, 0, 1);
 
         mPanoSphere = null;
 
@@ -227,6 +259,25 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         mPanoSphere.deleteTextToDisplay(panoramaInfoDisplay, panoramaInfoCloser, mPicker);
     }
 
+    public void zoomOnText(double angle, double X, double Z) {
+        mTargetPos = mTargetPos.setAll(X, 0, Z);
+        Log.d(TAG, "Moving to:" + X + " , " + Z);
+
+        mCamera.setCameraPitch(0);
+        mCamera.setCameraRoll(0);
+        mCamera.setCameraYaw(angle * 180 / Math.PI + 71.5);
+
+        //    mTargetAngle = mTargetAngle.setAll(angle * 180 / Math.PI+ 71.5,0,0);
+        mRenderLogic = mSlidingToTextRendering;
+    }
+
+    public void zoomOut() {
+        Log.d(TAG, "Moving Out");
+        // mTargetPos = mTargetPos.setAll(ORIGIN);
+        mRenderLogic = mSlidingOutOfTextRendering;
+    }
+
+
     /**
      * This method is called by the asynchronous task that fetched the panorama picture
      *
@@ -268,7 +319,9 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     public void onRender(final long elapsedTime, final double deltaTime) {
         super.onRender(elapsedTime, deltaTime);
         mRenderLogic.render();
-        updateCamera();
+        if (!(mRenderLogic.equals(mSlidingToTextRendering)) && !mRenderLogic.equals(mSlidingOutOfTextRendering)) {
+            updateCamera();
+        }
     }
 
     /**
@@ -356,10 +409,14 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
     @Override
     public void onObjectPicked(@NonNull Object3D object) {
-        if (mRenderLogic == mIdleRendering) {
+        if (mRenderLogic == mIdleRendering || mRenderLogic == mSlidingToTextRendering) {
             Log.d(TAG, "ObjectPicked");
             mTargetPos = object.getWorldPosition();
-            ((PanoramaObject) object).reactWith(this);
+
+            if ((((PanoramaObject) object).getClass() == PanoramaInfoDisplay.class &&
+                    mRenderLogic == mSlidingToTextRendering) || mRenderLogic == mIdleRendering) {
+                ((PanoramaObject) object).reactWith(this);
+            }
         }
     }
 
@@ -374,6 +431,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     @Override
     public void onOffsetsChanged(float x, float y, float z, float w, int i, int j) {
     }
+
 
     /**
      * This interface defines a behavior of the PanoramaRenderer. Change in behavior can happen due to user input for
