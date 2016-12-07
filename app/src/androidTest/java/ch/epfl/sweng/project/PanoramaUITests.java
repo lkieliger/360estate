@@ -28,6 +28,7 @@ import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
 import ch.epfl.sweng.project.engine3d.components.PanoramaTransitionObject;
 
+import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotSame;
@@ -55,6 +56,8 @@ public class PanoramaUITests {
     @After
     public void closeTests() {
         sleepDuring(2000);
+        mActivityRule.getActivity().finish();
+        wait1s(TAG);
     }
 
     /**
