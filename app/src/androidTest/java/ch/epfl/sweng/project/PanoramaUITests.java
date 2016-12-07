@@ -79,8 +79,8 @@ public class PanoramaUITests {
         testPanoramaSphere();
         panoramaTransitionObjectsThrowsException();
         testRenderingLogics();
-        testFetchPhotoTask(TEST_URL);
-        testFetchPhotoTask("idontexpectthistobeavalidurl");
+        //testFetchPhotoTask(TEST_URL);
+        //testFetchPhotoTask("idontexpectthistobeavalidurl");
     }
 
     private void testPanoramaSphere() {
