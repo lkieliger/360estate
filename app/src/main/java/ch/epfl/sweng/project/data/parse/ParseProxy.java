@@ -23,8 +23,8 @@ public enum ParseProxy {
     PROXY;
 
     private static final long INTERNET_TIMEOUT = 10000L;
-    private static final long QUERY_TIMEOUT = 3014L;
-    private static final long QUERY_2ND_TIMEOUT = 1014L;
+    private static final long QUERY_TIMEOUT = 5014L;
+    private static final long QUERY_2ND_TIMEOUT = 1514L;
     private static final String TAG = "ParseProxy";
 
     private long internetUnavailableTime = 0;
