@@ -58,21 +58,19 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     private final RotSensorListener mRotListener;
     private final boolean mRotSensorAvailable;
     private final Sensor mRotSensor;
+    private final double distanceOfDisplay = 10.5;
     private PanoramaSphere mPanoSphere;
     private Quaternion mUserRot;
     private Quaternion mSensorRot;
     private Vector3 mTargetPos;
     private Quaternion mTargetQuaternion;
     private Quaternion mHelperQuaternion;
-
     private double mYaw;
-
     private FetchPhotoTask mTaskManager;
     private HouseManager mHouseManager;
     private RenderingLogic mRenderLogic;
     private ObjectColorPicker mPicker;
     private int debugCounter = 0;
-
     /**
      * Use this rendering when nothing special need to be done. In other words just allowing the camera to look
      * around and print some debug informations.
@@ -128,13 +126,12 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             //Log.i(TAG, "Rendering logic is set to sliding");
             double travellingLength = mCamera.getPosition().length();
 
-
-            if (travellingLength < 12) {
+            if (travellingLength < distanceOfDisplay) {
                 Vector3 v = new Vector3(mTargetPos.x, mTargetPos.y + 25, mTargetPos.z);
                 Vector3 pos = new Vector3(mCamera.getPosition());
                 mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
             }
-            mHelperQuaternion = mHelperQuaternion.slerp(mTargetQuaternion, LERP_FACTOR * 5);
+            mHelperQuaternion = mHelperQuaternion.slerp(mTargetQuaternion, LERP_FACTOR * 7);
             mCamera.setCameraOrientation(mHelperQuaternion);
         }
     };
@@ -265,9 +262,9 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         mPanoSphere.deleteTextToDisplay(panoramaInfoDisplay, panoramaInfoCloser, mPicker);
     }
 
-    public void zoomOnText(double angle, double X, double Z) {
-        mTargetPos = mTargetPos.setAll(X, 0, Z);
-        Log.d(TAG, "Moving to:" + X + " , " + Z);
+    public void zoomOnText(double angle, double x, double z) {
+        mTargetPos = mTargetPos.setAll(x, 0, z);
+        if (BuildConfig.DEBUG) Log.d(TAG, "Moving to:" + x + " , " + z);
 
         mTargetQuaternion = Quaternion.getIdentity().fromEuler(angle * 180 / Math.PI + 71.5, 0, 0);
 
@@ -423,8 +420,10 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             Log.d(TAG, "ObjectPicked");
             mTargetPos = object.getWorldPosition();
 
-            if ((((PanoramaObject) object).getClass() == PanoramaInfoDisplay.class &&
-                    mRenderLogic == mSlidingToTextRendering) || mRenderLogic == mIdleRendering) {
+            if ((((PanoramaObject) object).getClass() == PanoramaInfoCloser.class &&
+                    mRenderLogic == mSlidingToTextRendering) ||
+                    (((PanoramaObject) object).getClass() == PanoramaInfoDisplay.class &&
+                            mRenderLogic == mSlidingToTextRendering) || mRenderLogic == mIdleRendering) {
                 ((PanoramaObject) object).reactWith(this);
             }
         }
