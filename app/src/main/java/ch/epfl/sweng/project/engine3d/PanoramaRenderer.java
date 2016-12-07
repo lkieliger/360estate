@@ -23,6 +23,7 @@ import org.rajawali3d.util.ObjectColorPicker;
 import org.rajawali3d.util.OnObjectPickedListener;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
@@ -63,10 +64,10 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     private Quaternion mUserRot;
     private Quaternion mSensorRot;
     private Vector3 mTargetPos;
-    private Quaternion mTargetQuaternion;
-    private Quaternion mHelperQuaternion;
+    private Quaternion mTargetQuaternion = null;
+    private Quaternion mHelperQuaternion = null;
     private double mYaw;
-    private FetchPhotoTask mTaskManager;
+    private FetchPhotoTask mTaskManager = null;
     private HouseManager mHouseManager;
     private RenderingLogic mRenderLogic;
     private ObjectColorPicker mPicker;
@@ -109,7 +110,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             double travellingLength = mCamera.getPosition().length();
 
             if (travellingLength < CAM_TRAVEL_DISTANCE) {
-                Vector3 v = new Vector3(mTargetPos.x, mTargetPos.y + 25, mTargetPos.z);
+                Vector3 v = new Vector3(mTargetPos.x, mTargetPos.y, mTargetPos.z);
                 Vector3 pos = new Vector3(mCamera.getPosition());
                 mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
             }
@@ -127,7 +128,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             double travellingLength = mCamera.getPosition().length();
 
             if (travellingLength < distanceOfDisplay) {
-                Vector3 v = new Vector3(mTargetPos.x, mTargetPos.y + 25, mTargetPos.z);
+                Vector3 v = new Vector3(mTargetPos.x, mTargetPos.y, mTargetPos.z);
                 Vector3 pos = new Vector3(mCamera.getPosition());
                 mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
             }
@@ -263,7 +264,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     }
 
     public void zoomOnText(double angle, double x, double z) {
-        mTargetPos = mTargetPos.setAll(x, 0, z);
+        mTargetPos = mTargetPos.setAll(x, 25, z);
         if (BuildConfig.DEBUG) Log.d(TAG, "Moving to:" + x + " , " + z);
 
         mTargetQuaternion = Quaternion.getIdentity().fromEuler(angle * 180 / Math.PI + 71.5, 0, 0);
@@ -305,11 +306,12 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     /**
      * Actually updates the current scene by changing the panorama picture and loading the new PanoramaComponents
      */
-    public void updateScene() {
+    private void updateScene() {
 
         Tuple<Integer, Bitmap> panoData = NextPanoramaDataBuilder.build();
-        Log.d(TAG, "Call to update scene, changing panorama photo and attaching new components. Pano id is: " +
-                "" + panoData.getX());
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "Call to update scene, changing panorama photo and attaching new components." +
+                    " Pano id is: " + panoData.getX());
 
         mPanoSphere.detachPanoramaComponents(mPicker);
         mPanoSphere.setPhotoTexture(panoData.getY());
@@ -419,11 +421,13 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         if (mRenderLogic == mIdleRendering || mRenderLogic == mSlidingToTextRendering) {
             Log.d(TAG, "ObjectPicked");
             mTargetPos = object.getWorldPosition();
+            mTargetPos.y += 25;
 
-            if ((((PanoramaObject) object).getClass() == PanoramaInfoCloser.class &&
-                    mRenderLogic == mSlidingToTextRendering) ||
-                    (((PanoramaObject) object).getClass() == PanoramaInfoDisplay.class &&
-                            mRenderLogic == mSlidingToTextRendering) || mRenderLogic == mIdleRendering) {
+            if ((Objects.equals(((PanoramaObject) object).getClass(), PanoramaInfoCloser.class) &&
+                    Objects.equals(mRenderLogic, mSlidingToTextRendering)) ||
+                    (Objects.equals(((PanoramaObject) object).getClass(), PanoramaInfoDisplay.class) &&
+                            Objects.equals(mRenderLogic, mSlidingToTextRendering)) ||
+                    Objects.equals(mRenderLogic, mIdleRendering)) {
                 ((PanoramaObject) object).reactWith(this);
             }
         }
@@ -455,11 +459,14 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
      * Builder for the data needed to transition between panoramas.
      */
     public static final class NextPanoramaDataBuilder {
-        public static final int INVALID_ID = -1;
-        public static final Bitmap INVALID_BITMAP = null;
+        static final int INVALID_ID = -1;
+        static final Bitmap INVALID_BITMAP = null;
         private static final String TAG = "NextPanoDataBuilder";
         private static Integer nextPanoId = INVALID_ID;
         private static Bitmap nextPanoBitmap = INVALID_BITMAP;
+
+        private NextPanoramaDataBuilder() {
+        }
 
         public static boolean isReady() {
             return (nextPanoId != INVALID_ID && nextPanoBitmap != INVALID_BITMAP);
@@ -528,7 +535,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         }
 
         private static void logStatus() {
-            Log.i(TAG, "ID: " + nextPanoId + ", Bitmap@" + nextPanoBitmap);
+            if (BuildConfig.DEBUG) Log.i(TAG, "ID: " + nextPanoId + ", Bitmap@" + nextPanoBitmap);
         }
     }
 
