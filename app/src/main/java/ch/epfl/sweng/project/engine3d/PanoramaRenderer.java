@@ -163,9 +163,6 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
         NextPanoramaDataBuilder.resetData();
 
-        mPicker = new ObjectColorPicker(this);
-        mPicker.setOnObjectPickedListener(this);
-
         mSensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         Sensor rotSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
         mHouseManager = houseManager;
@@ -309,6 +306,9 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Call to update scene, changing panorama photo and attaching new components." +
                     " Pano id is: " + panoData.getX());
+
+        mPicker = new ObjectColorPicker(this);
+        mPicker.setOnObjectPickedListener(this);
 
         mPanoSphere.detachPanoramaComponents(mPicker);
         mPanoSphere.setPhotoTexture(panoData.getY());

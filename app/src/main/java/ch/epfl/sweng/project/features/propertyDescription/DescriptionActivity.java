@@ -124,7 +124,6 @@ public final class DescriptionActivity extends AppCompatActivity {
         additionalInfo.putString(ClientRequest.LOCALISATION_TAG, getIntent().getStringExtra("HouseInfoLocalisation"));
         additionalInfo.putInt(ClientRequest.PRICE_TAG, getIntent().getIntExtra("HouseInfoPrice", 0));
         additionalInfo.putInt(ClientRequest.SURFACE_TAG, getIntent().getIntExtra("HouseInfoSurface", 0));
-
         contactDialog.setArguments(additionalInfo);
 
         contactDialog.show(getFragmentManager(), ContactMeDialogFragment.TAG);

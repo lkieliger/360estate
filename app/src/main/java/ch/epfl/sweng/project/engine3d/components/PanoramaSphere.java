@@ -108,14 +108,8 @@ public final class PanoramaSphere extends Sphere {
     public void attachPanoramaComponents(Iterable<SpatialData> l, ObjectColorPicker p) {
         Log.d(TAG, "Call to attach panorama");
         for (SpatialData am : l) {
-
             PanoramaObject panoramaObject = am.toPanoramaObject();
-
-            panoramaObject.registerComponentAtPicker(p, mComponentIndex);
-
-            mComponentIndex++;
-            addChild(panoramaObject);
-            mComponentList.add(panoramaObject);
+            attachPanoramaComponent(panoramaObject, p);
         }
     }
 

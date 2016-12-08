@@ -202,6 +202,12 @@ public class CompleteBehaviorTest {
         waitNms(TAG, 5000);
         onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
         waitNms(TAG, 3500);
+        onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
+        wait250ms(TAG);
+        onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
+        wait250ms(TAG);
+
+
         pressBack();
         logUserOut();
 
