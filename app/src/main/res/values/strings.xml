@@ -36,6 +36,7 @@
     <string name="text_currency" translatable="false">CHF</string>
     <string name="text_location_surface" translatable="false">%1$s, %2$s m \u00B2, %3$s %4$s</string>
     <string name="text_price_type" translatable="false">%1$s %2$s, %3$s</string>
+    <string name="location_separator">in</string>
 
     <!-- Strings related to login -->
     <string name="title_activity_login">HouseView360</string>
@@ -58,6 +59,8 @@
     <!-- Strings related to registering -->
     <string name="prompt_password_again" tools:ignore="UnusedResources">Password (double check)</string>
     <string name="prompt_phone_number">Phone number</string>
+    <string name="hint_register_name">Name</string>
+    <string name="hint_register_lastname">Last name</string>
     <string name="action_register">Register</string>
     <string name="error_empty_field">Please fill in all fields</string>
     <string name="error_unmatching_passwords">Entered passwords don\'t match</string>

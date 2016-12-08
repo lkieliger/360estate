@@ -47,6 +47,16 @@ public final class InputValidityChecker {
     }
 
     /**
+     * This method checks user name or lastname for validity
+     *
+     * @return true if the name or lastname is valid
+     */
+    public static boolean nameIsValid(String name, Context context) {
+        //TODO: implement validity check
+        return true;
+    }
+
+    /**
      * This method checks user email for validity. It should satisfy:
      * - At least a @
      *
