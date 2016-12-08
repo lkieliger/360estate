@@ -59,7 +59,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     private final RotSensorListener mRotListener;
     private final boolean mRotSensorAvailable;
     private final Sensor mRotSensor;
-    private final double distanceOfDisplay = 10.5;
+    private final double distanceOfDisplay = 9;
     private PanoramaSphere mPanoSphere;
     private Quaternion mUserRot;
     private Quaternion mSensorRot;
@@ -150,7 +150,10 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
                 mRenderLogic = mIdleRendering;
                 Log.d(TAG, "Movement Terminated");
             }
-            mHelperQuaternion = mHelperQuaternion.slerp(mTargetQuaternion, LERP_FACTOR * 5);
+            Quaternion q = new Quaternion(mSensorRot);
+            q = q.multiply(mUserRot);
+
+            mHelperQuaternion = mHelperQuaternion.slerp(q, LERP_FACTOR * 5);
             mCamera.setCameraOrientation(mHelperQuaternion);
         }
     };
@@ -276,11 +279,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
     public void zoomOut(double angle) {
         Log.d(TAG, "Moving Out");
-
         mHelperQuaternion = Quaternion.getIdentity().fromEuler(angle * 180 / Math.PI + 71.5, 0, 0);
-
-        Quaternion q = new Quaternion(mSensorRot);
-        mTargetQuaternion = q.multiply(mUserRot);
 
         mRenderLogic = mSlidingOutOfTextRendering;
     }

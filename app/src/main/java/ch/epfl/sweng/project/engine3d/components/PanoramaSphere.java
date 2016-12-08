@@ -163,7 +163,17 @@ public final class PanoramaSphere extends Sphere {
         detachPanoramaComponent(picker, panoramaInfoCloser);
     }
 
+    /**
+     * A magic formula that maps pixels into the units used in rajawali.
+     *
+     * @param pixels
+     * @return
+     */
     private int getSizeFromPixels(int pixels) {
-        return ((int) (Math.log(pixels) / Math.log(2)) - 7) * 15;
+        int i = ((int) (Math.log(pixels) / Math.log(2)) - 7) * 15;
+        if (i <= 0) {
+            return 15;
+        }
+        return i;
     }
 }
