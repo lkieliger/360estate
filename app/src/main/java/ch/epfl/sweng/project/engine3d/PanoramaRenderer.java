@@ -194,7 +194,6 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         mCamera = getCurrentCamera();
         mCamera.setFieldOfView(80);
         mCamera.setFarPlane(220);
-        mCamera.setLookAt(1, 0, 1);
 
         mPanoSphere = null;
 
@@ -270,7 +269,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         mTargetPos = mTargetPos.setAll(x, 25, z);
         if (BuildConfig.DEBUG) Log.d(TAG, "Moving to:" + x + " , " + z);
 
-        mTargetQuaternion = Quaternion.getIdentity().fromEuler(angle * 180 / Math.PI + 71.5, 0, 0);
+        mTargetQuaternion = Quaternion.getIdentity().fromEuler(angle * 180 / Math.PI + 90, 0, 0);
 
         Quaternion q = new Quaternion(mSensorRot);
         mHelperQuaternion = q.multiply(mUserRot);
@@ -279,8 +278,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
     public void zoomOut(double angle) {
         Log.d(TAG, "Moving Out");
-        mHelperQuaternion = Quaternion.getIdentity().fromEuler(angle * 180 / Math.PI + 71.5, 0, 0);
-
+        mHelperQuaternion = Quaternion.getIdentity().fromEuler(angle * 180 / Math.PI + 90, 0, 0);
         mRenderLogic = mSlidingOutOfTextRendering;
     }
 
