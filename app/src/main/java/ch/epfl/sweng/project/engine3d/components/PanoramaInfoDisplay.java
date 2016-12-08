@@ -9,31 +9,25 @@ import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.vector.Vector3;
 
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
-import ch.epfl.sweng.project.engine3d.StringAdapter;
 
 
 public final class PanoramaInfoDisplay extends PanoramaObject {
 
     private static final String TAG = "PanoramaInfoDisplay";
+    private final double theta;
+    private boolean isFocused;
+    private PanoramaInfoCloser panoramaInfoCloser;
 
 
-    public PanoramaInfoDisplay(double theta, double phi, int width, int height, String text, int colorIndex) {
+    public PanoramaInfoDisplay(double theta, double phi, int width, int height, Bitmap bitmap,
+                               int colorIndex, PanoramaInfoCloser panoramaInfoCloser) {
         super(theta, phi, width, height, 40);
+        this.theta = theta;
+        this.panoramaInfoCloser = panoramaInfoCloser;
 
         setLookAt(new Vector3(0, 0, 0));
         Material material = new Material();
-
-        int epsilon = 15;
-
-        StringAdapter stringAdapter = new StringAdapter(text);
-        Bitmap bitmap = stringAdapter.textToBitmap(20, 512, colorIndex, epsilon);
-
-
-        //  Bitmap bMap = BitmapFactory.decodeResource(TextureManager.getInstance().getContext().getResources(),
-        //        R.drawable.close_tex_red);
-        //bMap = Bitmap.createScaledBitmap(bMap, 30, 30, false);
-
-        //canvas.drawBitmap(bMap, new Matrix(), paint);
+        isFocused = false;
         material.setColor(0);
         Texture texture = new Texture(TAG, bitmap);
         enableLookAt();
@@ -48,7 +42,22 @@ public final class PanoramaInfoDisplay extends PanoramaObject {
 
     @Override
     public void reactWith(PanoramaRenderer p) {
+        if (isFocused) {
+            p.zoomOut(theta);
+            isFocused = false;
+
+        } else {
+            p.zoomOnText(theta, getX(), getZ());
+            isFocused = true;
+        }
+        panoramaInfoCloser.setFocused(isFocused);
     }
 
+    void setFocused(boolean focused) {
+        isFocused = focused;
+    }
 
+    public void setPanoramaInfoCloser(PanoramaInfoCloser panoramaInfoCloser) {
+        this.panoramaInfoCloser = panoramaInfoCloser;
+    }
 }

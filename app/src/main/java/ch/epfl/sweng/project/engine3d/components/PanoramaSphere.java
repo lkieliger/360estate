@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
+import ch.epfl.sweng.project.engine3d.StringAdapter;
 
 
 /**
@@ -131,20 +132,26 @@ public final class PanoramaSphere extends Sphere {
     public void setTextToDisplay(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject, int colorIndex,
                                  ObjectColorPicker picker) {
 
-        int heightInfoDisplay = 30;
+        StringAdapter stringAdapter = new StringAdapter(textInfo);
+        int epsilon = 10;
+        Bitmap bitmap = stringAdapter.textToBitmap(22, 512, colorIndex, epsilon);
+
+
+        int heightInfoDisplay = getSizeFromPixels(bitmap.getHeight());
         int widthInfoDisplay = 30;
         int heightInfoClose = 5;
         int widthInfoClose = 5;
 
         PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
-                , heightInfoDisplay, textInfo, colorIndex);
+                , heightInfoDisplay, bitmap, colorIndex, null);
 
-        int shiftY = (int) ((widthInfoDisplay) / 2.0 + heightInfoClose * 3 / 4.0);
+        int shiftY = (int) ((heightInfoDisplay + heightInfoClose + 4) / 2.0);
 
-        PanoramaInfoCloser panoramaInfoCloser = new PanoramaInfoCloser(theta, 1.5, widthInfoClose
-                , heightInfoClose, panoramaInfoDisplay, panoramaInfoObject);
+        PanoramaInfoCloser panoramaInfoCloser = new PanoramaInfoCloser(theta, 1.5, widthInfoClose,
+                heightInfoClose, panoramaInfoDisplay, panoramaInfoObject);
 
         panoramaInfoCloser.setY(panoramaInfoCloser.getY() + shiftY);
+        panoramaInfoDisplay.setPanoramaInfoCloser(panoramaInfoCloser);
 
         attachPanoramaComponent(panoramaInfoDisplay, picker);
         attachPanoramaComponent(panoramaInfoCloser, picker);
@@ -154,5 +161,19 @@ public final class PanoramaSphere extends Sphere {
                                     ObjectColorPicker picker) {
         detachPanoramaComponent(picker, panoramaInfoDisplay);
         detachPanoramaComponent(picker, panoramaInfoCloser);
+    }
+
+    /**
+     * A magic formula that maps pixels into the units used in rajawali.
+     *
+     * @param pixels
+     * @return
+     */
+    private int getSizeFromPixels(int pixels) {
+        int i = ((int) (Math.log(pixels) / Math.log(2)) - 7) * 15;
+        if (i <= 0) {
+            return 15;
+        }
+        return i;
     }
 }

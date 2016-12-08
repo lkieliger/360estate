@@ -14,6 +14,8 @@ public final class PanoramaInfoCloser extends PanoramaObject {
 
     private final PanoramaInfoDisplay panoramaInfoDisplay;
     private final PanoramaInfoObject panoramaInfoObject;
+    private final double theta;
+    private boolean isFocused;
 
 
     public PanoramaInfoCloser(double theta, double phi, int width, int height, PanoramaInfoDisplay panoramaInfoDisplay,
@@ -24,6 +26,8 @@ public final class PanoramaInfoCloser extends PanoramaObject {
         setIcon(TAG, ICON_CLOSE, ICON_COLOR);
         enableLookAt();
         setLookAt(new Vector3(0, 0, 0));
+        isFocused = false;
+        this.theta = theta;
     }
 
 
@@ -31,5 +35,14 @@ public final class PanoramaInfoCloser extends PanoramaObject {
     public void reactWith(PanoramaRenderer p) {
         panoramaInfoObject.unTrigger();
         p.deleteInfo(panoramaInfoDisplay, this);
+        if (isFocused) {
+            p.zoomOut(theta);
+            isFocused = false;
+        }
+        panoramaInfoDisplay.setFocused(false);
+    }
+
+    void setFocused(boolean focused) {
+        isFocused = focused;
     }
 }
