@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="20dp"
-    android:paddingRight="20dp"
     android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="20dp"
     >
 
 
@@ -150,7 +150,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="20dp"
             android:gravity="center"
-            android:text="@string/prix"
+            android:text="@string/price"
             android:textSize="18sp" />
 
         <EditText
@@ -185,11 +185,11 @@
         android:id="@+id/filterButton"
         android:layout_width="match_parent"
         android:layout_height="30dp"
+        android:layout_gravity="center"
         android:layout_marginBottom="30dp"
         android:layout_marginTop="30dp"
         android:text="@string/Filter"
         android:textAllCaps="false"
-        android:layout_gravity="center"
         android:textSize="20sp" />
 
 </LinearLayout>

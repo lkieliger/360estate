@@ -37,6 +37,7 @@
     <string name="text_location_surface" translatable="false">%1$s, %2$s m \u00B2, %3$s %4$s</string>
     <string name="text_price_type" translatable="false">%1$s %2$s, %3$s</string>
     <string name="location_separator">in</string>
+    <string name="price_separator">for</string>
 
     <!-- Strings related to login -->
     <string name="title_activity_login">HouseView360</string>
@@ -83,7 +84,7 @@
     <string name="trait_union" translatable="false">-</string>
     <string name="min" translatable="false">min</string>
     <string name="max" translatable="false">max</string>
-    <string name="prix">Prix</string>
+    <string name="price">Prix</string>
     <string name="rooms_filter">Rooms</string>
     <string name="action_goto_reset_password">Reset password</string>
     <string name="reset_suggestion">Password forgotten ?</string>

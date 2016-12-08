@@ -26,8 +26,10 @@ public final class ClientRequest extends ParseObject {
     }
 
     private void setName(String name, String lastname) {
-        put(NAME_TAG, name);
-        put(LASTNAME_TAG, lastname);
+        if (name != null && lastname != null) {
+            put(NAME_TAG, name);
+            put(LASTNAME_TAG, lastname);
+        }
     }
 
     public void setInterestedId(String id) {

@@ -121,7 +121,9 @@ public final class DescriptionActivity extends AppCompatActivity {
         DialogFragment contactDialog = new ContactMeDialogFragment();
         Bundle additionalInfo = new Bundle();
         additionalInfo.putString(ClientRequest.LOOKFOR_TAG, idItem);
-        additionalInfo.putString(ClientRequest.DESCRIPTION_TAG,...);
+        additionalInfo.putString(
+                ClientRequest.DESCRIPTION_TAG,
+                getIntent().getStringExtra(ClientRequest.DESCRIPTION_TAG));
 
         contactDialog.setArguments(additionalInfo);
 
