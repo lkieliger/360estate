@@ -1,12 +1,17 @@
 package ch.epfl.sweng.project;
 
 
+import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.action.GeneralClickAction;
+import android.support.test.espresso.action.GeneralLocation;
+import android.support.test.espresso.action.Press;
+import android.support.test.espresso.action.Tap;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ListView;
-import android.support.test.runner.AndroidJUnit4;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -23,6 +28,7 @@ import ch.epfl.sweng.project.features.SplashActivity;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
+import static android.support.test.espresso.action.ViewActions.actionWithAssertions;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
@@ -185,7 +191,7 @@ public class CompleteBehaviorTest {
         */
 
         wait250ms(TAG);
-/*
+
         onView(withId(R.id.action_launch_panorama)).perform(click());
 
         waitNms(TAG, 5000);
@@ -196,7 +202,7 @@ public class CompleteBehaviorTest {
         waitNms(TAG, 5000);
         onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
         waitNms(TAG, 3500);
-        pressBack();*/
+        pressBack();
         logUserOut();
 
     }
