@@ -51,7 +51,7 @@ dependencies {
     debugCompile 'com.parse:parseinterceptors:0.0.2'
 
     //Rajawali 3D engine
-    compile 'org.rajawali3d:rajawali:1.1.610@aar'
+    compile 'org.rajawali3d:rajawali:1.1.777@aar'
 
     //Roboeletric testing framework
     testCompile "org.robolectric:robolectric:3.1.2"
