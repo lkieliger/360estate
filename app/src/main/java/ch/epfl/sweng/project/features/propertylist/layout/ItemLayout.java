@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.data.DataMgmt;
+import ch.epfl.sweng.project.data.ImageMgmt;
 import ch.epfl.sweng.project.data.parse.objects.Item;
 import ch.epfl.sweng.project.features.propertylist.ListActivity;
 import ch.epfl.sweng.project.features.propertylist.listeners.OnCheckedFavorite;
@@ -65,7 +65,7 @@ public final class ItemLayout extends RelativeLayout {
         if(url == null){
             img.setImageResource(R.drawable.no_image);
         }else {
-            DataMgmt.getImgFromUrlIntoView(getContext(),url,img);
+            ImageMgmt.getImgFromUrlIntoView(getContext(),url,img);
         }
         img.setScaleType(ImageView.ScaleType.CENTER_CROP);
 

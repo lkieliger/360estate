@@ -17,7 +17,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.data.DataMgmt;
+import ch.epfl.sweng.project.data.ParseMgmt;
 import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
@@ -26,7 +26,7 @@ import ch.epfl.sweng.project.features.propertylist.ListActivity;
 import ch.epfl.sweng.project.features.propertylist.listeners.OnCheckedFavorite;
 import ch.epfl.sweng.project.userSupport.fragments.ContactMeDialogFragment;
 
-import static ch.epfl.sweng.project.data.DataMgmt.getImgFromUrlIntoView;
+import static ch.epfl.sweng.project.data.ImageMgmt.getImgFromUrlIntoView;
 
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
@@ -51,7 +51,7 @@ public final class DescriptionActivity extends AppCompatActivity {
         final ArrayList<String> imagesURL = new ArrayList<>();
         StringBuilder descriptionBuilder = new StringBuilder();
 
-        DataMgmt.getDataForDescription(idItem, imagesURL, descriptionBuilder, mContext);
+        ParseMgmt.getDataForDescription(idItem, imagesURL, descriptionBuilder, mContext);
         String description = descriptionBuilder.toString();
 
 

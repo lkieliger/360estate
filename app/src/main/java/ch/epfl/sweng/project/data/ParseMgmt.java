@@ -1,21 +1,16 @@
 package ch.epfl.sweng.project.data;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.util.Log;
 import android.util.SparseArray;
-import android.widget.ImageView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,51 +33,12 @@ import ch.epfl.sweng.project.features.propertylist.filter.FilterValues;
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 
-public final class DataMgmt {
+public final class ParseMgmt {
 
-    private static final String TAG = "DataMgmt";
-    private static final int WIDTH = 2048;
-    private static final int HEIGHT = 4096;
+    private static final String TAG = "ParseMgmt";
 
-    private DataMgmt() {
+    private ParseMgmt() {
     }
-
-    public static void getImgFromUrlIntoView(Context context, String url, ImageView imgV) {
-        Picasso.with(context).load(url).into(imgV);
-    }
-
-
-    /**
-     * Get a bitmap from url using Picasso.
-     *
-     * @param context the current context of the activity.
-     * @param url     the url to load
-     */
-    public static Bitmap getBitmapFromUrl(Context context, String url) {
-
-        Bitmap mBitmap = null;
-        Picasso.Builder builder = new Picasso.Builder(context);
-        builder.listener(new Picasso.Listener() {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, exception.getMessage());
-                }
-            }
-        });
-
-        if (url != null && !url.isEmpty()) {
-            try {
-                mBitmap = builder.build().with(context).load(url).resize(WIDTH, HEIGHT).get();
-            } catch (IOException e) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, e.getMessage());
-                }
-            }
-        }
-        return mBitmap;
-    }
-
 
     public static void getItemList(final Collection<Item> itemList,
                                    final ItemAdapter itemAdapter,
@@ -94,7 +50,7 @@ public final class DataMgmt {
         List<ParseQuery<Item>> queries = new ArrayList<>();
 
         if (favoriteToggled) {
-            Set<String> listId = DataMgmt.getFavoriteFromId(idUser).getFavoritesFromLocal();
+            Set<String> listId = getFavoriteFromId(idUser).getFavoritesFromLocal();
             if (!listId.isEmpty()) {
                 for (String s : listId) {
                     ParseQuery<Item> queryTemp = ParseQuery.getQuery(Item.class);
@@ -303,7 +259,7 @@ public final class DataMgmt {
             }
         }
         if (listItems.isEmpty()) {
-            throw new IllegalArgumentException("DataMgmt Error: No Item has this id.");
+            throw new IllegalArgumentException("ParseMgmt Error: No Item has this id.");
 
         }
         if (listItems.size() > 1)

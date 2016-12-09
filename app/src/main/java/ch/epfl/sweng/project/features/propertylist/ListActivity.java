@@ -27,7 +27,8 @@ import java.util.List;
 import java.util.Objects;
 
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.data.DataMgmt;
+import ch.epfl.sweng.project.data.ParseMgmt;
+import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
 import ch.epfl.sweng.project.data.parse.objects.Favorites;
 import ch.epfl.sweng.project.data.parse.objects.Item;
@@ -85,7 +86,7 @@ public final class ListActivity extends AppCompatActivity {
     }
 
     public static void addItem(String id) {
-        Item i = DataMgmt.getItemFromId(id);
+        Item i = ParseMgmt.getItemFromId(id);
         itemList.add(i);
     }
 
@@ -107,7 +108,7 @@ public final class ListActivity extends AppCompatActivity {
         mContext = getApplicationContext();
 
 
-        setFavorites(DataMgmt.getFavoriteFromId(idUser));
+        setFavorites(ParseMgmt.getFavoriteFromId(idUser));
 
 
         f.synchronizeFromServer();
@@ -138,7 +139,7 @@ public final class ListActivity extends AppCompatActivity {
         });
 
 
-        DataMgmt.getItemList(itemList, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext
+        ParseMgmt.getItemList(itemList, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext
         );
         // Assign adapter to ListView
         listView.setAdapter(itemAdapter);
@@ -179,7 +180,7 @@ public final class ListActivity extends AppCompatActivity {
                 f.synchronizeServer();
 
                 isFavoriteToggle = b;
-                DataMgmt.getItemList(itemList, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext);
+                ParseMgmt.getItemList(itemList, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext);
             }
         });
 
@@ -272,8 +273,8 @@ public final class ListActivity extends AppCompatActivity {
                         maxSurface.getText().toString(),
                         minSurface.getText().toString()
                 );
-                DataMgmt.getItemList(itemCollection, itemAdapter, filterValues, isFavoriteToggle
-                        , idUser, mContext);
+                ParseMgmt.getItemList(itemCollection, itemAdapter, filterValues, isFavoriteToggle,
+                        idUser, mContext);
                 listView.setAdapter(itemAdapter);
                 helpDialog.dismiss();
             }
@@ -282,28 +283,19 @@ public final class ListActivity extends AppCompatActivity {
 
 
     public void logOutUser() {
-
         ParseUser currentUser = ParseUser.getCurrentUser();
-
         if (currentUser != null) {
             ParseUser.logOut();
         }
-
 
         finish();
     }
 
     @Override
     protected void onStop() {
-
-
         ListActivity.synchronizeServer();
-
-
         super.onStop();
-
     }
-
 
     @Override
     public void onBackPressed() {

@@ -27,7 +27,7 @@ import java.util.Objects;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.data.DataMgmt;
+import ch.epfl.sweng.project.data.ImageMgmt;
 import ch.epfl.sweng.project.data.panorama.HouseManager;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoCloser;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoDisplay;
@@ -227,7 +227,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         getCurrentScene().addChild(mPanoSphere);
 
         NextPanoramaDataBuilder.setNextPanoId(mHouseManager.getStartingId());
-        prepareScene(DataMgmt.getBitmapFromUrl(getContext(), mHouseManager.getStartingUrl()));
+        prepareScene(ImageMgmt.getBitmapFromUrl(getContext(), mHouseManager.getStartingUrl()));
         Log.d(TAG, "Updating scene from initscene");
         updateScene();
     }

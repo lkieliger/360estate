@@ -1,6 +1,5 @@
 package ch.epfl.sweng.project.data.parse.objects;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.parse.ParseClassName;
@@ -14,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.data.DataMgmt;
+import ch.epfl.sweng.project.data.ParseMgmt;
 import ch.epfl.sweng.project.data.parse.ParseProxy;
 
 
@@ -99,7 +98,7 @@ public final class Favorites extends ParseObject {
 
     public void synchronizeServer() {
         if (ParseProxy.PROXY.internetAvailable()) {
-            DataMgmt.overrideFavorites(getIdUser(), favorites);
+            ParseMgmt.overrideFavorites(getIdUser(), favorites);
         }
     }
 }

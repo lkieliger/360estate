@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import ch.epfl.sweng.project.R;
 
-import static ch.epfl.sweng.project.data.DataMgmt.getImgFromUrlIntoView;
+import static ch.epfl.sweng.project.data.ImageMgmt.getImgFromUrlIntoView;
 
 public final class SlideFragment extends Fragment {
     private String url;

@@ -40,6 +40,11 @@ public class RegisterActivityTests {
         TextView registrationPassBis = (TextView) activity.findViewById(R.id.registration_password_bis);
         registrationPassBis.append("pepe");
 
+        TextView registrationName = (TextView) activity.findViewById(R.id.registration_name);
+        registrationName.append("testName");
+        TextView registrationLastName = (TextView) activity.findViewById(R.id.registration_lastname);
+        registrationLastName.append("testLastName");
+
         registerButton.performClick();
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(activity.getString(R.string.error_invalid_password)));
 
