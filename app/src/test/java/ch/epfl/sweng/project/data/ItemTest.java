@@ -9,6 +9,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.data.parse.objects.HouseType;
 import ch.epfl.sweng.project.data.parse.objects.Item;
 
 import static org.junit.Assert.assertEquals;
@@ -29,7 +30,7 @@ public class ItemTest {
     @Test
     public void resourcesCorrectBehavior() {
 
-        Item item = new Item(141414, "NotFar", Item.HouseType.HOUSE, 3.5, 500, "Away");
+        Item item = new Item(141414, "NotFar", HouseType.HOUSE, 3.5, 500, "Away");
 
         assertEquals(item.getId(), "Away");
     }
