@@ -158,9 +158,23 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.logOutButton)).perform(click());
         wait500ms(TAG);
 
+        wait1s(TAG);
+        wait1s(TAG);
+
         onView(withId(R.id.goto_login_button)).perform(click());
         login("qwert@qwert.org", "12345");
         wait500ms(TAG);
+
+        onView(withId(R.id.FavoritesButton)).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
+
+        onView(withId(R.id.addToFavorites)).perform(click());
+        pressBack();
+
+        onView(withId(R.id.FavoritesButton)).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
+        onView(withId(R.id.addToFavorites)).perform(click());
+        pressBack();
 
         onView(withId(R.id.FavoritesButton)).perform(click());
 
