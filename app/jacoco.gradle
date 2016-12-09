@@ -14,8 +14,8 @@ android {
     }
 }
 
-//task jacocoReport(type: JacocoReport, dependsOn: ['connectedAndroidTest', 'testDebugUnitTest']) {
-task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+task jacocoReport(type: JacocoReport, dependsOn: ['connectedAndroidTest', 'testDebugUnitTest']) {
+//task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
     reports {
         xml.enabled = true
         html.enabled = true

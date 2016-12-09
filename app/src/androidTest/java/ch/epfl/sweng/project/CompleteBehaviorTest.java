@@ -116,6 +116,8 @@ public class CompleteBehaviorTest {
         String testUserMail = randomString(8) + "@astutus.org";
         String testUserPassword = "12345";
         String testUserPhone = "+078888888";
+        String testUserName = "TestName";
+        String testUserLastName = "TestLastName";
 
         onView(withId(R.id.goto_registration_button)).perform(click());
         wait500ms(TAG);
@@ -124,7 +126,7 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.goto_registration_button)).perform(click());
         wait500ms(TAG);
 
-        registerNewUser(testUserMail, testUserPassword, testUserPhone);
+        registerNewUser(testUserMail, testUserPassword, testUserPhone, testUserName, testUserLastName);
         waitNms(TAG, 6000);
 
         onView(withId(R.id.goto_login_button)).perform(click());
@@ -263,8 +265,11 @@ public class CompleteBehaviorTest {
 
     }
 
-    private void registerNewUser(String testUserMail, String testUserPassword, String testUserPhone) {
+    private void registerNewUser(String testUserMail, String testUserPassword, String testUserPhone,
+                                 String testUserName, String testUserLastName) {
 
+        onView(withId(R.id.registration_name)).perform(replaceText(testUserName), closeSoftKeyboard());
+        onView(withId(R.id.registration_lastname)).perform(replaceText(testUserLastName), closeSoftKeyboard());
         onView(withId(R.id.registration_email)).perform(replaceText(testUserMail), closeSoftKeyboard());
         onView(withId(R.id.registration_password)).perform(replaceText(testUserPassword), closeSoftKeyboard());
         onView(withId(R.id.registration_password_bis)).perform(replaceText(testUserPassword), closeSoftKeyboard());
