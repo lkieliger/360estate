@@ -35,6 +35,8 @@ public final class RegisterActivity extends AppCompatActivity {
     private TextView mPassword;
     private TextView mPasswordBis;
     private TextView mPhoneNumber;
+    private TextView mName;
+    private TextView mLastName;
     private Context mAppContext;
 
     @Override
@@ -46,6 +48,9 @@ public final class RegisterActivity extends AppCompatActivity {
         mPassword = (TextView) findViewById(R.id.registration_password);
         mPasswordBis = (TextView) findViewById(R.id.registration_password_bis);
         mPhoneNumber = (TextView) findViewById(R.id.registration_phone);
+        mName = (TextView) findViewById(R.id.registration_name);
+        mLastName = (TextView) findViewById(R.id.registration_lastname);
+
         mAppContext = getApplicationContext();
 
         mPhoneNumber.setOnEditorActionListener(new EditText.OnEditorActionListener() {
@@ -83,6 +88,8 @@ public final class RegisterActivity extends AppCompatActivity {
             newUser.setEmail(mEmail.getText().toString());
             newUser.setPassword(mPassword.getText().toString());
 
+            newUser.put("name", mName.getText().toString());
+            newUser.put("lastName", mLastName.getText().toString());
             newUser.put("phone", mPhoneNumber.getText().toString());
 
             newUser.signUpInBackground(new SignUpCallback() {
@@ -139,7 +146,9 @@ public final class RegisterActivity extends AppCompatActivity {
 
         boolean filled = !mEmail.getText().toString().isEmpty() &&
                 !mPassword.getText().toString().isEmpty() &&
-                !mPasswordBis.getText().toString().isEmpty();
+                !mPasswordBis.getText().toString().isEmpty() &&
+                !mName.getText().toString().isEmpty() &&
+                !mLastName.getText().toString().isEmpty();
 
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Result of field checking was: " + filled);

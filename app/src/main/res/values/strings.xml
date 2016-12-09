@@ -36,6 +36,8 @@
     <string name="text_currency" translatable="false">CHF</string>
     <string name="text_location_surface" translatable="false">%1$s, %2$s m \u00B2, %3$s %4$s</string>
     <string name="text_price_type" translatable="false">%1$s %2$s, %3$s</string>
+    <string name="location_separator">in</string>
+    <string name="price_separator">for</string>
 
     <!-- Strings related to login -->
     <string name="title_activity_login">HouseView360</string>
@@ -58,6 +60,8 @@
     <!-- Strings related to registering -->
     <string name="prompt_password_again" tools:ignore="UnusedResources">Password (double check)</string>
     <string name="prompt_phone_number">Phone number</string>
+    <string name="hint_register_name">Name</string>
+    <string name="hint_register_lastname">Last name</string>
     <string name="action_register">Register</string>
     <string name="error_empty_field">Please fill in all fields</string>
     <string name="error_unmatching_passwords">Entered passwords don\'t match</string>
@@ -80,7 +84,7 @@
     <string name="trait_union" translatable="false">-</string>
     <string name="min" translatable="false">min</string>
     <string name="max" translatable="false">max</string>
-    <string name="prix">Prix</string>
+    <string name="price">Prix</string>
     <string name="rooms_filter">Rooms</string>
     <string name="action_goto_reset_password">Reset password</string>
     <string name="reset_suggestion">Password forgotten ?</string>
