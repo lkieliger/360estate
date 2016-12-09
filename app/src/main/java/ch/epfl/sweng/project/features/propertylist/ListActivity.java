@@ -291,15 +291,20 @@ public final class ListActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+
         if (isInternetAvailable(mContext)) {
             ListActivity.synchronizeServer(mContext);
         }
+
+
         super.onStop();
+
     }
+
 
     @Override
     public void onBackPressed() {
-        // avoid going back on SplashActivity.
+        moveTaskToBack(true); // HOME BUTTON behavior.
     }
 
 
