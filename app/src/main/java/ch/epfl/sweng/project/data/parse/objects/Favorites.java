@@ -15,6 +15,7 @@ import java.util.Set;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.data.DataMgmt;
+import ch.epfl.sweng.project.data.parse.ParseProxy;
 
 
 @ParseClassName("Favorites")
@@ -90,11 +91,15 @@ public final class Favorites extends ParseObject {
     }
 
     public void synchronizeFromServer() {
-        favorites = getFavoritesFromServer();
+        if (ParseProxy.PROXY.internetAvailable()) {
+            favorites = getFavoritesFromServer();
+        }
 
     }
 
-    public void synchronizeServer(Context context) {
-        DataMgmt.overrideFavorites(getIdUser(), favorites, context);
+    public void synchronizeServer() {
+        if (ParseProxy.PROXY.internetAvailable()) {
+            DataMgmt.overrideFavorites(getIdUser(), favorites);
+        }
     }
 }
