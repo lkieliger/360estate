@@ -94,7 +94,7 @@ public final class DataMgmt {
         List<ParseQuery<Item>> queries = new ArrayList<>();
 
         if (favoriteToggled) {
-            Set<String> listId = DataMgmt.getFavoriteFromId(idUser, context).getFavoritesFromLocal();
+            Set<String> listId = DataMgmt.getFavoriteFromId(idUser).getFavoritesFromLocal();
             if (!listId.isEmpty()) {
                 for (String s : listId) {
                     ParseQuery<Item> queryTemp = ParseQuery.getQuery(Item.class);
@@ -243,13 +243,13 @@ public final class DataMgmt {
     }
 
 
-    public static void overrideFavorites(String idUser, Collection<String> list, Context context) {
-        Favorites f = getFavoriteFromId(idUser, context);
+    public static void overrideFavorites(String idUser, Collection<String> list) {
+        Favorites f = getFavoriteFromId(idUser);
         f.setFavorites((Set<String>) list);
 
     }
 
-    public static Favorites getFavoriteFromId(String idUser, Context context) {
+    public static Favorites getFavoriteFromId(String idUser) {
         ParseQuery<Favorites> query = ParseQuery.getQuery(Favorites.class);
         query.whereEqualTo("idUser", idUser);
 

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.DataMgmt;
+import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.features.propertyDescription.slider.SlideActivity;
@@ -26,7 +27,7 @@ import ch.epfl.sweng.project.features.propertylist.listeners.OnCheckedFavorite;
 import ch.epfl.sweng.project.userSupport.fragments.ContactMeDialogFragment;
 
 import static ch.epfl.sweng.project.data.DataMgmt.getImgFromUrlIntoView;
-import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
+
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 
@@ -92,7 +93,7 @@ public final class DescriptionActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    if (isInternetAvailable(mContext)) {
+                    if (ParseProxy.PROXY.internetAvailable()) {
                         Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
                         intentToPanorama.putExtra("id", idItem);
                         startActivity(intentToPanorama);
@@ -132,8 +133,8 @@ public final class DescriptionActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (isInternetAvailable(mContext)) {
-            ListActivity.synchronizeServer(mContext);
+        if (ParseProxy.PROXY.internetAvailable()) {
+            ListActivity.synchronizeServer();
             if (getIntent().getBooleanExtra("isToggled", false)) {
                 if (isInitiallyInFavorite != checkBoxFavorite.isChecked()) {
                     if (isInitiallyInFavorite) {
@@ -150,8 +151,8 @@ public final class DescriptionActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        if (isInternetAvailable(mContext)) {
-            ListActivity.synchronizeServer(mContext);
+        if (ParseProxy.PROXY.internetAvailable()) {
+            ListActivity.synchronizeServer();
         }
         super.onStop();
     }

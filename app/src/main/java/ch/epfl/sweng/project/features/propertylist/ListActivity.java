@@ -36,7 +36,6 @@ import ch.epfl.sweng.project.features.propertylist.adapter.ItemAdapter;
 import ch.epfl.sweng.project.features.propertylist.filter.FilterValues;
 import ch.epfl.sweng.project.features.propertylist.listeners.EraseButtonListener;
 
-import static ch.epfl.sweng.project.util.InternetAvailable.isInternetAvailable;
 
 public final class ListActivity extends AppCompatActivity {
 
@@ -75,8 +74,10 @@ public final class ListActivity extends AppCompatActivity {
         return f.containsUrl(idItem);
     }
 
-    public static void synchronizeServer(Context context) {
-        f.synchronizeServer(context);
+    public static void synchronizeServer() {
+        if (ParseProxy.PROXY.internetAvailable()) {
+            f.synchronizeServer();
+        }
     }
 
     public static void notifyItemAdapter() {
@@ -106,13 +107,10 @@ public final class ListActivity extends AppCompatActivity {
         mContext = getApplicationContext();
 
 
-        setFavorites(DataMgmt.getFavoriteFromId(idUser, mContext));
+        setFavorites(DataMgmt.getFavoriteFromId(idUser));
 
 
-        // if there is no Internet , the local list is empty.
-        if (isInternetAvailable(mContext)) {
-            f.synchronizeFromServer();
-        }
+        f.synchronizeFromServer();
 
 
         setItemAdapter(new ItemAdapter(this, itemList));
@@ -132,9 +130,9 @@ public final class ListActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                if (isInternetAvailable(mContext)) {
-                    ListActivity.synchronizeServer(mContext);
-                }
+
+                ListActivity.synchronizeServer();
+
                 logOutUser();
             }
         });
@@ -177,9 +175,9 @@ public final class ListActivity extends AppCompatActivity {
         favoriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (isInternetAvailable(mContext)) {
-                    f.synchronizeServer(mContext);
-                }
+
+                f.synchronizeServer();
+
                 isFavoriteToggle = b;
                 DataMgmt.getItemList(itemList, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext);
             }
@@ -297,15 +295,19 @@ public final class ListActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        if (isInternetAvailable(mContext)) {
-            ListActivity.synchronizeServer(mContext);
-        }
+
+
+        ListActivity.synchronizeServer();
+
+
         super.onStop();
+
     }
+
 
     @Override
     public void onBackPressed() {
-        // avoid going back on SplashActivity.
+        moveTaskToBack(true); // HOME BUTTON behavior.
     }
 
 
