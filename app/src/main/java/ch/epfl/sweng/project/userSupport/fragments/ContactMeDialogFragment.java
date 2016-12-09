@@ -17,16 +17,12 @@ public final class ContactMeDialogFragment extends DialogFragment {
     public static final String TAG = "ContactRequestDialog";
 
     private String propertyId;
-    private int propertySurface;
-    private int propertyPrice;
-    private String propertyLocalisation;
+    private String propertyDescription;
 
     @Override
     public void setArguments(Bundle args) {
         propertyId = args.getString(ClientRequest.LOOKFOR_TAG);
-        propertySurface = args.getInt(ClientRequest.SURFACE_TAG);
-        propertyPrice = args.getInt(ClientRequest.PRICE_TAG);
-        propertyLocalisation = args.getString(ClientRequest.LOCALISATION_TAG);
+        propertyDescription = args.getString(ClientRequest.DESCRIPTION_TAG);
     }
 
     @Override
@@ -39,9 +35,9 @@ public final class ContactMeDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int id) {
                 Log.i(TAG, "User requested to be contacted");
                 ClientRequest request = new ClientRequest();
-                request.setFromUser(ParseUser.getCurrentUser());
+                request.setUser(ParseUser.getCurrentUser());
                 request.setInterestedId(propertyId);
-                request.setHouseInfo(propertyLocalisation, propertyPrice, propertySurface);
+                request.setPropertyDescription(propertyDescription);
                 request.saveInBackground();
             }
         });

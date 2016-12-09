@@ -28,7 +28,7 @@ import java.util.Objects;
 
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.DataMgmt;
-import ch.epfl.sweng.project.data.parse.ParseProxy;
+import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
 import ch.epfl.sweng.project.data.parse.objects.Favorites;
 import ch.epfl.sweng.project.data.parse.objects.Item;
 import ch.epfl.sweng.project.features.propertyDescription.DescriptionActivity;
@@ -157,10 +157,16 @@ public final class ListActivity extends AppCompatActivity {
                 intent.putExtra("idUser", idUser);
                 intent.putExtra("idItem", itemValue.getId());
 
-                intent.putExtra("HouseInfoLocalisation", itemValue.getLocation());
-                intent.putExtra("HouseInfoPrice", itemValue.getPrice());
-                intent.putExtra("HouseInfoSurface", itemValue.getSurface());
-
+                StringBuilder descriptionBuilder = new StringBuilder();
+                descriptionBuilder.append(getString(itemValue.getType().getDescription())).append(" ");
+                descriptionBuilder.append(itemValue.getRooms()).append(" ");
+                descriptionBuilder.append(getString(R.string.rooms)).append(" ");
+                descriptionBuilder.append(getString(R.string.location_separator)).append(" ");
+                descriptionBuilder.append(itemValue.getLocation()).append(" ");
+                descriptionBuilder.append(getString(R.string.price_separator)).append(" ");
+                descriptionBuilder.append(itemValue.getPrice());
+                descriptionBuilder.append(getString(R.string.text_currency));
+                intent.putExtra(ClientRequest.DESCRIPTION_TAG, descriptionBuilder.toString());
 
                 startActivity(intent);
             }

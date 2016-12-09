@@ -3,8 +3,6 @@ package ch.epfl.sweng.project.data.parse.objects;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
-import ch.epfl.sweng.project.R;
-
 @ParseClassName("Item")
 public final class Item extends ParseObject {
 
@@ -96,20 +94,5 @@ public final class Item extends ParseObject {
         if (price > 9) {
             return formatInts(price / 10, (acc + 1) % 3) + (acc == 2 ? "'" : "") + price % 10;
         } else return "" + price;
-    }
-
-    public enum HouseType {
-        APARTMENT(R.string.apartment), HOUSE(R.string.house),
-        BUILDING(R.string.building);
-
-        private final int description;
-
-        HouseType(int d) {
-            description = d;
-        }
-
-        public int getDescription() {
-            return description;
-        }
     }
 }
