@@ -19,7 +19,7 @@ import static ch.epfl.sweng.project.data.parse.objects.JSONTags.neighborsListTag
 
 /**
  * class that provides method to simplify the conversion of the data between the Java and the JSON representation
- * It contains the data for every PhotoSphere (the neighbors list and the it's ID)
+ * It contains the data for every PhotoSphere (the neighbors list and its IDs)
  */
 public final class PhotoSphereData {
 

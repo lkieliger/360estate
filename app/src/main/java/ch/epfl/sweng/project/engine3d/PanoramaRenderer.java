@@ -23,12 +23,17 @@ import org.rajawali3d.renderer.Renderer;
 import org.rajawali3d.util.ObjectColorPicker;
 import org.rajawali3d.util.OnObjectPickedListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.ImageMgmt;
 import ch.epfl.sweng.project.data.panorama.HouseManager;
+import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
+import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
+import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoCloser;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoDisplay;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoObject;
@@ -50,8 +55,6 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     public static final Vector3 ORIGIN = new Vector3(0, 0, 0);
     public static final int TEXTURE_COLOR = 0x0022c8ff;
     private static final double LERP_FACTOR = 0.03;
-    private static final int PANO_WIDTH = 4096;
-    private static final int PANO_HEIGHT = 2048;
 
     private final String TAG = "Renderer";
     private final Camera mCamera;
@@ -76,7 +79,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     private int debugCounter = 0;
     /**
      * Use this rendering when nothing special need to be done. In other words just allowing the camera to look
-     * around and print some debug informations.
+     * around and print some debug information.
      */
     private RenderingLogic mIdleRendering = new RenderingLogic() {
         @Override
@@ -317,7 +320,19 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
         mPanoSphere.detachPanoramaComponents(mPicker);
         mPanoSphere.setPhotoTexture(panoData.getY());
-        mPanoSphere.attachPanoramaComponents(mHouseManager.getNeighborsFromId(panoData.getX()), mPicker);
+        List<SpatialData> panoComponents = mHouseManager.getAttachedDataFromId(panoData.getX());
+        mPanoSphere.attachPanoramaComponents(panoComponents, mPicker);
+
+        //Pre-fetch all neighboring panoramas
+        List<String> urls = new ArrayList<>();
+
+        for (SpatialData sd : panoComponents) {
+            if (sd.getType() == PanoramaComponentType.TRANSITION) {
+                urls.add(((TransitionObject) sd).getUrl());
+            }
+        }
+
+        ImageMgmt.fetchBitmapsFromUrlList(mContext, urls);
     }
 
 
@@ -550,6 +565,8 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
      */
     private class FetchPhotoTask implements Target {
 
+        private static final String TAG = "FetchPhotoTask";
+
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             prepareScene(bitmap);
@@ -557,7 +574,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
         @Override
         public void onBitmapFailed(Drawable errorDrawable) {
-            Log.d("Async bitmap load", "Picasso async bitmap load failed");
+            Log.d(TAG, "Picasso async bitmap load failed");
         }
 
         @Override
