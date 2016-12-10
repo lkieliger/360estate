@@ -33,7 +33,6 @@
     <string name="prompt_password">Mot de passe</string>
     <string name="prompt_password_again">Mot de passe (vérification)</string>
     <string name="prompt_phone_number">Numéro de téléphone</string>
-    <string name="register_suggestion">Pas encore enregistré ?</string>
     <string name="text_title">Informations</string>
     <string name="title_activity_login">Maison à 360°</string>
     <string name="title_activity_register">S\'enregistrer</string>
@@ -50,14 +49,19 @@
         de passe. Merci de vérifier votre connexion internet</string>
     <string name="info_reset_successful">"La réinitialisation du mot de passe a abouti! Vous pouvez vérifier vos courriels!"</string>
     <string name="password_reset_procedure">Si vous avez oublié votre mot de passe, vous pouvez l\'entrer dans le champs ci-dessous et cliquer sur le bouton de réinitialisation du mot de passe. \n\nCela vous enverra un courriel contenant un lien pour réinitialiser votre mot de passe.\n</string>
-    <string name="addToFavorites">Ajouter aux favoris</string>
-    <string name="All">Tout</string>
     <string name="description_slide">Diapo avec les propriétés des images</string>
     <string name="no_internet_access">Accès internet indisponible</string>
     <string name="no_panorama_view">La vue panoramique est indosponible en mode hors connexion</string>
     <string name="title_activity_reset">Réinitialisation</string>
-    <string name="favorites">Favoris</string>
     <string name="accept_contact_me">Contactez-moi</string>
     <string name="button_contact_request">J\'aimerais plus de détails</string>
     <string name="invalid_parse_object">Il y a une erreur sur le serveur: prière de réessayer plus tard</string>
+    <string name="dialog_contact_me_message">En continuant, vous acceptez que l\'un de nos courtiers utilse vos données personnelles de manière à vous contacter et à vous transmettre les détails dont vous pourriez avoir besoin.</string>
+    <string name="dialog_contact_me_title">Demande de contact</string>
+    <string name="hint_register_lastname">Nom de famille</string>
+    <string name="hint_register_name">Prénom</string>
+    <string name="location_separator">dans</string>
+    <string name="price">Prix</string>
+    <string name="price_separator">pour</string>
+    <string name="refuse_contact_me">Ne pas me contacter</string>
 </resources>

@@ -1,7 +1,6 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/appGray</item>
         <item name="colorPrimaryDark">@color/appGray</item>
         <item name="colorAccent">@color/appBlue</item>
@@ -9,6 +8,14 @@
         <item name="android:buttonStyleToggle">@style/MyButton</item>
         <item name="android:autoCompleteTextViewStyle">@style/AutoTextView</item>
         <item name="android:background">@color/colorBackground</item>
+
+    </style>
+
+    <style name="SlideTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/appGray</item>
+        <item name="colorPrimaryDark">@color/appGray</item>
+        <item name="colorAccent">@color/appBlue</item>
+        <item name="android:background">@color/colorBlack</item>
 
     </style>
     <style name="FullScreenDialogTheme" parent="android:Theme.Material.NoActionBar.Fullscreen"/>

@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorBlack">#000000</color>
     <color name="colorBackground">#FFFFFFFF</color>
     <color name="buttonColor">#33B5E5</color>
     <color name="colorPressed">#E08fe7fd</color>
-    <color name="colorItemPressed">#C08fe7fd</color>
     <color name="colorSelected">#F0FFFFFF</color>
     <color name="colorTransparent">#C08fe7fd</color>
     <color name="colorItem">#f0faff</color>
     <color name="colorTrueTransparent">#00FFFFFF</color>
-    <color name="colorAccent">#FF4081</color>
     <color name="appWhite">#FFFFFF</color>
     <color name="appBlue">#03BBF6</color>
     <color name="appGray">#8a8a8a</color>
 </resources>
+<!--
+Unused colors!
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorItemPressed">#C08fe7fd</color>
+-->
 <!--
 <color name="colorBackground">#8fe7fd</color>
     <

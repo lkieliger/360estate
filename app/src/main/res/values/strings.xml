@@ -45,7 +45,6 @@
     <string name="prompt_password">Password</string>
     <string name="action_login">Sign in</string>
     <string name="action_goto_registration">Register</string>
-    <string name="register_suggestion">Not yet registered ?</string>
     <string name="action_sign_in_short">Sign In</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -84,7 +83,7 @@
     <string name="trait_union" translatable="false">-</string>
     <string name="min" translatable="false">min</string>
     <string name="max" translatable="false">max</string>
-    <string name="price">Prix</string>
+    <string name="price">Price</string>
     <string name="rooms_filter">Rooms</string>
     <string name="action_goto_reset_password">Reset password</string>
     <string name="reset_suggestion">Password forgotten ?</string>
@@ -95,13 +94,7 @@
     <string name="title_activity_reset">Reset</string>
     <string name="error_reset_no_email_matching">There does not exist an account with this email on the server.</string>
     <string name="no_internet_access">Internet is not available</string>
-    <string name="favorites">Favorites</string>
-    <string name="addToFavorites">Add to Favorites</string>
-    <string name="All">All</string>
     <string name = "no_panorama_view">The panoramic view is not available offline.</string>
-
-    <!-- Strings related to image content description -->
-    <string name="description_logo" translatable="false">Application logo</string>
 
     <!-- Strings related to dialog windows -->
     <!-- Contact request -->

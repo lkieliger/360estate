@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/email_login_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
@@ -7,76 +8,66 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingTop="32dp"
     android:weightSum="1"
     tools:context="ch.epfl.sweng.project.userSupport.activities.LoginActivity">
 
     <!-- Login progress -->
 
-    <LinearLayout
-        android:id="@+id/email_login_form"
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:weightSum="1"
-        tools:ignore="UnusedIds">
+        android:layout_height="wrap_content">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <AutoCompleteTextView
-                android:id="@+id/login_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:completionHint="@string/prompt_email"
-                android:hint="@string/prompt_email"
-                android:inputType="textEmailAddress"
-                android:maxLines="1" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <!-- The imeActionId needs to be an hardcoded int because of roboelectric issue-->
-
-            <EditText
-                android:id="@+id/login_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/prompt_password"
-                android:imeActionId="1414"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:maxLines="1" />
-        </android.support.design.widget.TextInputLayout>
-
-        <Button
-            android:id="@+id/login_button"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="30dp"
-            android:onClick="attemptLogin"
-            android:text="@string/action_login"
-            android:textAppearance="@style/EstateButtonTextAppearance"
-            tools:ignore="UnusedIds" />
-
-        <Button
-            android:id="@+id/goto_reset_button"
+        <AutoCompleteTextView
+            android:id="@+id/login_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="proceedToReset"
-            android:text="@string/reset_suggestion"
-            android:textAppearance="@style/EstateButtonTextAppearance"
-            android:visibility="invisible"
-            tools:ignore="UnusedIds" />
-    </LinearLayout>
+            android:completionHint="@string/prompt_email"
+            android:hint="@string/prompt_email"
+            android:inputType="textEmailAddress"
+            android:maxLines="1" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!-- The imeActionId needs to be an hardcoded int because of roboelectric issue-->
+
+        <EditText
+            android:id="@+id/login_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/prompt_password"
+            android:imeActionId="1414"
+            android:imeActionLabel="@string/action_sign_in_short"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:maxLines="1" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="30dp"
+        android:onClick="attemptLogin"
+        android:text="@string/action_login"
+        android:textAppearance="@style/EstateButtonTextAppearance"
+        tools:ignore="UnusedIds" />
+
+    <Button
+        android:id="@+id/goto_reset_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="proceedToReset"
+        android:text="@string/reset_suggestion"
+        android:textAppearance="@style/EstateButtonTextAppearance"
+        android:visibility="invisible"
+        tools:ignore="UnusedIds" />
 
 </LinearLayout>

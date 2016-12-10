@@ -56,6 +56,7 @@ public class PanoramaUITests {
     @After
     public void closeTests() {
         sleepDuring(2000);
+        mActivityRule.getActivity().getAssociatedRenderer().onPause();
         mActivityRule.getActivity().finish();
         wait1s(TAG);
     }
@@ -74,7 +75,7 @@ public class PanoramaUITests {
         mActivityRule.launchActivity(intent);
         mRenderer = mActivityRule.getActivity().getAssociatedRenderer();
 
-        sleepDuring(1500);
+        sleepDuring(3000);
 
         testPanoramaSphere();
         panoramaTransitionObjectsThrowsException();
