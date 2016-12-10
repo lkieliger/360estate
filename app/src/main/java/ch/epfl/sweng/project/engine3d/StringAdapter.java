@@ -11,6 +11,9 @@ import java.util.List;
 
 public final class StringAdapter {
 
+    private static final int contourColor = Color.rgb(70, 75, 75);
+    private static final int backColor = Color.rgb(238, 238, 238);
+    private static final int textColor = Color.rgb(23, 23, 23);
     private final String text;
 
 
@@ -61,7 +64,7 @@ public final class StringAdapter {
         return list;
     }
 
-    public Bitmap textToBitmap(int textSize, int widthBitmap, int colorIndex, int epsilon) {
+    public Bitmap textToBitmap(int textSize, int widthBitmap, int epsilon) {
 
         List<String> list = textToList(textSize, widthBitmap, epsilon);
 
@@ -80,13 +83,13 @@ public final class StringAdapter {
         Bitmap image = Bitmap.createBitmap(widthBitmap, heightBitmap, Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(image);
 
-        paint.setColor(colorIndex);
+        paint.setColor(contourColor);
         canvas.drawRect(0, 0, widthBitmap, heightBitmap, paint);
 
-        paint.setColor(0xff9C9C9C);
+        paint.setColor(backColor);
         canvas.drawRect(epsilon, epsilon, widthBitmap - epsilon, heightBitmap - epsilon, paint);
 
-        paint.setColor(Color.WHITE);
+        paint.setColor(textColor);
         for (int i = 0; i < list.size(); i++) {
             canvas.drawText(list.get(i), epsilon, epsilon + (i + 1) * heightTemp, paint);
         }
