@@ -101,6 +101,11 @@ public final class PanoramaSphere extends Sphere {
      * @param b A bitmap file that contain the panorama photograph
      */
     public void setPhotoTexture(Bitmap b) {
+        Bitmap old = mPhotoTexture.getBitmap();
+        if (old != null) {
+            old.recycle();
+            Log.d(TAG, "Recycling old panorama texture bitmap");
+        }
         mPhotoTexture.setBitmap(b);
         TextureManager.getInstance().replaceTexture(mPhotoTexture);
     }
