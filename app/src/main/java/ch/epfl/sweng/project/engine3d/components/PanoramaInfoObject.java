@@ -27,7 +27,7 @@ public final class PanoramaInfoObject extends PanoramaObject {
     @Override
     public void reactWith(PanoramaRenderer p) {
         if (!isTriggered) {
-            p.displayText(textInfo, theta, this);
+            p.getPanoramaSphere().setTextToDisplay(textInfo, theta, this);
         }
         isTriggered = true;
     }

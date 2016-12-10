@@ -92,9 +92,9 @@ public class PanoramaUITests {
             l.add(new TransitionObject((double) i, (double) i, 0, ""));
         }
 
-        panoSphere.detachPanoramaComponents(cp);
+        panoSphere.detachPanoramaComponents();
         assertEquals(0, panoSphere.getNumChildren());
-        panoSphere.attachPanoramaComponents(l, cp);
+        panoSphere.attachPanoramaComponents(l);
         assertEquals(10, panoSphere.getNumChildren());
     }
 

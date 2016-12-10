@@ -77,7 +77,7 @@ public final class ImageMgmt {
         mainHandler.post(r);
     }
 
-    public static void fetchBitmapsFromUrlList(final Context context, final List<String> urls) {
+    public static void warmCache(final Context context, final List<String> urls) {
 
         for (String url : urls) {
             Log.d(TAG, "Asking Picasso to fetch " + url);
