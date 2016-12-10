@@ -2,6 +2,7 @@ package ch.epfl.sweng.project;
 
 
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.GeneralLocation;
 import android.support.test.espresso.action.Press;
@@ -24,6 +25,7 @@ import org.junit.runner.RunWith;
 import java.security.SecureRandom;
 
 import ch.epfl.sweng.project.features.SplashActivity;
+import ch.epfl.sweng.project.util.CustomGeneralClickAction;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -185,30 +187,15 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
 
 
-        /*
         // wait 3s for the images to load
         waitNms(TAG, 3000);
 
         ViewInteraction img0 = onView(childAtPosition(withId(R.id.scroll), 0));
 
-
-        ViewInteraction img0 = onView(childAtPosition(
-                withParent(Matchers.allOf(withId(R.id.imgs),
-                        withParent(withId(R.id.scroll)))), 0));
-
-
-
-
-
-        wait500ms(TAG);
-        img0.perform(scrollTo());
-        wait250ms(TAG);
-        img0.perform(click());
+        img0.perform(customClick());
         wait250ms(TAG);
 
         pressBack();
-        */
-
         wait250ms(TAG);
 
         onView(withId(R.id.action_launch_panorama)).perform(click());
@@ -347,6 +334,10 @@ public class CompleteBehaviorTest {
             counts[0] = listView.getCount();
             return true;
         }
+    }
+
+    private static ViewAction customClick(){
+        return new CustomGeneralClickAction(Tap.SINGLE, GeneralLocation.VISIBLE_CENTER, Press.FINGER);
     }
 
 }
