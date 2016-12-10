@@ -25,6 +25,7 @@ public class TimeoutQuery<T extends ParseObject> {
     private ParseQuery<T> mQuery;
     private final long mTimeout;
     private final boolean mSecondTry;
+    private boolean firstQueryFailed;
     private FindCallback<T> mCallback;
     private final Object mLock = new Object();
     private final Thread mThread;
@@ -55,6 +56,7 @@ public class TimeoutQuery<T extends ParseObject> {
                     if (mSecondTry) {
                         cancelQuery();
                     } else {
+                        firstQueryFailed = true;
                         secondQueryAttempt();
                     }
 
@@ -112,6 +114,12 @@ public class TimeoutQuery<T extends ParseObject> {
                 }
             });
             mThread.start();
+        }
+    }
+
+    public boolean firstQueryFailed() {
+        synchronized (mLock) {
+            return firstQueryFailed;
         }
     }
 }

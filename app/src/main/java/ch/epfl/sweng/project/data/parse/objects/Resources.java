@@ -22,7 +22,6 @@ import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
 import ch.epfl.sweng.project.util.Tuple;
 
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.descriptionTag;
-import static ch.epfl.sweng.project.data.parse.objects.JSONTags.idHouseTag;
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.idTag;
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.neighborsListTag;
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.panoSphereDatasTag;
@@ -33,7 +32,6 @@ import static ch.epfl.sweng.project.data.parse.objects.JSONTags.startingIdTag;
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.startingUrlTag;
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.textInfoTag;
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.thetaTag;
-import static ch.epfl.sweng.project.data.parse.objects.JSONTags.titleTag;
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.typeTag;
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.urlTag;
 
@@ -70,7 +68,7 @@ public final class Resources extends ParseObject {
             for (int i = 0; i < neighborsJSONArray.length(); i++) {
                 int type = neighborsJSONArray.getJSONObject(i).getInt(typeTag);
 
-                if (type >= typeValues.length){
+                if (type >= typeValues.length || type < 0) {
                     throw new JSONException("Invalid type in the JSON object while parsing a neighbor object");
                 }
 
@@ -93,9 +91,6 @@ public final class Resources extends ParseObject {
                                 ),
                                 neighborsJSONArray.getJSONObject(i).getString(textInfoTag)));
                         break;
-
-                    default:
-                        throw new JSONException("Invalid type");
                 }
             }
         }
@@ -115,26 +110,22 @@ public final class Resources extends ParseObject {
 
     /**
      * updates the content of the Parse object with the parameters values
+     *
      * @param photoSphereList the list of PhotoSphere informations (one entry in the list = one room)
      * @param startingId      the Id of the first room
      * @param startingUrl     the Url of the first room
      */
-    public void setPhotoSphereDatas(Iterable<PhotoSphereData> photoSphereList, int startingId, String startingUrl) {
+    public void setPhotoSphereDatas(Iterable<PhotoSphereData> photoSphereList, int startingId, String startingUrl)
+            throws JSONException {
         JSONObject photoSphereDatas = new JSONObject();
 
         JSONArray neighborsList = new JSONArray();
         for (PhotoSphereData p : photoSphereList) {
             neighborsList.put(p.getNeighborObject());
         }
-        try {
-            photoSphereDatas.put(startingIdTag, String.valueOf(startingId));
-            photoSphereDatas.put(startingUrlTag, startingUrl);
-            photoSphereDatas.put(panoramaRoomsTag, neighborsList);
-        } catch (JSONException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, e.getMessage());
-            }
-        }
+        photoSphereDatas.put(startingIdTag, String.valueOf(startingId));
+        photoSphereDatas.put(startingUrlTag, startingUrl);
+        photoSphereDatas.put(panoramaRoomsTag, neighborsList);
         put(panoSphereDatasTag, photoSphereDatas);
     }
 
@@ -146,20 +137,7 @@ public final class Resources extends ParseObject {
         put(descriptionTag, desc);
     }
 
-    public String getId() {
-        return getString(idHouseTag);
-    }
-
-    public void setId(String id) {
-        put(idHouseTag, id);
-    }
-
-    public String getTitle(){
-        return getString(titleTag);
-    }
-
     /**
-     *
      * @return the list of the picures to be displayed on the description activity
      * @throws JSONException
      */
