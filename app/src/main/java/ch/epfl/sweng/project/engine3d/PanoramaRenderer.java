@@ -3,9 +3,9 @@ package ch.epfl.sweng.project.engine3d;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -13,6 +13,7 @@ import android.view.Display;
 import android.view.MotionEvent;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.cameras.Camera;
@@ -22,7 +23,6 @@ import org.rajawali3d.renderer.Renderer;
 import org.rajawali3d.util.ObjectColorPicker;
 import org.rajawali3d.util.OnObjectPickedListener;
 
-import java.io.IOException;
 import java.util.Objects;
 
 import ch.epfl.sweng.project.BuildConfig;
@@ -50,6 +50,8 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     public static final Vector3 ORIGIN = new Vector3(0, 0, 0);
     public static final int TEXTURE_COLOR = 0x0022c8ff;
     private static final double LERP_FACTOR = 0.03;
+    private static final int PANO_WIDTH = 4096;
+    private static final int PANO_HEIGHT = 2048;
 
     private final String TAG = "Renderer";
     private final Camera mCamera;
@@ -225,6 +227,8 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
         Log.d(TAG, "Initializing scene");
 
+        Picasso.with(mContext).setLoggingEnabled(true);
+
         mCamera.setPosition(new Vector3(0, 0, 0));
         mPanoSphere = new PanoramaSphere();
         getCurrentScene().addChild(mPanoSphere);
@@ -243,13 +247,14 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
      * @param url URL of the next Bitmap to load
      * @param id  Id of the next Panorama to load
      */
-    public void initiatePanoramaTransition(String url, int id) {
+    public void initiatePanoramaTransition(final String url, final int id) {
         Log.d(TAG, "Call to initiate panorama transition, creating new task and setting next id.");
         mRenderLogic = mSlidingRendering;
 
         NextPanoramaDataBuilder.setNextPanoId(id);
         mTaskManager = new FetchPhotoTask();
-        mTaskManager.execute(url);
+
+        ImageMgmt.getBitmapFromUrl(mContext, url, mTaskManager);
     }
 
 
@@ -317,7 +322,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
 
     public void cancelPanoramaUpdate() {
-        mTaskManager.cancel(true);
+        Picasso.with(mContext).cancelRequest(mTaskManager);
         NextPanoramaDataBuilder.resetData();
     }
 
@@ -543,33 +548,21 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
      * object but this did not work. This class acts in the same way however.
      * Will return a null Bitmap if the query was unsuccessful
      */
-    private class FetchPhotoTask extends AsyncTask<String, Void, Bitmap> {
-
-        private String url;
+    private class FetchPhotoTask implements Target {
 
         @Override
-        protected Bitmap doInBackground(String... paramses) {
-
-            url = paramses[0];
-            Bitmap ret = null;
-            try {
-                ret = Picasso.with(getContext()).load(url).resize(2048, 4096).get();
-            } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
-            } finally {
-                return ret;
-            }
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            prepareScene(bitmap);
         }
 
         @Override
-        protected void onPostExecute(Bitmap b) {
-            prepareScene(b);
+        public void onBitmapFailed(Drawable errorDrawable) {
+            Log.d("Async bitmap load", "Picasso async bitmap load failed");
         }
 
         @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            Log.d("AsyncTask", "Task cancelled");
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
         }
     }
 }
