@@ -1,6 +1,7 @@
 package ch.epfl.sweng.project;
 
 
+import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.GeneralClickAction;
@@ -25,7 +26,6 @@ import org.junit.runner.RunWith;
 import java.security.SecureRandom;
 
 import ch.epfl.sweng.project.features.SplashActivity;
-import ch.epfl.sweng.project.util.CustomGeneralClickAction;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -37,6 +37,8 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.logUserOut;
@@ -178,6 +180,7 @@ public class CompleteBehaviorTest {
         wait1s(TAG);
         wait1s(TAG);
 
+
         onView(withId(R.id.goto_login_button)).perform(click());
         login("qwert@qwert.org", "12345");
         wait500ms(TAG);
@@ -192,7 +195,7 @@ public class CompleteBehaviorTest {
 
         ViewInteraction img0 = onView(childAtPosition(withId(R.id.scroll), 0));
 
-        img0.perform(customClick());
+        img0.perform(new CustomClick());
         wait250ms(TAG);
 
         pressBack();
@@ -336,8 +339,23 @@ public class CompleteBehaviorTest {
         }
     }
 
-    private static ViewAction customClick(){
-        return new CustomGeneralClickAction(Tap.SINGLE, GeneralLocation.VISIBLE_CENTER, Press.FINGER);
+    private static class CustomClick implements ViewAction {
+        @Override
+        public Matcher<View> getConstraints() {
+            return isDisplayingAtLeast(60); // no constraints, they are checked above
+        }
+
+        @Override
+        public String getDescription() {
+            return "click plus button";
+        }
+
+        @Override
+        public void perform(UiController uiController, View view) {
+            float[] coordinates = GeneralLocation.VISIBLE_CENTER.calculateCoordinates(view);
+            float[] precision = Press.FINGER.describePrecision();
+            Tap.SINGLE.sendTap(uiController, coordinates, precision);
+        }
     }
 
 }
