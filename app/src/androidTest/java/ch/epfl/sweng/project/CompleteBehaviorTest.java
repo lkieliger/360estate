@@ -142,8 +142,23 @@ public class CompleteBehaviorTest {
         wait500ms(TAG);
         login(testUserMail, testUserPassword);
         wait1s(TAG);
+        wait1s(TAG);
+        wait1s(TAG);
 
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
+
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
+
+        onView(withId(R.id.addToFavorites)).perform(click());
+
+        pressBack();
+
+        onView(withId(R.id.FavoritesButton)).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
+        onView(withId(R.id.addToFavorites)).perform(click());
+        pressBack();
+
+        onView(withId(R.id.FavoritesButton)).perform(click());
 
         filterTest();
 
@@ -166,18 +181,6 @@ public class CompleteBehaviorTest {
         wait500ms(TAG);
 
         onView(withId(R.id.FavoritesButton)).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
-
-        onView(withId(R.id.addToFavorites)).perform(click());
-        pressBack();
-
-        onView(withId(R.id.FavoritesButton)).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
-        onView(withId(R.id.addToFavorites)).perform(click());
-        pressBack();
-
-        onView(withId(R.id.FavoritesButton)).perform(click());
-
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
 
@@ -225,6 +228,7 @@ public class CompleteBehaviorTest {
 
 
         pressBack();
+
         logUserOut();
 
     }
@@ -275,8 +279,6 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.eraseButton)).perform(click());
         onView(withId(R.id.filterButton)).perform(click());
         wait250ms(TAG);
-
-
     }
 
     private void registerNewUser(String testUserMail, String testUserPassword, String testUserPhone,

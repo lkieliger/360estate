@@ -197,6 +197,9 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         mRenderLogic = mIdleRendering;
         mTargetPos = ORIGIN;
 
+        mPicker = new ObjectColorPicker(this);
+        mPicker.setOnObjectPickedListener(this);
+
         setFrameRate(60);
     }
 
@@ -306,9 +309,6 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Call to update scene, changing panorama photo and attaching new components." +
                     " Pano id is: " + panoData.getX());
-
-        mPicker = new ObjectColorPicker(this);
-        mPicker.setOnObjectPickedListener(this);
 
         mPanoSphere.detachPanoramaComponents(mPicker);
         mPanoSphere.setPhotoTexture(panoData.getY());
