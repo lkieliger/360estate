@@ -37,6 +37,7 @@ import static android.view.MotionEvent.ACTION_OUTSIDE;
 import static android.view.MotionEvent.ACTION_POINTER_DOWN;
 import static android.view.MotionEvent.ACTION_POINTER_UP;
 import static android.view.MotionEvent.TOOL_TYPE_FINGER;
+import static ch.epfl.sweng.project.util.DebugPrinter.printRendererDebug;
 import static ch.epfl.sweng.project.util.UnitTestUtilityFunctions.wait1s;
 import static ch.epfl.sweng.project.util.UnitTestUtilityFunctions.wait250ms;
 import static ch.epfl.sweng.project.util.UnitTestUtilityFunctions.wait500ms;
@@ -72,6 +73,8 @@ public class PanoramaRendererTests {
         userRotHandlingTest();
         rotSensorListenerTest();
         touchListenerTest();
+
+        printRendererDebug("PanoramaRendererTests", panoramaRenderer);
     }
 
     private void sensorRotHandlingTest() {
