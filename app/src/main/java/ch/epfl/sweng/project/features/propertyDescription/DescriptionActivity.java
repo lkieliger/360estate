@@ -133,18 +133,7 @@ public final class DescriptionActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (ParseProxy.PROXY.internetAvailable()) {
-            ListActivity.synchronizeServer();
-            if (getIntent().getBooleanExtra("isToggled", false)) {
-                if (isInitiallyInFavorite != checkBoxFavorite.isChecked()) {
-                    if (isInitiallyInFavorite) {
-                        ListActivity.removeItem(idItem);
-                    } else {
-                        ListActivity.addItem(idItem);
-                    }
-                }
-            }
-        }
+        ListActivity.synchronizeServer();
         ListActivity.notifyItemAdapter();
         super.onBackPressed();
     }

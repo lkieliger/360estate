@@ -85,22 +85,6 @@ public final class ListActivity extends AppCompatActivity {
         itemAdapter.notifyDataSetChanged();
     }
 
-    public static void addItem(String id) {
-        Item i = PInterface.getItemFromId(id);
-        itemList.add(i);
-    }
-
-    public static void removeItem(String id) {
-
-        int i = 0;
-        while (i < itemList.size() && !Objects.equals(itemList.get(i).getId(), id)) {
-            ++i;
-        }
-        if (i < itemList.size()) {
-            itemList.remove(i);
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,16 +140,15 @@ public final class ListActivity extends AppCompatActivity {
                 intent.putExtra("idUser", idUser);
                 intent.putExtra("idItem", itemValue.getId());
 
-                StringBuilder descriptionBuilder = new StringBuilder();
-                descriptionBuilder.append(getString(itemValue.getType().getDescription())).append(" ");
-                descriptionBuilder.append(itemValue.getRooms()).append(" ");
-                descriptionBuilder.append(getString(R.string.rooms)).append(" ");
-                descriptionBuilder.append(getString(R.string.location_separator)).append(" ");
-                descriptionBuilder.append(itemValue.getLocation()).append(" ");
-                descriptionBuilder.append(getString(R.string.price_separator)).append(" ");
-                descriptionBuilder.append(itemValue.getPrice());
-                descriptionBuilder.append(getString(R.string.text_currency));
-                intent.putExtra(ClientRequest.DESCRIPTION_TAG, descriptionBuilder.toString());
+                String descriptionBuilder = getString(itemValue.getType().getDescription()) + " " +
+                        itemValue.getRooms() + " " +
+                        getString(R.string.rooms) + " " +
+                        getString(R.string.location_separator) + " " +
+                        itemValue.getLocation() + " " +
+                        getString(R.string.price_separator) + " " +
+                        itemValue.getPrice() +
+                        getString(R.string.text_currency);
+                intent.putExtra(ClientRequest.DESCRIPTION_TAG, descriptionBuilder);
 
                 startActivity(intent);
             }

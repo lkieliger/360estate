@@ -41,10 +41,6 @@ public final class Item extends ParseObject {
         return getString("startingImageUrl");
     }
 
-    private void setStartingImageUrl(String url) {
-        put("startingImageUrl", url);
-    }
-
     public String getLocation() {
         return getString("location");
     }

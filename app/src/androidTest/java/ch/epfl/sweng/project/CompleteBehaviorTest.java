@@ -38,7 +38,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.logUserOut;
@@ -57,9 +56,9 @@ public class CompleteBehaviorTest {
 
     private static final String TAG = "CompleteBehaviorTest";
     /*
- Random string, for the registration.
- Source:
- http://stackoverflow.com/questions/41107/how-to-generate-a-random-alpha-numeric-string
+    Random string, for the registration.
+    Source:
+    http://stackoverflow.com/questions/41107/how-to-generate-a-random-alpha-numeric-string
   */
     private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static SecureRandom rnd = new SecureRandom();
@@ -154,23 +153,26 @@ public class CompleteBehaviorTest {
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
 
         onView(withId(R.id.addToFavorites)).perform(click());
-
         pressBack();
 
         onView(withId(R.id.FavoritesButton)).perform(click());
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
+
         onView(withId(R.id.addToFavorites)).perform(click());
+
+        wait250ms(TAG);
         pressBack();
 
         onView(withId(R.id.FavoritesButton)).perform(click());
-
-        filterTest();
-
 
         // tests the favorites function
         addToFavorite();
         addToFavorite();
         addToFavorite();
+
+        filterTest();
+
+
 
         onView(withId(R.id.FavoritesButton)).perform(click());
 
@@ -188,7 +190,6 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.FavoritesButton)).perform(click());
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
-
 
         // wait 3s for the images to load
         waitNms(TAG, 3000);
@@ -285,6 +286,8 @@ public class CompleteBehaviorTest {
     }
 
     private void testAlreadyRegisteredUser() {
+        onView(withId(R.id.registration_name)).perform(replaceText("test"), closeSoftKeyboard());
+        onView(withId(R.id.registration_lastname)).perform(replaceText("astutus"), closeSoftKeyboard());
         onView(withId(R.id.registration_email)).perform(replaceText("test@astutus.org"), closeSoftKeyboard());
         onView(withId(R.id.registration_password)).perform(replaceText("abcdef"), closeSoftKeyboard());
         onView(withId(R.id.registration_password_bis)).perform(replaceText("abcdef"), closeSoftKeyboard());
@@ -343,7 +346,7 @@ public class CompleteBehaviorTest {
     private static class CustomClick implements ViewAction {
         @Override
         public Matcher<View> getConstraints() {
-            return isDisplayingAtLeast(60); // no constraints, they are checked above
+            return isDisplayingAtLeast(60);
         }
 
         @Override

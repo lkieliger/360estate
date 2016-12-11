@@ -19,7 +19,6 @@ import ch.epfl.sweng.project.userSupport.activities.LoginActivity;
 import ch.epfl.sweng.project.userSupport.activities.RegisterActivity;
 
 public final class SplashActivity extends AppCompatActivity {
-    public static final String APP_ID = "360ESTATE";
     public static final String TAG = "SplashScreen";
 
     @Override

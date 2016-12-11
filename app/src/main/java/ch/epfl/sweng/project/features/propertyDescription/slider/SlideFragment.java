@@ -19,7 +19,7 @@ public final class SlideFragment extends Fragment {
                 R.layout.fragment_slide, container, false
         );
         Bundle b = getArguments();
-        String url = b.getString("url");
+        url = b.getString("url");
         ImageView imgV = (ImageView) root.findViewById(R.id.displayed_image);
 
 

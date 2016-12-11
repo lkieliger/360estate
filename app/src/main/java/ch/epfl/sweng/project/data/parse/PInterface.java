@@ -243,29 +243,4 @@ public final class PInterface {
         return f;
     }
 
-    public static Item getItemFromId(String id) {
-        ParseQuery<Item> query = new ParseQuery<>(Item.class);
-        query.whereEqualTo("idHouse", id);
-
-        List<Item> listItems = new ArrayList<>();
-        try {
-            listItems = query.find();
-
-
-        } catch (ParseException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, e.getMessage());
-            }
-        }
-        if (listItems.isEmpty()) {
-            throw new IllegalArgumentException("PInterface Error: No Item has this id.");
-
-        }
-        if (listItems.size() > 1)
-            Log.d(TAG, "Warning: The same id has different Items.");
-
-        return listItems.get(0);
-    }
 }
-
-
