@@ -123,12 +123,13 @@ public final class PanoramaSphere extends Sphere {
         mComponentList.add(panoramaObject);
     }
 
-    public void setTextToDisplay(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject, int colorIndex,
+    public void setTextToDisplay(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject,
                                  ObjectColorPicker picker) {
 
         StringAdapter stringAdapter = new StringAdapter(textInfo);
         int epsilon = 10;
-        Bitmap bitmap = stringAdapter.textToBitmap(22, 512, colorIndex, epsilon);
+        int color = 0X03BBF6;
+        Bitmap bitmap = stringAdapter.textToBitmap(22, 512, epsilon);
 
 
         int heightInfoDisplay = getSizeFromPixels(bitmap.getHeight());
@@ -137,7 +138,7 @@ public final class PanoramaSphere extends Sphere {
         int widthInfoClose = 5;
 
         PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
-                , heightInfoDisplay, bitmap, colorIndex, null);
+                , heightInfoDisplay, bitmap, color, null);
 
         int shiftY = (int) ((heightInfoDisplay + heightInfoClose + 4) / 2.0);
 

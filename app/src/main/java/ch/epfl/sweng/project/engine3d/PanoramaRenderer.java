@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.util.Objects;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.ImageMgmt;
 import ch.epfl.sweng.project.data.panorama.HouseManager;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoCloser;
@@ -256,8 +255,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     public void displayText(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
         Log.d(TAG, "Call to display text information.");
         //noinspection deprecation
-        mPanoSphere.setTextToDisplay(textInfo, theta, panoramaInfoObject, getContext().getResources().getColor(R
-                .color.appBlue), mPicker);
+        mPanoSphere.setTextToDisplay(textInfo, theta, panoramaInfoObject, mPicker);
     }
 
     public void deleteInfo(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser) {
