@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.data.ParseMgmt;
+import ch.epfl.sweng.project.data.parse.PInterface;
 import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
 import ch.epfl.sweng.project.data.parse.objects.Favorites;
@@ -86,7 +86,7 @@ public final class ListActivity extends AppCompatActivity {
     }
 
     public static void addItem(String id) {
-        Item i = ParseMgmt.getItemFromId(id);
+        Item i = PInterface.getItemFromId(id);
         itemList.add(i);
     }
 
@@ -108,7 +108,7 @@ public final class ListActivity extends AppCompatActivity {
         mContext = getApplicationContext();
 
 
-        setFavorites(ParseMgmt.getFavoriteFromId(idUser));
+        setFavorites(PInterface.getFavoriteFromId(idUser));
 
 
         f.synchronizeFromServer();
@@ -139,7 +139,7 @@ public final class ListActivity extends AppCompatActivity {
         });
 
 
-        ParseMgmt.getItemList(itemList, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext
+        PInterface.getItemList(itemList, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext
         );
         // Assign adapter to ListView
         listView.setAdapter(itemAdapter);
@@ -180,7 +180,7 @@ public final class ListActivity extends AppCompatActivity {
                 f.synchronizeServer();
 
                 isFavoriteToggle = b;
-                ParseMgmt.getItemList(itemList, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext);
+                PInterface.getItemList(itemList, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext);
             }
         });
 
@@ -273,7 +273,7 @@ public final class ListActivity extends AppCompatActivity {
                         maxSurface.getText().toString(),
                         minSurface.getText().toString()
                 );
-                ParseMgmt.getItemList(itemCollection, itemAdapter, filterValues, isFavoriteToggle,
+                PInterface.getItemList(itemCollection, itemAdapter, filterValues, isFavoriteToggle,
                         idUser, mContext);
                 listView.setAdapter(itemAdapter);
                 helpDialog.dismiss();

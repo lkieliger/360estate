@@ -17,7 +17,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.data.ParseMgmt;
+import ch.epfl.sweng.project.data.parse.PInterface;
 import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
@@ -51,7 +51,7 @@ public final class DescriptionActivity extends AppCompatActivity {
         final ArrayList<String> imagesURL = new ArrayList<>();
         StringBuilder descriptionBuilder = new StringBuilder();
 
-        ParseMgmt.getDataForDescription(idItem, imagesURL, descriptionBuilder, mContext);
+        PInterface.getDataForDescription(idItem, imagesURL, descriptionBuilder, mContext);
         String description = descriptionBuilder.toString();
 
 

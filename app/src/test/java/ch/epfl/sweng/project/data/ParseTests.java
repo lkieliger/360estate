@@ -52,7 +52,7 @@ public class ParseTests {
         Activity dummyActivity = Robolectric.buildActivity(LoginActivity.class).create().get();
 
         ArrayList<Item> itemList = new ArrayList<>();
-        ParseMgmt.getItemList(itemList, new ItemAdapter(dummyActivity.getBaseContext(), itemList),
+        PInterface.getItemList(itemList, new ItemAdapter(dummyActivity.getBaseContext(), itemList),
                 null, false, "nullUid", null);
     }
     */

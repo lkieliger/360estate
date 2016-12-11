@@ -15,7 +15,7 @@ import org.rajawali3d.view.ISurface;
 import org.rajawali3d.view.SurfaceView;
 
 import ch.epfl.sweng.project.R;
-import ch.epfl.sweng.project.data.ParseMgmt;
+import ch.epfl.sweng.project.data.parse.PInterface;
 import ch.epfl.sweng.project.data.panorama.HouseManager;
 import ch.epfl.sweng.project.engine3d.listeners.PanoramaTouchListener;
 
@@ -33,7 +33,7 @@ public final class PanoramaActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        HouseManager houseManager = ParseMgmt.getHouseManager(getIntent().getStringExtra("id"), getApplicationContext());
+        HouseManager houseManager = PInterface.getHouseManager(getIntent().getStringExtra("id"), getApplicationContext());
 
         if (houseManager.getStartingId() == -1) {
             Toast toast = Toast.makeText(this, getString(R.string.invalid_parse_object), Toast.LENGTH_SHORT);

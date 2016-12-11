@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.data.ParseMgmt;
+import ch.epfl.sweng.project.data.parse.PInterface;
 import ch.epfl.sweng.project.data.parse.ParseProxy;
 
 
@@ -98,7 +98,7 @@ public final class Favorites extends ParseObject {
 
     public void synchronizeServer() {
         if (ParseProxy.PROXY.internetAvailable()) {
-            ParseMgmt.overrideFavorites(getIdUser(), favorites);
+            PInterface.overrideFavorites(getIdUser(), favorites);
         }
     }
 }
