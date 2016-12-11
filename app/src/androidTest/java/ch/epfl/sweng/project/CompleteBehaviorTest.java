@@ -196,9 +196,10 @@ public class CompleteBehaviorTest {
         ViewInteraction img0 = onView(childAtPosition(withId(R.id.scroll), 0));
 
         img0.perform(new CustomClick());
-        wait250ms(TAG);
+        wait1s(TAG);
 
         pressBack();
+
         wait250ms(TAG);
 
         onView(withId(R.id.action_launch_panorama)).perform(click());
