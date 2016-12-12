@@ -19,8 +19,8 @@ public final class PanoramaInfoDisplay extends PanoramaObject {
     private PanoramaInfoCloser panoramaInfoCloser;
 
 
-    public PanoramaInfoDisplay(double theta, double phi, int width, int height, Bitmap bitmap,
-                               int colorIndex, PanoramaInfoCloser panoramaInfoCloser) {
+    public PanoramaInfoDisplay(double theta, double phi, int width, int height, Bitmap bitmap
+            , PanoramaInfoCloser panoramaInfoCloser) {
         super(theta, phi, width, height, 40);
         this.theta = theta;
         this.panoramaInfoCloser = panoramaInfoCloser;
@@ -45,7 +45,6 @@ public final class PanoramaInfoDisplay extends PanoramaObject {
         if (isFocused) {
             p.zoomOut(theta);
             isFocused = false;
-
         } else {
             p.zoomOnText(theta, getX(), getZ());
             isFocused = true;

@@ -85,6 +85,16 @@ public final class ListActivity extends AppCompatActivity {
         itemAdapter.notifyDataSetChanged();
     }
 
+    public static void removeItem(String id) {
+        int i = 0;
+        while (i < itemList.size() && !Objects.equals(itemList.get(i).getId(), id)) {
+            ++i;
+        }
+        if (i < itemList.size()) {
+            itemList.remove(i);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -27,7 +27,6 @@ import ch.epfl.sweng.project.features.propertylist.listeners.OnCheckedFavorite;
 import ch.epfl.sweng.project.userSupport.fragments.ContactMeDialogFragment;
 
 import static ch.epfl.sweng.project.data.ImageMgmt.getImgFromUrlIntoView;
-
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 
@@ -134,6 +133,12 @@ public final class DescriptionActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         ListActivity.synchronizeServer();
+        if (getIntent().getBooleanExtra("isToggled", false)) {
+            if (isInitiallyInFavorite && !checkBoxFavorite.isChecked()) {
+                ListActivity.removeItem(idItem);
+            }
+        }
+
         ListActivity.notifyItemAdapter();
         super.onBackPressed();
     }
