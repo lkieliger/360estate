@@ -223,7 +223,7 @@ public class CompleteBehaviorTest {
         wait1s(TAG);
 
         pressBack();
-        waitNms(TAG, 3000);
+        waitNms(TAG, 5000);
         onView(withId(R.id.action_launch_panorama)).perform(click());
         waitNms(TAG, 5000);
 
