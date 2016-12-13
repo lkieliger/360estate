@@ -65,7 +65,7 @@ public final class StringAdapter {
         return list;
     }
 
-    public Bitmap textToBitmap(int textSize, int widthBitmap, int contourSize, int marginSize) {
+    public Bitmap textToBitmap(int textSize, int widthBitmap, int contourSize, int marginSize, int heightLimit) {
 
         List<String> list = textToList(textSize, widthBitmap, contourSize + marginSize);
 
@@ -76,10 +76,16 @@ public final class StringAdapter {
         paint.getTextBounds(text, 0, text.length(), rect);
         int heightTemp = rect.height();
 
-        int heightBitmap = (heightTemp) * list.size() + 2 * contourSize;
+        int heightBitmap = (heightTemp) * list.size() + 2 * (contourSize + marginSize);
+
 
         int powerOfHeight = (int) (Math.log(heightBitmap) / Math.log(2)) + 1;
         heightBitmap = (int) Math.pow(2, powerOfHeight);
+
+        if (heightBitmap > heightLimit) {
+            heightBitmap = heightLimit;
+        }
+
 
         Bitmap image = Bitmap.createBitmap(widthBitmap, heightBitmap, Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(image);
@@ -91,11 +97,14 @@ public final class StringAdapter {
         canvas.drawRect(contourSize, contourSize, widthBitmap - contourSize, heightBitmap - contourSize, paint);
 
         paint.setColor(textColor);
-        for (int i = 0; i < list.size(); i++) {
+        int i = 0;
+        int currentHeight = contourSize + marginSize + 2 * heightTemp;
+        while (i < list.size() && currentHeight < heightBitmap) {
             canvas.drawText(list.get(i), contourSize + marginSize, contourSize + marginSize + (i + 1) * heightTemp,
                     paint);
+            currentHeight += heightTemp;
+            i++;
         }
-
         return image;
     }
 }

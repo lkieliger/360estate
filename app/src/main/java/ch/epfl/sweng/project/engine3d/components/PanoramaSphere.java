@@ -131,33 +131,25 @@ public final class PanoramaSphere extends Sphere {
         int marginSize = 10;
         int textSize = 18;
         int widthPixels = 512;
+        int heightLimit = 512;
 
-        Bitmap bitmap = stringAdapter.textToBitmap(textSize, widthPixels, contourSize, marginSize);
+        Bitmap bitmap = stringAdapter.textToBitmap(textSize, widthPixels, contourSize, marginSize, heightLimit);
 
         int heightInfoDisplay = getSizeFromPixels(bitmap.getHeight());
         int widthInfoDisplay = 30;
-        int heightInfoClose = 5;
-        int widthInfoClose = 5;
 
-        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
+        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.57, widthInfoDisplay
                 , heightInfoDisplay, bitmap, null);
 
-        int shiftY = (int) ((heightInfoDisplay + heightInfoClose + 4) / 2.0);
+        panoramaInfoDisplay.setY(panoramaInfoDisplay.getY() + 10);
 
-        PanoramaInfoCloser panoramaInfoCloser = new PanoramaInfoCloser(theta, 1.5, widthInfoClose,
-                heightInfoClose, panoramaInfoDisplay, panoramaInfoObject);
-
-        panoramaInfoCloser.setY(panoramaInfoCloser.getY() + shiftY);
-        panoramaInfoDisplay.setPanoramaInfoCloser(panoramaInfoCloser);
-
+        panoramaInfoDisplay.setPanoramaInfoObject(panoramaInfoObject);
+        panoramaInfoObject.setPanoramaInfoDisplay(panoramaInfoDisplay);
         attachPanoramaComponent(panoramaInfoDisplay, picker);
-        attachPanoramaComponent(panoramaInfoCloser, picker);
     }
 
-    public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser,
-                                    ObjectColorPicker picker) {
+    public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay, ObjectColorPicker picker) {
         detachPanoramaComponent(picker, panoramaInfoDisplay);
-        detachPanoramaComponent(picker, panoramaInfoCloser);
     }
 
     /**
@@ -169,7 +161,7 @@ public final class PanoramaSphere extends Sphere {
     private int getSizeFromPixels(int pixels) {
         int i = ((int) (Math.log(pixels) / Math.log(2)) - 7) * 15;
         if (i <= 0) {
-            return 15;
+            return 10;
         }
         return i;
     }
