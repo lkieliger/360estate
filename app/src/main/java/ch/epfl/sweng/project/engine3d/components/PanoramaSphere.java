@@ -131,8 +131,9 @@ public final class PanoramaSphere extends Sphere {
         int marginSize = 10;
         int textSize = 18;
         int widthPixels = 512;
+        int heightLimit = 512;
 
-        Bitmap bitmap = stringAdapter.textToBitmap(textSize, widthPixels, contourSize, marginSize);
+        Bitmap bitmap = stringAdapter.textToBitmap(textSize, widthPixels, contourSize, marginSize, heightLimit);
 
         int heightInfoDisplay = getSizeFromPixels(bitmap.getHeight());
         int widthInfoDisplay = 30;
