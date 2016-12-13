@@ -138,8 +138,10 @@ public final class PanoramaSphere extends Sphere {
         int heightInfoDisplay = getSizeFromPixels(bitmap.getHeight());
         int widthInfoDisplay = 30;
 
-        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
+        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.57, widthInfoDisplay
                 , heightInfoDisplay, bitmap, null);
+
+        panoramaInfoDisplay.setY(panoramaInfoDisplay.getY() + 10);
 
         panoramaInfoDisplay.setPanoramaInfoObject(panoramaInfoObject);
         panoramaInfoObject.setPanoramaInfoDisplay(panoramaInfoDisplay);

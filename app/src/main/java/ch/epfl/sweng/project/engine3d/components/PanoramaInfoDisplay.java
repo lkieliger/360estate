@@ -30,7 +30,6 @@ public final class PanoramaInfoDisplay extends PanoramaObject {
         isFocused = false;
         material.setColor(0);
         Texture texture = new Texture(TAG, bitmap);
-        enableLookAt();
 
         try {
             material.addTexture(texture);

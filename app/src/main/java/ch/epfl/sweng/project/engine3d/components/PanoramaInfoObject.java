@@ -12,6 +12,8 @@ public final class PanoramaInfoObject extends PanoramaObject {
 
     private static final String TEXTURE_TAG = "PanoramaInfoObject";
     private static final int ICON_INDEX = R.drawable.info_tex;
+    private static final int width = 5;
+    private static final int height = 5;
     private final String textInfo;
     private final double theta;
     private boolean isDisplay;
@@ -19,10 +21,11 @@ public final class PanoramaInfoObject extends PanoramaObject {
     private PanoramaInfoDisplay panoramaInfoDisplay = null;
 
     public PanoramaInfoObject(double theta, double phi, String textInfo) {
-        super(theta, phi, TEXTURE_TAG, ICON_INDEX);
+        super(theta, phi, width, height, 40);
         this.textInfo = textInfo;
         enableLookAt();
         setLookAt(new Vector3(0, 0, 0));
+        setIcon(TEXTURE_TAG, ICON_INDEX);
         this.theta = theta;
         isDisplay = false;
         isFocused = false;
