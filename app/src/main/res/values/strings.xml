@@ -105,6 +105,7 @@
     <string name="accept_contact_me">Contact me</string>
     <string name="refuse_contact_me">Refuse</string>
     <string name="invalid_parse_object">There is an error on the server, please try again later</string>
+    <string name="success_request">Request successful</string>
 
 
 </resources>

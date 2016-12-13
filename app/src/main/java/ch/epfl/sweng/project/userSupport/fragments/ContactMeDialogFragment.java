@@ -15,6 +15,9 @@ import com.parse.ParseUser;
 
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
+import ch.epfl.sweng.project.features.propertyDescription.DescriptionActivity;
+
+import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 public final class ContactMeDialogFragment extends DialogFragment {
 
@@ -45,6 +48,16 @@ public final class ContactMeDialogFragment extends DialogFragment {
                 request.setInterestedId(propertyId);
                 request.setPropertyDescription(propertyDescription);
                 request.saveInBackground();
+                dismiss();
+                shortToast(getActivity().getApplicationContext(), getResources().getText(R.string.success_request));
+            }
+        });
+
+        Button refuse = (Button)v.findViewById(R.id.contact_refuse);
+        refuse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
             }
         });
 
