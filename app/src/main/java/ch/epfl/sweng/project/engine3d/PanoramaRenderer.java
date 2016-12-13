@@ -23,12 +23,10 @@ import org.rajawali3d.util.ObjectColorPicker;
 import org.rajawali3d.util.OnObjectPickedListener;
 
 import java.io.IOException;
-import java.util.Objects;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.data.ImageMgmt;
 import ch.epfl.sweng.project.data.panorama.HouseManager;
-import ch.epfl.sweng.project.engine3d.components.PanoramaInfoCloser;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoDisplay;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
@@ -71,6 +69,13 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     private RenderingLogic mRenderLogic;
     private ObjectColorPicker mPicker;
     private int debugCounter = 0;
+
+    private PanoramaInfoObject objectToRotate;
+    private double targetAngle;
+    private double currentAngle = 0.0;
+
+    private boolean rotationTime = false;
+
     /**
      * Use this rendering when nothing special need to be done. In other words just allowing the camera to look
      * around and print some debug informations.
@@ -87,6 +92,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
         }
     };
+
     /**
      * Use this rendering logic to change the panorama photo after a scene transition
      */
@@ -136,11 +142,10 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         }
     };
 
-
     private RenderingLogic mSlidingOutOfTextRendering = new RenderingLogic() {
         @Override
         public void render() {
-            //Log.i(TAG, "Rendering logic is set to sliding");
+            Log.i(TAG, "Zoom out in progress");
             double travellingLength = mCamera.getPosition().length();
             if (travellingLength > 0.01) {
                 Vector3 pos = new Vector3(mCamera.getPosition());
@@ -154,6 +159,42 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
             mHelperQuaternion = mHelperQuaternion.slerp(q, LERP_FACTOR * 5);
             mCamera.setCameraOrientation(mHelperQuaternion);
+        }
+    };
+
+    private RenderingLogic mRotateObject = new RenderingLogic() {
+        @Override
+        public void render() {
+            Log.i(TAG, "Rotate Object in progress");
+            double rateOfRotation = 30.0;
+            double angle = 180 / (4.0 * rateOfRotation);
+            objectToRotate.rotate(-objectToRotate.getX(), -objectToRotate.getY(), -objectToRotate.getZ(), angle);
+            currentAngle += angle;
+
+            if (currentAngle >= targetAngle) {
+                mRenderLogic = mIdleRendering;
+                Log.d(TAG, "Rotation finished");
+            }
+        }
+    };
+
+    private RenderingLogic mRotateObjectAndZoomOut = new RenderingLogic() {
+        @Override
+        public void render() {
+            Log.i(TAG, "Rotate Object And Zoom Out");
+            if (rotationTime) {
+                mRotateObject.render();
+                if (mRenderLogic == mIdleRendering) {
+                    mRenderLogic = mSlidingOutOfTextRendering;
+                }
+                rotationTime = false;
+            } else {
+                mSlidingOutOfTextRendering.render();
+                if (mRenderLogic == mIdleRendering) {
+                    mRenderLogic = mRotateObject;
+                }
+                rotationTime = true;
+            }
         }
     };
 
@@ -252,15 +293,28 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     }
 
 
+    public void rotateDisplayInfoObject(PanoramaInfoObject panoramaInfoObject) {
+        objectToRotate = panoramaInfoObject;
+        targetAngle = currentAngle + 180 / 4.0;
+        mRenderLogic = mRotateObject;
+    }
+
+    public void zoomOutAndRotate(double theta, PanoramaInfoObject panoramaInfoObject) {
+        mHelperQuaternion = Quaternion.getIdentity().fromEuler(theta * 180 / Math.PI + 90, 0, 0);
+        objectToRotate = panoramaInfoObject;
+        targetAngle = currentAngle + 180 / 4.0;
+        mRenderLogic = mRotateObjectAndZoomOut;
+    }
+
     public void displayText(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
         Log.d(TAG, "Call to display text information.");
         //noinspection deprecation
         mPanoSphere.setTextToDisplay(textInfo, theta, panoramaInfoObject, mPicker);
     }
 
-    public void deleteInfo(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser) {
+    public void deleteInfo(PanoramaInfoDisplay panoramaInfoDisplay) {
         Log.d(TAG, "Call to delete text information.");
-        mPanoSphere.deleteTextToDisplay(panoramaInfoDisplay, panoramaInfoCloser, mPicker);
+        mPanoSphere.deleteTextToDisplay(panoramaInfoDisplay, mPicker);
     }
 
     public void zoomOnText(double angle, double x, double z) {
@@ -323,7 +377,8 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     public void onRender(final long elapsedTime, final double deltaTime) {
         super.onRender(elapsedTime, deltaTime);
         mRenderLogic.render();
-        if (!(mRenderLogic.equals(mSlidingToTextRendering)) && !mRenderLogic.equals(mSlidingOutOfTextRendering)) {
+        if (mRenderLogic != mSlidingToTextRendering && mRenderLogic != mSlidingOutOfTextRendering && mRenderLogic !=
+                mRotateObjectAndZoomOut) {
             updateCamera();
         }
     }
@@ -417,14 +472,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             Log.d(TAG, "ObjectPicked");
             mTargetPos = object.getWorldPosition();
             mTargetPos.y += 25;
-
-            if ((Objects.equals(((PanoramaObject) object).getClass(), PanoramaInfoCloser.class) &&
-                    Objects.equals(mRenderLogic, mSlidingToTextRendering)) ||
-                    (Objects.equals(((PanoramaObject) object).getClass(), PanoramaInfoDisplay.class) &&
-                            Objects.equals(mRenderLogic, mSlidingToTextRendering)) ||
-                    Objects.equals(mRenderLogic, mIdleRendering)) {
-                ((PanoramaObject) object).reactWith(this);
-            }
+            ((PanoramaObject) object).reactWith(this);
         }
     }
 

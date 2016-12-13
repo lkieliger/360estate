@@ -136,28 +136,17 @@ public final class PanoramaSphere extends Sphere {
 
         int heightInfoDisplay = getSizeFromPixels(bitmap.getHeight());
         int widthInfoDisplay = 30;
-        int heightInfoClose = 5;
-        int widthInfoClose = 5;
 
         PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
                 , heightInfoDisplay, bitmap, null);
 
-        int shiftY = (int) ((heightInfoDisplay + heightInfoClose + 4) / 2.0);
-
-        PanoramaInfoCloser panoramaInfoCloser = new PanoramaInfoCloser(theta, 1.5, widthInfoClose,
-                heightInfoClose, panoramaInfoDisplay, panoramaInfoObject);
-
-        panoramaInfoCloser.setY(panoramaInfoCloser.getY() + shiftY);
-        panoramaInfoDisplay.setPanoramaInfoCloser(panoramaInfoCloser);
-
+        panoramaInfoDisplay.setPanoramaInfoObject(panoramaInfoObject);
+        panoramaInfoObject.setPanoramaInfoDisplay(panoramaInfoDisplay);
         attachPanoramaComponent(panoramaInfoDisplay, picker);
-        attachPanoramaComponent(panoramaInfoCloser, picker);
     }
 
-    public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser,
-                                    ObjectColorPicker picker) {
+    public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay, ObjectColorPicker picker) {
         detachPanoramaComponent(picker, panoramaInfoDisplay);
-        detachPanoramaComponent(picker, panoramaInfoCloser);
     }
 
     /**
