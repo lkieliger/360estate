@@ -182,11 +182,6 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             if (currentAngle >= targetAngle) {
                 rotationPercent = 0;
                 mRenderLogic = mIdleRendering;
-
-                int temp = startingColor;
-                startingColor = finishColor;
-                finishColor = temp;
-
                 Log.d(TAG, "Rotation finished");
             }
         }
@@ -310,13 +305,19 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     public void rotateDisplayInfoObject(PanoramaInfoObject panoramaInfoObject) {
         objectToRotate = panoramaInfoObject;
         targetAngle = currentAngle + 180 / 4.0;
+        if (panoramaInfoObject.isDisplay()) {
+            startingColor = COLOR_CLOSE;
+            finishColor = TEXTURE_COLOR;
+        } else {
+            startingColor = TEXTURE_COLOR;
+            finishColor = COLOR_CLOSE;
+        }
         mRenderLogic = mRotateObject;
     }
 
     public void zoomOutAndRotate(double theta, PanoramaInfoObject panoramaInfoObject) {
-        mHelperQuaternion = Quaternion.getIdentity().fromEuler(theta * 180 / Math.PI + 90, 0, 0);
-        objectToRotate = panoramaInfoObject;
-        targetAngle = currentAngle + 180 / 4.0;
+        rotateDisplayInfoObject(panoramaInfoObject);
+        zoomOut(theta);
         mRenderLogic = mRotateObjectAndZoomOut;
     }
 

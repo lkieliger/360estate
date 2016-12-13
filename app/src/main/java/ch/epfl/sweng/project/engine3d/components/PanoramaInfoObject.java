@@ -57,4 +57,7 @@ public final class PanoramaInfoObject extends PanoramaObject {
         }
     }
 
+    public boolean isDisplay() {
+        return isDisplay;
+    }
 }

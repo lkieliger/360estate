@@ -158,7 +158,7 @@ public final class PanoramaSphere extends Sphere {
     private int getSizeFromPixels(int pixels) {
         int i = ((int) (Math.log(pixels) / Math.log(2)) - 7) * 15;
         if (i <= 0) {
-            return 15;
+            return 10;
         }
         return i;
     }
