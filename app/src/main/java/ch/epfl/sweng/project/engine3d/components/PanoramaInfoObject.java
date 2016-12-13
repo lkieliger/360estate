@@ -12,8 +12,8 @@ public final class PanoramaInfoObject extends PanoramaObject {
 
     private static final String TEXTURE_TAG = "PanoramaInfoObject";
     private static final int ICON_INDEX = R.drawable.info_tex;
-    private static final int width = 5;
-    private static final int height = 5;
+    private static final int width = 6;
+    private static final int height = 6;
     private final String textInfo;
     private final double theta;
     private boolean isDisplay;
