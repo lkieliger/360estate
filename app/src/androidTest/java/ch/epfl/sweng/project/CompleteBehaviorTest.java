@@ -4,6 +4,7 @@ package ch.epfl.sweng.project;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.GeneralLocation;
 import android.support.test.espresso.action.Press;
@@ -92,13 +93,33 @@ public class CompleteBehaviorTest {
         return sb.toString();
     }
 
+    public static ViewAction clickXY(final int shiftX, final int shiftY) {
+        return new GeneralClickAction(
+                Tap.SINGLE,
+                new CoordinatesProvider() {
+                    @Override
+                    public float[] calculateCoordinates(View view) {
+
+                        final int[] screenPos = new int[2];
+                        view.getLocationOnScreen(screenPos);
+
+                        float[] coordinates = GeneralLocation.CENTER.calculateCoordinates(view);
+                        coordinates[0] += shiftX;
+                        coordinates[1] += shiftY;
+
+                        return coordinates;
+                    }
+                },
+                Press.THUMB
+        );
+    }
+
     @After
     public void finishActivity() {
         mActivityTestRule.getActivity().finish();
         wait1s(TAG);
         logUserOut();
     }
-
 
     private void login(String testUserMail, String testUserPassword) {
         wait250ms(TAG);
@@ -197,18 +218,13 @@ public class CompleteBehaviorTest {
 
         // wait 3s for the images to load
         waitNms(TAG, 3000);
-
         ViewInteraction img0 = onView(childAtPosition(withId(R.id.scroll), 0));
-
         img0.perform(new CustomClick());
         wait1s(TAG);
 
         pressBack();
-
-        wait250ms(TAG);
-
+        wait500ms(TAG);
         onView(withId(R.id.action_launch_panorama)).perform(click());
-
         waitNms(TAG, 5000);
 
         ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE,
@@ -217,15 +233,17 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
         waitNms(TAG, 5000);
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
-        waitNms(TAG, 3500);
-
-
+        wait1s(TAG);
 
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
-        wait250ms(TAG);
+        wait1s(TAG);
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
-        wait250ms(TAG);
+        wait1s(TAG);
 
+        onView(withId(R.id.panorama_activity)).perform(clickXY(200, 0));
+        wait1s(TAG);
+        onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
+        wait1s(TAG);
 
         pressBack();
 
@@ -321,7 +339,6 @@ public class CompleteBehaviorTest {
         waitNms(TAG, 6000);
     }
 
-
     private void addToFavorite() {
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
         onView(withId(R.id.addToFavorites)).perform(click());
@@ -365,9 +382,8 @@ public class CompleteBehaviorTest {
         @Override
         public void perform(UiController uiController, View view) {
             float[] coordinates = GeneralLocation.VISIBLE_CENTER.calculateCoordinates(view);
-            float[] precision = Press.FINGER.describePrecision();
+            float[] precision = Press.PINPOINT.describePrecision();
             Tap.SINGLE.sendTap(uiController, coordinates, precision);
         }
     }
-
 }
