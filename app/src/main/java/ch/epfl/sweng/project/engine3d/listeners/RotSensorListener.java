@@ -4,13 +4,16 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.view.Display;
 import android.view.Surface;
 
 import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
 
+import java.util.Arrays;
+
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
+
+import static ch.epfl.sweng.project.util.DoubleArrayConverter.floatToDoubleArray;
 
 
 public final class RotSensorListener implements SensorEventListener {
@@ -18,24 +21,22 @@ public final class RotSensorListener implements SensorEventListener {
     private static final String TAG = "RotSensorListener";
 
     private final PanoramaRenderer mRenderer;
-    private final Display mDisplay;
     private float[] mRotationMatrixIn;
     private float[] mRotationMatrixOut;
-    private Quaternion mDummyRotation;
     private int mScreenRotation = 0;
 
-    public RotSensorListener(Display display, PanoramaRenderer renderer) {
-        if (renderer == null) {
+    public RotSensorListener(int rotation, PanoramaRenderer renderer) {
+        if (renderer == null)
             throw new IllegalArgumentException("Renderer reference was null");
-        }
-        mDisplay = display;
+
+        if (rotation != Surface.ROTATION_0 && rotation != Surface.ROTATION_90 && rotation != Surface.ROTATION_180 &&
+                rotation != Surface.ROTATION_270)
+            throw new IllegalArgumentException("Surface.ROTATION value is invalid");
+
         mRenderer = renderer;
         mRotationMatrixIn = new float[16];
         mRotationMatrixOut = new float[16];
-        mDummyRotation = new Quaternion();
-        //Screen rotation is locked once the panorama is started
-        //TODO: remove unnecessary display reference
-        mScreenRotation = mDisplay.getRotation();
+        mScreenRotation = rotation;
     }
 
     @Override
@@ -50,7 +51,8 @@ public final class RotSensorListener implements SensorEventListener {
 
     }
 
-    public void sensorChanged(float[] values) {
+    public void sensorChanged(float[] sensorValues) {
+        float[] values = Arrays.copyOf(sensorValues, sensorValues.length);
         values[3] = -values[3];
 
         SensorManager.getRotationMatrixFromVector(mRotationMatrixIn, values);
@@ -78,27 +80,7 @@ public final class RotSensorListener implements SensorEventListener {
         mRenderer.setSensorRotation(q);
     }
 
-    public Quaternion getDummyRotation() {
-        return new Quaternion(mDummyRotation);
-    }
-
     public void setScreenRotation(int r) {
         mScreenRotation = r;
-    }
-
-    public double[] floatToDoubleArray(float[] a) {
-        double[] ret = new double[a.length];
-        for (int i = 0; i < a.length; i++) {
-            ret[i] = Double.valueOf(a[i]);
-        }
-        return ret;
-    }
-
-    public float[] doubleToFloatArray(double[] a) {
-        float[] ret = new float[a.length];
-        for (int i = 0; i < a.length; i++) {
-            ret[i] = (float) a[i];
-        }
-        return ret;
     }
 }

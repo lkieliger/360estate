@@ -3,7 +3,6 @@ package ch.epfl.sweng.project.tests3d;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.MotionEvent;
-import android.view.Surface;
 import android.view.View;
 
 import junit.framework.Assert;
@@ -18,13 +17,11 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.internal.Shadow;
 
-import java.util.Arrays;
 import java.util.Locale;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.listeners.PanoramaTouchListener;
-import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
 import ch.epfl.sweng.project.features.SplashActivity;
 
 import static android.view.MotionEvent.ACTION_CANCEL;
@@ -54,7 +51,6 @@ public class PanoramaRendererTests {
     private static double errorEpsilon = 0.1d;
     private SplashActivity dummyActivity;
     private PanoramaRenderer panoramaRenderer;
-    private RotSensorListener rotSensorListener;
     private PanoramaTouchListener panoramaTouchListener;
     private DisplayMetrics metrics = null;
 
@@ -66,12 +62,10 @@ public class PanoramaRendererTests {
                 create().get();
         Display display = Shadow.newInstanceOf(Display.class);
         panoramaRenderer = new PanoramaRenderer(dummyActivity.getBaseContext(), display, null);
-        rotSensorListener = new RotSensorListener(display, panoramaRenderer);
         panoramaTouchListener = new PanoramaTouchListener(panoramaRenderer);
 
         sensorRotHandlingTest();
         userRotHandlingTest();
-        rotSensorListenerTest();
         touchListenerTest();
 
         printRendererDebug("PanoramaRendererTests", panoramaRenderer);
@@ -155,38 +149,6 @@ public class PanoramaRendererTests {
         //Tests yaw
         panoramaRenderer.setDeviceYaw(123.456);
         assertEquals(123.456, panoramaRenderer.getDeviceYaw());
-    }
-
-    private void rotSensorListenerTest() {
-
-        Quaternion q1 = new Quaternion();
-        Quaternion q2 = new Quaternion().fromAngleAxis(Vector3.Axis.X, 90);
-        Quaternion q3 = new Quaternion(0.5, 0.5, 0.5, 0.5);
-        Quaternion q4 = new Quaternion(0, 0, 0.71, 0.71);
-        Quaternion q5 = new Quaternion(0.5, 0.5, -0.5, -0.5);
-
-        float[] values = rotSensorListener.doubleToFloatArray(new double[]{q1.x, q1.y, q1.z, -q1.w});
-
-        rotSensorListener.sensorChanged(Arrays.copyOf(values, values.length));
-        assertQuaternionEquals(q2, panoramaRenderer.getSensorRot(), true);
-
-        rotSensorListener.setScreenRotation(Surface.ROTATION_90);
-        rotSensorListener.sensorChanged(Arrays.copyOf(values, values.length));
-
-        wait250ms(TAG);
-        assertQuaternionEquals(q3, panoramaRenderer.getSensorRot(), true);
-
-        rotSensorListener.setScreenRotation(Surface.ROTATION_180);
-        rotSensorListener.sensorChanged(Arrays.copyOf(values, values.length));
-
-        wait250ms(TAG);
-        assertQuaternionEquals(q4, panoramaRenderer.getSensorRot(), true);
-
-        rotSensorListener.setScreenRotation(Surface.ROTATION_270);
-        rotSensorListener.sensorChanged(Arrays.copyOf(values, values.length));
-
-        wait250ms(TAG);
-        assertQuaternionEquals(q5, panoramaRenderer.getSensorRot(), true);
     }
 
     private void assertQuaternionEquals(Quaternion v1, Quaternion v2, boolean shouldBeEqual) {

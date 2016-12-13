@@ -15,7 +15,7 @@ import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
  * It contain also a SparseArray ( an optimized map from integer to objects), that will be used to stock the "graph".
  * The SparseArray will be used to map an Id to an list of {@link SpatialData} representing the neighbors of the id.
  */
-public final class HouseManager {
+public class HouseManager {
 
     private final SparseArray<List<SpatialData>> sparseArray;
     private final String startingUrl;

@@ -42,7 +42,7 @@ import static android.content.Context.SENSOR_SERVICE;
  * This class defines how the 3d engine should be used to
  * render the scene.
  */
-public final class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
+public class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
 
     public static final double SENSITIVITY = 50.0;
     public static final double CAM_TRAVEL_DISTANCE = 65.0;
@@ -174,7 +174,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             mRotSensor = null;
             mRotSensorAvailable = false;
         } else {
-            mRotListener = new RotSensorListener(display, this);
+            mRotListener = new RotSensorListener(display.getRotation(), this);
             mRotSensor = rotSensor;
             mRotSensorAvailable = true;
         }
@@ -237,7 +237,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     /**
      * This method is called to initiate the panorama transition. The camera will start
      * sliding towards the next panorama and a task will be launched to retrieve
-     * asynchronously the next bitmap
+     * asynchronouslythe next bitmap
      *
      * @param url URL of the next Bitmap to load
      * @param id  Id of the next Panorama to load
