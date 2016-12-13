@@ -127,10 +127,12 @@ public final class PanoramaSphere extends Sphere {
                                  ObjectColorPicker picker) {
 
         StringAdapter stringAdapter = new StringAdapter(textInfo);
-        int epsilon = 10;
-        int color = 0X03BBF6;
-        Bitmap bitmap = stringAdapter.textToBitmap(22, 512, epsilon);
+        int contourSize = 10;
+        int marginSize = 10;
+        int textSize = 18;
+        int widthPixels = 512;
 
+        Bitmap bitmap = stringAdapter.textToBitmap(textSize, widthPixels, contourSize, marginSize);
 
         int heightInfoDisplay = getSizeFromPixels(bitmap.getHeight());
         int widthInfoDisplay = 30;
@@ -138,7 +140,7 @@ public final class PanoramaSphere extends Sphere {
         int widthInfoClose = 5;
 
         PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
-                , heightInfoDisplay, bitmap, color, null);
+                , heightInfoDisplay, bitmap, null);
 
         int shiftY = (int) ((heightInfoDisplay + heightInfoClose + 4) / 2.0);
 

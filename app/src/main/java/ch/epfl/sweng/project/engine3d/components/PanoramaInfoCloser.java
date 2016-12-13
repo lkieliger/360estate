@@ -1,5 +1,7 @@
 package ch.epfl.sweng.project.engine3d.components;
 
+import android.graphics.Color;
+
 import org.rajawali3d.math.vector.Vector3;
 
 import ch.epfl.sweng.project.R;
@@ -10,7 +12,7 @@ public final class PanoramaInfoCloser extends PanoramaObject {
 
     private static final String TAG = "PanoramaInfoCloser";
     private static final int ICON_CLOSE = R.drawable.close_tex;
-    private static final int ICON_COLOR = 0x00ff0000;
+    private static final int ICON_COLOR = Color.rgb(25, 102, 127);
 
     private final PanoramaInfoDisplay panoramaInfoDisplay;
     private final PanoramaInfoObject panoramaInfoObject;
