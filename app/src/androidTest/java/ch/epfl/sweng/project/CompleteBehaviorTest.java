@@ -110,7 +110,7 @@ public class CompleteBehaviorTest {
                         return coordinates;
                     }
                 },
-                Press.THUMB
+                Press.PINPOINT
         );
     }
 
@@ -232,23 +232,28 @@ public class CompleteBehaviorTest {
 
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
         waitNms(TAG, 5000);
-        onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
-        wait1s(TAG);
 
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
         wait1s(TAG);
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
         wait1s(TAG);
 
+        onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
+        wait1s(TAG);
+
+        onView(withId(R.id.panorama_activity)).perform(clickXY(150, 0));
+        wait1s(TAG);
         onView(withId(R.id.panorama_activity)).perform(clickXY(200, 0));
+        wait1s(TAG);
+        onView(withId(R.id.panorama_activity)).perform(clickXY(250, 0));
+        wait1s(TAG);
+        onView(withId(R.id.panorama_activity)).perform(clickXY(300, 0));
         wait1s(TAG);
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
         wait1s(TAG);
 
         pressBack();
-
         logUserOut();
-
     }
 
     private void filterTest() {
