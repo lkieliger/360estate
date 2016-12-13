@@ -152,7 +152,11 @@ public class CompleteBehaviorTest {
         wait500ms(TAG);
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
 
+        onView(withId(R.id.contactRequestButton)).perform(click());
+        onView(withId(R.id.contact_refuse)).perform(click());
 
+        onView(withId(R.id.contactRequestButton)).perform(click());
+        onView(withId(R.id.contact_accept)).perform(click());
 
         onView(withId(R.id.addToFavorites)).perform(click());
         pressBack();
@@ -209,13 +213,17 @@ public class CompleteBehaviorTest {
 
         ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE,
                 GeneralLocation.VISIBLE_CENTER, Press.FINGER);
-        onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
+
+        onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
         waitNms(TAG, 5000);
-        onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
+        onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
         waitNms(TAG, 3500);
-        onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
+
+
+
+        onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
         wait250ms(TAG);
-        onView(withId(R.id.activity_main)).perform(actionWithAssertions(generalClickAction));
+        onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
         wait250ms(TAG);
 
 
