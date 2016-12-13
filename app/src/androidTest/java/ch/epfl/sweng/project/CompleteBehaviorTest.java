@@ -146,11 +146,13 @@ public class CompleteBehaviorTest {
         login(testUserMail, testUserPassword);
         wait1s(TAG);
         wait1s(TAG);
-        wait1s(TAG);
+        wait1s(TAG + "before activity list Tests");
 
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
-
+        wait500ms(TAG);
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
+
+
 
         onView(withId(R.id.addToFavorites)).perform(click());
         pressBack();
@@ -171,8 +173,6 @@ public class CompleteBehaviorTest {
         addToFavorite();
 
         filterTest();
-
-
 
         onView(withId(R.id.FavoritesButton)).perform(click());
 
