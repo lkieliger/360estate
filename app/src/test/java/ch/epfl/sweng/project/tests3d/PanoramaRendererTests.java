@@ -67,7 +67,9 @@ public class PanoramaRendererTests {
         sensorRotHandlingTest();
         userRotHandlingTest();
         touchListenerTest();
-
+//Tests yaw
+        panoramaRenderer.setDeviceYaw(123.456);
+        assertEquals(123.456, panoramaRenderer.getDeviceYaw());
         printRendererDebug("PanoramaRendererTests", panoramaRenderer);
     }
 

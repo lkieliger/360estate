@@ -1,37 +1,39 @@
 package ch.epfl.sweng.project.tests3d;
 
-import android.view.Display;
 import android.view.Surface;
-
-import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.data.panorama.HouseManager;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
 
 import static ch.epfl.sweng.project.util.DoubleArrayConverter.doubleToFloatArray;
+import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 23)
 public class RotSensorListenerTest {
 
+
     private static double errorEpsilon = 0.1d;
-    float[] values;
-    PanoramaRenderer panoramaRenderer;
+    @Mock
+    PanoramaRenderer mockedRenderer;
+    @Captor
+    ArgumentCaptor<Quaternion> argumentCaptor;
     RotSensorListener rotSensorListener;
-    private Display display = Mockito.mock(Display.class);
-    private HouseManager houseManager = Mockito.mock(HouseManager.class);
+    private float[] values;
     private Quaternion q1;
     private Quaternion q2;
     private Quaternion q3;
@@ -40,11 +42,12 @@ public class RotSensorListenerTest {
 
     @Before
     public void initMocks() {
-        panoramaRenderer = new PanoramaRenderer(RuntimeEnvironment.application, display, houseManager);
+        MockitoAnnotations.initMocks(this);
     }
 
     @Before
     public void initVariables() {
+
         Quaternion rot90AlongX = new Quaternion().fromAngleAxis(Vector3.Axis.X, 90);
         Quaternion rot90AlongZ = new Quaternion().fromAngleAxis(Vector3.Axis.Z, 90);
         q1 = new Quaternion();
@@ -58,37 +61,42 @@ public class RotSensorListenerTest {
     @Test
     public void coordMappingIsCorrectForPortrait() {
 
-        rotSensorListener = new RotSensorListener(Surface.ROTATION_0, panoramaRenderer);
+        rotSensorListener = new RotSensorListener(Surface.ROTATION_0, mockedRenderer);
         rotSensorListener.sensorChanged(values);
 
-        assertQuaternionEquals(q2, panoramaRenderer.getSensorRot());
+        verify(mockedRenderer).setSensorRotation(argumentCaptor.capture());
+        assertQuaternionEquals(q2, argumentCaptor.getValue());
     }
 
     @Test
     public void coordMappingIsCorrectForLandscape() {
 
-        rotSensorListener = new RotSensorListener(Surface.ROTATION_90, panoramaRenderer);
-
+        rotSensorListener = new RotSensorListener(Surface.ROTATION_90, mockedRenderer);
         rotSensorListener.sensorChanged(values);
-        assertQuaternionEquals(q3, panoramaRenderer.getSensorRot());
+
+        verify(mockedRenderer).setSensorRotation(argumentCaptor.capture());
+        assertQuaternionEquals(q3, argumentCaptor.getValue());
     }
 
     @Test
     public void coordMappingIsCorrectForInversePortrait() {
 
-        rotSensorListener = new RotSensorListener(Surface.ROTATION_180, panoramaRenderer);
-
+        rotSensorListener = new RotSensorListener(Surface.ROTATION_180, mockedRenderer);
         rotSensorListener.sensorChanged(values);
-        assertQuaternionEquals(q4, panoramaRenderer.getSensorRot());
+
+        verify(mockedRenderer).setSensorRotation(argumentCaptor.capture());
+        assertQuaternionEquals(q4, argumentCaptor.getValue());
+
     }
 
     @Test
     public void coordMappingIsCorrectForInverseLandscape() {
 
-        rotSensorListener = new RotSensorListener(Surface.ROTATION_270, panoramaRenderer);
-
+        rotSensorListener = new RotSensorListener(Surface.ROTATION_270, mockedRenderer);
         rotSensorListener.sensorChanged(values);
-        assertQuaternionEquals(q5, panoramaRenderer.getSensorRot());
+
+        verify(mockedRenderer).setSensorRotation(argumentCaptor.capture());
+        assertQuaternionEquals(q5, argumentCaptor.getValue());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -106,13 +114,13 @@ public class RotSensorListenerTest {
                 .ROTATION_270)
             i++;
 
-        rotSensorListener = new RotSensorListener(i, panoramaRenderer);
+        rotSensorListener = new RotSensorListener(i, mockedRenderer);
     }
 
     private void assertQuaternionEquals(Quaternion q1, Quaternion q2) {
         System.out.println("Expected: " + q1);
         System.out.println("Got     : " + q2);
 
-        Assert.assertTrue(q1.equals(q2, errorEpsilon));
+        assertTrue(q1.equals(q2, errorEpsilon));
     }
 }
