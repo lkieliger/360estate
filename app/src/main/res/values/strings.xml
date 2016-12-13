@@ -103,7 +103,9 @@
     <string name="dialog_contact_me_message">By further proceeding you accept that one of our brokers use your personal
     information in order to contact and provide you with all the details you may need.</string>
     <string name="accept_contact_me">Contact me</string>
-    <string name="refuse_contact_me">Don\'t contact me</string>
+    <string name="refuse_contact_me">Refuse</string>
     <string name="invalid_parse_object">There is an error on the server, please try again later</string>
+    <string name="success_request">Request successful</string>
+
 
 </resources>
