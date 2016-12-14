@@ -254,7 +254,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
      *
      * @param b The panorama picture as a Bitmap
      */
-    private void prepareScene(Bitmap b) {
+    public void prepareScene(Bitmap b) {
         if (b == null) {
             Log.e(TAG, "There was a problem with the PhotoFetch task, returned bitmap was null");
             NextPanoramaDataBuilder.resetData();
@@ -269,7 +269,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     /**
      * Actually updates the current scene by changing the panorama picture and loading the new PanoramaComponents
      */
-    private void updateScene() {
+    public void updateScene() {
 
         Tuple<Integer, Bitmap> panoData = NextPanoramaDataBuilder.build();
         if (BuildConfig.DEBUG)
