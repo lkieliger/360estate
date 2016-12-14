@@ -9,7 +9,6 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -18,11 +17,11 @@ import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
 
-public final class ImageMgmt {
+public class ImageMgmt {
 
     private static final String TAG = "ImageMgmt";
 
-    private ImageMgmt() {
+    public ImageMgmt() {
     }
 
     public static void getImgFromUrlIntoView(Context context, String url, ImageView imgV) {
@@ -38,7 +37,7 @@ public final class ImageMgmt {
      * @param context the current context of the activity.
      * @param url     the url to load
      */
-    public static Bitmap getBitmapFromUrl(Context context, String url) {
+    public Bitmap getBitmapFromUrl(Context context, String url) {
 
         Bitmap mBitmap = null;
 
@@ -59,7 +58,7 @@ public final class ImageMgmt {
      * @param url
      * @param t
      */
-    public static void getBitmapFromUrl(final Context context, final String url, final Target t) {
+    public void getBitmapFromUrl(final Context context, final String url, final Target t) {
 
         //The following code runs the Picasso calls form the main thread
         Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -69,7 +68,6 @@ public final class ImageMgmt {
                 Picasso.with(context)
                         .load(url)
                         .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)//Don't store in memory, prefers disk
-                        .networkPolicy(NetworkPolicy.OFFLINE)
                         .into(t);
             }
         };
@@ -77,7 +75,7 @@ public final class ImageMgmt {
         mainHandler.post(r);
     }
 
-    public static void warmCache(final Context context, final List<String> urls) {
+    public void warmCache(final Context context, final List<String> urls) {
 
         for (String url : urls) {
             Log.d(TAG, "Asking Picasso to fetch " + url);

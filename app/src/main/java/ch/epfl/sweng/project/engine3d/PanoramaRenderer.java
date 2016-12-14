@@ -45,15 +45,17 @@ import static android.content.Context.SENSOR_SERVICE;
  * This class defines how the 3d engine should be used to
  * render the scene.
  */
-public final class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
+public class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
 
     public static final double SENSITIVITY = 50.0;
     public static final double CAM_TRAVEL_DISTANCE = 65.0;
     public static final Vector3 ORIGIN = new Vector3(0, 0, 0);
     public static final int TEXTURE_COLOR = 0x0022c8ff;
-    private static final double LERP_FACTOR = 0.03;
+    public static final double DISTANCE_TO_DISPLAY = 9;
 
+    public static final double LERP_FACTOR = 0.03;
     private final String TAG = "Renderer";
+    private final ImageMgmt mImageManager;
     private final Camera mCamera;
     private final double mXdpi;
     private final double mYdpi;
@@ -61,13 +63,12 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     private final RotSensorListener mRotListener;
     private final boolean mRotSensorAvailable;
     private final Sensor mRotSensor;
-    private final double distanceOfDisplay = 9;
     private PanoramaSphere mPanoSphere;
     private Quaternion mUserRot;
     private Quaternion mSensorRot;
     private Vector3 mTargetPos;
-    private Quaternion mTargetQuaternion = null;
-    private Quaternion mHelperQuaternion = null;
+    private Quaternion mTargetQuaternion = new Quaternion();
+    private Quaternion mHelperQuaternion = new Quaternion();
     private double mYaw;
     private FetchPhotoTask mImageLoadTask = null;
     private HouseManager mHouseManager;
@@ -130,7 +131,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             //Log.i(TAG, "Rendering logic is set to sliding");
             double travellingLength = mCamera.getPosition().length();
 
-            if (travellingLength < distanceOfDisplay) {
+            if (travellingLength < DISTANCE_TO_DISPLAY) {
                 Vector3 v = new Vector3(mTargetPos.x, mTargetPos.y, mTargetPos.z);
                 Vector3 pos = new Vector3(mCamera.getPosition());
                 mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
@@ -169,6 +170,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         mSensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         Sensor rotSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
         mHouseManager = houseManager;
+        mImageManager = new ImageMgmt();
 
         if (rotSensor == null) {
             if (BuildConfig.DEBUG) {
@@ -222,8 +224,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
         NextPanoramaDataBuilder.setNextPanoId(id);
         mImageLoadTask = new FetchPhotoTask();
-
-        ImageMgmt.getBitmapFromUrl(mContext, url, mImageLoadTask);
+        mImageManager.getBitmapFromUrl(mContext, url, mImageLoadTask);
     }
 
     public void deleteInfo(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser) {
@@ -290,7 +291,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             }
         }
 
-        ImageMgmt.warmCache(mContext, urls);
+        mImageManager.warmCache(mContext, urls);
     }
 
     public void cancelPanoramaUpdate() {
@@ -364,6 +365,10 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         mYaw = y;
     }
 
+    public void resetTargetPos() {
+        mTargetPos = new Vector3(0, 0, 0);
+    }
+
     public Quaternion getUserRotation() {
         return new Quaternion(mUserRot);
     }
@@ -416,7 +421,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         getCurrentScene().addChild(mPanoSphere);
 
         NextPanoramaDataBuilder.setNextPanoId(mHouseManager.getStartingId());
-        prepareScene(ImageMgmt.getBitmapFromUrl(getContext(), mHouseManager.getStartingUrl()));
+        prepareScene(mImageManager.getBitmapFromUrl(getContext(), mHouseManager.getStartingUrl()));
         Log.d(TAG, "Updating scene from initscene");
         updateScene();
     }
@@ -425,7 +430,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
     public void onRender(final long elapsedTime, final double deltaTime) {
         super.onRender(elapsedTime, deltaTime);
         mRenderLogic.render();
-        if (!(mRenderLogic.equals(mSlidingToTextRendering)) && !mRenderLogic.equals(mSlidingOutOfTextRendering)) {
+        if (mRenderLogic != mSlidingToTextRendering && mRenderLogic != mSlidingOutOfTextRendering) {
             updateCamera();
         }
     }
@@ -490,9 +495,6 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         private static final String TAG = "NextPanoDataBuilder";
         private static Integer nextPanoId = INVALID_ID;
         private static Bitmap nextPanoBitmap = INVALID_BITMAP;
-
-        private NextPanoramaDataBuilder() {
-        }
 
         public static boolean isReady() {
             return (nextPanoId != INVALID_ID && nextPanoBitmap != INVALID_BITMAP);

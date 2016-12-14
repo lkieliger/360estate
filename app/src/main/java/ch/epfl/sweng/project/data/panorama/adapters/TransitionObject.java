@@ -13,7 +13,7 @@ import static ch.epfl.sweng.project.data.parse.objects.JSONTags.idTag;
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.typeTag;
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.urlTag;
 
-public final class TransitionObject extends SpatialData {
+public class TransitionObject extends SpatialData {
 
     private final int mId;
     private final String mUrl;

@@ -49,6 +49,7 @@ public class RotSensorListenerTest {
     SensorEvent mockedEvent;
 
     RotSensorListener rotSensorListener;
+
     private float[] values;
     private Quaternion q1;
     private Quaternion q2;

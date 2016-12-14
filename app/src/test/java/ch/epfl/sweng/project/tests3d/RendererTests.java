@@ -3,11 +3,16 @@ package ch.epfl.sweng.project.tests3d;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +22,10 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.rajawali3d.cameras.Camera;
 import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
+import org.rajawali3d.util.ObjectColorPicker;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
@@ -29,23 +36,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.data.ImageMgmt;
 import ch.epfl.sweng.project.data.panorama.HouseManager;
 import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
+import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
+import ch.epfl.sweng.project.engine3d.PanoramaRenderer.RenderingLogic;
+import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoCloser;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoDisplay;
+import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
 import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
+import ch.epfl.sweng.project.util.Tuple;
 
+import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.CAM_TRAVEL_DISTANCE;
+import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.DISTANCE_TO_DISPLAY;
+import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.LERP_FACTOR;
+import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.ORIGIN;
 import static ch.epfl.sweng.project.tests3d.AssertUtils.assertQuaternionEquals;
 import static ch.epfl.sweng.project.tests3d.AssertUtils.assertQuaternionNotEquals;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -62,6 +82,8 @@ public class RendererTests {
     @Mock
     private HouseManager mockedHouseManager;
     @Mock
+    private TransitionObject mockedSpatialData;
+    @Mock
     private SensorManager mockedSensorManager;
     @Mock
     private Sensor mockedSensor;
@@ -69,6 +91,8 @@ public class RendererTests {
     private Bitmap mockedBitmap;
     @Mock
     private PanoramaSphere mockedSphere;
+    @Mock
+    private Camera mockedCamera;
     @Captor
     private ArgumentCaptor<PanoramaInfoDisplay> infoDisplayCaptor;
     @Captor
@@ -79,12 +103,23 @@ public class RendererTests {
     private ArgumentCaptor<Integer> intCaptor;
     @Captor
     private ArgumentCaptor<Bitmap> bitmapCaptor;
+    @Captor
+    private ArgumentCaptor<Quaternion> quaternionCaptor;
+    @Captor
+    private ArgumentCaptor<Float> floatCaptor1;
+    @Captor
+    private ArgumentCaptor<Float> floatCaptor2;
+    @Captor
+    private ArgumentCaptor<Vector3> vectorCaptor;
+    @Captor
+    private ArgumentCaptor<Target> picassoTargetCaptor;
+
 
     private Display roboDisplay;
     private PanoramaRenderer panoramaRenderer;
     private DisplayMetrics metrics;
     private Context spiedContext;
-
+    private boolean testLogicIsCalled = false;
 
     @Before
     public void initMocks() {
@@ -93,7 +128,15 @@ public class RendererTests {
         spiedContext = Mockito.spy(RuntimeEnvironment.application);
         doReturn(mockedSensorManager).when(spiedContext).getSystemService(Context.SENSOR_SERVICE);
         metrics = RuntimeEnvironment.application.getResources().getDisplayMetrics();
-        when(mockedHouseManager.getAttachedDataFromId(anyInt())).thenReturn(new ArrayList<SpatialData>());
+
+        when(mockedSpatialData.getType()).thenReturn(PanoramaComponentType.TRANSITION, null);
+
+        List<SpatialData> spatialDataList = new ArrayList<>();
+        spatialDataList.add(mockedSpatialData);
+        spatialDataList.add(mockedSpatialData); //Second instance will return null
+        when(mockedHouseManager.getAttachedDataFromId(anyInt()))
+                .thenReturn(spatialDataList);
+
         panoramaRenderer = new PanoramaRenderer(spiedContext, roboDisplay, mockedHouseManager);
     }
 
@@ -131,27 +174,15 @@ public class RendererTests {
     @Test
     public void userRotationIsCorrect() {
 
-
         double angleChange = 91;
-        //Rotate the camera counter clockwise to simulate a swipe to the right
-        Quaternion newRot = panoramaRenderer.getUserRotation().
-                multiplyLeft(new Quaternion().fromAngleAxis(Vector3.Axis.Y, -angleChange));
-        /*
-             formula
-             angle = (Math.cos(yaw) * xComp) + (Math.sin(yaw) * yComp);
-         */
-        float dx = angleToPixelDelta(angleChange / Math.cos(panoramaRenderer.getDeviceYaw()), true);
-        panoramaRenderer.updateCameraRotation(dx, 0);
-
+        Quaternion newRot = modifyUserRot(angleChange);
         assertQuaternionEquals(newRot, panoramaRenderer.getUserRotation());
     }
 
     @Test
     public void getUserRotPerformDefensiveCopying() {
-
-
         Quaternion userRot = panoramaRenderer.getUserRotation();
-        userRot.multiplyLeft(new Quaternion().fromAngleAxis(Vector3.Axis.Y, 30));
+        userRot.multiply(123);
 
         assertQuaternionNotEquals(panoramaRenderer.getUserRotation(), userRot);
     }
@@ -185,8 +216,7 @@ public class RendererTests {
         PanoramaInfoDisplay mockedInfoDisplay = Mockito.mock(PanoramaInfoDisplay.class);
         PanoramaInfoCloser mockedInfoCloser = Mockito.mock(PanoramaInfoCloser.class);
 
-
-        inject(panoramaRenderer, mockedSphere, "mPanoSphere");
+        new InjectedRendererBuilder(panoramaRenderer).withMockedPanoSphere();
 
         panoramaRenderer.deleteInfo(mockedInfoDisplay, mockedInfoCloser);
         verify(mockedSphere).deleteTextToDisplay(infoDisplayCaptor.capture(),
@@ -230,7 +260,7 @@ public class RendererTests {
         PanoramaRenderer.NextPanoramaDataBuilder.setNextPanoId(123);
         PanoramaRenderer.NextPanoramaDataBuilder.setNextPanoBitmap(mockedBitmap);
 
-        inject(panoramaRenderer, mockedSphere, "mPanoSphere");
+        new InjectedRendererBuilder(panoramaRenderer).withMockedPanoSphere();
 
         panoramaRenderer.updateScene();
         verify(mockedSphere, times(1)).detachPanoramaComponents();
@@ -239,13 +269,297 @@ public class RendererTests {
         verify(mockedHouseManager, times(1)).getAttachedDataFromId(intCaptor.capture());
         assertEquals(Integer.valueOf(123), intCaptor.getValue());
         verify(mockedSphere, times(1)).attachPanoramaComponents(spatialDataListCaptor.capture());
-        assertEquals(new ArrayList<SpatialData>(), spatialDataListCaptor.getValue());
+        List<SpatialData> spatialDataList = new ArrayList<>();
+        spatialDataList.add(mockedSpatialData);
+        spatialDataList.add(mockedSpatialData);
+        assertEquals(spatialDataList, spatialDataListCaptor.getValue());
     }
 
     @Test
     public void cancelPanoramaUpdateResetsBuilder() {
         panoramaRenderer.cancelPanoramaUpdate();
         assertTrue(PanoramaRenderer.NextPanoramaDataBuilder.isReset());
+    }
+
+    @Test
+    public void updateCameraIsCorrect() {
+        Camera mockedCamera = Mockito.mock(Camera.class);
+
+        inject(panoramaRenderer, mockedCamera, "mCamera");
+
+        panoramaRenderer.updateCameraRotation(-100, 0);
+        panoramaRenderer.setSensorRotation(new Quaternion(0.5, 0.5, 0.5, 0.5));
+        panoramaRenderer.updateCamera();
+        verify(mockedCamera, times(1)).setCameraOrientation(quaternionCaptor.capture());
+        assertQuaternionEquals(panoramaRenderer.getSensorRot().multiply(panoramaRenderer.getUserRotation()),
+                quaternionCaptor.getValue());
+    }
+
+    @Test
+    public void getSensorRotPerformsDefensiveCopying() {
+        Quaternion rot = panoramaRenderer.getSensorRot();
+        rot.multiply(123);
+
+        assertQuaternionNotEquals(panoramaRenderer.getSensorRot(), rot);
+    }
+
+    @Test
+    public void setSensorRotationIsCorrect() {
+
+        Quaternion q = new Quaternion().fromAngleAxis(Vector3.Axis.Y, 120);
+
+        panoramaRenderer.setSensorRotation(q);
+
+        assertQuaternionEquals(q, panoramaRenderer.getSensorRot());
+        assertNotSame(q, panoramaRenderer.getSensorRot());
+    }
+
+    @Test
+    public void getPanoramaShereIsCorrect() {
+        new InjectedRendererBuilder(panoramaRenderer).withMockedPanoSphere();
+        assertSame(mockedSphere, panoramaRenderer.getPanoramaSphere());
+    }
+
+    @Test
+    public void getObjectAtIsCorrect() {
+        ObjectColorPicker mockedPicker = Mockito.mock(ObjectColorPicker.class);
+        inject(panoramaRenderer, mockedPicker, "mPicker");
+        panoramaRenderer.getObjectAt(34, 56);
+
+        verify(mockedPicker, times(1)).getObjectAt(floatCaptor1.capture(), floatCaptor2.capture());
+        assertEquals(34.0f, floatCaptor1.getValue());
+        assertEquals(56.0f, floatCaptor2.getValue());
+    }
+
+    @Test
+    public void onRenderCallsRespectiveRenderLogic() {
+
+        RenderingLogic testLogic = new RenderingLogic() {
+            @Override
+            public void render() {
+                callFromTestLogic();
+            }
+        };
+
+        inject(panoramaRenderer, testLogic, "mRenderLogic");
+        panoramaRenderer.onRender(0, 0);
+        assertTrue(testLogicIsCalled);
+    }
+
+    private void callFromTestLogic() {
+        testLogicIsCalled = true;
+    }
+
+    @Test
+    public void onRenderUpdatesCameraOnCorrectRenderLogics() {
+
+        modifyUserRot(35);
+        panoramaRenderer.setSensorRotation(new Quaternion().fromAngleAxis(Vector3.Axis.Z, 47));
+
+        Quaternion ref = panoramaRenderer.getSensorRot().multiply(panoramaRenderer.getUserRotation());
+
+        Camera mockedCamera = Mockito.mock(Camera.class);
+        when(mockedCamera.getPosition()).thenReturn(new Vector3(1, 0, 0));
+
+
+        inject(panoramaRenderer, mockedCamera, "mCamera");
+        //Idle sensor + user
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, times(1)).setCameraOrientation(quaternionCaptor.capture());
+        assertQuaternionEquals(ref, quaternionCaptor.getValue());
+
+        //Sliding to text means special rotation
+        new InjectedRendererBuilder(panoramaRenderer).withSlidingToTextRendering();
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, times(2)).setCameraOrientation(quaternionCaptor.capture());
+        assertQuaternionNotEquals(ref, quaternionCaptor.getValue());
+
+        //Sliding out, special rotation
+        new InjectedRendererBuilder(panoramaRenderer).withSlidingOutOfTextRendering();
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, times(3)).setCameraOrientation(quaternionCaptor.capture());
+        assertQuaternionNotEquals(ref, quaternionCaptor.getValue());
+
+        //All other should update camera
+        new InjectedRendererBuilder(panoramaRenderer).withSlidingRendering();
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, times(4)).setCameraOrientation(quaternionCaptor.capture());
+        assertQuaternionEquals(ref, quaternionCaptor.getValue());
+
+        PanoramaRenderer.NextPanoramaDataBuilder.setNextPanoId(1);
+        PanoramaRenderer.NextPanoramaDataBuilder.setNextPanoBitmap(mockedBitmap);
+        new InjectedRendererBuilder(panoramaRenderer).withTransitioningRendering().withMockedPanoSphere();
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, times(5)).setCameraOrientation(quaternionCaptor.capture());
+        assertQuaternionEquals(ref, quaternionCaptor.getValue());
+
+    }
+
+    @Test
+    public void onObjectPickedIsCorrect() {
+        PanoramaObject mockPanoObject = Mockito.mock(PanoramaObject.class);
+        PanoramaObject mockPanoObject2 = Mockito.mock(PanoramaObject.class);
+        when(mockPanoObject.getWorldPosition()).thenReturn(new Vector3(0, 0, 0));
+
+        panoramaRenderer.onObjectPicked(mockPanoObject);
+        verify(mockPanoObject, times(1)).reactWith(panoramaRenderer);
+
+        panoramaRenderer.zoomOnText(0, 0, 0);
+        panoramaRenderer.onObjectPicked(mockPanoObject);
+        verify(mockPanoObject, times(2)).reactWith(panoramaRenderer);
+
+        panoramaRenderer.zoomOut(0);
+        panoramaRenderer.onObjectPicked(mockPanoObject2);
+        verifyNoMoreInteractions(mockPanoObject2);
+
+        //TODO: complete with more rendering logics
+    }
+
+    @Test
+    public void idleRenderingIsCorrect() {
+        //Compute 3 secs worth of frames
+        for (int i = 0; i < 60 * 3; i++)
+            panoramaRenderer.onRender(i, 1);
+        assertNoSideEffects();
+    }
+
+    @Test
+    public void transitioningRenderingIsCorrect() {
+        setupPanoramaBuilder();
+        new InjectedRendererBuilder(panoramaRenderer).withTransitioningRendering()
+                .withMockedPanoSphere()
+                .withMockedCamera();
+        panoramaRenderer.onRender(0, 0);
+
+        verify(mockedCamera, times(1)).setPosition(PanoramaRenderer.ORIGIN);
+        assertEquals(panoramaRenderer.getIdleRendering(), panoramaRenderer.getCurrentRenderingLogic());
+
+    }
+
+    @Test
+    public void slidingRenderingIsCorrect() {
+        Vector3 target = new Vector3(0, 0, 0);
+        Vector3 pos1 = new Vector3(5, 0, 0);
+        Vector3 pos2 = new Vector3(20, 0, 0);
+        Vector3 pos3 = new Vector3(CAM_TRAVEL_DISTANCE, 0, 0);
+        //Simulate a movement
+        when(mockedCamera.getPosition()).thenReturn(pos1, pos1, pos2, pos2, pos3, pos3);
+
+        new InjectedRendererBuilder(panoramaRenderer)
+                .withSlidingRendering()
+                .withMockedCamera();
+
+        panoramaRenderer.resetTargetPos();
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, atLeastOnce()).setPosition(vectorCaptor.capture());
+        assertEquals(pos1.lerp(target, LERP_FACTOR), vectorCaptor.getValue());
+
+        panoramaRenderer.resetTargetPos();
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, atLeastOnce()).setPosition(vectorCaptor.capture());
+        assertEquals(pos2.lerp(target, LERP_FACTOR), vectorCaptor.getValue());
+
+        //Camera is at destination, but pano data is not ready
+        panoramaRenderer.onRender(0, 0);
+        assertEquals(panoramaRenderer.getSlidingRendering(), panoramaRenderer.getCurrentRenderingLogic());
+        //Now should be ready
+        setupPanoramaBuilder();
+        panoramaRenderer.onRender(0, 0);
+        assertEquals(panoramaRenderer.getTransitioningRendering(), panoramaRenderer.getCurrentRenderingLogic());
+    }
+
+    @Test
+    public void slidingToTextRenderingIsCorrect() {
+        Vector3 target = new Vector3(0, 0, 0);
+        Vector3 pos1 = new Vector3(1, 0, 0);
+        Vector3 pos2 = new Vector3(DISTANCE_TO_DISPLAY, 0, 0);
+        //Simulate a movement
+        when(mockedCamera.getPosition()).thenReturn(pos1, pos1, pos2, pos2);
+
+        new InjectedRendererBuilder(panoramaRenderer)
+                .withMockedCamera()
+                .withSlidingToTextRendering();
+
+        panoramaRenderer.resetTargetPos();
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, atLeastOnce()).setPosition(vectorCaptor.capture());
+        assertEquals(pos1.lerp(target, LERP_FACTOR), vectorCaptor.getValue());
+
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, atLeastOnce()).getPosition();
+        verify(mockedCamera, atLeastOnce()).setCameraOrientation(any(Quaternion.class));
+        verifyNoMoreInteractions(mockedCamera);
+    }
+
+    @Test
+    public void slidingOutOfTextRenderingIsCorrect() {
+        Vector3 pos1 = new Vector3(DISTANCE_TO_DISPLAY, 0, 0);
+        Vector3 pos2 = new Vector3(0, 0, 0);
+        //Simulate a movement
+        when(mockedCamera.getPosition()).thenReturn(pos1, pos1, pos2, pos2);
+
+        new InjectedRendererBuilder(panoramaRenderer)
+                .withMockedCamera()
+                .withSlidingOutOfTextRendering()
+                .withNeutralTargetPos();
+
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, atLeastOnce()).setPosition(vectorCaptor.capture());
+        assertEquals(pos1.lerp(ORIGIN, LERP_FACTOR * 5), vectorCaptor.getValue());
+
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, atLeastOnce()).getPosition();
+        verify(mockedCamera, atLeastOnce()).setCameraOrientation(any(Quaternion.class));
+        verifyNoMoreInteractions(mockedCamera);
+
+        assertEquals(panoramaRenderer.getIdleRendering(), panoramaRenderer.getCurrentRenderingLogic());
+    }
+
+    @Test
+    public void testFetchPhotoTask() {
+        ImageMgmt mockedImageManager = Mockito.mock(ImageMgmt.class);
+
+        inject(panoramaRenderer, mockedImageManager, "mImageManager");
+
+        //Verify behavior for success
+        panoramaRenderer.initiatePanoramaTransition("dummyUrl", 987);
+        verify(mockedImageManager, atLeastOnce())
+                .getBitmapFromUrl(any(Context.class), anyString(), picassoTargetCaptor.capture());
+
+        Target picassoTarget = picassoTargetCaptor.getValue();
+        picassoTarget.onBitmapLoaded(mockedBitmap, Picasso.LoadedFrom.DISK);
+
+        Tuple<Integer, Bitmap> t = PanoramaRenderer.NextPanoramaDataBuilder.build();
+        assertEquals(Integer.valueOf(987), t.getX());
+        assertEquals(mockedBitmap, t.getY());
+
+        //Verify behavior for failure
+        panoramaRenderer.initiatePanoramaTransition("dummyUrl", 987);
+        verify(mockedImageManager, atLeastOnce())
+                .getBitmapFromUrl(any(Context.class), anyString(), picassoTargetCaptor.capture());
+        picassoTarget = picassoTargetCaptor.getValue();
+        Drawable mockedDrawable = Mockito.mock(Drawable.class);
+        picassoTarget.onBitmapFailed(mockedDrawable);
+        verifyNoMoreInteractions(mockedDrawable);
+    }
+
+    @Test
+    public void unusedMethodsHaveNoSideEffect() {
+        panoramaRenderer.onNoObjectPicked();
+        panoramaRenderer.onOffsetsChanged(0, 0, 0, 0, 0, 0);
+
+        MotionEvent mockedEvent = Mockito.mock(MotionEvent.class);
+        panoramaRenderer.onTouchEvent(mockedEvent);
+
+        verifyNoMoreInteractions(mockedEvent);
+        assertNoSideEffects();
+    }
+
+    private void assertNoSideEffects() {
+        verifyNoMoreInteractions(mockedHouseManager);
+        verifyNoMoreInteractions(mockedSensor);
+        verifyNoMoreInteractions(mockedSphere);
+        verifyNoMoreInteractions(mockedCamera);
     }
 
     /**
@@ -263,6 +577,30 @@ public class RendererTests {
         }
     }
 
+    private void setupPanoramaBuilder() {
+        PanoramaRenderer.NextPanoramaDataBuilder.setNextPanoId(1);
+        PanoramaRenderer.NextPanoramaDataBuilder.setNextPanoBitmap(mockedBitmap);
+    }
+
+    /**
+     * Rotates the camera of a given angle and return a reference quaternion
+     *
+     * @param angleChange
+     * @return
+     */
+    private Quaternion modifyUserRot(double angleChange) {
+        //Rotate the camera counter clockwise to simulate a swipe to the right
+        Quaternion newRot = panoramaRenderer.getUserRotation().
+                multiplyLeft(new Quaternion().fromAngleAxis(Vector3.Axis.Y, -angleChange));
+        /*
+             formula
+             angle = (Math.cos(yaw) * xComp) + (Math.sin(yaw) * yComp);
+         */
+        float dx = angleToPixelDelta(angleChange / Math.cos(panoramaRenderer.getDeviceYaw()), true);
+        panoramaRenderer.updateCameraRotation(dx, 0);
+        return newRot;
+    }
+
     private <E, S> E inject(E intoObj, S injection, String fieldName) {
         try {
             Field valueField = intoObj.getClass().getDeclaredField(fieldName);
@@ -277,5 +615,52 @@ public class RendererTests {
         }
 
         return intoObj;
+    }
+
+    private class InjectedRendererBuilder {
+
+        private PanoramaRenderer pr;
+
+        public InjectedRendererBuilder() {
+            pr = new PanoramaRenderer(spiedContext, roboDisplay, mockedHouseManager);
+        }
+
+        public InjectedRendererBuilder(PanoramaRenderer pr) {
+            this.pr = pr;
+        }
+
+        public InjectedRendererBuilder withSlidingRendering() {
+            inject(pr, pr.getSlidingRendering(), "mRenderLogic");
+            return this;
+        }
+
+        public InjectedRendererBuilder withTransitioningRendering() {
+            inject(pr, pr.getTransitioningRendering(), "mRenderLogic");
+            return this;
+        }
+
+        public InjectedRendererBuilder withSlidingToTextRendering() {
+            inject(pr, pr.getSlidingToTextRendering(), "mRenderLogic");
+            return this;
+        }
+
+        public InjectedRendererBuilder withSlidingOutOfTextRendering() {
+            inject(pr, pr.getSlidingOutOfTextRendering(), "mRenderLogic");
+            return this;
+        }
+
+        public InjectedRendererBuilder withMockedPanoSphere() {
+            inject(pr, mockedSphere, "mPanoSphere");
+            return this;
+        }
+
+        public InjectedRendererBuilder withMockedCamera() {
+            inject(pr, mockedCamera, "mCamera");
+            return this;
+        }
+
+        public InjectedRendererBuilder withNeutralTargetPos() {
+            return this;
+        }
     }
 }

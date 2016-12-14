@@ -1,20 +1,15 @@
 package ch.epfl.sweng.project;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.rajawali3d.math.vector.Vector3;
-import org.rajawali3d.util.ObjectColorPicker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +25,6 @@ import ch.epfl.sweng.project.engine3d.components.PanoramaTransitionObject;
 
 import static ch.epfl.sweng.project.util.TestUtilityFunctions.wait1s;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -55,7 +47,6 @@ public class PanoramaUITests {
 
     @After
     public void closeTests() {
-        sleepDuring(2000);
         mActivityRule.getActivity().getAssociatedRenderer().onPause();
         mActivityRule.getActivity().finish();
         wait1s(TAG);
@@ -75,17 +66,11 @@ public class PanoramaUITests {
         mActivityRule.launchActivity(intent);
         mRenderer = mActivityRule.getActivity().getAssociatedRenderer();
 
-        sleepDuring(3000);
-
         testPanoramaSphere();
         panoramaTransitionObjectsThrowsException();
-        testRenderingLogics();
-        //testFetchPhotoTask(TEST_URL);
-        //testFetchPhotoTask("idontexpectthistobeavalidurl");
     }
 
     private void testPanoramaSphere() {
-        ObjectColorPicker cp = new ObjectColorPicker(mRenderer);
         PanoramaSphere panoSphere = mRenderer.getPanoramaSphere();
         List<SpatialData> l = new ArrayList<>();
 
@@ -113,85 +98,4 @@ public class PanoramaUITests {
         }
     }
 
-    private void testRenderingLogics() {
-        //Allows the renderer to settle
-        sleepDuring(1500);
-
-        //Compute 120 frames in idle
-        for (int i = 0; i < 120; i++) {
-            computeFrame();
-        }
-
-        PanoramaObject dummyTransition = new PanoramaTransitionObject(0, 0, TEST_ID, TEST_URL);
-        dummyTransition.setPosition(new Vector3(100, 0, 0));
-
-        //Check if goes out from idle mode
-        PanoramaRenderer.RenderingLogic renderingLogic = mRenderer.getCurrentRenderingLogic();
-        PanoramaRenderer.RenderingLogic initialRenderingLogic = renderingLogic;
-
-        assertSame(renderingLogic, mRenderer.getCurrentRenderingLogic());
-        mRenderer.onObjectPicked(dummyTransition);
-        mRenderer.cancelPanoramaUpdate();
-        assertNotSame(renderingLogic, mRenderer.getCurrentRenderingLogic());
-
-        //Compute 60 frames in transition
-        for (int i = 0; i < 60; i++) {
-            computeFrame();
-            Log.i(TAG, mRenderer.getCurrentCamera().getPosition().toString());
-        }
-
-        //Check if camera moved the expected amout
-        assertTrue(mRenderer.getCurrentCamera().getPosition().length() > PanoramaRenderer.CAM_TRAVEL_DISTANCE);
-        assertTrue(mRenderer.getCurrentCamera().getPosition().length() < PanoramaRenderer.CAM_TRAVEL_DISTANCE + 10);
-
-        //Prepare for panorama transition
-        Bitmap b = BitmapFactory.decodeResource(mActivityRule.getActivity().getResources(), R.drawable.panotest);
-
-        assertFalse(PanoramaRenderer.NextPanoramaDataBuilder.isReady());
-        PanoramaRenderer.NextPanoramaDataBuilder.setNextPanoBitmap(b);
-        PanoramaRenderer.NextPanoramaDataBuilder.setNextPanoId(TEST_ID);
-        assertTrue(PanoramaRenderer.NextPanoramaDataBuilder.isReady());
-
-        renderingLogic = mRenderer.getCurrentRenderingLogic();
-        assertSame(renderingLogic, mRenderer.getCurrentRenderingLogic());
-        mRenderer.onRender(1016, 16); //SLIDING -> TRANSITIONING
-        mRenderer.onRender(1032, 16); //TRANSITIONING: RESET CAM -> IDLE
-        assertNotSame(renderingLogic, mRenderer.getCurrentRenderingLogic());
-
-        //Camera should be at origin again
-        assertEquals(PanoramaRenderer.ORIGIN, mRenderer.getCurrentCamera().getPosition());
-        assertTrue(PanoramaRenderer.NextPanoramaDataBuilder.isReset());
-
-        //Rendering should be at idle again
-        mRenderer.onRender(1048, 16);
-        assertSame(initialRenderingLogic, mRenderer.getCurrentRenderingLogic());
-    }
-
-    private void testFetchPhotoTask(String url) {
-        sleepDuring(1000);
-        int timeout = 100;
-        PanoramaRenderer.NextPanoramaDataBuilder.resetData();
-        mRenderer.initiatePanoramaTransition(url, TEST_ID);
-
-        while (!PanoramaRenderer.NextPanoramaDataBuilder.isReset() && timeout > 0) {
-            Log.d(TAG, "Waiting 100ms for fetch image task to be completed");
-            timeout -= 1;
-            sleepDuring(100);
-        }
-        assertTrue(timeout > 0);
-    }
-
-    private void computeFrame() {
-        elapsedTime += FRAME_TIME_MILLIS;
-        sleepDuring(FRAME_TIME_MILLIS);
-        mRenderer.onRender(elapsedTime, FRAME_TIME_MILLIS);
-    }
-
-    private void sleepDuring(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 }
