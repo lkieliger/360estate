@@ -11,7 +11,7 @@ import org.rajawali3d.math.vector.Vector3;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
 
-public final class PanoramaInfoDisplay extends PanoramaObject {
+public class PanoramaInfoDisplay extends PanoramaObject {
 
     private static final String TAG = "PanoramaInfoDisplay";
     private final double theta;

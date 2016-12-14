@@ -99,7 +99,8 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             //Log.i(TAG, "Rendering logic is set to transitioning");
             updateScene();
             mCamera.setPosition(ORIGIN);
-            mRenderLogic = mIdleRendering;
+            mRenderLogic = getIdleRendering(
+            );
         }
     };
     /**
@@ -118,7 +119,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             }
 
             if (travellingLength >= CAM_TRAVEL_DISTANCE && NextPanoramaDataBuilder.isReady()) {
-                mRenderLogic = mTransitioningRendering;
+                mRenderLogic = getTransitioningRendering();
             }
         }
     };
@@ -149,7 +150,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
                 Vector3 pos = new Vector3(mCamera.getPosition());
                 mCamera.setPosition(pos.lerp(ORIGIN, LERP_FACTOR * 5));
             } else {
-                mRenderLogic = mIdleRendering;
+                mRenderLogic = getIdleRendering();
                 Log.d(TAG, "Movement Terminated");
             }
             Quaternion q = new Quaternion(mSensorRot);
@@ -196,7 +197,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
         mPanoSphere = null;
 
-        mRenderLogic = mIdleRendering;
+        mRenderLogic = getIdleRendering();
         mTargetPos = ORIGIN;
 
         mPicker = new ObjectColorPicker(this);
@@ -217,7 +218,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
      */
     public void initiatePanoramaTransition(final String url, final int id) {
         Log.d(TAG, "Call to initiate panorama transition, creating new task and setting next id.");
-        mRenderLogic = mSlidingRendering;
+        mRenderLogic = getSlidingRendering();
 
         NextPanoramaDataBuilder.setNextPanoId(id);
         mImageLoadTask = new FetchPhotoTask();
@@ -238,13 +239,13 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
         Quaternion q = new Quaternion(mSensorRot);
         mHelperQuaternion = q.multiply(mUserRot);
-        mRenderLogic = mSlidingToTextRendering;
+        mRenderLogic = getSlidingToTextRendering();
     }
 
     public void zoomOut(double angle) {
         Log.d(TAG, "Moving Out");
         mHelperQuaternion = Quaternion.getIdentity().fromEuler(angle * 180 / Math.PI + 90, 0, 0);
-        mRenderLogic = mSlidingOutOfTextRendering;
+        mRenderLogic = getSlidingOutOfTextRendering();
     }
 
 
@@ -257,7 +258,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
         if (b == null) {
             Log.e(TAG, "There was a problem with the PhotoFetch task, returned bitmap was null");
             NextPanoramaDataBuilder.resetData();
-            mRenderLogic = mIdleRendering;
+            mRenderLogic = getIdleRendering();
         } else {
             Log.d(TAG, "Call to prepare scene, assigning next bitmap.");
             NextPanoramaDataBuilder.setNextPanoBitmap(b);
@@ -381,6 +382,26 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
 
     public void getObjectAt(float x, float y) {
         mPicker.getObjectAt(x, y);
+    }
+
+    public RenderingLogic getSlidingOutOfTextRendering() {
+        return mSlidingOutOfTextRendering;
+    }
+
+    public RenderingLogic getSlidingToTextRendering() {
+        return mSlidingToTextRendering;
+    }
+
+    public RenderingLogic getSlidingRendering() {
+        return mSlidingRendering;
+    }
+
+    public RenderingLogic getIdleRendering() {
+        return mIdleRendering;
+    }
+
+    public RenderingLogic getTransitioningRendering() {
+        return mTransitioningRendering;
     }
 
     @Override

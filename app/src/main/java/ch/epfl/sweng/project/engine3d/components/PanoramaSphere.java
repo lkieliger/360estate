@@ -21,7 +21,7 @@ import ch.epfl.sweng.project.engine3d.StringAdapter;
 /**
  * Represent the panoramic Spere containing the image.
  */
-public final class PanoramaSphere extends Sphere {
+public class PanoramaSphere extends Sphere {
 
     public static final String TEXTURE_TAG = "PhotoTexture";
     private static final int INITIAL_COMPONENTLIST_SIZE = 10;
@@ -145,7 +145,7 @@ public final class PanoramaSphere extends Sphere {
         int widthInfoClose = 5;
 
         PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
-                , heightInfoDisplay, bitmap, color, null);
+                , heightInfoDisplay, bitmap, null);
 
         int shiftY = (int) ((heightInfoDisplay + heightInfoClose + 4) / 2.0);
 
