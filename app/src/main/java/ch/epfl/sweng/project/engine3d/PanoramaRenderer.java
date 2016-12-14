@@ -25,18 +25,16 @@ import org.rajawali3d.renderer.Renderer;
 import org.rajawali3d.util.ObjectColorPicker;
 import org.rajawali3d.util.OnObjectPickedListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.data.ImageMgmt;
 import ch.epfl.sweng.project.data.panorama.HouseManager;
 import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
 import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
-import ch.epfl.sweng.project.engine3d.components.PanoramaInfoCloser;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoDisplay;
+import ch.epfl.sweng.project.engine3d.components.PanoramaInfoObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
 import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
@@ -56,10 +54,9 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public static final Vector3 ORIGIN = new Vector3(0, 0, 0);
     public static final int TEXTURE_COLOR = 0x0022c8ff;
     public static final double DISTANCE_TO_DISPLAY = 9;
-    private static final double LERP_FACTOR = 0.03;
+    public static final double LERP_FACTOR = 0.03;
     private static final int COLOR_CLOSE = Color.rgb(255, 25, 25);
 
-    public static final double LERP_FACTOR = 0.03;
     private final String TAG = "Renderer";
     private final ImageMgmt mImageManager;
     private final Camera mCamera;
@@ -144,7 +141,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private RenderingLogic mSlidingToTextRendering = new RenderingLogic() {
         @Override
         public void render() {
-            double distanceOfDisplay = 9;
             double travellingLength = mCamera.getPosition().length();
 
             if (travellingLength < DISTANCE_TO_DISPLAY) {
@@ -177,7 +173,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         }
     };
 
-    private RenderingLogic mRotateObject = new RenderingLogic() {
+    private RenderingLogic mRotateObjectRendering = new RenderingLogic() {
         @Override
         public void render() {
             Log.i(TAG, "Rotate Object in progress");
@@ -197,12 +193,12 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         }
     };
 
-    private RenderingLogic mRotateObjectAndZoomOut = new RenderingLogic() {
+    private RenderingLogic mRotateObjectAndZoomOutRendering = new RenderingLogic() {
         @Override
         public void render() {
             Log.i(TAG, "Rotate Object And Zoom Out");
             if (rotationTime) {
-                mRotateObject.render();
+                mRotateObjectRendering.render();
                 if (mRenderLogic == mIdleRendering) {
                     mRenderLogic = mSlidingOutOfTextRendering;
                 }
@@ -210,7 +206,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             } else {
                 mSlidingOutOfTextRendering.render();
                 if (mRenderLogic == mIdleRendering) {
-                    mRenderLogic = mRotateObject;
+                    mRenderLogic = mRotateObjectRendering;
                 }
                 rotationTime = true;
             }
@@ -228,9 +224,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mImageManager = new ImageMgmt();
 
         if (rotSensor == null) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "No rotSensor available");
-            }
+            Log.d(TAG, "No rotSensor available");
+
             mRotListener = null;
             mRotSensor = null;
             mRotSensorAvailable = false;
@@ -285,7 +280,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void displayText(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
         Log.d(TAG, "Call to display text information.");
         //noinspection deprecation
-        mPanoramaSphere.setTextToDisplay(textInfo, theta, panoramaInfoObject, mPicker);
+        mPanoSphere.setTextToDisplay(textInfo, theta, panoramaInfoObject);
     }
 
     public void deleteInfo(PanoramaInfoDisplay panoramaInfoDisplay) {
@@ -303,18 +298,18 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             startingColor = TEXTURE_COLOR;
             finishColor = COLOR_CLOSE;
         }
-        mRenderLogic = mRotateObject;
+        mRenderLogic = mRotateObjectRendering;
     }
 
     public void zoomOutAndRotate(double theta, PanoramaInfoObject panoramaInfoObject) {
         rotateDisplayInfoObject(panoramaInfoObject);
         zoomOut(theta);
-        mRenderLogic = mRotateObjectAndZoomOut;
+        mRenderLogic = mRotateObjectAndZoomOutRendering;
     }
 
     public void zoomOnText(double angle, double x, double z) {
         mTargetPos = mTargetPos.setAll(x, 25, z);
-        if (BuildConfig.DEBUG) Log.d(TAG, "Moving to:" + x + " , " + z);
+        Log.d(TAG, "Moving to:" + x + " , " + z);
 
         mTargetQuaternion = Quaternion.getIdentity().fromEuler(angle * 180 / Math.PI + 90, 0, 0);
 
@@ -353,9 +348,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void updateScene() {
 
         Tuple<Integer, Bitmap> panoData = NextPanoramaDataBuilder.build();
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Call to update scene, changing panorama photo and attaching new components." +
-                    " Pano id is: " + panoData.getX());
+        Log.d(TAG, "Call to update scene, changing panorama photo and attaching new components." +
+                " Pano id is: " + panoData.getX());
 
         mPanoSphere.detachPanoramaComponents();
         mPanoSphere.setPhotoTexture(panoData.getY());
@@ -489,6 +483,14 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         return mTransitioningRendering;
     }
 
+    public RenderingLogic getRotateObjectAndZoomOutRendering() {
+        return mRotateObjectAndZoomOutRendering;
+    }
+
+    public RenderingLogic getRotateObjectRendering() {
+        return mRotateObjectRendering;
+    }
+
     @Override
     public void initScene() {
 
@@ -508,10 +510,10 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     @Override
     public void onRender(final long elapsedTime, final double deltaTime) {
-        super.onRender(ellapsedRealTime, deltaTime);
+        super.onRender(elapsedTime, deltaTime);
         mRenderLogic.render();
         if (mRenderLogic != mSlidingToTextRendering && mRenderLogic != mSlidingOutOfTextRendering && mRenderLogic !=
-                mRotateObjectAndZoomOut) {
+                mRotateObjectAndZoomOutRendering) {
             updateCamera();
         }
     }
@@ -644,7 +646,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         }
 
         private static void logStatus() {
-            if (BuildConfig.DEBUG) Log.i(TAG, "ID: " + nextPanoId + ", Bitmap@" + nextPanoBitmap);
+            Log.i(TAG, "ID: " + nextPanoId + ", Bitmap@" + nextPanoBitmap);
         }
     }
 

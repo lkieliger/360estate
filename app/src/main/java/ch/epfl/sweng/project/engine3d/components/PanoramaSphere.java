@@ -152,11 +152,11 @@ public class PanoramaSphere extends Sphere {
 
         panoramaInfoDisplay.setPanoramaInfoObject(panoramaInfoObject);
         panoramaInfoObject.setPanoramaInfoDisplay(panoramaInfoDisplay);
-        attachPanoramaComponent(panoramaInfoDisplay, picker);
+        attachPanoramaComponent(panoramaInfoDisplay);
     }
 
-    public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay, ObjectColorPicker picker) {
-        detachPanoramaComponent(picker, panoramaInfoDisplay);
+    public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay) {
+        detachPanoramaComponent(panoramaInfoDisplay);
     }
 
     /**

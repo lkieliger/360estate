@@ -43,12 +43,13 @@ import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer.RenderingLogic;
 import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
-import ch.epfl.sweng.project.engine3d.components.PanoramaInfoCloser;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoDisplay;
+import ch.epfl.sweng.project.engine3d.components.PanoramaInfoObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
 import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
 import ch.epfl.sweng.project.util.Tuple;
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.CAM_TRAVEL_DISTANCE;
 import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.DISTANCE_TO_DISPLAY;
@@ -96,8 +97,6 @@ public class RendererTests {
     @Captor
     private ArgumentCaptor<PanoramaInfoDisplay> infoDisplayCaptor;
     @Captor
-    private ArgumentCaptor<PanoramaInfoCloser> infoCloserCaptor;
-    @Captor
     private ArgumentCaptor<List<SpatialData>> spatialDataListCaptor;
     @Captor
     private ArgumentCaptor<Integer> intCaptor;
@@ -111,6 +110,8 @@ public class RendererTests {
     private ArgumentCaptor<Float> floatCaptor2;
     @Captor
     private ArgumentCaptor<Vector3> vectorCaptor;
+    @Captor
+    private ArgumentCaptor<Double> doubleCaptor;
     @Captor
     private ArgumentCaptor<Target> picassoTargetCaptor;
 
@@ -214,15 +215,32 @@ public class RendererTests {
     @Test
     public void deleteInfoIsCorrect() {
         PanoramaInfoDisplay mockedInfoDisplay = Mockito.mock(PanoramaInfoDisplay.class);
-        PanoramaInfoCloser mockedInfoCloser = Mockito.mock(PanoramaInfoCloser.class);
 
         new InjectedRendererBuilder(panoramaRenderer).withMockedPanoSphere();
 
-        panoramaRenderer.deleteInfo(mockedInfoDisplay, mockedInfoCloser);
-        verify(mockedSphere).deleteTextToDisplay(infoDisplayCaptor.capture(),
-                infoCloserCaptor.capture());
+        panoramaRenderer.deleteInfo(mockedInfoDisplay);
+        verify(mockedSphere).deleteTextToDisplay(infoDisplayCaptor.capture());
         assertEquals(mockedInfoDisplay, infoDisplayCaptor.getValue());
-        assertEquals(mockedInfoCloser, infoCloserCaptor.getValue());
+    }
+
+    @Test
+    public void rotateDisplayInfoObjectIsCorrect() {
+        PanoramaInfoObject mockedPanoramaInfo = Mockito.mock(PanoramaInfoObject.class);
+        when(mockedPanoramaInfo.isDisplay()).thenReturn(true, false);
+
+        panoramaRenderer.rotateDisplayInfoObject(mockedPanoramaInfo);
+        panoramaRenderer.rotateDisplayInfoObject(mockedPanoramaInfo);
+        assertEquals(panoramaRenderer.getRotateObjectRendering(), panoramaRenderer.getCurrentRenderingLogic());
+    }
+
+    @Test
+    public void zoomOutAndRotateIsCorrect() {
+        PanoramaInfoObject mockedPanoramaInfo = Mockito.mock(PanoramaInfoObject.class);
+
+        panoramaRenderer.zoomOutAndRotate(0, mockedPanoramaInfo);
+        verify(mockedPanoramaInfo, atLeastOnce()).isDisplay();
+        assertEquals(panoramaRenderer.getRotateObjectAndZoomOutRendering(),
+                panoramaRenderer.getCurrentRenderingLogic());
     }
 
     @Test
@@ -516,6 +534,38 @@ public class RendererTests {
     }
 
     @Test
+    public void rotateObjectRenderingIsCorrect() {
+        PanoramaInfoObject mockedObjectToRotate = Mockito.mock(PanoramaInfoObject.class);
+        List<Double> refVal1s = Arrays.asList(new Double[]{-1.0, -2.0, -3.0, 180.0 / (4.0 * 15)});
+        when(mockedObjectToRotate.getX()).thenReturn(1.0, 1.1);
+        when(mockedObjectToRotate.getY()).thenReturn(2.0, 2.1);
+        when(mockedObjectToRotate.getZ()).thenReturn(3.0, 3.1);
+        inject(panoramaRenderer, mockedObjectToRotate, "objectToRotate");
+
+        new InjectedRendererBuilder(panoramaRenderer).withRotateObjectRendering();
+
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedObjectToRotate).rotate(doubleCaptor.capture(),
+                doubleCaptor.capture(),
+                doubleCaptor.capture(),
+                doubleCaptor.capture());
+        List<Double> vals = doubleCaptor.getAllValues();
+        verify(mockedObjectToRotate, atLeastOnce()).setColor(anyInt());
+        assertEquals(refVal1s, vals);
+
+        for (int i = 1; i < 15; i++) {
+            panoramaRenderer.onRender(0, 0);
+        }
+        assertEquals(panoramaRenderer.getIdleRendering(), panoramaRenderer.getCurrentRenderingLogic());
+    }
+
+    @Test
+    public void rotateObjectAndZoomOutRenderingIsCorrect() {
+
+        //TODO: refactor rendering logic so that is it testable
+    }
+
+    @Test
     public void testFetchPhotoTask() {
         ImageMgmt mockedImageManager = Mockito.mock(ImageMgmt.class);
 
@@ -646,6 +696,16 @@ public class RendererTests {
 
         public InjectedRendererBuilder withSlidingOutOfTextRendering() {
             inject(pr, pr.getSlidingOutOfTextRendering(), "mRenderLogic");
+            return this;
+        }
+
+        public InjectedRendererBuilder withRotateObjectRendering() {
+            inject(pr, pr.getRotateObjectRendering(), "mRenderLogic");
+            return this;
+        }
+
+        public InjectedRendererBuilder withRotateObjectAndZoomOutRendering() {
+            inject(pr, pr.getRotateObjectAndZoomOutRendering(), "mRenderLogic");
             return this;
         }
 
