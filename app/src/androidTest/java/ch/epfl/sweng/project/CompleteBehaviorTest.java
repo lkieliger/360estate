@@ -192,6 +192,7 @@ public class CompleteBehaviorTest {
         pressBack();
 
         onView(withId(R.id.FavoritesButton)).perform(click());
+        waitNms(TAG, 500);
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
 
         onView(withId(R.id.addToFavorites)).perform(click());
@@ -226,7 +227,7 @@ public class CompleteBehaviorTest {
         img0.perform(new CustomClick());
 
         pressBack();
-        waitNms(TAG, 5000);
+        waitNms(TAG, 4000);
 
         waitForIdNms(R.id.action_launch_panorama, TimeUnit.SECONDS.toMillis(2), isCompletelyDisplayed());
         onView(withId(R.id.action_launch_panorama)).perform(click());
