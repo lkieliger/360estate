@@ -16,21 +16,20 @@ public class PanoramaInfoDisplay extends PanoramaObject {
     private static final String TAG = "PanoramaInfoDisplay";
     private final double theta;
     private boolean isFocused;
-    private PanoramaInfoCloser panoramaInfoCloser;
+    private PanoramaInfoObject panoramaInfoObject;
 
 
     public PanoramaInfoDisplay(double theta, double phi, int width, int height, Bitmap bitmap
-            , PanoramaInfoCloser panoramaInfoCloser) {
+            , PanoramaInfoObject panoramaInfoObject) {
         super(theta, phi, width, height, 40);
         this.theta = theta;
-        this.panoramaInfoCloser = panoramaInfoCloser;
+        this.panoramaInfoObject = panoramaInfoObject;
 
         setLookAt(new Vector3(0, 0, 0));
         Material material = new Material();
         isFocused = false;
         material.setColor(0);
         Texture texture = new Texture(TAG, bitmap);
-        enableLookAt();
 
         try {
             material.addTexture(texture);
@@ -49,14 +48,14 @@ public class PanoramaInfoDisplay extends PanoramaObject {
             p.zoomOnText(theta, getX(), getZ());
             isFocused = true;
         }
-        panoramaInfoCloser.setFocused(isFocused);
+        panoramaInfoObject.setFocused(isFocused);
     }
 
     void setFocused(boolean focused) {
         isFocused = focused;
     }
 
-    public void setPanoramaInfoCloser(PanoramaInfoCloser panoramaInfoCloser) {
-        this.panoramaInfoCloser = panoramaInfoCloser;
+    public void setPanoramaInfoObject(PanoramaInfoObject panoramaInfoObject) {
+        this.panoramaInfoObject = panoramaInfoObject;
     }
 }

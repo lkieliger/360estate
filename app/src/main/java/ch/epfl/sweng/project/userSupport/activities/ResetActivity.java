@@ -25,7 +25,6 @@ import static ch.epfl.sweng.project.util.Toaster.shortToast;
 public final class ResetActivity extends AppCompatActivity {
 
     private static final String TAG = "ResetActivity";
-    private static final int NO_EMAIL_MATCHING = 205;
     private TextView mEmail;
     private Context mAppContext;
 
@@ -56,7 +55,7 @@ public final class ResetActivity extends AppCompatActivity {
                         finish();
                     } else {
                         switch (e.getCode()) {
-                            case NO_EMAIL_MATCHING:
+                            case ParseException.EMAIL_NOT_FOUND:
                                 longToast(getApplicationContext(),
                                         getResources().getString(R.string.error_reset_no_email_matching));
                                 break;

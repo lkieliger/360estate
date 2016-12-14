@@ -134,34 +134,29 @@ public class PanoramaSphere extends Sphere {
     public void setTextToDisplay(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
 
         StringAdapter stringAdapter = new StringAdapter(textInfo);
-        int epsilon = 10;
-        int color = 0X03BBF6;
-        Bitmap bitmap = stringAdapter.textToBitmap(22, 512, epsilon);
+        int contourSize = 10;
+        int marginSize = 10;
+        int textSize = 18;
+        int widthPixels = 512;
+        int heightLimit = 512;
 
+        Bitmap bitmap = stringAdapter.textToBitmap(textSize, widthPixels, contourSize, marginSize, heightLimit);
 
         int heightInfoDisplay = getSizeFromPixels(bitmap.getHeight());
         int widthInfoDisplay = 30;
-        int heightInfoClose = 5;
-        int widthInfoClose = 5;
 
-        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
+        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.57, widthInfoDisplay
                 , heightInfoDisplay, bitmap, null);
 
-        int shiftY = (int) ((heightInfoDisplay + heightInfoClose + 4) / 2.0);
+        panoramaInfoDisplay.setY(panoramaInfoDisplay.getY() + 10);
 
-        PanoramaInfoCloser panoramaInfoCloser = new PanoramaInfoCloser(theta, 1.5, widthInfoClose,
-                heightInfoClose, panoramaInfoDisplay, panoramaInfoObject);
-
-        panoramaInfoCloser.setY(panoramaInfoCloser.getY() + shiftY);
-        panoramaInfoDisplay.setPanoramaInfoCloser(panoramaInfoCloser);
-
-        attachPanoramaComponent(panoramaInfoDisplay);
-        attachPanoramaComponent(panoramaInfoCloser);
+        panoramaInfoDisplay.setPanoramaInfoObject(panoramaInfoObject);
+        panoramaInfoObject.setPanoramaInfoDisplay(panoramaInfoDisplay);
+        attachPanoramaComponent(panoramaInfoDisplay, picker);
     }
 
-    public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser) {
-        detachPanoramaComponent(panoramaInfoDisplay);
-        detachPanoramaComponent(panoramaInfoCloser);
+    public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay, ObjectColorPicker picker) {
+        detachPanoramaComponent(picker, panoramaInfoDisplay);
     }
 
     /**
@@ -173,7 +168,7 @@ public class PanoramaSphere extends Sphere {
     private int getSizeFromPixels(int pixels) {
         int i = ((int) (Math.log(pixels) / Math.log(2)) - 7) * 15;
         if (i <= 0) {
-            return 15;
+            return 10;
         }
         return i;
     }

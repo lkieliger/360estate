@@ -48,7 +48,7 @@ public final class PanoramaActivity extends Activity {
             onStop();
         }
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.panorama_activity);
 
         mSurface = new SurfaceView(this);
         mSurface.setFrameRate(60.0);
