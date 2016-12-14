@@ -27,6 +27,12 @@ public final class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         ParseInitialiser.INSTANCE.initParse(this);
 
+        // Check if the user is already logged in in the localDatastore, and jump to the ListActivity accordingly
+        if (userAlreadyLoggedIn()) {
+            Intent intent = new Intent(this, ListActivity.class);
+            startActivity(intent);
+        }
+
         WebView wv = (WebView) findViewById(R.id.webview);
 
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -41,11 +47,6 @@ public final class SplashActivity extends AppCompatActivity {
 
         wv.loadUrl("file:///android_asset/logo_gif-" + dpi + ".gif");
 
-        // Check if the user is already logged in in the localDatastore, and jump to the ListActivity accordingly
-        if (userAlreadyLoggedIn()) {
-            Intent intent = new Intent(this, ListActivity.class);
-            startActivity(intent);
-        }
     }
 
     /**

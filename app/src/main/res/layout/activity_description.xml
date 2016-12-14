@@ -50,7 +50,6 @@
             android:fillViewport="true"
             android:measureAllChildren="true"
             tools:ignore="UnusedIds"
-
             >
 
             <LinearLayout

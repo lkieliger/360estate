@@ -107,11 +107,7 @@ public final class DescriptionActivity extends AppCompatActivity {
 
             isInitiallyInFavorite = ListActivity.favoriteContainsUrl(idItem);
 
-            if (isInitiallyInFavorite) {
-                checkBoxFavorite.setChecked(true);
-            } else {
-                checkBoxFavorite.setChecked(false);
-            }
+            checkBoxFavorite.setChecked(isInitiallyInFavorite);
             checkBoxFavorite.setOnClickListener(new OnCheckedFavorite(idItem, checkBoxFavorite));
         }
     }
