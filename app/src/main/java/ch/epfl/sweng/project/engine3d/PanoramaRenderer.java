@@ -177,7 +177,7 @@ public final class PanoramaRenderer extends Renderer implements OnObjectPickedLi
             mRotSensor = null;
             mRotSensorAvailable = false;
         } else {
-            mRotListener = new RotSensorListener(display, this);
+            mRotListener = new RotSensorListener(display.getRotation(), this);
             mRotSensor = rotSensor;
             mRotSensorAvailable = true;
         }

@@ -24,8 +24,8 @@ import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
 
+import static ch.epfl.sweng.project.tests3d.AssertUtils.assertQuaternionEquals;
 import static ch.epfl.sweng.project.util.DoubleArrayConverter.doubleToFloatArray;
-import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.times;
@@ -38,7 +38,6 @@ import static org.mockito.Mockito.when;
 public class RotSensorListenerTest {
 
     private static final String TAG = "RotSensorListenerTest";
-    private static double errorEpsilon = 0.1d;
     @Mock
     PanoramaRenderer mockedRenderer;
     @Captor
@@ -171,12 +170,5 @@ public class RotSensorListenerTest {
             i++;
 
         rotSensorListener = new RotSensorListener(i, mockedRenderer);
-    }
-
-    private void assertQuaternionEquals(Quaternion q1, Quaternion q2) {
-        System.out.println("Expected: " + q1);
-        System.out.println("Got     : " + q2);
-
-        assertTrue(q1.equals(q2, errorEpsilon));
     }
 }
