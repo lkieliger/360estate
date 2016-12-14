@@ -3,9 +3,9 @@ package ch.epfl.sweng.project.engine3d;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -13,6 +13,7 @@ import android.view.Display;
 import android.view.MotionEvent;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.cameras.Camera;
@@ -22,15 +23,17 @@ import org.rajawali3d.renderer.Renderer;
 import org.rajawali3d.util.ObjectColorPicker;
 import org.rajawali3d.util.OnObjectPickedListener;
 
-import java.io.IOException;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.data.ImageMgmt;
 import ch.epfl.sweng.project.data.panorama.HouseManager;
+import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
+import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
+import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoCloser;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoDisplay;
-import ch.epfl.sweng.project.engine3d.components.PanoramaInfoObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
 import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
@@ -42,7 +45,7 @@ import static android.content.Context.SENSOR_SERVICE;
  * This class defines how the 3d engine should be used to
  * render the scene.
  */
-public class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
+public final class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
 
     public static final double SENSITIVITY = 50.0;
     public static final double CAM_TRAVEL_DISTANCE = 65.0;
@@ -66,14 +69,14 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private Quaternion mTargetQuaternion = null;
     private Quaternion mHelperQuaternion = null;
     private double mYaw;
-    private FetchPhotoTask mTaskManager = null;
+    private FetchPhotoTask mImageLoadTask = null;
     private HouseManager mHouseManager;
     private RenderingLogic mRenderLogic;
     private ObjectColorPicker mPicker;
     private int debugCounter = 0;
     /**
      * Use this rendering when nothing special need to be done. In other words just allowing the camera to look
-     * around and print some debug informations.
+     * around and print some debug information.
      */
     private RenderingLogic mIdleRendering = new RenderingLogic() {
         @Override
@@ -174,7 +177,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             mRotSensor = null;
             mRotSensorAvailable = false;
         } else {
-            mRotListener = new RotSensorListener(display.getRotation(), this);
+            mRotListener = new RotSensorListener(display, this);
             mRotSensor = rotSensor;
             mRotSensorAvailable = true;
         }
@@ -202,65 +205,29 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         setFrameRate(60);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mRotSensorAvailable) {
-            mSensorManager.registerListener(mRotListener, mRotSensor, SensorManager.SENSOR_DELAY_GAME);
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mRotSensorAvailable) {
-            //This frees unnecessary resources when app does not have focus
-            mSensorManager.unregisterListener(mRotListener);
-        }
-    }
-
-    @Override
-    public void initScene() {
-
-        Log.d(TAG, "Initializing scene");
-
-        mCamera.setPosition(new Vector3(0, 0, 0));
-        mPanoSphere = new PanoramaSphere();
-        getCurrentScene().addChild(mPanoSphere);
-
-        NextPanoramaDataBuilder.setNextPanoId(mHouseManager.getStartingId());
-        prepareScene(ImageMgmt.getBitmapFromUrl(getContext(), mHouseManager.getStartingUrl()));
-        Log.d(TAG, "Updating scene from initscene");
-        updateScene();
-    }
+    //-------------------------------------------- ACTION METHODS ---------------------------------------------------//
 
     /**
      * This method is called to initiate the panorama transition. The camera will start
      * sliding towards the next panorama and a task will be launched to retrieve
-     * asynchronouslythe next bitmap
+     * asynchronously the next bitmap
      *
      * @param url URL of the next Bitmap to load
      * @param id  Id of the next Panorama to load
      */
-    public void initiatePanoramaTransition(String url, int id) {
+    public void initiatePanoramaTransition(final String url, final int id) {
         Log.d(TAG, "Call to initiate panorama transition, creating new task and setting next id.");
         mRenderLogic = mSlidingRendering;
 
         NextPanoramaDataBuilder.setNextPanoId(id);
-        mTaskManager = new FetchPhotoTask();
-        mTaskManager.execute(url);
-    }
+        mImageLoadTask = new FetchPhotoTask();
 
-
-    public void displayText(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
-        Log.d(TAG, "Call to display text information.");
-        //noinspection deprecation
-        mPanoSphere.setTextToDisplay(textInfo, theta, panoramaInfoObject, mPicker);
+        ImageMgmt.getBitmapFromUrl(mContext, url, mImageLoadTask);
     }
 
     public void deleteInfo(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser) {
         Log.d(TAG, "Call to delete text information.");
-        mPanoSphere.deleteTextToDisplay(panoramaInfoDisplay, panoramaInfoCloser, mPicker);
+        mPanoSphere.deleteTextToDisplay(panoramaInfoDisplay, panoramaInfoCloser);
     }
 
     public void zoomOnText(double angle, double x, double z) {
@@ -308,25 +275,30 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             Log.d(TAG, "Call to update scene, changing panorama photo and attaching new components." +
                     " Pano id is: " + panoData.getX());
 
-        mPanoSphere.detachPanoramaComponents(mPicker);
+        mPanoSphere.detachPanoramaComponents();
         mPanoSphere.setPhotoTexture(panoData.getY());
-        mPanoSphere.attachPanoramaComponents(mHouseManager.getNeighborsFromId(panoData.getX()), mPicker);
+        List<SpatialData> panoComponents = mHouseManager.getAttachedDataFromId(panoData.getX());
+        mPanoSphere.attachPanoramaComponents(panoComponents);
+
+        //Pre-fetch all neighboring panoramas
+        List<String> urls = new ArrayList<>();
+
+        for (SpatialData sd : panoComponents) {
+            if (sd.getType() == PanoramaComponentType.TRANSITION) {
+                urls.add(((TransitionObject) sd).getUrl());
+            }
+        }
+
+        ImageMgmt.warmCache(mContext, urls);
     }
 
-
     public void cancelPanoramaUpdate() {
-        mTaskManager.cancel(true);
+        Picasso.with(mContext).cancelRequest(mImageLoadTask);
         NextPanoramaDataBuilder.resetData();
     }
 
-    @Override
-    public void onRender(final long elapsedTime, final double deltaTime) {
-        super.onRender(elapsedTime, deltaTime);
-        mRenderLogic.render();
-        if (!(mRenderLogic.equals(mSlidingToTextRendering)) && !mRenderLogic.equals(mSlidingOutOfTextRendering)) {
-            updateCamera();
-        }
-    }
+
+    //---------------------------------------- RENDERING-RELATED METHODS --------------------------------------------//
 
     /**
      * Automatically called when rendering, should not be manually called except for testing purposes
@@ -412,19 +384,57 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     }
 
     @Override
+    public void initScene() {
+
+        Log.d(TAG, "Initializing scene");
+
+        Picasso.with(mContext).setLoggingEnabled(true);
+
+        mCamera.setPosition(new Vector3(0, 0, 0));
+        mPanoSphere = new PanoramaSphere(mPicker);
+        getCurrentScene().addChild(mPanoSphere);
+
+        NextPanoramaDataBuilder.setNextPanoId(mHouseManager.getStartingId());
+        prepareScene(ImageMgmt.getBitmapFromUrl(getContext(), mHouseManager.getStartingUrl()));
+        Log.d(TAG, "Updating scene from initscene");
+        updateScene();
+    }
+
+    @Override
+    public void onRender(final long elapsedTime, final double deltaTime) {
+        super.onRender(elapsedTime, deltaTime);
+        mRenderLogic.render();
+        if (!(mRenderLogic.equals(mSlidingToTextRendering)) && !mRenderLogic.equals(mSlidingOutOfTextRendering)) {
+            updateCamera();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mRotSensorAvailable) {
+            mSensorManager.registerListener(mRotListener, mRotSensor, SensorManager.SENSOR_DELAY_GAME);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mRotSensorAvailable) {
+            //This frees unnecessary resources when app does not have focus
+            mSensorManager.unregisterListener(mRotListener);
+        }
+    }
+
+    @Override
     public void onObjectPicked(@NonNull Object3D object) {
         if (mRenderLogic == mIdleRendering || mRenderLogic == mSlidingToTextRendering) {
             Log.d(TAG, "ObjectPicked");
             mTargetPos = object.getWorldPosition();
             mTargetPos.y += 25;
 
-            if ((Objects.equals(((PanoramaObject) object).getClass(), PanoramaInfoCloser.class) &&
-                    Objects.equals(mRenderLogic, mSlidingToTextRendering)) ||
-                    (Objects.equals(((PanoramaObject) object).getClass(), PanoramaInfoDisplay.class) &&
-                            Objects.equals(mRenderLogic, mSlidingToTextRendering)) ||
-                    Objects.equals(mRenderLogic, mIdleRendering)) {
-                ((PanoramaObject) object).reactWith(this);
-            }
+            ((PanoramaObject) object).reactWith(this);
+
         }
     }
 
@@ -535,39 +545,25 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     }
 
     /**
-     * Asychronous task used to retrieve a bitmap on the network using Picasso
-     * <p>
-     * We tried to use directly the Picasso feature for retrieving bitmap asynchronously and storing them in a Target
-     * object but this did not work. This class acts in the same way however.
-     * Will return a null Bitmap if the query was unsuccessful
+     * Target for Picasso's asynchronous image loading
      */
-    private class FetchPhotoTask extends AsyncTask<String, Void, Bitmap> {
+    private class FetchPhotoTask implements Target {
 
-        private String url;
+        private static final String TAG = "FetchPhotoTask";
 
         @Override
-        protected Bitmap doInBackground(String... paramses) {
-
-            url = paramses[0];
-            Bitmap ret = null;
-            try {
-                ret = Picasso.with(getContext()).load(url).resize(2048, 4096).get();
-            } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
-            } finally {
-                return ret;
-            }
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            prepareScene(bitmap);
         }
 
         @Override
-        protected void onPostExecute(Bitmap b) {
-            prepareScene(b);
+        public void onBitmapFailed(Drawable errorDrawable) {
+            Log.d(TAG, "Picasso async bitmap load failed");
         }
 
         @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            Log.d("AsyncTask", "Task cancelled");
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
         }
     }
 }

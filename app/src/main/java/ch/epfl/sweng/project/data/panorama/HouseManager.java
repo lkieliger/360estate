@@ -3,6 +3,7 @@ package ch.epfl.sweng.project.data.panorama;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
@@ -27,9 +28,9 @@ public class HouseManager {
         startingId = extStartingId;
     }
 
-    public List<SpatialData> getNeighborsFromId(int id) {
+    public List<SpatialData> getAttachedDataFromId(int id) {
         if(sparseArray != null && sparseArray.size() != 0) {
-            return new ArrayList<>(sparseArray.get(id));
+            return Collections.unmodifiableList(new ArrayList<>(sparseArray.get(id)));
         }
         return new ArrayList<>();
     }

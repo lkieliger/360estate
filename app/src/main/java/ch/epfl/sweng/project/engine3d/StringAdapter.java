@@ -26,7 +26,6 @@ public final class StringAdapter {
         Paint paint = new Paint();
         paint.setTextSize(textSize);
         Rect rect = new Rect();
-        String newLine = "\n";
 
         String[] words = text.split(" ");
 
@@ -42,7 +41,7 @@ public final class StringAdapter {
                     + stringArrayList.get(indexOfLine).length() + 1, rect);
             final int widthLine = rect.width();
 
-            if (words[i].equals(newLine)) {
+            if (words[i].equals("\n")) {
                 indexOfLine++;
                 stringArrayList.add(new StringBuilder());
             } else {
@@ -59,15 +58,15 @@ public final class StringAdapter {
         List<String> list = new ArrayList<>();
 
         for (StringBuilder s : stringArrayList) {
-            list.add(s.toString().replace(newLine.charAt(0), ' '));
+            list.add(s.toString().replace('\n', ' '));
         }
 
         return list;
     }
 
-    public Bitmap textToBitmap(int textSize, int widthBitmap, int contourSize, int marginSize) {
+    public Bitmap textToBitmap(int textSize, int widthBitmap, int epsilon) {
 
-        List<String> list = textToList(textSize, widthBitmap, contourSize + marginSize);
+        List<String> list = textToList(textSize, widthBitmap, epsilon);
 
         Paint paint = new Paint();
         paint.setTextSize(textSize);
@@ -76,7 +75,7 @@ public final class StringAdapter {
         paint.getTextBounds(text, 0, text.length(), rect);
         int heightTemp = rect.height();
 
-        int heightBitmap = (heightTemp) * list.size() + 2 * contourSize;
+        int heightBitmap = (heightTemp) * list.size() + 2 * epsilon;
 
         int powerOfHeight = (int) (Math.log(heightBitmap) / Math.log(2)) + 1;
         heightBitmap = (int) Math.pow(2, powerOfHeight);
@@ -88,12 +87,11 @@ public final class StringAdapter {
         canvas.drawRect(0, 0, widthBitmap, heightBitmap, paint);
 
         paint.setColor(backColor);
-        canvas.drawRect(contourSize, contourSize, widthBitmap - contourSize, heightBitmap - contourSize, paint);
+        canvas.drawRect(epsilon, epsilon, widthBitmap - epsilon, heightBitmap - epsilon, paint);
 
         paint.setColor(textColor);
         for (int i = 0; i < list.size(); i++) {
-            canvas.drawText(list.get(i), contourSize + marginSize, contourSize + marginSize + (i + 1) * heightTemp,
-                    paint);
+            canvas.drawText(list.get(i), epsilon, epsilon + (i + 1) * heightTemp, paint);
         }
 
         return image;

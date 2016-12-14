@@ -28,6 +28,7 @@ public final class PanoramaSphere extends Sphere {
     private static final String TAG = "PanoramaSphere";
     private static final Vector3 INITIAL_POS = new Vector3(0, 0, 0);
     private final List<PanoramaObject> mComponentList;
+    private final ObjectColorPicker mPicker;
     private Texture mPhotoTexture;
     private int mComponentIndex = 0;
 
@@ -40,10 +41,12 @@ public final class PanoramaSphere extends Sphere {
      * bitmap associated with a texture can change but the texture instance remains unique. Therefore subsequent
      * panorama photo changes should call the texture setter as it will handle the bitmap replacement
      */
-    public PanoramaSphere() {
+    public PanoramaSphere(ObjectColorPicker p) {
         super(100, 48, 48);
 
         mComponentList = new ArrayList<>(INITIAL_COMPONENTLIST_SIZE);
+
+        mPicker = p;
 
         setBackSided(true);
         setPosition(INITIAL_POS);
@@ -64,23 +67,23 @@ public final class PanoramaSphere extends Sphere {
     /**
      * Call this method to dissociate all UI components that were previously defined as children of the panorama sphere
      */
-    public void detachPanoramaComponents(ObjectColorPicker p) {
+    public void detachPanoramaComponents() {
         for (PanoramaObject pc : mComponentList) {
-            pc.unregisterComponentFromPicker(p);
+            pc.unregisterComponentFromPicker(mPicker);
             pc.detachFromParentAndDie();
             mComponentIndex--;
         }
         mComponentList.clear();
     }
 
-    public void detachPanoramaComponent(ObjectColorPicker p, PanoramaObject panoramaObject) {
+    public void detachPanoramaComponent(PanoramaObject panoramaObject) {
         Log.d(TAG, "Call to detach component");
 
         int index = mComponentList.indexOf(panoramaObject);
         panoramaObject.setPickingColor(-1);
 
         for (int i = index; i < mComponentList.size(); i++) {
-            mComponentList.get(i).unregisterComponentFromPicker(p);
+            mComponentList.get(i).unregisterComponentFromPicker(mPicker);
             mComponentIndex--;
         }
 
@@ -88,7 +91,7 @@ public final class PanoramaSphere extends Sphere {
         panoramaObject.detachFromParentAndDie();
 
         for (int i = index; i < mComponentList.size(); i++) {
-            mComponentList.get(i).registerComponentAtPicker(p, mComponentIndex);
+            mComponentList.get(i).registerComponentAtPicker(mPicker, mComponentIndex);
             mComponentIndex++;
         }
     }
@@ -101,38 +104,40 @@ public final class PanoramaSphere extends Sphere {
      * @param b A bitmap file that contain the panorama photograph
      */
     public void setPhotoTexture(Bitmap b) {
+        Bitmap old = mPhotoTexture.getBitmap();
+        if (old != null) {
+            old.recycle();
+            Log.d(TAG, "Recycling old panorama texture bitmap");
+        }
         mPhotoTexture.setBitmap(b);
         TextureManager.getInstance().replaceTexture(mPhotoTexture);
     }
 
-    public void attachPanoramaComponents(Iterable<SpatialData> l, ObjectColorPicker p) {
+    public void attachPanoramaComponents(Iterable<SpatialData> l) {
         Log.d(TAG, "Call to attach panorama");
         for (SpatialData am : l) {
             PanoramaObject panoramaObject = am.toPanoramaObject();
-            attachPanoramaComponent(panoramaObject, p);
+            attachPanoramaComponent(panoramaObject);
         }
     }
 
-    public void attachPanoramaComponent(PanoramaObject panoramaObject, ObjectColorPicker p) {
+    public void attachPanoramaComponent(PanoramaObject panoramaObject) {
 
         Log.d(TAG, "Call to attach component");
-        panoramaObject.registerComponentAtPicker(p, mComponentIndex);
+        panoramaObject.registerComponentAtPicker(mPicker, mComponentIndex);
 
         mComponentIndex++;
         addChild(panoramaObject);
         mComponentList.add(panoramaObject);
     }
 
-    public void setTextToDisplay(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject,
-                                 ObjectColorPicker picker) {
+    public void setTextToDisplay(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
 
         StringAdapter stringAdapter = new StringAdapter(textInfo);
-        int contourSize = 10;
-        int marginSize = 10;
-        int textSize = 18;
-        int widthPixels = 512;
+        int epsilon = 10;
+        int color = 0X03BBF6;
+        Bitmap bitmap = stringAdapter.textToBitmap(22, 512, epsilon);
 
-        Bitmap bitmap = stringAdapter.textToBitmap(textSize, widthPixels, contourSize, marginSize);
 
         int heightInfoDisplay = getSizeFromPixels(bitmap.getHeight());
         int widthInfoDisplay = 30;
@@ -140,7 +145,7 @@ public final class PanoramaSphere extends Sphere {
         int widthInfoClose = 5;
 
         PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.5, widthInfoDisplay
-                , heightInfoDisplay, bitmap, null);
+                , heightInfoDisplay, bitmap, color, null);
 
         int shiftY = (int) ((heightInfoDisplay + heightInfoClose + 4) / 2.0);
 
@@ -150,14 +155,13 @@ public final class PanoramaSphere extends Sphere {
         panoramaInfoCloser.setY(panoramaInfoCloser.getY() + shiftY);
         panoramaInfoDisplay.setPanoramaInfoCloser(panoramaInfoCloser);
 
-        attachPanoramaComponent(panoramaInfoDisplay, picker);
-        attachPanoramaComponent(panoramaInfoCloser, picker);
+        attachPanoramaComponent(panoramaInfoDisplay);
+        attachPanoramaComponent(panoramaInfoCloser);
     }
 
-    public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser,
-                                    ObjectColorPicker picker) {
-        detachPanoramaComponent(picker, panoramaInfoDisplay);
-        detachPanoramaComponent(picker, panoramaInfoCloser);
+    public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay, PanoramaInfoCloser panoramaInfoCloser) {
+        detachPanoramaComponent(panoramaInfoDisplay);
+        detachPanoramaComponent(panoramaInfoCloser);
     }
 
     /**
