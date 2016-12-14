@@ -98,7 +98,7 @@ public final class PanoramaTouchListener implements View.OnTouchListener {
                 Log.d(TAG, "ACTION POINTER DOWN");
 
                 posValueIsValid = false;
-                mActivePointerId = event.getPointerId(pointerIndex == 1 ? 0 : 0);
+                mActivePointerId = 0;
 
                 return true;
 

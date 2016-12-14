@@ -16,7 +16,7 @@ import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import static ch.epfl.sweng.project.util.DoubleArrayConverter.floatToDoubleArray;
 
 
-public final class RotSensorListener implements SensorEventListener {
+public class RotSensorListener implements SensorEventListener {
 
     private static final String TAG = "RotSensorListener";
 
@@ -78,9 +78,5 @@ public final class RotSensorListener implements SensorEventListener {
         }
 
         mRenderer.setSensorRotation(q);
-    }
-
-    public void setScreenRotation(int r) {
-        mScreenRotation = r;
     }
 }

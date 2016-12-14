@@ -1,5 +1,8 @@
 package ch.epfl.sweng.project.tests3d;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.util.Log;
 import android.view.Surface;
 
 import org.junit.Before;
@@ -7,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.rajawali3d.math.Quaternion;
@@ -14,24 +18,37 @@ import org.rajawali3d.math.vector.Vector3;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.lang.reflect.Field;
+
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
 
 import static ch.epfl.sweng.project.util.DoubleArrayConverter.doubleToFloatArray;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 23)
 public class RotSensorListenerTest {
 
-
+    private static final String TAG = "RotSensorListenerTest";
     private static double errorEpsilon = 0.1d;
     @Mock
     PanoramaRenderer mockedRenderer;
     @Captor
     ArgumentCaptor<Quaternion> argumentCaptor;
+
+    @Mock
+    Sensor mockedSensor;
+    @InjectMocks
+    SensorEvent mockedEvent;
+
     RotSensorListener rotSensorListener;
     private float[] values;
     private Quaternion q1;
@@ -43,10 +60,6 @@ public class RotSensorListenerTest {
     @Before
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
-    }
-
-    @Before
-    public void initVariables() {
 
         Quaternion rot90AlongX = new Quaternion().fromAngleAxis(Vector3.Axis.X, 90);
         Quaternion rot90AlongZ = new Quaternion().fromAngleAxis(Vector3.Axis.Z, 90);
@@ -56,6 +69,49 @@ public class RotSensorListenerTest {
         q4 = new Quaternion(q3).multiplyLeft(rot90AlongZ);
         q5 = new Quaternion(q4).multiplyLeft(rot90AlongZ);
         values = doubleToFloatArray(new double[]{q1.x, q1.y, q1.z, -q1.w});
+
+        float[] v = {0.1f, 0.2f, 0.3f, 0.4f};
+
+        try {
+            Field valuesField = SensorEvent.class.getField("values");
+            valuesField.setAccessible(true);
+            try {
+                valuesField.set(mockedEvent, v);
+            } catch (IllegalAccessException e) {
+                Log.d(TAG, e.getMessage());
+            }
+        } catch (NoSuchFieldException e) {
+            Log.d(TAG, e.getMessage());
+        }
+    }
+
+    @Test
+    public void onSensorChangedIsCorrect() {
+
+        when(mockedSensor.getType()).thenReturn(Sensor.TYPE_GAME_ROTATION_VECTOR, Sensor.TYPE_GYROSCOPE, Sensor
+                .TYPE_ACCELEROMETER, Sensor.TYPE_ROTATION_VECTOR, Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR);
+
+        rotSensorListener = new RotSensorListener(Surface.ROTATION_0, mockedRenderer);
+        rotSensorListener.onSensorChanged(mockedEvent);
+        rotSensorListener.onSensorChanged(mockedEvent);
+        rotSensorListener.onSensorChanged(mockedEvent);
+        rotSensorListener.onSensorChanged(mockedEvent);
+        rotSensorListener.onSensorChanged(mockedEvent);
+        verify(mockedRenderer, times(1)).setDeviceYaw(anyDouble());
+        verify(mockedRenderer, times(1)).setSensorRotation(any(Quaternion.class));
+    }
+
+    @Test
+    public void onAccuracyChangedIsCorrect() {
+
+        rotSensorListener = new RotSensorListener(Surface.ROTATION_0, mockedRenderer);
+
+        rotSensorListener.onAccuracyChanged(mockedSensor, 0);
+        rotSensorListener.onAccuracyChanged(mockedSensor, 1);
+        rotSensorListener.onAccuracyChanged(mockedSensor, 100);
+
+        verifyNoMoreInteractions(mockedSensor);
+        verifyNoMoreInteractions(mockedRenderer);
     }
 
     @Test

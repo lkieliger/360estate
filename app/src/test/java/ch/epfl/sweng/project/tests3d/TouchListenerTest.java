@@ -122,10 +122,12 @@ public class TouchListenerTest {
         generateClickWithDrift(0, -11);
         generateClickWithDrift(150, -131);
 
+        //Simply UP without DOWN first should be discarded
+        panoramaTouchListener.onTouch(view, genMockedEvent(ACTION_UP, 0, 0, 0, 0));
 
         //Only clicks with less or equal amplitude than scroll threshold should be valid
         verify(mockedRenderer, times(8)).getObjectAt(anyFloat(), anyFloat());
-        verify(view, times(16)).performClick();
+        verify(view, times(17)).performClick();
 
     }
 
@@ -153,6 +155,31 @@ public class TouchListenerTest {
         }
     }
 
+    @Test
+    public void handleMultiplePointers() {
+        generateValidPos();
+
+        /*
+        If the active pointer is UP then the last pos should be invalidated and next
+        event with move shouldn't affect camera
+         */
+
+        panoramaTouchListener.onTouch(view, genMockedEvent(ACTION_DOWN, 0, 0, 0, 0));
+        panoramaTouchListener.onTouch(view, genMockedEvent(ACTION_POINTER_DOWN, 1, 1, 0, 0));
+        generateValidPos();
+        panoramaTouchListener.onTouch(view, genMockedEvent(ACTION_POINTER_UP, 0, 0, 0, 0));
+
+        //Move should be discared as active pointer is now 1 and not 0
+        panoramaTouchListener.onTouch(view, genMockedEvent(ACTION_MOVE, 0, 0, 100, 100));
+        verify(mockedRenderer, never()).updateCameraRotation(anyFloat(), anyFloat());
+        //Move doesn't yet affect camera
+        panoramaTouchListener.onTouch(view, genMockedEvent(ACTION_MOVE, 0, 1, 100, 100));
+        verify(mockedRenderer, never()).updateCameraRotation(anyFloat(), anyFloat());
+        //Move taken into account
+        panoramaTouchListener.onTouch(view, genMockedEvent(ACTION_MOVE, 0, 1, 200, 200));
+        verify(mockedRenderer, times(1)).updateCameraRotation(anyFloat(), anyFloat());
+    }
+
     private MotionEvent genBasicEvent(int action) {
         return MotionEvent.obtain(0, 0, action, 111, 111, 0);
     }
@@ -161,7 +188,8 @@ public class TouchListenerTest {
         MotionEvent mockedEvent = Mockito.mock(MotionEvent.class);
         when(mockedEvent.getActionMasked()).thenReturn(action);
         when(mockedEvent.getActionIndex()).thenReturn(pIndex);
-        when(mockedEvent.getPointerId(pIndex)).thenReturn(pId);
+        when(mockedEvent.getPointerId(0)).thenReturn(0);
+        when(mockedEvent.getPointerId(1)).thenReturn(1);
         when(mockedEvent.getX(pIndex)).thenReturn(x);
         when(mockedEvent.getX()).thenReturn(x);
         when(mockedEvent.getY(pIndex)).thenReturn(y);
