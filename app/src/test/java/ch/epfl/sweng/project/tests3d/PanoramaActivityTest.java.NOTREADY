@@ -1,0 +1,64 @@
+package ch.epfl.sweng.project.tests3d;
+
+
+import android.content.Context;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.rajawali3d.view.SurfaceView;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+import org.robolectric.util.ActivityController;
+
+import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.data.panorama.HouseManager;
+import ch.epfl.sweng.project.data.parse.PInterface;
+import ch.epfl.sweng.project.engine3d.PanoramaActivity;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 23)
+public class PanoramaActivityTest {
+
+    @Mock
+    private PInterface mockedParseManager;
+    @Mock
+    private HouseManager mockedHouseManager;
+    @Mock
+    private SurfaceView mockedSurface;
+    @InjectMocks
+    private PanoramaActivity panoramaActivity;
+
+    private ActivityController<PanoramaActivity> activityController;
+
+    @Before
+    public void initMocks(){
+
+        activityController = Robolectric.buildActivity(PanoramaActivity.class);
+        // get the activity instance
+        panoramaActivity = activityController.get();
+
+        MockitoAnnotations.initMocks(this);
+        when(mockedParseManager.getHouseManager((String) isNull(), any(Context.class))).thenReturn
+                (mockedHouseManager);
+
+    }
+
+    @Test
+    public void serverErrorClosesActivity(){
+        when(mockedHouseManager.getStartingId()).thenReturn(0);
+        activityController.create();
+        verify(mockedParseManager, times(1)).getHouseManager((String) isNull(), any(Context.class));
+    }
+
+}

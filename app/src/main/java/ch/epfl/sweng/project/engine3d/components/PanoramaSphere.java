@@ -19,7 +19,7 @@ import ch.epfl.sweng.project.engine3d.StringAdapter;
 
 
 /**
- * Represent the panoramic Spere containing the image.
+ * Represent the panoramic Sphere containing the image.
  */
 public class PanoramaSphere extends Sphere {
 
