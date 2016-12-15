@@ -19,6 +19,7 @@ import static ch.epfl.sweng.project.util.DoubleArrayConverter.floatToDoubleArray
 public class RotSensorListener implements SensorEventListener {
 
     private static final String TAG = "RotSensorListener";
+    private static final double HALF_PI = Math.PI / 2.0;
 
     private final PanoramaRenderer mRenderer;
     private float[] mRotationMatrixIn;
@@ -59,21 +60,25 @@ public class RotSensorListener implements SensorEventListener {
         SensorManager.remapCoordinateSystem(mRotationMatrixIn, SensorManager.AXIS_X, SensorManager.AXIS_MINUS_Z,
                 mRotationMatrixOut);
 
-        mRenderer.setDeviceYaw(Math.atan2(mRotationMatrixOut[1], mRotationMatrixOut[5]));
+        double yaw = Math.atan2(mRotationMatrixOut[1], mRotationMatrixOut[5]);
 
         Quaternion q = new Quaternion().fromMatrix(floatToDoubleArray(mRotationMatrixOut));
 
         switch (mScreenRotation) {
             case Surface.ROTATION_0:
+                mRenderer.setDeviceYaw(yaw);
                 break;
             case Surface.ROTATION_90:
                 q.multiplyLeft(new Quaternion().fromAngleAxis(Vector3.Axis.Z, 90));
+                mRenderer.setDeviceYaw(yaw - HALF_PI);
                 break;
             case Surface.ROTATION_180:
                 q.multiplyLeft(new Quaternion().fromAngleAxis(Vector3.Axis.Z, 180));
+                mRenderer.setDeviceYaw(-yaw);
                 break;
             case Surface.ROTATION_270:
                 q.multiplyLeft(new Quaternion().fromAngleAxis(Vector3.Axis.Z, 270));
+                mRenderer.setDeviceYaw(yaw + HALF_PI);
                 break;
         }
 
