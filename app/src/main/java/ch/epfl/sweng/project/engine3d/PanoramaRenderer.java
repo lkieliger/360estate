@@ -55,6 +55,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public static final int TEXTURE_COLOR = 0x0022c8ff;
     public static final double DISTANCE_TO_DISPLAY = 9;
     public static final double LERP_FACTOR = 0.03;
+    public static final double FOV_PORTRAIT = 80;
+    public static final double FOV_LANDSCAPE = 60;
     private static final int COLOR_CLOSE = Color.rgb(255, 25, 25);
 
     private final String TAG = "Renderer";
@@ -249,11 +251,11 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         switch (displayRotation) {
             case Surface.ROTATION_0:
             case Surface.ROTATION_180:
-                mCamera.setFieldOfView(80);
+                mCamera.setFieldOfView(FOV_PORTRAIT);
                 break;
             case Surface.ROTATION_90:
             case Surface.ROTATION_270:
-                mCamera.setFieldOfView(60);
+                mCamera.setFieldOfView(FOV_LANDSCAPE);
                 break;
         }
 
@@ -386,7 +388,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     }
 
     public void handlePanoramaTransitionFailure() {
-        Log.d(TAG, "Call to handlePanoramaTransitionFailure");
+        Log.e(TAG, "Call to handlePanoramaTransitionFailure");
         mCamera.setPosition(ORIGIN);
         mRenderLogic = getIdleRendering();
         NextPanoramaDataBuilder.resetData();

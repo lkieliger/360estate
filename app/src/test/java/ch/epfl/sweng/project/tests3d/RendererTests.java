@@ -7,8 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.MotionEvent;
+import android.view.Surface;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -28,7 +28,6 @@ import org.rajawali3d.util.ObjectColorPicker;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import org.robolectric.internal.Shadow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +50,8 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 
 import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.CAM_TRAVEL_DISTANCE;
 import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.DISTANCE_TO_DISPLAY;
+import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.FOV_LANDSCAPE;
+import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.FOV_PORTRAIT;
 import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.LERP_FACTOR;
 import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.ORIGIN;
 import static ch.epfl.sweng.project.tests3d.TestUtils.assertQuaternionEquals;
@@ -115,7 +116,6 @@ public class RendererTests {
     private ArgumentCaptor<Target> picassoTargetCaptor;
 
 
-    private Display roboDisplay;
     private PanoramaRenderer panoramaRenderer;
     private DisplayMetrics metrics;
     private Context spiedContext;
@@ -124,7 +124,6 @@ public class RendererTests {
     @Before
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
-        roboDisplay = Shadow.newInstanceOf(Display.class);
         spiedContext = Mockito.spy(RuntimeEnvironment.application);
         doReturn(mockedSensorManager).when(spiedContext).getSystemService(Context.SENSOR_SERVICE);
         metrics = RuntimeEnvironment.application.getResources().getDisplayMetrics();
@@ -137,13 +136,32 @@ public class RendererTests {
         when(mockedHouseManager.getAttachedDataFromId(anyInt()))
                 .thenReturn(spatialDataList);
 
-        panoramaRenderer = new PanoramaRenderer(spiedContext, roboDisplay, mockedHouseManager);
+        panoramaRenderer = new PanoramaRenderer(spiedContext, Surface.ROTATION_0, mockedHouseManager);
+    }
+
+    @Test
+    public void adjustsFOVBasedOnScreenOrientation() {
+
+        assertEquals(FOV_PORTRAIT, panoramaRenderer.getCurrentCamera().getFieldOfView());
+
+        panoramaRenderer = new PanoramaRenderer(RuntimeEnvironment.application, Surface.ROTATION_90,
+                mockedHouseManager);
+        assertEquals(FOV_LANDSCAPE, panoramaRenderer.getCurrentCamera().getFieldOfView());
+
+        panoramaRenderer = new PanoramaRenderer(RuntimeEnvironment.application, Surface.ROTATION_180,
+                mockedHouseManager);
+        assertEquals(FOV_PORTRAIT, panoramaRenderer.getCurrentCamera().getFieldOfView());
+
+        panoramaRenderer = new PanoramaRenderer(RuntimeEnvironment.application, Surface.ROTATION_270,
+                mockedHouseManager);
+        assertEquals(FOV_LANDSCAPE, panoramaRenderer.getCurrentCamera().getFieldOfView());
+
     }
 
     @Test
     public void handleAvailableSensor() {
         when(mockedSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR)).thenReturn(mockedSensor);
-        panoramaRenderer = new PanoramaRenderer(spiedContext, roboDisplay, mockedHouseManager);
+        panoramaRenderer = new PanoramaRenderer(spiedContext, Surface.ROTATION_0, mockedHouseManager);
 
         panoramaRenderer.onResume();
         verify(mockedSensorManager, times(1)).registerListener(
@@ -299,6 +317,18 @@ public class RendererTests {
     }
 
     @Test
+    public void correctlyHandlesFailedPicassoLoad() {
+        new InjectedRendererBuilder(panoramaRenderer)
+                .withMockedCamera()
+                .withSlidingRendering();
+        panoramaRenderer.handlePanoramaTransitionFailure();
+        verify(mockedCamera).setPosition(vectorCaptor.capture());
+        assertEquals(ORIGIN, vectorCaptor.getValue());
+        assertEquals(panoramaRenderer.getIdleRendering(), panoramaRenderer.getCurrentRenderingLogic());
+        assertTrue(PanoramaRenderer.NextPanoramaDataBuilder.isReset());
+    }
+
+    @Test
     public void updateCameraIsCorrect() {
         Camera mockedCamera = Mockito.mock(Camera.class);
 
@@ -382,32 +412,38 @@ public class RendererTests {
         inject(panoramaRenderer, mockedCamera, "mCamera");
         //Idle sensor + user
         panoramaRenderer.onRender(0, 0);
-        verify(mockedCamera, times(1)).setCameraOrientation(quaternionCaptor.capture());
+        verify(mockedCamera, atLeastOnce()).setCameraOrientation(quaternionCaptor.capture());
         assertQuaternionEquals(ref, quaternionCaptor.getValue());
 
         //Sliding to text means special rotation
         new InjectedRendererBuilder(panoramaRenderer).withSlidingToTextRendering();
         panoramaRenderer.onRender(0, 0);
-        verify(mockedCamera, times(2)).setCameraOrientation(quaternionCaptor.capture());
+        verify(mockedCamera, atLeastOnce()).setCameraOrientation(quaternionCaptor.capture());
         assertQuaternionNotEquals(ref, quaternionCaptor.getValue());
 
         //Sliding out, special rotation
         new InjectedRendererBuilder(panoramaRenderer).withSlidingOutOfTextRendering();
         panoramaRenderer.onRender(0, 0);
-        verify(mockedCamera, times(3)).setCameraOrientation(quaternionCaptor.capture());
+        verify(mockedCamera, atLeastOnce()).setCameraOrientation(quaternionCaptor.capture());
+        assertQuaternionNotEquals(ref, quaternionCaptor.getValue());
+
+        //Sliding out and rotate, special rotation
+        new InjectedRendererBuilder(panoramaRenderer).withRotateObjectAndZoomOutRendering();
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, atLeastOnce()).setCameraOrientation(quaternionCaptor.capture());
         assertQuaternionNotEquals(ref, quaternionCaptor.getValue());
 
         //All other should update camera
         new InjectedRendererBuilder(panoramaRenderer).withSlidingRendering();
         panoramaRenderer.onRender(0, 0);
-        verify(mockedCamera, times(4)).setCameraOrientation(quaternionCaptor.capture());
+        verify(mockedCamera, atLeastOnce()).setCameraOrientation(quaternionCaptor.capture());
         assertQuaternionEquals(ref, quaternionCaptor.getValue());
 
         PanoramaRenderer.NextPanoramaDataBuilder.setNextPanoId(1);
         PanoramaRenderer.NextPanoramaDataBuilder.setNextPanoBitmap(mockedBitmap);
         new InjectedRendererBuilder(panoramaRenderer).withTransitioningRendering().withMockedPanoSphere();
         panoramaRenderer.onRender(0, 0);
-        verify(mockedCamera, times(5)).setCameraOrientation(quaternionCaptor.capture());
+        verify(mockedCamera, atLeastOnce()).setCameraOrientation(quaternionCaptor.capture());
         assertQuaternionEquals(ref, quaternionCaptor.getValue());
 
     }
@@ -517,9 +553,9 @@ public class RendererTests {
 
         new InjectedRendererBuilder(panoramaRenderer)
                 .withMockedCamera()
-                .withSlidingOutOfTextRendering()
-                .withNeutralTargetPos();
+                .withSlidingOutOfTextRendering();
 
+        panoramaRenderer.resetTargetPos();
         panoramaRenderer.onRender(0, 0);
         verify(mockedCamera, atLeastOnce()).setPosition(vectorCaptor.capture());
         assertEquals(pos1.lerp(ORIGIN, LERP_FACTOR * 5), vectorCaptor.getValue());
@@ -588,8 +624,10 @@ public class RendererTests {
                 .getBitmapFromUrl(any(Context.class), anyString(), picassoTargetCaptor.capture());
         picassoTarget = picassoTargetCaptor.getValue();
         Drawable mockedDrawable = Mockito.mock(Drawable.class);
+
+        assertFalse(PanoramaRenderer.NextPanoramaDataBuilder.isReset());
         picassoTarget.onBitmapFailed(mockedDrawable);
-        verifyNoMoreInteractions(mockedDrawable);
+        assertTrue(PanoramaRenderer.NextPanoramaDataBuilder.isReset());
     }
 
     @Test
@@ -655,10 +693,6 @@ public class RendererTests {
 
         private PanoramaRenderer pr;
 
-        public InjectedRendererBuilder() {
-            pr = new PanoramaRenderer(spiedContext, roboDisplay, mockedHouseManager);
-        }
-
         public InjectedRendererBuilder(PanoramaRenderer pr) {
             this.pr = pr;
         }
@@ -700,10 +734,6 @@ public class RendererTests {
 
         public InjectedRendererBuilder withMockedCamera() {
             inject(pr, mockedCamera, "mCamera");
-            return this;
-        }
-
-        public InjectedRendererBuilder withNeutralTargetPos() {
             return this;
         }
     }
