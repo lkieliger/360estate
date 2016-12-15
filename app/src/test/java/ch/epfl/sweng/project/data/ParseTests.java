@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import bolts.Task;
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.data.parse.PInterface;
+import ch.epfl.sweng.project.data.parse.ParseInitialiser;
 import ch.epfl.sweng.project.data.parse.util.TimeoutQuery;
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -150,6 +151,13 @@ public class ParseTests {
         doReturn(mockTask).when(query).findInBackground();
 
         assertEquals(Collections.emptyList(), parseInterface.getProxy().executeFindQuery(query));
+    }
+
+    @Test
+    public void parseInitialiserEnum() {
+        assertEquals(ParseInitialiser.INSTANCE, ParseInitialiser.valueOf("INSTANCE"));
+        assertEquals(ParseInitialiser.values().length, ParseInitialiser.values().length);
+
     }
 
 }

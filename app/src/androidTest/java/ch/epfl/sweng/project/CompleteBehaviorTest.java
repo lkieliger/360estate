@@ -30,6 +30,7 @@ import org.junit.runner.RunWith;
 import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
 
+import ch.epfl.sweng.project.data.parse.ParseInitialiser;
 import ch.epfl.sweng.project.features.SplashActivity;
 import ch.epfl.sweng.project.util.LogHelper;
 
@@ -259,6 +260,9 @@ public class CompleteBehaviorTest {
         wait1s(TAG);
 
         pressBack();
+
+        //Makes sure the Parse initializer is called twice
+        ParseInitialiser.INSTANCE.initParse(mActivityTestRule.getActivity().getBaseContext());
     }
 
     private void filterTest() {
