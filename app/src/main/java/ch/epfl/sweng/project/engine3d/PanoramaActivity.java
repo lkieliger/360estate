@@ -28,11 +28,9 @@ public final class PanoramaActivity extends Activity {
 
     private SurfaceView mSurface = null;
     private PanoramaRenderer mRenderer = null;
-    private PInterface mParseManager;
     private HouseManager mHouseManager;
 
     public PanoramaActivity() {
-        mParseManager = new PInterface();
     }
 
     @Override
@@ -41,7 +39,7 @@ public final class PanoramaActivity extends Activity {
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
-        mHouseManager = mParseManager.getHouseManager(getIntent().getStringExtra("id"),
+        mHouseManager = PInterface.INST.getHouseManager(getIntent().getStringExtra("id"),
                 getApplicationContext());
 
         if (mHouseManager.getStartingId() == -1) {

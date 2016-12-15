@@ -50,7 +50,7 @@ public final class DescriptionActivity extends AppCompatActivity {
         final ArrayList<String> imagesURL = new ArrayList<>();
         StringBuilder descriptionBuilder = new StringBuilder();
 
-        PInterface.getDataForDescription(idItem, imagesURL, descriptionBuilder, mContext);
+        PInterface.INST.getDataForDescription(idItem, imagesURL, descriptionBuilder, mContext);
         String description = descriptionBuilder.toString();
 
 
@@ -92,7 +92,7 @@ public final class DescriptionActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    if (ParseProxy.PROXY.internetAvailable()) {
+                    if (PInterface.INST.getProxy().internetAvailable()) {
                         Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
                         intentToPanorama.putExtra("id", idItem);
                         startActivity(intentToPanorama);
@@ -141,7 +141,7 @@ public final class DescriptionActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        if (ParseProxy.PROXY.internetAvailable()) {
+        if (PInterface.INST.getProxy().internetAvailable()) {
             ListActivity.synchronizeServer();
         }
         super.onStop();

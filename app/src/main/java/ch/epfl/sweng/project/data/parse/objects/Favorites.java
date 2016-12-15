@@ -16,7 +16,7 @@ import ch.epfl.sweng.project.util.LogHelper;
 
 
 @ParseClassName("Favorites")
-public final class Favorites extends ParseObject {
+public class Favorites extends ParseObject {
 
     private static final String TAG = "Favorites";
     private Set<String> favorites = new HashSet<>();
@@ -25,7 +25,7 @@ public final class Favorites extends ParseObject {
 
     }
 
-    public Favorites(HashSet<String> extFavorites, String idUser) {
+    public Favorites(Set<String> extFavorites, String idUser) {
         setFavorites(extFavorites);
         setIdUser(idUser);
     }
@@ -84,15 +84,15 @@ public final class Favorites extends ParseObject {
     }
 
     public void synchronizeFromServer() {
-        if (ParseProxy.PROXY.internetAvailable()) {
+        if (PInterface.INST.getProxy().internetAvailable()) {
             favorites = getFavoritesFromServer();
         }
 
     }
 
     public void synchronizeServer() {
-        if (ParseProxy.PROXY.internetAvailable()) {
-            PInterface.overrideFavorites(getIdUser(), favorites);
+        if (PInterface.INST.getProxy().internetAvailable()) {
+            PInterface.INST.overrideFavorites(getIdUser(), favorites);
         }
     }
 }

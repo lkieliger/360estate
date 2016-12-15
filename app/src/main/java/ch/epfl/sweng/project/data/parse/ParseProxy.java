@@ -16,9 +16,11 @@ import ch.epfl.sweng.project.util.LogHelper;
 
 
 @SuppressWarnings("ClassNamePrefixedWithPackageName")
-public enum ParseProxy {
+public class ParseProxy {
 
-    PROXY;
+    ParseProxy() {
+        // Package local constructor ! only accessbile from data package
+    }
 
     private static final long INTERNET_TIMEOUT = 10000L;
     private static final long QUERY_TIMEOUT = 3014L;
@@ -37,7 +39,7 @@ public enum ParseProxy {
     }
 
 
-    public <T extends ParseObject> void executeQuery(ParseQuery<T> query, FindCallback<T> callback, String tag) {
+    public <T extends ParseObject> void executeQuery(ParseQuery<T> query, FindCallback<T> callback) {
 
         // If we haven't had internet since INTERNET_TIMEOUT ms, we make the query locally
         if (!internetAvailable()) {
@@ -64,7 +66,7 @@ public enum ParseProxy {
         try {
             task.waitForCompletion(secondTime ? QUERY_2ND_TIMEOUT : QUERY_TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            LogHelper.log(TAG, "Error in findQuery waitForCompletion execution: \n" + e.getMessage());
+            LogHelper.log(TAG, "Error in findQuery waitForCompletion execution: " + e.getMessage());
             return Collections.emptyList();
         }
 
