@@ -96,6 +96,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private RenderingLogic mIdleRendering = new RenderingLogic() {
         @Override
         public void render() {
+
             if (debugCounter == 60) {
                 debugCounter = 0;
                 DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
@@ -381,6 +382,13 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     public void cancelPanoramaUpdate() {
         Picasso.with(mContext).cancelRequest(mImageLoadTask);
+        NextPanoramaDataBuilder.resetData();
+    }
+
+    public void handlePanoramaTransitionFailure() {
+        Log.d(TAG, "Call to handlePanoramaTransitionFailure");
+        mCamera.setPosition(ORIGIN);
+        mRenderLogic = getIdleRendering();
         NextPanoramaDataBuilder.resetData();
     }
 
@@ -676,6 +684,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         @Override
         public void onBitmapFailed(Drawable errorDrawable) {
             Log.d(TAG, "Picasso async bitmap load failed");
+            handlePanoramaTransitionFailure();
         }
 
         @Override
