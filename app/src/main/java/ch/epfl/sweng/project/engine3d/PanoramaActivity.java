@@ -28,15 +28,23 @@ public final class PanoramaActivity extends Activity {
 
     private SurfaceView mSurface = null;
     private PanoramaRenderer mRenderer = null;
+    private PInterface mParseManager;
+    private HouseManager mHouseManager;
+
+    public PanoramaActivity() {
+        mParseManager = new PInterface();
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        HouseManager houseManager = PInterface.getHouseManager(getIntent().getStringExtra("id"),
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+
+        mHouseManager = mParseManager.getHouseManager(getIntent().getStringExtra("id"),
                 getApplicationContext());
 
-        if (houseManager.getStartingId() == -1) {
+        if (mHouseManager.getStartingId() == -1) {
             Toast toast = Toast.makeText(this, getString(R.string.invalid_parse_object), Toast.LENGTH_SHORT);
             View view = toast.getView();
             view.setBackgroundColor(Color.GRAY);
@@ -50,18 +58,6 @@ public final class PanoramaActivity extends Activity {
 
         setContentView(R.layout.panorama_activity);
 
-        mSurface = new SurfaceView(this);
-        mSurface.setFrameRate(60.0);
-        mSurface.setRenderMode(ISurface.RENDERMODE_WHEN_DIRTY);
-
-        // Add mSurface to root view
-        addContentView(mSurface, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
-        mRenderer = new PanoramaRenderer(this, getWindowManager().getDefaultDisplay(), houseManager);
-        mSurface.setSurfaceRenderer(mRenderer);
-
-        //Create listener for handling user inputs
-        View.OnTouchListener listener = new PanoramaTouchListener(mRenderer);
-        mSurface.setOnTouchListener(listener);
     }
 
     @Override
@@ -75,22 +71,30 @@ public final class PanoramaActivity extends Activity {
         mSurface.setSystemUiVisibility(viewFlags);
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
         mRenderer.onPause();
     }
 
-    public PanoramaRenderer getAssociatedRenderer() {
-        return mRenderer;
-    }
-
     @Override
     public void onStart() {
         super.onStart();
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+
+        mSurface = new SurfaceView(this);
+        mSurface.setFrameRate(60.0);
+        mSurface.setRenderMode(ISurface.RENDERMODE_WHEN_DIRTY);
+
+        // Add mSurface to root view
+        addContentView(mSurface, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
+        mRenderer = new PanoramaRenderer(this, getWindowManager().getDefaultDisplay().getRotation(), mHouseManager);
+        mSurface.setSurfaceRenderer(mRenderer);
+
+        //Create listener for handling user inputs
+        View.OnTouchListener listener = new PanoramaTouchListener(mRenderer);
+        mSurface.setOnTouchListener(listener);
     }
 
     @Override

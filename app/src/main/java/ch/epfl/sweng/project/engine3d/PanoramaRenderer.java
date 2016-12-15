@@ -11,8 +11,8 @@ import android.hardware.SensorManager;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
+import android.view.Surface;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -213,7 +213,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         }
     };
 
-    public PanoramaRenderer(Context context, Display display, HouseManager houseManager) {
+    public PanoramaRenderer(Context context, int displayRotation, HouseManager houseManager) {
         super(context);
 
         NextPanoramaDataBuilder.resetData();
@@ -230,7 +230,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             mRotSensor = null;
             mRotSensorAvailable = false;
         } else {
-            mRotListener = new RotSensorListener(display.getRotation(), this);
+            mRotListener = new RotSensorListener(displayRotation, this);
             mRotSensor = rotSensor;
             mRotSensorAvailable = true;
         }
@@ -244,7 +244,18 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mSensorRot = new Quaternion();
         mYaw = 0;
         mCamera = getCurrentCamera();
-        mCamera.setFieldOfView(80);
+
+        switch (displayRotation) {
+            case Surface.ROTATION_0:
+            case Surface.ROTATION_180:
+                mCamera.setFieldOfView(80);
+                break;
+            case Surface.ROTATION_90:
+            case Surface.ROTATION_270:
+                mCamera.setFieldOfView(60);
+                break;
+        }
+
         mCamera.setFarPlane(220);
 
         mPanoSphere = null;

@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 
@@ -31,7 +30,6 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.internal.Shadow;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,8 +53,9 @@ import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.CAM_TRAVEL_DISTANC
 import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.DISTANCE_TO_DISPLAY;
 import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.LERP_FACTOR;
 import static ch.epfl.sweng.project.engine3d.PanoramaRenderer.ORIGIN;
-import static ch.epfl.sweng.project.tests3d.AssertUtils.assertQuaternionEquals;
-import static ch.epfl.sweng.project.tests3d.AssertUtils.assertQuaternionNotEquals;
+import static ch.epfl.sweng.project.tests3d.TestUtils.assertQuaternionEquals;
+import static ch.epfl.sweng.project.tests3d.TestUtils.assertQuaternionNotEquals;
+import static ch.epfl.sweng.project.tests3d.TestUtils.inject;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotSame;
@@ -651,21 +650,6 @@ public class RendererTests {
         return newRot;
     }
 
-    private <E, S> E inject(E intoObj, S injection, String fieldName) {
-        try {
-            Field valueField = intoObj.getClass().getDeclaredField(fieldName);
-            valueField.setAccessible(true);
-            try {
-                valueField.set(intoObj, injection);
-            } catch (IllegalAccessException e) {
-                Log.e("INJECTOR", e.getMessage());
-            }
-        } catch (NoSuchFieldException e) {
-            Log.e("INJECTOR", e.getMessage());
-        }
-
-        return intoObj;
-    }
 
     private class InjectedRendererBuilder {
 

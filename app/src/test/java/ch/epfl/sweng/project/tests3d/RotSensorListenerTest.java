@@ -24,7 +24,7 @@ import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
 
-import static ch.epfl.sweng.project.tests3d.AssertUtils.assertQuaternionEquals;
+import static ch.epfl.sweng.project.tests3d.TestUtils.assertQuaternionEquals;
 import static ch.epfl.sweng.project.util.DoubleArrayConverter.doubleToFloatArray;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;

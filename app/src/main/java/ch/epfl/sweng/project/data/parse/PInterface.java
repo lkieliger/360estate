@@ -32,11 +32,11 @@ import ch.epfl.sweng.project.features.propertylist.filter.FilterValues;
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 
-public final class PInterface {
+public class PInterface {
 
     private static final String TAG = "ParseInterface";
 
-    private PInterface() {
+    public PInterface() {
     }
 
     public static void getItemList(final Collection<Item> itemList,
@@ -114,38 +114,6 @@ public final class PInterface {
         }
     }
 
-
-    /**
-     * this function should only be called if internet is available.
-     */
-    public static HouseManager getHouseManager(String id, final Context context) {
-        Resources resources = getResourcesObject(id, context).get(0); //
-        List<PhotoSphereData> photoSphereDataList = new ArrayList<>();
-        int startingId;
-        String startingUrl = "";
-
-        try {
-            photoSphereDataList = resources.getPhotoSphereDatas();
-            startingId = resources.getStartingId();
-            startingUrl = resources.getStartingUrl();
-        } catch (JSONException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Error: " + e.getMessage());
-            }
-            //If there is a problem during the parsing of the data, we set the ID to -1
-            startingId = -1;
-        }
-
-        SparseArray<List<SpatialData>> sparseArray = new SparseArray<>();
-
-        for (PhotoSphereData photoSphereData : photoSphereDataList) {
-            sparseArray.append(photoSphereData.getId(), photoSphereData.getNeighborsList());
-        }
-
-
-        return new HouseManager(sparseArray, startingId, startingUrl);
-    }
-
     public static void getDataForDescription(String id,
                                              final Collection<String> urls,
                                              StringBuilder description,
@@ -167,7 +135,6 @@ public final class PInterface {
         }
 
     }
-
 
     private static List<Resources> getResourcesObject(String id, final Context context) {
         ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
@@ -196,7 +163,6 @@ public final class PInterface {
 
         return listResource;
     }
-
 
     public static void overrideFavorites(String idUser, Collection<String> list) {
         Favorites f = getFavoriteFromId(idUser);
@@ -241,6 +207,37 @@ public final class PInterface {
         f.saveEventually();
 
         return f;
+    }
+
+    /**
+     * this function should only be called if internet is available.
+     */
+    public HouseManager getHouseManager(String id, final Context context) {
+        Resources resources = getResourcesObject(id, context).get(0); //
+        List<PhotoSphereData> photoSphereDataList = new ArrayList<>();
+        int startingId;
+        String startingUrl = "";
+
+        try {
+            photoSphereDataList = resources.getPhotoSphereDatas();
+            startingId = resources.getStartingId();
+            startingUrl = resources.getStartingUrl();
+        } catch (JSONException e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Error: " + e.getMessage());
+            }
+            //If there is a problem during the parsing of the data, we set the ID to -1
+            startingId = -1;
+        }
+
+        SparseArray<List<SpatialData>> sparseArray = new SparseArray<>();
+
+        for (PhotoSphereData photoSphereData : photoSphereDataList) {
+            sparseArray.append(photoSphereData.getId(), photoSphereData.getNeighborsList());
+        }
+
+
+        return new HouseManager(sparseArray, startingId, startingUrl);
     }
 
 }
