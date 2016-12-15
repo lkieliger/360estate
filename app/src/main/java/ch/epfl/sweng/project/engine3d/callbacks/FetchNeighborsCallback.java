@@ -1,8 +1,8 @@
 package ch.epfl.sweng.project.engine3d.callbacks;
 
-import android.util.Log;
-
 import com.squareup.picasso.Callback;
+
+import ch.epfl.sweng.project.util.LogHelper;
 
 public class FetchNeighborsCallback implements Callback {
 
@@ -16,11 +16,11 @@ public class FetchNeighborsCallback implements Callback {
 
     @Override
     public void onSuccess() {
-        Log.d(TAG, "Fetching " + url + " was a success");
+        LogHelper.log(TAG, "Fetching " + url + " was a success");
     }
 
     @Override
     public void onError() {
-        Log.d(TAG, "Fetching " + url + " was a failure");
+        LogHelper.log(TAG, "Fetching " + url + " was a failure");
     }
 }

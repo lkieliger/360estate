@@ -16,6 +16,7 @@ import java.util.List;
 
 import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
 import ch.epfl.sweng.project.engine3d.StringAdapter;
+import ch.epfl.sweng.project.util.LogHelper;
 
 
 /**
@@ -77,7 +78,7 @@ public class PanoramaSphere extends Sphere {
     }
 
     public void detachPanoramaComponent(PanoramaObject panoramaObject) {
-        Log.d(TAG, "Call to detach component");
+        LogHelper.log(TAG, "Call to detach component");
 
         int index = mComponentList.indexOf(panoramaObject);
         panoramaObject.setPickingColor(-1);
@@ -107,14 +108,14 @@ public class PanoramaSphere extends Sphere {
         Bitmap old = mPhotoTexture.getBitmap();
         if (old != null) {
             old.recycle();
-            Log.d(TAG, "Recycling old panorama texture bitmap");
+            LogHelper.log(TAG, "Recycling old panorama texture bitmap");
         }
         mPhotoTexture.setBitmap(b);
         TextureManager.getInstance().replaceTexture(mPhotoTexture);
     }
 
     public void attachPanoramaComponents(Iterable<SpatialData> l) {
-        Log.d(TAG, "Call to attach panorama");
+        LogHelper.log(TAG, "Call to attach panorama");
         for (SpatialData am : l) {
             PanoramaObject panoramaObject = am.toPanoramaObject();
             attachPanoramaComponent(panoramaObject);
@@ -123,7 +124,7 @@ public class PanoramaSphere extends Sphere {
 
     public void attachPanoramaComponent(PanoramaObject panoramaObject) {
 
-        Log.d(TAG, "Call to attach component");
+        LogHelper.log(TAG, "Call to attach component");
         panoramaObject.registerComponentAtPicker(mPicker, mComponentIndex);
 
         mComponentIndex++;

@@ -1,7 +1,6 @@
 package ch.epfl.sweng.project.data.parse;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.parse.FindCallback;
@@ -17,7 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.panorama.HouseManager;
 import ch.epfl.sweng.project.data.panorama.PhotoSphereData;
@@ -28,18 +26,19 @@ import ch.epfl.sweng.project.data.parse.objects.JSONTags;
 import ch.epfl.sweng.project.data.parse.objects.Resources;
 import ch.epfl.sweng.project.features.propertylist.adapter.ItemAdapter;
 import ch.epfl.sweng.project.features.propertylist.filter.FilterValues;
+import ch.epfl.sweng.project.util.LogHelper;
 
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
 
-public class PInterface {
+public enum PInterface {
+
+    INST;
 
     private static final String TAG = "ParseInterface";
+    private final ParseProxy proxy = new ParseProxy();
 
-    public PInterface() {
-    }
-
-    public static void getItemList(final Collection<Item> itemList,
+    public void getItemList(final Collection<Item> itemList,
                                    final ItemAdapter itemAdapter,
                                    FilterValues filterValues,
                                    Boolean favoriteToggled,
@@ -77,7 +76,7 @@ public class PInterface {
     }
 
 
-    private static void fetchItems(ParseQuery<Item> query,
+    private void fetchItems(ParseQuery<Item> query,
                                    final Collection<Item> itemList,
                                    final ItemAdapter itemAdapter,
                                    final Context context) {
@@ -86,27 +85,27 @@ public class PInterface {
             FindCallback<Item> callback = new FindCallback<Item>() {
                 public void done(List<Item> objects, ParseException e) {
                     if (e == null) {
-                        Log.d(TAG, "Retrieved " + objects.size() + " house items");
+                        LogHelper.log(TAG, "Retrieved " + objects.size() + " house items");
                         itemList.clear();
                         itemList.addAll(objects);
                         itemAdapter.notifyDataSetChanged();
 
                         //we only update the localDataStore if internet was available at the time of the query
-                        if (ParseProxy.PROXY.internetAvailable()) {
+                        if (proxy.internetAvailable()) {
                             ParseObject.pinAllInBackground(objects);
                         }
 
                     } else {
-                        Log.d("fetchItems", "Error: " + e.getMessage());
+                        LogHelper.log("fetchItems", "Error: " + e.getMessage());
                     }
 
-                    if (!ParseProxy.PROXY.internetAvailable()) {
+                    if (!proxy.internetAvailable()) {
                         shortToast(context, context.getResources().getText(R.string.no_internet_access));
                     }
                 }
             };
 
-            ParseProxy.PROXY.executeQuery(query, callback, TAG);
+            proxy.executeQuery(query, callback);
 
         } else {
             itemList.clear();
@@ -114,7 +113,7 @@ public class PInterface {
         }
     }
 
-    public static void getDataForDescription(String id,
+    public void getDataForDescription(String id,
                                              final Collection<String> urls,
                                              StringBuilder description,
                                              final Context context) {
@@ -126,9 +125,7 @@ public class PInterface {
             try {
                 urls.addAll(resource.getPicturesList());
             } catch (JSONException e) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Error: " + e.getMessage());
-                }
+                LogHelper.log(TAG, "Error: " + e.getMessage());
             }
 
             description.append(resource.getDescription());
@@ -136,62 +133,56 @@ public class PInterface {
 
     }
 
-    private static List<Resources> getResourcesObject(String id, final Context context) {
+    private List<Resources> getResourcesObject(String id, final Context context) {
         ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
         query.whereEqualTo(JSONTags.idHouseTag, id);
 
         List<Resources> listResource = new ArrayList<>();
 
         try {
-            listResource = ParseProxy.PROXY.executeFindQuery(query);
+            listResource = proxy.executeFindQuery(query);
 
-            if (ParseProxy.PROXY.internetAvailable()) {
+            if (proxy.internetAvailable()) {
                 ParseObject.pinAllInBackground(listResource);
             }
         } catch (ParseException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Error in Resources query : " + e.getMessage());
-            }
+            LogHelper.log(TAG, "Error in Resources query : " + e.getMessage());
         }
 
-        if (!ParseProxy.PROXY.internetAvailable()) {
+        if (!proxy.internetAvailable()) {
             shortToast(context, context.getResources().getText(R.string.no_internet_access));
         }
 
         if (listResource.size() > 1)
-            Log.d(TAG, "Warning: The same id has different Resources.");
+            LogHelper.log(TAG, "Warning: The same id has different Resources.");
 
         return listResource;
     }
 
-    public static void overrideFavorites(String idUser, Collection<String> list) {
+    public void overrideFavorites(String idUser, Collection<String> list) {
         Favorites f = getFavoriteFromId(idUser);
         f.setFavorites((Set<String>) list);
 
     }
 
-    public static Favorites getFavoriteFromId(String idUser) {
+    public Favorites getFavoriteFromId(String idUser) {
         ParseQuery<Favorites> query = ParseQuery.getQuery(Favorites.class);
         query.whereEqualTo("idUser", idUser);
 
         List<Favorites> listFavorites = new ArrayList<>();
 
         try {
-            listFavorites = ParseProxy.PROXY.executeFindQuery(query);
+            listFavorites = proxy.executeFindQuery(query);
 
-            if (ParseProxy.PROXY.internetAvailable()) {
+            if (proxy.internetAvailable()) {
                 ParseObject.pinAllInBackground(listFavorites);
             }
         } catch (ParseException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Error in favorites query : " + e.getMessage());
-            }
+            LogHelper.log(TAG, "Error in favorites query : " + e.getMessage());
         }
 
         if (listFavorites.size() > 1)
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Warning: The same user id has different Favorites.");
-
+            LogHelper.log(TAG, "Warning: The same user id has different Favorites.");
         Favorites f;
         if (listFavorites.isEmpty()) {
             f = saveNewFavorites(idUser);
@@ -223,9 +214,7 @@ public class PInterface {
             startingId = resources.getStartingId();
             startingUrl = resources.getStartingUrl();
         } catch (JSONException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Error: " + e.getMessage());
-            }
+            LogHelper.log(TAG, "Error: " + e.getMessage());
             //If there is a problem during the parsing of the data, we set the ID to -1
             startingId = -1;
         }
@@ -238,6 +227,10 @@ public class PInterface {
 
 
         return new HouseManager(sparseArray, startingId, startingUrl);
+    }
+
+    public ParseProxy getProxy() {
+        return proxy;
     }
 
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -25,6 +24,7 @@ import ch.epfl.sweng.project.features.propertyDescription.slider.SlideActivity;
 import ch.epfl.sweng.project.features.propertylist.ListActivity;
 import ch.epfl.sweng.project.features.propertylist.listeners.OnCheckedFavorite;
 import ch.epfl.sweng.project.userSupport.fragments.ContactMeDialogFragment;
+import ch.epfl.sweng.project.util.LogHelper;
 
 import static ch.epfl.sweng.project.data.ImageMgmt.getImgFromUrlIntoView;
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
@@ -50,14 +50,14 @@ public final class DescriptionActivity extends AppCompatActivity {
         final ArrayList<String> imagesURL = new ArrayList<>();
         StringBuilder descriptionBuilder = new StringBuilder();
 
-        PInterface.getDataForDescription(idItem, imagesURL, descriptionBuilder, mContext);
+        PInterface.INST.getDataForDescription(idItem, imagesURL, descriptionBuilder, mContext);
         String description = descriptionBuilder.toString();
 
 
         if (!description.equals("")) {
 
 
-            Log.d("description ", description);
+            LogHelper.log("description ", description);
 
             TextView txt = (TextView) findViewById(R.id.description_text);
             txt.setText(description.toCharArray(), 0, description.length());
@@ -92,7 +92,7 @@ public final class DescriptionActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    if (ParseProxy.PROXY.internetAvailable()) {
+                    if (PInterface.INST.getProxy().internetAvailable()) {
                         Intent intentToPanorama = new Intent(DescriptionActivity.this, PanoramaActivity.class);
                         intentToPanorama.putExtra("id", idItem);
                         startActivity(intentToPanorama);
@@ -141,7 +141,7 @@ public final class DescriptionActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        if (ParseProxy.PROXY.internetAvailable()) {
+        if (PInterface.INST.getProxy().internetAvailable()) {
             ListActivity.synchronizeServer();
         }
         super.onStop();

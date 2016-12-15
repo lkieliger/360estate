@@ -76,7 +76,7 @@ public final class ListActivity extends AppCompatActivity {
     }
 
     public static void synchronizeServer() {
-        if (ParseProxy.PROXY.internetAvailable()) {
+        if (PInterface.INST.getProxy().internetAvailable()) {
             f.synchronizeServer();
         }
     }
@@ -102,7 +102,7 @@ public final class ListActivity extends AppCompatActivity {
         mContext = getApplicationContext();
 
 
-        setFavorites(PInterface.getFavoriteFromId(idUser));
+        setFavorites(PInterface.INST.getFavoriteFromId(idUser));
 
 
         f.synchronizeFromServer();
@@ -133,7 +133,7 @@ public final class ListActivity extends AppCompatActivity {
         });
 
 
-        PInterface.getItemList(itemList, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext
+        PInterface.INST.getItemList(itemList, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext
         );
         // Assign adapter to ListView
         listView.setAdapter(itemAdapter);
@@ -173,7 +173,8 @@ public final class ListActivity extends AppCompatActivity {
                 f.synchronizeServer();
 
                 isFavoriteToggle = b;
-                PInterface.getItemList(itemList, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext);
+                PInterface.INST.
+                        getItemList(itemList, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext);
             }
         });
 
@@ -266,8 +267,8 @@ public final class ListActivity extends AppCompatActivity {
                         maxSurface.getText().toString(),
                         minSurface.getText().toString()
                 );
-                PInterface.getItemList(itemCollection, itemAdapter, filterValues, isFavoriteToggle,
-                        idUser, mContext);
+                PInterface.INST.
+                        getItemList(itemCollection, itemAdapter, filterValues, isFavoriteToggle, idUser, mContext);
                 listView.setAdapter(itemAdapter);
                 helpDialog.dismiss();
             }

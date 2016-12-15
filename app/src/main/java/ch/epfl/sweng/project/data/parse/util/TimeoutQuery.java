@@ -11,7 +11,7 @@ import com.parse.ParseQuery;
 import java.util.Collections;
 import java.util.List;
 
-import ch.epfl.sweng.project.data.parse.ParseProxy;
+import ch.epfl.sweng.project.data.parse.PInterface;
 
 /**
  * Class used to specify a timeout on ParseQueries
@@ -50,7 +50,7 @@ public class TimeoutQuery<T extends ParseObject> {
                     return;
                 }
 
-                ParseProxy.PROXY.notifyInternetProblem();
+                PInterface.INST.getProxy().notifyInternetProblem();
 
                 synchronized (mLock) {
                     if (mSecondTry) {

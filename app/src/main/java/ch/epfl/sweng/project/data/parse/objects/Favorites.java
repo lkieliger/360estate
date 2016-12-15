@@ -1,7 +1,5 @@
 package ch.epfl.sweng.project.data.parse.objects;
 
-import android.util.Log;
-
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -12,13 +10,13 @@ import org.json.JSONException;
 import java.util.HashSet;
 import java.util.Set;
 
-import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.data.parse.PInterface;
 import ch.epfl.sweng.project.data.parse.ParseProxy;
+import ch.epfl.sweng.project.util.LogHelper;
 
 
 @ParseClassName("Favorites")
-public final class Favorites extends ParseObject {
+public class Favorites extends ParseObject {
 
     private static final String TAG = "Favorites";
     private Set<String> favorites = new HashSet<>();
@@ -27,7 +25,7 @@ public final class Favorites extends ParseObject {
 
     }
 
-    public Favorites(HashSet<String> extFavorites, String idUser) {
+    public Favorites(Set<String> extFavorites, String idUser) {
         setFavorites(extFavorites);
         setIdUser(idUser);
     }
@@ -38,7 +36,7 @@ public final class Favorites extends ParseObject {
         try {
             save();
         } catch (ParseException e) {
-            Log.d(TAG, e.getMessage());
+            LogHelper.log(TAG, e.getMessage());
         }
     }
 
@@ -71,9 +69,7 @@ public final class Favorites extends ParseObject {
         Set<String> favoritesSet = new HashSet<>();
 
         if (urlArray == null) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Error parsing the favoritesList array from JSON");
-            }
+            LogHelper.log(TAG, "Error parsing the favoritesList array from JSON");
             return favoritesSet;
         }
 
@@ -81,24 +77,22 @@ public final class Favorites extends ParseObject {
             try {
                 favoritesSet.add(urlArray.getString(i));
             } catch (JSONException e) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, e.getMessage());
-                }
+                LogHelper.log(TAG, e.getMessage());
             }
         }
         return favoritesSet;
     }
 
     public void synchronizeFromServer() {
-        if (ParseProxy.PROXY.internetAvailable()) {
+        if (PInterface.INST.getProxy().internetAvailable()) {
             favorites = getFavoritesFromServer();
         }
 
     }
 
     public void synchronizeServer() {
-        if (ParseProxy.PROXY.internetAvailable()) {
-            PInterface.overrideFavorites(getIdUser(), favorites);
+        if (PInterface.INST.getProxy().internetAvailable()) {
+            PInterface.INST.overrideFavorites(getIdUser(), favorites);
         }
     }
 }

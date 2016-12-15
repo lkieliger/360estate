@@ -12,7 +12,7 @@ import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.parse.objects.Item;
 import ch.epfl.sweng.project.features.propertylist.layout.ItemLayout;
 
-public final class ItemAdapter extends ArrayAdapter<Item> {
+public class ItemAdapter extends ArrayAdapter<Item> {
 
     public ItemAdapter(Context c, List<Item> items) {
         super(c, 0, items);

@@ -11,7 +11,6 @@ import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Tap;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -32,6 +31,7 @@ import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sweng.project.features.SplashActivity;
+import ch.epfl.sweng.project.util.LogHelper;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -69,15 +69,6 @@ public class CompleteBehaviorTest {
   */
     private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static SecureRandom rnd = new SecureRandom();
-
-    @Before
-    public void checkParseUserLoggedIn() {
-        if (ParseUser.getCurrentUser() != null) {
-            logUserOut();
-            throw new IllegalStateException("The Parse User was already logged in ! Run the test again");
-        }
-    }
-
     @Rule
     public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
 
@@ -129,6 +120,14 @@ public class CompleteBehaviorTest {
         );
     }
 
+    @Before
+    public void checkParseUserLoggedIn() {
+        if (ParseUser.getCurrentUser() != null) {
+            logUserOut();
+            throw new IllegalStateException("The Parse User was already logged in ! Run the test again");
+        }
+    }
+
     @After
     public void finishActivity() {
         logUserOut();
@@ -147,29 +146,29 @@ public class CompleteBehaviorTest {
         waitForIdNms(R.id.goto_registration_button, TimeUnit.SECONDS.toMillis(5));
         onView(withId(R.id.goto_registration_button)).perform(click());
 
-        Log.d(TAG, "Testing already registered user behavior");
+        LogHelper.log(TAG, "Testing already registered user behavior");
         testAlreadyRegisteredUser();
 
         waitForIdNms(R.id.goto_registration_button, TimeUnit.SECONDS.toMillis(5));
         onView(withId(R.id.goto_registration_button)).perform(click());
 
-        Log.d(TAG, "Testing new user registration");
+        LogHelper.log(TAG, "Testing new user registration");
         registerNewUser(testUserMail, testUserPassword, testUserPhone, testUserName, testUserLastName);
 
         viewIdDisplayedAfterNattempts(R.id.activity_splash, 3);
         onView(withId(R.id.goto_login_button)).perform(click());
 
-        Log.d(TAG, "Testing invalid login");
+        LogHelper.log(TAG, "Testing invalid login");
         login("HolaSenior@Shanchez.co", "PortesTriEstate");
 
         waitForIdNms(R.id.goto_reset_button, TimeUnit.SECONDS.toMillis(5));
         onView(withId(R.id.goto_reset_button)).perform(click());
 
-        Log.d(TAG, "Testing password reset activity");
+        LogHelper.log(TAG, "Testing password reset activity");
         testResetFunctionality();
 
 
-        Log.d(TAG, "Testing test user login");
+        LogHelper.log(TAG, "Testing test user login");
         viewIdDisplayedAfterNattempts(R.id.login_button, 5);
         waitForIdNms(R.id.login_button, TimeUnit.SECONDS.toMillis(10));
         login(testUserMail, testUserPassword);
@@ -179,7 +178,7 @@ public class CompleteBehaviorTest {
 
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
 
-        Log.d(TAG, "Testing contact request feature");
+        LogHelper.log(TAG, "Testing contact request feature");
         viewIdDisplayedAfterNattempts(R.id.contactRequestButton, 3);
         onView(withId(R.id.contactRequestButton)).perform(click());
         onView(withId(R.id.contact_refuse)).perform(click());
@@ -187,7 +186,7 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.contactRequestButton)).perform(click());
         onView(withId(R.id.contact_accept)).perform(click());
 
-        Log.d(TAG, "Testing favorites feature");
+        LogHelper.log(TAG, "Testing favorites feature");
         onView(withId(R.id.addToFavorites)).perform(click());
         pressBack();
 
@@ -212,7 +211,7 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.logOutButton)).perform(click());
         viewIdDisplayedAfterNattempts(R.id.activity_splash, 3);
 
-        Log.d(TAG, "Testing description activity behavior");
+        LogHelper.log(TAG, "Testing description activity behavior");
         onView(withId(R.id.goto_login_button)).perform(click());
         login("qwert@qwert.org", "12345");
 
@@ -226,10 +225,11 @@ public class CompleteBehaviorTest {
         ViewInteraction img0 = onView(childAtPosition(withId(R.id.scroll), 0));
         img0.perform(new CustomClick());
 
+        waitNms(TAG, 1000);
         pressBack();
         waitNms(TAG, 4000);
 
-        waitForIdNms(R.id.action_launch_panorama, TimeUnit.SECONDS.toMillis(2), isCompletelyDisplayed());
+        viewIdDisplayedAfterNattempts(R.id.action_launch_panorama, 5, isCompletelyDisplayed());
         onView(withId(R.id.action_launch_panorama)).perform(click());
         waitNms(TAG, 8000);
 

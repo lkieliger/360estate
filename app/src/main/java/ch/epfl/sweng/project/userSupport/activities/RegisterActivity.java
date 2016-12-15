@@ -15,8 +15,8 @@ import com.parse.SignUpCallback;
 
 import java.util.Arrays;
 
-import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
+import ch.epfl.sweng.project.util.LogHelper;
 
 import static ch.epfl.sweng.project.util.InputValidityChecker.emailIsValid;
 import static ch.epfl.sweng.project.util.InputValidityChecker.passwordIsValid;
@@ -150,9 +150,7 @@ public final class RegisterActivity extends AppCompatActivity {
                 !mName.getText().toString().isEmpty() &&
                 !mLastName.getText().toString().isEmpty();
 
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Result of field checking was: " + filled);
-        }
+        LogHelper.log(TAG, "Result of field checking was: " + filled);
 
         if (!filled) {
             shortToast(getApplicationContext(),

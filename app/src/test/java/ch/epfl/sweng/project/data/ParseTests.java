@@ -16,13 +16,12 @@ import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import bolts.Task;
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.data.parse.ParseProxy;
+import ch.epfl.sweng.project.data.parse.PInterface;
 import ch.epfl.sweng.project.data.parse.util.TimeoutQuery;
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -39,25 +38,7 @@ import static org.mockito.Mockito.doThrow;
 
 public class ParseTests {
 
-    private final ParseProxy proxy = ParseProxy.PROXY;
-
-    /*
-    Maybe rewrite this test using Mocking
-    @Test
-    public void testParseMgmtCornerCase() throws InterruptedException {
-
-        while (!proxy.internetAvailable()) {
-            Thread.sleep(500);
-        }
-
-        Activity dummyActivity = Robolectric.buildActivity(LoginActivity.class).create().get();
-
-        ArrayList<Item> itemList = new ArrayList<>();
-        PInterface.getItemList(itemList, new ItemAdapter(dummyActivity.getBaseContext(), itemList),
-                null, false, "nullUid", null);
-    }
-    */
-
+    private final PInterface parseInterface = PInterface.INST;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
@@ -106,7 +87,7 @@ public class ParseTests {
 
         doReturn(mockTask).when(query).findInBackground();
 
-        proxy.executeFindQuery(query);
+        parseInterface.getProxy().executeFindQuery(query);
     }
 
 
@@ -127,7 +108,7 @@ public class ParseTests {
         doReturn(new ParseException(exception)).when(mockTask).getError();
 
         try {
-            proxy.executeFindQuery(query);
+            parseInterface.getProxy().executeFindQuery(query);
         } catch (ParseException e) {
             assertEquals(exception.toString(), e.getMessage());
         }
@@ -150,7 +131,7 @@ public class ParseTests {
         doReturn(exception).when(mockTask).getError();
 
         try {
-            proxy.executeFindQuery(query);
+            parseInterface.getProxy().executeFindQuery(query);
         } catch (ParseException e) {
             assertEquals(exception.toString(), e.getMessage());
         }
@@ -168,7 +149,7 @@ public class ParseTests {
 
         doReturn(mockTask).when(query).findInBackground();
 
-        assertEquals(Collections.emptyList(), proxy.executeFindQuery(query));
+        assertEquals(Collections.emptyList(), parseInterface.getProxy().executeFindQuery(query));
     }
 
 }

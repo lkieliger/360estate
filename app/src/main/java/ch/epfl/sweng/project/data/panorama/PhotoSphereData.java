@@ -1,8 +1,5 @@
 package ch.epfl.sweng.project.data.panorama;
 
-import android.support.compat.BuildConfig;
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
+import ch.epfl.sweng.project.util.LogHelper;
 
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.idTag;
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.neighborsListTag;
@@ -49,9 +47,7 @@ public final class PhotoSphereData {
                 neighborsJsonArray.put(angleMapping);
             }
         } catch (JSONException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "JSONException:" + e.getMessage());
-            }
+            LogHelper.log(TAG, "JSONException:" + e.getMessage());
         }
         return neighborsJsonArray;
     }
@@ -67,9 +63,7 @@ public final class PhotoSphereData {
             neighborObject.put(idTag, mId);
             neighborObject.put(neighborsListTag, getNeighborsJsonArray());
         } catch (JSONException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "JSONException:" + e.getMessage());
-            }
+            LogHelper.log(TAG, "JSONException:" + e.getMessage());
         }
         return neighborObject;
     }

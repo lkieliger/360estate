@@ -50,6 +50,10 @@ public class LoginActivityTests {
         loginButton.performClick();
 
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(activity.getString(R.string.error_invalid_password)));
+
+        passwordText.setText("");
+        loginButton.performClick();
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(activity.getString(R.string.error_empty_field)));
     }
 
 

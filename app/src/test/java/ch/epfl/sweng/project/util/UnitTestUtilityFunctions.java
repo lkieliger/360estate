@@ -2,7 +2,6 @@ package ch.epfl.sweng.project.util;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import com.parse.Parse;
 
@@ -42,25 +41,11 @@ public final class UnitTestUtilityFunctions {
         );
     }
 
-    public static void wait250ms(String debugTag) {
-        waitNms(debugTag, 250);
-    }
-
-    public static void wait500ms(String debugTag) {
-        waitNms(debugTag, 500);
-    }
-
-    public static void wait1s(String debugTag) {
-        waitNms(debugTag, 1000);
-    }
-
     private static void waitNms(String debugTag, long millis) {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(debugTag, "InterruptedException" + e.getMessage());
-            }
+            LogHelper.log(debugTag, "InterruptedException" + e.getMessage());
         }
     }
 
