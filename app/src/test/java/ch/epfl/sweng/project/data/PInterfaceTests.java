@@ -1,20 +1,18 @@
 package ch.epfl.sweng.project.data;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.view.LayoutInflater;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
@@ -25,16 +23,13 @@ import java.util.List;
 import java.util.Set;
 
 import ch.epfl.sweng.project.BuildConfig;
-import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.parse.PInterface;
 import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.data.parse.objects.Favorites;
 import ch.epfl.sweng.project.data.parse.objects.Item;
-import ch.epfl.sweng.project.features.SplashActivity;
 import ch.epfl.sweng.project.features.propertylist.adapter.ItemAdapter;
-import ch.epfl.sweng.project.tests3d.TestUtils;
-import ch.epfl.sweng.project.userSupport.activities.RegisterActivity;
 
+import static ch.epfl.sweng.project.util.UnitTestUtilityFunctions.inject;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,12 +42,19 @@ import static org.mockito.Mockito.mock;
 @SuppressWarnings({"TypeMayBeWeakened", "rawtypes", "unchecked"})
 public class PInterfaceTests {
 
-    private ParseProxy proxy = mock(ParseProxy.class);
+    private ParseProxy mockProxy = mock(ParseProxy.class);
     private PInterface parseInterface = PInterface.INST;
+    private ParseProxy normalProxy;
 
     @Before
     public void setMockedProxy() {
-        parseInterface = TestUtils.inject(parseInterface, proxy, "proxy");
+        normalProxy = parseInterface.getProxy();
+        parseInterface = inject(parseInterface, mockProxy, "proxy");
+    }
+
+    @After
+    public void restoreNormalProxy() {
+        parseInterface = inject(parseInterface, normalProxy, "proxy");
     }
 
     @Test
@@ -89,7 +91,7 @@ public class PInterfaceTests {
                         throw new IllegalStateException("Nothing to do here");
                 }
             }
-        }).when(proxy).executeFindQuery(any(ParseQuery.class));
+        }).when(mockProxy).executeFindQuery(any(ParseQuery.class));
 
         doAnswer(new Answer() {
             public Object answer(InvocationOnMock invocation) {
@@ -105,7 +107,7 @@ public class PInterfaceTests {
                         throw new IllegalStateException("Nothing to do here");
                 }
             }
-        }).when(proxy).executeQuery(any(ParseQuery.class), any(FindCallback.class));
+        }).when(mockProxy).executeQuery(any(ParseQuery.class), any(FindCallback.class));
 
 
         List<Item> queriedList = new ArrayList<>();

@@ -36,7 +36,12 @@ public enum PInterface {
     INST;
 
     private static final String TAG = "ParseInterface";
-    private final ParseProxy proxy = new ParseProxy();
+    private final ParseProxy proxy;
+
+    PInterface() {
+        proxy = new ParseProxy();
+    }
+
 
     public void getItemList(final Collection<Item> itemList,
                                    final ItemAdapter itemAdapter,

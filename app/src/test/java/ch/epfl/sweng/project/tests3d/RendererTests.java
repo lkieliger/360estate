@@ -128,6 +128,7 @@ public class RendererTests {
         doReturn(mockedSensorManager).when(spiedContext).getSystemService(Context.SENSOR_SERVICE);
         metrics = RuntimeEnvironment.application.getResources().getDisplayMetrics();
 
+        //noinspection ConfusingArgumentToVarargsMethod
         when(mockedSpatialData.getType()).thenReturn(PanoramaComponentType.TRANSITION, null);
 
         List<SpatialData> spatialDataList = new ArrayList<>();
