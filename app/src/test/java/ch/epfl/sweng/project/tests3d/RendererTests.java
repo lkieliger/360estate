@@ -156,6 +156,10 @@ public class RendererTests {
                 mockedHouseManager);
         assertEquals(FOV_LANDSCAPE, panoramaRenderer.getCurrentCamera().getFieldOfView());
 
+        panoramaRenderer = new PanoramaRenderer(RuntimeEnvironment.application, -12345,
+                mockedHouseManager);
+        assertEquals(FOV_PORTRAIT, panoramaRenderer.getCurrentCamera().getFieldOfView());
+
     }
 
     @Test

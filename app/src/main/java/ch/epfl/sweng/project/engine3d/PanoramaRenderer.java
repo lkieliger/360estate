@@ -226,6 +226,25 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mHouseManager = houseManager;
         mImageManager = new ImageMgmt();
 
+        mCamera = getCurrentCamera();
+
+        switch (displayRotation) {
+            case Surface.ROTATION_0:
+            case Surface.ROTATION_180:
+                mCamera.setFieldOfView(FOV_PORTRAIT);
+                break;
+            case Surface.ROTATION_90:
+            case Surface.ROTATION_270:
+                mCamera.setFieldOfView(FOV_LANDSCAPE);
+                break;
+            default:
+                mCamera.setFieldOfView(FOV_PORTRAIT);
+                displayRotation = Surface.ROTATION_0;
+                break;
+        }
+
+        mCamera.setFarPlane(220);
+
         if (rotSensor == null) {
             Log.d(TAG, "No rotSensor available");
 
@@ -238,7 +257,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             mRotSensorAvailable = true;
         }
 
-
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         mXdpi = displayMetrics.xdpi;
         mYdpi = displayMetrics.ydpi;
@@ -246,20 +264,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mUserRot = new Quaternion();
         mSensorRot = new Quaternion();
         mYaw = 0;
-        mCamera = getCurrentCamera();
-
-        switch (displayRotation) {
-            case Surface.ROTATION_0:
-            case Surface.ROTATION_180:
-                mCamera.setFieldOfView(FOV_PORTRAIT);
-                break;
-            case Surface.ROTATION_90:
-            case Surface.ROTATION_270:
-                mCamera.setFieldOfView(FOV_LANDSCAPE);
-                break;
-        }
-
-        mCamera.setFarPlane(220);
 
         mPanoSphere = null;
 

@@ -50,18 +50,18 @@ public class PanoramaSphere extends Sphere {
 
         setBackSided(true);
         setPosition(INITIAL_POS);
-        mMaterial = new Material();
-        mMaterial.setColor(0);
+        Material m = new Material();
+        m.setColor(0);
 
         mPhotoTexture = new Texture(TEXTURE_TAG);
 
         try {
-            mMaterial.addTexture(mPhotoTexture);
+            m.addTexture(mPhotoTexture);
         } catch (ATexture.TextureException e) {
             Log.e(TAG, e.getMessage());
         }
 
-        setMaterial(mMaterial);
+        setMaterial(m);
     }
 
     /**

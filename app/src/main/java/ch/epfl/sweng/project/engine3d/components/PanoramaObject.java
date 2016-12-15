@@ -23,13 +23,13 @@ public abstract class PanoramaObject extends Plane {
         setX(distance * Math.sin(phi) * Math.cos(theta));
         setZ(distance * Math.sin(phi) * Math.sin(theta));
         setY(distance * Math.cos(phi));
-        mMaterial = new Material();
+        setMaterial(new Material());
 
     }
 
     PanoramaObject(double theta, double phi, String tag, int iconIndex) {
         super(10, 10, 2, 2, Vector3.Axis.Z);
-        mMaterial = new Material();
+        setMaterial(new Material());
 
         setX(DISTANCE * Math.sin(phi) * Math.cos(theta));
         setZ(DISTANCE * Math.sin(phi) * Math.sin(theta));
@@ -44,10 +44,10 @@ public abstract class PanoramaObject extends Plane {
 
     public void setIcon(String tag, int iconIndex, int colorIndex) {
         AlphaMapTexture alphaMap = new AlphaMapTexture(tag, iconIndex);
-        mMaterial.setColor(colorIndex);
+        getMaterial().setColor(colorIndex);
 
         try {
-            mMaterial.addTexture(alphaMap);
+            getMaterial().addTexture(alphaMap);
         } catch (ATexture.TextureException e) {
             Log.e("Texture error", e.getMessage());
         }
@@ -63,11 +63,11 @@ public abstract class PanoramaObject extends Plane {
     }
 
     public void detachFromParentAndDie() {
-        if (mParent == null) {
+        if (getParent() == null) {
             throw new IllegalStateException("Trying to detach PanoramaTransitionObject from a null " +
                     "parent !");
         }
-        mParent.removeChild(this);
+        getParent().removeChild(this);
         destroy();
     }
 
