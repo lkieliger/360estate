@@ -39,6 +39,7 @@ import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
 import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
 import ch.epfl.sweng.project.util.DebugPrinter;
+import ch.epfl.sweng.project.util.LogHelper;
 import ch.epfl.sweng.project.util.Tuple;
 
 import static android.content.Context.SENSOR_SERVICE;
@@ -166,7 +167,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
                 mCamera.setPosition(pos.lerp(ORIGIN, LERP_FACTOR * 5));
             } else {
                 mRenderLogic = getIdleRendering();
-                Log.d(TAG, "Movement Terminated");
+                LogHelper.log(TAG, "Movement Terminated");
             }
             Quaternion q = new Quaternion(mSensorRot);
             q = q.multiply(mUserRot);
@@ -191,7 +192,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             if (currentAngle >= targetAngle) {
                 rotationPercent = 0;
                 mRenderLogic = mIdleRendering;
-                Log.d(TAG, "Rotation finished");
+                LogHelper.log(TAG, "Rotation finished");
             }
         }
     };
@@ -246,7 +247,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mCamera.setFarPlane(220);
 
         if (rotSensor == null) {
-            Log.d(TAG, "No rotSensor available");
+            LogHelper.log(TAG, "No rotSensor available");
 
             mRotListener = null;
             mRotSensor = null;
@@ -287,7 +288,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * @param id  Id of the next Panorama to load
      */
     public void initiatePanoramaTransition(final String url, final int id) {
-        Log.d(TAG, "Call to initiate panorama transition, creating new task and setting next id.");
+        LogHelper.log(TAG, "Call to initiate panorama transition, creating new task and setting next id.");
         mRenderLogic = getSlidingRendering();
 
         NextPanoramaDataBuilder.setNextPanoId(id);
@@ -296,13 +297,13 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     }
 
     public void displayText(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
-        Log.d(TAG, "Call to display text information.");
+        LogHelper.log(TAG, "Call to display text information.");
         //noinspection deprecation
         mPanoSphere.setTextToDisplay(textInfo, theta, panoramaInfoObject);
     }
 
     public void deleteInfo(PanoramaInfoDisplay panoramaInfoDisplay) {
-        Log.d(TAG, "Call to delete text information.");
+        LogHelper.log(TAG, "Call to delete text information.");
         mPanoSphere.deleteTextToDisplay(panoramaInfoDisplay);
     }
 
@@ -327,7 +328,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     public void zoomOnText(double angle, double x, double z) {
         mTargetPos = mTargetPos.setAll(x, 25, z);
-        Log.d(TAG, "Moving to:" + x + " , " + z);
+        LogHelper.log(TAG, "Moving to:" + x + " , " + z);
 
         mTargetQuaternion = Quaternion.getIdentity().fromEuler(angle * 180 / Math.PI + 90, 0, 0);
 
@@ -337,7 +338,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     }
 
     public void zoomOut(double angle) {
-        Log.d(TAG, "Moving Out");
+        LogHelper.log(TAG, "Moving Out");
         mHelperQuaternion = Quaternion.getIdentity().fromEuler(angle * 180 / Math.PI + 90, 0, 0);
         mRenderLogic = getSlidingOutOfTextRendering();
     }
@@ -354,7 +355,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             NextPanoramaDataBuilder.resetData();
             mRenderLogic = getIdleRendering();
         } else {
-            Log.d(TAG, "Call to prepare scene, assigning next bitmap.");
+            LogHelper.log(TAG, "Call to prepare scene, assigning next bitmap.");
             NextPanoramaDataBuilder.setNextPanoBitmap(b);
         }
     }
@@ -366,7 +367,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void updateScene() {
 
         Tuple<Integer, Bitmap> panoData = NextPanoramaDataBuilder.build();
-        Log.d(TAG, "Call to update scene, changing panorama photo and attaching new components." +
+        LogHelper.log(TAG, "Call to update scene, changing panorama photo and attaching new components." +
                 " Pano id is: " + panoData.getX());
 
         mPanoSphere.detachPanoramaComponents();
@@ -519,7 +520,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     @Override
     public void initScene() {
 
-        Log.d(TAG, "Initializing scene");
+        LogHelper.log(TAG, "Initializing scene");
 
         Picasso.with(mContext).setLoggingEnabled(true);
 
@@ -529,7 +530,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
         NextPanoramaDataBuilder.setNextPanoId(mHouseManager.getStartingId());
         prepareScene(mImageManager.getBitmapFromUrl(getContext(), mHouseManager.getStartingUrl()));
-        Log.d(TAG, "Updating scene from initscene");
+        LogHelper.log(TAG, "Updating scene from initscene");
         updateScene();
     }
 
@@ -563,7 +564,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     @Override
     public void onObjectPicked(@NonNull Object3D object) {
         if (mRenderLogic == mIdleRendering || mRenderLogic == mSlidingToTextRendering) {
-            Log.d(TAG, "ObjectPicked");
+            LogHelper.log(TAG, "ObjectPicked");
             mTargetPos = object.getWorldPosition();
             mTargetPos.y += 25;
 
@@ -689,7 +690,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
         @Override
         public void onBitmapFailed(Drawable errorDrawable) {
-            Log.d(TAG, "Picasso async bitmap load failed");
+            LogHelper.log(TAG, "Picasso async bitmap load failed");
             handlePanoramaTransitionFailure();
         }
 

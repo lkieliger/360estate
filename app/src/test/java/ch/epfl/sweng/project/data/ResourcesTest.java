@@ -1,7 +1,5 @@
 package ch.epfl.sweng.project.data;
 
-import android.util.Log;
-
 import com.parse.ParseObject;
 
 import junit.framework.Assert;
@@ -25,8 +23,7 @@ import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
 import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
 import ch.epfl.sweng.project.data.parse.objects.JSONTags;
 import ch.epfl.sweng.project.data.parse.objects.Resources;
-import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
-import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
+import ch.epfl.sweng.project.util.LogHelper;
 import ch.epfl.sweng.project.util.Tuple;
 
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.neighborsListTag;
@@ -57,9 +54,7 @@ public class ResourcesTest {
         try {
             assertTrue(resources.getPicturesList().isEmpty());
         } catch (JSONException e) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, e.getMessage());
-
+            LogHelper.log(TAG, e.getMessage());
         }
     }
 
@@ -94,9 +89,7 @@ public class ResourcesTest {
         try {
             photoSphereDatas1 = testResources.getPhotoSphereDatas();
         } catch (JSONException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "JSON Exception:" + e.getMessage());
-            }
+            LogHelper.log(TAG, "JSON Exception:" + e.getMessage());
         }
         Assert.assertEquals(photoSphereDatas.size(), photoSphereDatas1.size());
 
@@ -110,9 +103,7 @@ public class ResourcesTest {
         try {
             urlList1 = testResources.getPicturesList();
         } catch (JSONException e) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, e.getMessage());
-
+            LogHelper.log(TAG, e.getMessage());
         }
 
         for (int i = 0; i < urlList.size(); i++) {

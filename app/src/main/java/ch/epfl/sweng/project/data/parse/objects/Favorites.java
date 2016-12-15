@@ -1,7 +1,5 @@
 package ch.epfl.sweng.project.data.parse.objects;
 
-import android.util.Log;
-
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -12,9 +10,9 @@ import org.json.JSONException;
 import java.util.HashSet;
 import java.util.Set;
 
-import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.data.parse.PInterface;
 import ch.epfl.sweng.project.data.parse.ParseProxy;
+import ch.epfl.sweng.project.util.LogHelper;
 
 
 @ParseClassName("Favorites")
@@ -38,7 +36,7 @@ public final class Favorites extends ParseObject {
         try {
             save();
         } catch (ParseException e) {
-            Log.d(TAG, e.getMessage());
+            LogHelper.log(TAG, e.getMessage());
         }
     }
 
@@ -71,9 +69,7 @@ public final class Favorites extends ParseObject {
         Set<String> favoritesSet = new HashSet<>();
 
         if (urlArray == null) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Error parsing the favoritesList array from JSON");
-            }
+            LogHelper.log(TAG, "Error parsing the favoritesList array from JSON");
             return favoritesSet;
         }
 
@@ -81,9 +77,7 @@ public final class Favorites extends ParseObject {
             try {
                 favoritesSet.add(urlArray.getString(i));
             } catch (JSONException e) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, e.getMessage());
-                }
+                LogHelper.log(TAG, e.getMessage());
             }
         }
         return favoritesSet;

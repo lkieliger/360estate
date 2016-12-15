@@ -9,7 +9,6 @@ import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.util.HumanReadables;
 import android.support.test.espresso.util.TreeIterables;
-import android.util.Log;
 import android.view.View;
 
 import com.parse.Parse;
@@ -20,8 +19,6 @@ import org.hamcrest.core.AllOf;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import ch.epfl.sweng.project.BuildConfig;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -63,13 +60,9 @@ public final class TestUtilityFunctions {
     public static void waitNms(String debugTag, long millis) {
         try {
             Thread.sleep(millis);
-            if (BuildConfig.DEBUG) {
-                Log.d(debugTag, "Thread slept for " + millis + " ms");
-            }
+            LogHelper.log(debugTag, "Thread slept for " + millis + " ms");
         } catch (InterruptedException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(debugTag, "InterruptedException" + e.getMessage());
-            }
+            LogHelper.log(debugTag, "InterruptedException" + e.getMessage());
         }
     }
 
@@ -79,6 +72,44 @@ public final class TestUtilityFunctions {
 
     public static void waitForIdNms(final int viewId, final long millis, final Matcher<View> matcher) {
         onView(isRoot()).perform(new WaitActionForId(viewId, millis, matcher));
+    }
+
+    public static void viewIdDisplayedAfterNattempts(final int viewId, final int maxNumberOfAttempts) {
+        viewIdDisplayedAfterNattempts(viewId, maxNumberOfAttempts, null);
+    }
+
+    public static void viewIdDisplayedAfterNattempts(final int viewId, final int maxNumberOfAttempts,
+                                                     Matcher<View> matcher) {
+        int numberOfAttempts = 0;
+        final int[] numberFailedAttempts = {0};
+        ViewInteraction viewInteraction = onView(withId(viewId)).
+                withFailureHandler(new CustomFailureHandler(numberFailedAttempts));
+
+        do {
+            if (matcher != null) {
+                viewInteraction.check(matches(allOf(isDisplayed(), matcher)));
+            } else {
+                viewInteraction.check(matches(isDisplayed()));
+            }
+            numberOfAttempts++;
+            if (numberFailedAttempts[0] < numberOfAttempts)
+                return;
+
+            try {
+                Thread.sleep(TimeUnit.SECONDS.toMillis(2));
+            } catch (InterruptedException ignored) {
+            }
+        } while (numberFailedAttempts[0] < maxNumberOfAttempts - 1);
+
+        if (numberFailedAttempts[0] == maxNumberOfAttempts - 1) {
+            // The view was not found, so we run onView one last time without a FailureHandler, so that an exception
+            // is thrown if it is still not found, otherwise it will continue
+            if (matcher != null) {
+                onView(withId(viewId)).check(matches(allOf(isDisplayed(), matcher)));
+            } else {
+                onView(withId(viewId)).check(matches(isDisplayed()));
+            }
+        }
     }
 
     /**
@@ -141,44 +172,6 @@ public final class TestUtilityFunctions {
         }
     }
 
-    public static void viewIdDisplayedAfterNattempts(final int viewId, final int maxNumberOfAttempts) {
-        viewIdDisplayedAfterNattempts(viewId, maxNumberOfAttempts, null);
-    }
-
-    public static void viewIdDisplayedAfterNattempts(final int viewId, final int maxNumberOfAttempts,
-                                                     Matcher<View> matcher) {
-        int numberOfAttempts = 0;
-        final int[] numberFailedAttempts = {0};
-        ViewInteraction viewInteraction = onView(withId(viewId)).
-                withFailureHandler(new CustomFailureHandler(numberFailedAttempts));
-
-        do {
-            if (matcher != null) {
-                viewInteraction.check(matches(allOf(isDisplayed(), matcher)));
-            } else {
-                viewInteraction.check(matches(isDisplayed()));
-            }
-            numberOfAttempts++;
-            if (numberFailedAttempts[0] < numberOfAttempts)
-                return;
-
-            try {
-                Thread.sleep(TimeUnit.SECONDS.toMillis(2));
-            } catch (InterruptedException ignored) {
-            }
-        } while (numberFailedAttempts[0] < maxNumberOfAttempts - 1);
-
-        if (numberFailedAttempts[0] == maxNumberOfAttempts - 1) {
-            // The view was not found, so we run onView one last time without a FailureHandler, so that an exception
-            // is thrown if it is still not found, otherwise it will continue
-            if (matcher != null) {
-                onView(withId(viewId)).check(matches(allOf(isDisplayed(), matcher)));
-            } else {
-                onView(withId(viewId)).check(matches(isDisplayed()));
-            }
-        }
-    }
-
     private static class CustomFailureHandler implements FailureHandler {
 
         private int[] mNumberOfFailedAttempts;
@@ -191,8 +184,8 @@ public final class TestUtilityFunctions {
         @Override
         public void handle(Throwable error, Matcher<View> viewMatcher) {
             mNumberOfFailedAttempts[0]++;
-            Log.d("RecursiveFailureHandler", "The viewMatcher" + viewMatcher.toString() + " failed. number of failed " +
-                    "attempts : " + mNumberOfFailedAttempts[0]);
+            LogHelper.log("RecursiveFailureHandler", "The viewMatcher" + viewMatcher.toString() +
+                    " failed. number of failed " + "attempts : " + mNumberOfFailedAttempts[0]);
         }
     }
 

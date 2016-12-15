@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.MemoryPolicy;
@@ -15,7 +14,7 @@ import com.squareup.picasso.Target;
 import java.io.IOException;
 import java.util.List;
 
-import ch.epfl.sweng.project.BuildConfig;
+import ch.epfl.sweng.project.util.LogHelper;
 
 public class ImageMgmt {
 
@@ -45,9 +44,7 @@ public class ImageMgmt {
             try {
                 mBitmap = Picasso.with(context).load(url).get();
             } catch (IOException e) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, e.getMessage());
-                }
+                LogHelper.log(TAG, e.getMessage());
             }
         }
         return mBitmap;
@@ -78,7 +75,7 @@ public class ImageMgmt {
     public void warmCache(final Context context, final List<String> urls) {
 
         for (String url : urls) {
-            Log.d(TAG, "Asking Picasso to fetch " + url);
+            LogHelper.log(TAG, "Asking Picasso to fetch " + url);
             Picasso.with(context)
                     .load(url)
                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)//Don't store in memory, prefers disk

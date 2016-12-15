@@ -55,6 +55,27 @@ public class RegisterActivityTests {
         assertThat(ShadowToast.getTextOfLatestToast(),
                 equalTo(activity.getString(R.string.error_unmatching_passwords)));
 
-    }
 
+        registrationEmail.setText("TOTO");
+        registrationPassword.setText("");
+        registerButton.performClick();
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(activity.getString(R.string.error_empty_field)));
+
+        registrationPassword.setText("TOTO");
+        registrationPassBis.setText("");
+        registerButton.performClick();
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(activity.getString(R.string.error_empty_field)));
+
+        registrationPassBis.setText("TOTO");
+        registrationName.setText("");
+        registerButton.performClick();
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(activity.getString(R.string.error_empty_field)));
+
+        registrationName.setText("TOTO");
+        registrationLastName.setText("");
+        registerButton.performClick();
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(activity.getString(R.string.error_empty_field)));
+
+
+    }
 }

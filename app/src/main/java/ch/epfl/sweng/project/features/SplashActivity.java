@@ -4,19 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 
 import com.parse.ParseUser;
 
-import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.parse.ParseInitialiser;
-import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.features.propertylist.ListActivity;
 import ch.epfl.sweng.project.userSupport.activities.LoginActivity;
 import ch.epfl.sweng.project.userSupport.activities.RegisterActivity;
+import ch.epfl.sweng.project.util.LogHelper;
 
 public final class SplashActivity extends AppCompatActivity {
     public static final String TAG = "SplashScreen";
@@ -78,13 +76,10 @@ public final class SplashActivity extends AppCompatActivity {
 
         if (currentUser != null) {
             if (currentUser.isAuthenticated()) {
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "The user is already logged in");
-
+                LogHelper.log(TAG, "The user is already logged in");
                 return true;
             } else {
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "The user is not authenticated");
+                LogHelper.log(TAG, "The user is not authenticated");
             }
         }
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -16,9 +15,9 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
-import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.features.propertylist.ListActivity;
+import ch.epfl.sweng.project.util.LogHelper;
 
 import static ch.epfl.sweng.project.util.InputValidityChecker.emailIsValid;
 import static ch.epfl.sweng.project.util.InputValidityChecker.passwordIsValid;
@@ -142,9 +141,8 @@ public final class LoginActivity extends AppCompatActivity {
         boolean filled = !mEmail.getText().toString().isEmpty() &&
                 !mPassword.getText().toString().isEmpty();
 
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Result of field checking was: " + filled);
-        }
+        LogHelper.log(TAG, "Result of field checking was: " + filled);
+
 
         if (!filled) {
             shortToast(getApplicationContext(),

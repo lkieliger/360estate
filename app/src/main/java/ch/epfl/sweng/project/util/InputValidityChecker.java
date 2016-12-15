@@ -1,12 +1,10 @@
 package ch.epfl.sweng.project.util;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
 
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
@@ -34,9 +32,7 @@ public final class InputValidityChecker {
     public static boolean passwordIsValid(String pwd, Context context) {
         boolean passLen = pwd.length() > 4;
 
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Password length check returned " + passLen);
-        }
+        LogHelper.log(TAG, "Password length check returned " + passLen);
 
         if (!passLen) {
             shortToast(context,
@@ -55,9 +51,7 @@ public final class InputValidityChecker {
     public static boolean emailIsValid(String email, Context context) {
         boolean emailCheck = validate(email);
 
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Email validity check returned " + emailCheck);
-        }
+        LogHelper.log(TAG, "Email validity check returned " + emailCheck);
 
         if (!emailCheck) {
             shortToast(context,
@@ -79,9 +73,7 @@ public final class InputValidityChecker {
     public static boolean passwordMatches(String pwd1, String pwd2, Context context) {
         boolean match = pwd1.equals(pwd2);
 
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Result of password matching was: " + match);
-        }
+        LogHelper.log(TAG, "Result of password matching was: " + match);
 
         if (!match) {
             shortToast(context,

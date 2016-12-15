@@ -1,10 +1,10 @@
 package ch.epfl.sweng.project.engine3d.listeners;
 
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
+import ch.epfl.sweng.project.util.LogHelper;
 
 import static android.view.MotionEvent.INVALID_POINTER_ID;
 
@@ -37,14 +37,13 @@ public final class PanoramaTouchListener implements View.OnTouchListener {
         final float x = event.getX(pointerIndex);
         final float y = event.getY(pointerIndex);
 
-        Log.d(TAG, "Event values: pointer index: " + pointerIndex + " pointer id: " + event.getPointerId(pointerIndex)
-                + " active id: " + mActivePointerId
-                + " x:" + x + " y:" + y);
+        LogHelper.log(TAG, "Event values: pointer index: " + pointerIndex + " pointer id: " +
+                event.getPointerId(pointerIndex) + " active id: " + mActivePointerId + " x:" + x + " y:" + y);
 
         switch (action) {
 
             case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "ACTION DOWN");
+                LogHelper.log(TAG, "ACTION DOWN");
                 // Remember where we started (for dragging)
                 lastX = x;
                 lastY = y;
@@ -56,9 +55,9 @@ public final class PanoramaTouchListener implements View.OnTouchListener {
             case MotionEvent.ACTION_MOVE:
                 // Remember this touch position for the next move event
                 if (pointerId == mActivePointerId) {
-                    Log.d(TAG, "ACTION MOVE");
+                    LogHelper.log(TAG, "ACTION MOVE");
                     // Calculate the distance moved
-                    Log.d(TAG, "Calculating dx with 0");
+                    LogHelper.log(TAG, "Calculating dx with 0");
                     float dx = x - lastX;
                     float dy = y - lastY;
 
@@ -69,7 +68,7 @@ public final class PanoramaTouchListener implements View.OnTouchListener {
                     if (posValueIsValid) {
                         if (isOnClick && (Math.abs(dx) > SCROLL_THRESHOLD || Math.abs(dy) >
                                 SCROLL_THRESHOLD)) {
-                            Log.d(TAG, "movement detected");
+                            LogHelper.log(TAG, "movement detected");
                             isOnClick = false;
                         }
                         mRenderer.updateCameraRotation(dx, dy);
@@ -79,23 +78,23 @@ public final class PanoramaTouchListener implements View.OnTouchListener {
                 return true;
 
             case MotionEvent.ACTION_UP:
-                Log.d(TAG, "ACTION UP");
+                LogHelper.log(TAG, "ACTION UP");
                 mActivePointerId = INVALID_POINTER_ID;
 
                 v.performClick();
                 if (isOnClick) {
-                    Log.d(TAG, "CLICK");
+                    LogHelper.log(TAG, "CLICK");
                     mRenderer.getObjectAt(event.getX(), event.getY());
                 }
                 return true;
 
             case MotionEvent.ACTION_CANCEL:
-                Log.d(TAG, "ACTION CANCEL");
+                LogHelper.log(TAG, "ACTION CANCEL");
                 mActivePointerId = INVALID_POINTER_ID;
                 return true;
 
             case MotionEvent.ACTION_POINTER_DOWN:
-                Log.d(TAG, "ACTION POINTER DOWN");
+                LogHelper.log(TAG, "ACTION POINTER DOWN");
 
                 posValueIsValid = false;
                 mActivePointerId = 0;
@@ -103,11 +102,11 @@ public final class PanoramaTouchListener implements View.OnTouchListener {
                 return true;
 
             case MotionEvent.ACTION_POINTER_UP:
-                Log.d(TAG, "ACTION POINTER UP");
+                LogHelper.log(TAG, "ACTION POINTER UP");
 
                 if (pointerId == mActivePointerId) {
                     // This was our active pointer going up. Choose a new active pointer and adjust accordingly.
-                    Log.d(TAG, "Changing pointer index");
+                    LogHelper.log(TAG, "Changing pointer index");
 
                     posValueIsValid = false;
                     mActivePointerId = event.getPointerId(pointerIndex == 0 ? 1 : 0);

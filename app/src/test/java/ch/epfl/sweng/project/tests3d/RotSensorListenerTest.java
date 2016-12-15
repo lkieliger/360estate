@@ -2,7 +2,6 @@ package ch.epfl.sweng.project.tests3d;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
-import android.util.Log;
 import android.view.Surface;
 
 import org.junit.Before;
@@ -23,6 +22,7 @@ import java.lang.reflect.Field;
 import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 import ch.epfl.sweng.project.engine3d.listeners.RotSensorListener;
+import ch.epfl.sweng.project.util.LogHelper;
 
 import static ch.epfl.sweng.project.tests3d.TestUtils.assertQuaternionEquals;
 import static ch.epfl.sweng.project.util.DoubleArrayConverter.doubleToFloatArray;
@@ -78,10 +78,10 @@ public class RotSensorListenerTest {
             try {
                 valuesField.set(mockedEvent, v);
             } catch (IllegalAccessException e) {
-                Log.d(TAG, e.getMessage());
+                LogHelper.log(TAG, e.getMessage());
             }
         } catch (NoSuchFieldException e) {
-            Log.d(TAG, e.getMessage());
+            LogHelper.log(TAG, e.getMessage());
         }
     }
 

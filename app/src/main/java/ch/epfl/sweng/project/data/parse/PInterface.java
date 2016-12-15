@@ -1,7 +1,6 @@
 package ch.epfl.sweng.project.data.parse;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.parse.FindCallback;
@@ -17,7 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.panorama.HouseManager;
 import ch.epfl.sweng.project.data.panorama.PhotoSphereData;
@@ -28,6 +26,7 @@ import ch.epfl.sweng.project.data.parse.objects.JSONTags;
 import ch.epfl.sweng.project.data.parse.objects.Resources;
 import ch.epfl.sweng.project.features.propertylist.adapter.ItemAdapter;
 import ch.epfl.sweng.project.features.propertylist.filter.FilterValues;
+import ch.epfl.sweng.project.util.LogHelper;
 
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
@@ -86,7 +85,7 @@ public class PInterface {
             FindCallback<Item> callback = new FindCallback<Item>() {
                 public void done(List<Item> objects, ParseException e) {
                     if (e == null) {
-                        Log.d(TAG, "Retrieved " + objects.size() + " house items");
+                        LogHelper.log(TAG, "Retrieved " + objects.size() + " house items");
                         itemList.clear();
                         itemList.addAll(objects);
                         itemAdapter.notifyDataSetChanged();
@@ -97,7 +96,7 @@ public class PInterface {
                         }
 
                     } else {
-                        Log.d("fetchItems", "Error: " + e.getMessage());
+                        LogHelper.log("fetchItems", "Error: " + e.getMessage());
                     }
 
                     if (!ParseProxy.PROXY.internetAvailable()) {
@@ -126,9 +125,7 @@ public class PInterface {
             try {
                 urls.addAll(resource.getPicturesList());
             } catch (JSONException e) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Error: " + e.getMessage());
-                }
+                LogHelper.log(TAG, "Error: " + e.getMessage());
             }
 
             description.append(resource.getDescription());
@@ -149,9 +146,7 @@ public class PInterface {
                 ParseObject.pinAllInBackground(listResource);
             }
         } catch (ParseException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Error in Resources query : " + e.getMessage());
-            }
+            LogHelper.log(TAG, "Error in Resources query : " + e.getMessage());
         }
 
         if (!ParseProxy.PROXY.internetAvailable()) {
@@ -159,7 +154,7 @@ public class PInterface {
         }
 
         if (listResource.size() > 1)
-            Log.d(TAG, "Warning: The same id has different Resources.");
+            LogHelper.log(TAG, "Warning: The same id has different Resources.");
 
         return listResource;
     }
@@ -183,15 +178,11 @@ public class PInterface {
                 ParseObject.pinAllInBackground(listFavorites);
             }
         } catch (ParseException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Error in favorites query : " + e.getMessage());
-            }
+            LogHelper.log(TAG, "Error in favorites query : " + e.getMessage());
         }
 
         if (listFavorites.size() > 1)
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Warning: The same user id has different Favorites.");
-
+            LogHelper.log(TAG, "Warning: The same user id has different Favorites.");
         Favorites f;
         if (listFavorites.isEmpty()) {
             f = saveNewFavorites(idUser);
@@ -223,9 +214,7 @@ public class PInterface {
             startingId = resources.getStartingId();
             startingUrl = resources.getStartingUrl();
         } catch (JSONException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Error: " + e.getMessage());
-            }
+            LogHelper.log(TAG, "Error: " + e.getMessage());
             //If there is a problem during the parsing of the data, we set the ID to -1
             startingId = -1;
         }

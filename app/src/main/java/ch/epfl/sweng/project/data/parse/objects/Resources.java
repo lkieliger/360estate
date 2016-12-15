@@ -1,7 +1,5 @@
 package ch.epfl.sweng.project.data.parse.objects;
 
-import android.util.Log;
-
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
@@ -13,12 +11,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.data.panorama.PhotoSphereData;
 import ch.epfl.sweng.project.data.panorama.adapters.InformationObject;
 import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
 import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
+import ch.epfl.sweng.project.util.LogHelper;
 import ch.epfl.sweng.project.util.Tuple;
 
 import static ch.epfl.sweng.project.data.parse.objects.JSONTags.descriptionTag;
@@ -146,9 +144,7 @@ public final class Resources extends ParseObject {
         List<String> picturesList = new ArrayList<>();
 
         if (urlArray == null) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Error parsing the picturesList array from JSON");
-            }
+            LogHelper.log(TAG, "Error parsing the picturesList array from JSON");
             return picturesList;
         }
 

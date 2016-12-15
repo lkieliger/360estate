@@ -1,12 +1,10 @@
 package ch.epfl.sweng.project.features.propertylist.filter;
 
-import android.support.compat.BuildConfig;
-import android.util.Log;
-
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import ch.epfl.sweng.project.data.parse.objects.Item;
+import ch.epfl.sweng.project.util.LogHelper;
 
 /**
  * A state of the popup layout.
@@ -116,9 +114,7 @@ public final class FilterValues {
             filterWithMin(isMinSurfaceFiltered, "surface", minSurface, query);
 
         } catch (NumberFormatException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d("FilterValues", "NumberFormatException" + e.getMessage());
-            }
+            LogHelper.log("FilterValues", "NumberFormatException" + e.getMessage());
         }
         return query;
     }

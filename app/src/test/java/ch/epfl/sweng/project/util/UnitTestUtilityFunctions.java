@@ -2,11 +2,8 @@ package ch.epfl.sweng.project.util;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import com.parse.Parse;
-
-import ch.epfl.sweng.project.BuildConfig;
 
 public final class UnitTestUtilityFunctions {
 
@@ -49,9 +46,7 @@ public final class UnitTestUtilityFunctions {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(debugTag, "InterruptedException" + e.getMessage());
-            }
+            LogHelper.log(debugTag, "InterruptedException" + e.getMessage());
         }
     }
 

@@ -1,8 +1,6 @@
 package ch.epfl.sweng.project.data.parse;
 
 
-import android.util.Log;
-
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -13,8 +11,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import bolts.Task;
-import ch.epfl.sweng.project.BuildConfig;
 import ch.epfl.sweng.project.data.parse.util.TimeoutQuery;
+import ch.epfl.sweng.project.util.LogHelper;
 
 
 @SuppressWarnings("ClassNamePrefixedWithPackageName")
@@ -66,9 +64,7 @@ public enum ParseProxy {
         try {
             task.waitForCompletion(secondTime ? QUERY_2ND_TIMEOUT : QUERY_TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Error in findQuery waitForCompletion execution: \n" + e.getMessage());
-            }
+            LogHelper.log(TAG, "Error in findQuery waitForCompletion execution: \n" + e.getMessage());
             return Collections.emptyList();
         }
 
@@ -84,9 +80,7 @@ public enum ParseProxy {
                 }
             } else {
                 if (!secondTime) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Error in findQuery .. we probably encountered a network timeout");
-                    }
+                    LogHelper.log(TAG, "Error in findQuery .. we probably encountered a network timeout");
                     notifyInternetProblem();
                     query.cancel();
 
