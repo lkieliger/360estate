@@ -2,14 +2,13 @@ package ch.epfl.sweng.project.util;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import com.parse.Parse;
 
 import org.rajawali3d.math.Quaternion;
 
 import java.lang.reflect.Field;
-
-import ch.epfl.sweng.project.BuildConfig;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
