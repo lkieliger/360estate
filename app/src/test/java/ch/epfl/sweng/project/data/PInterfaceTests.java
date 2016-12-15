@@ -176,7 +176,7 @@ public class PInterfaceTests {
     }
 
     @Test
-    public void errorsThrown() throws ParseException, InterruptedException {
+    public void exceptionsThrown() throws ParseException, InterruptedException {
 
         Context context = RuntimeEnvironment.application;
 
@@ -237,7 +237,7 @@ public class PInterfaceTests {
         //noinspection ProhibitedExceptionCaught
         try {
             f = parseInterface.getFavoriteFromId("coolId");
-        } catch (NullPointerException exception) {
+        } catch (Exception exception) {
             exceptionThrown = true;
             System.out.println("There is a \"normal\" null pointer exception: " + exception.getMessage());
         }
