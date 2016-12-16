@@ -192,7 +192,7 @@ public class CompleteBehaviorTest {
         pressBack();
 
         onView(withId(R.id.FavoritesButton)).perform(click());
-        waitNms(TAG, 500);
+        waitNms(TAG, TimeUnit.SECONDS.toMillis(3));
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
 
         onView(withId(R.id.addToFavorites)).perform(click());
@@ -222,23 +222,23 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.activity_description)).check(matches(isDisplayed()));
 
         // wait 3s for the images to load
-        waitNms(TAG, 3000);
+        waitNms(TAG, TimeUnit.SECONDS.toMillis(3));
         ViewInteraction img0 = onView(childAtPosition(withId(R.id.scroll), 0));
         img0.perform(new CustomClick());
 
-        waitNms(TAG, 1000);
+        waitNms(TAG, TimeUnit.SECONDS.toMillis(3));
         pressBack();
-        waitNms(TAG, 4000);
+        waitNms(TAG, TimeUnit.SECONDS.toMillis(5));
 
-        viewIdDisplayedAfterNattempts(R.id.action_launch_panorama, 5, isCompletelyDisplayed());
+        viewIdDisplayedAfterNattempts(R.id.action_launch_panorama, 10);
         onView(withId(R.id.action_launch_panorama)).perform(click());
-        waitNms(TAG, 8000);
+        waitNms(TAG, TimeUnit.SECONDS.toMillis(8));
 
         ViewAction generalClickAction = new GeneralClickAction(Tap.SINGLE,
                 GeneralLocation.VISIBLE_CENTER, Press.FINGER);
 
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
-        waitNms(TAG, 5000);
+        waitNms(TAG, TimeUnit.SECONDS.toMillis(5));
 
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
         wait1s(TAG);
