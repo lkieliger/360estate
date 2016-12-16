@@ -30,19 +30,7 @@ import static org.hamcrest.core.AllOf.allOf;
 
 public final class TestUtilityFunctions {
 
-    private static final String APP_ID = "360ESTATE";
-
     private TestUtilityFunctions() {
-    }
-
-    public static void initializeParse(Context context) {
-        Parse.initialize(new Parse.Configuration.Builder(context)
-                // The network interceptor is used to debug the communication between server/client
-                //.addNetworkInterceptor(new ParseLogInterceptor())
-                .applicationId(APP_ID)
-                .server("https://360.astutus.org/parse/")
-                .build()
-        );
     }
 
     public static void logUserOut() {
@@ -54,16 +42,12 @@ public final class TestUtilityFunctions {
     }
 
     public static void wait1s(String debugTag) {
-        waitNms(debugTag, 1000);
+        waitNms(debugTag, TimeUnit.SECONDS.toMillis(1));
     }
 
     public static void waitNms(String debugTag, long millis) {
-        try {
-            Thread.sleep(millis);
-            LogHelper.log(debugTag, "Thread slept for " + millis + " ms");
-        } catch (InterruptedException e) {
-            LogHelper.log(debugTag, "InterruptedException" + e.getMessage());
-        }
+        ViewAction waitAction = new WaitNMsAction(millis, debugTag);
+        onView(isRoot()).perform(waitAction);
     }
 
     public static void waitForIdNms(final int viewId, final long millis) {
@@ -186,6 +170,51 @@ public final class TestUtilityFunctions {
             mNumberOfFailedAttempts[0]++;
             LogHelper.log("RecursiveFailureHandler", "The viewMatcher" + viewMatcher.toString() +
                     " failed. number of failed " + "attempts : " + mNumberOfFailedAttempts[0]);
+        }
+    }
+
+
+    /**
+     * Perform action of waiting for a specific view id.
+     * <p>
+     * source : http://stackoverflow.com/a/22563297
+     */
+    private static class WaitNMsAction implements ViewAction {
+        private final long mMillis;
+        private final String mDebugTag;
+
+        WaitNMsAction(long millis) {
+            this(millis, null);
+        }
+
+        WaitNMsAction(long millis, String debugTag) {
+            mMillis = millis;
+            mDebugTag = debugTag;
+        }
+
+        @Override
+        public Matcher<View> getConstraints() {
+            return isRoot();
+        }
+
+        @Override
+        public String getDescription() {
+            return "wait unconditionally during " + mMillis + " millis.";
+        }
+
+        @Override
+        public void perform(final UiController uiController, final View view) {
+            uiController.loopMainThreadUntilIdle();
+            final long startTime = System.currentTimeMillis();
+            final long endTime = startTime + mMillis;
+
+            do {
+                // loops main thread 140ms each time.
+                uiController.loopMainThreadForAtLeast(140);
+            }
+            while (System.currentTimeMillis() < endTime);
+
+            LogHelper.log(mDebugTag != null ? mDebugTag : "WaitAction", "Just waited for " + mMillis + " ms");
         }
     }
 
