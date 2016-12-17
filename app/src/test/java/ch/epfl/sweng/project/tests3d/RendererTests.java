@@ -434,6 +434,11 @@ public class RendererTests {
 
         //Sliding out and rotate, special rotation
         new InjectedRendererBuilder(panoramaRenderer).withRotateObjectAndZoomOutRendering();
+        PanoramaInfoObject mockedObjectToRotate = Mockito.mock(PanoramaInfoObject.class);
+        when(mockedObjectToRotate.getX()).thenReturn(1.0);
+        when(mockedObjectToRotate.getY()).thenReturn(2.0);
+        when(mockedObjectToRotate.getZ()).thenReturn(3.0);
+        inject(panoramaRenderer, mockedObjectToRotate, "objectToRotate");
         panoramaRenderer.onRender(0, 0);
         verify(mockedCamera, atLeastOnce()).setCameraOrientation(quaternionCaptor.capture());
         assertQuaternionNotEquals(ref, quaternionCaptor.getValue());
@@ -577,10 +582,12 @@ public class RendererTests {
     public void rotateObjectRenderingIsCorrect() {
         PanoramaInfoObject mockedObjectToRotate = Mockito.mock(PanoramaInfoObject.class);
         List<Double> refVal1s = Arrays.asList(new Double[]{-1.0, -2.0, -3.0, 180.0 / (4.0 * 15)});
-        when(mockedObjectToRotate.getX()).thenReturn(1.0, 1.1);
-        when(mockedObjectToRotate.getY()).thenReturn(2.0, 2.1);
-        when(mockedObjectToRotate.getZ()).thenReturn(3.0, 3.1);
+        when(mockedObjectToRotate.getX()).thenReturn(1.0);
+        when(mockedObjectToRotate.getY()).thenReturn(2.0);
+        when(mockedObjectToRotate.getZ()).thenReturn(3.0);
         inject(panoramaRenderer, mockedObjectToRotate, "objectToRotate");
+
+        panoramaRenderer.rotateDisplayInfoObject(mockedObjectToRotate);
 
         new InjectedRendererBuilder(panoramaRenderer).withRotateObjectRendering();
 
@@ -594,15 +601,109 @@ public class RendererTests {
         assertEquals(refVal1s, vals);
 
         for (int i = 1; i < 15; i++) {
+            assertEquals(panoramaRenderer.getRotateObjectRendering(), panoramaRenderer.getCurrentRenderingLogic());
             panoramaRenderer.onRender(0, 0);
         }
         assertEquals(panoramaRenderer.getIdleRendering(), panoramaRenderer.getCurrentRenderingLogic());
     }
 
     @Test
-    public void rotateObjectAndZoomOutRenderingIsCorrect() {
+    public void rotateObjectAndZoomOutRenderingIsCorrectRotateFinishFirst() {
+        PanoramaInfoObject mockedObjectToRotate = Mockito.mock(PanoramaInfoObject.class);
+        List<Double> refVal1s = Arrays.asList(new Double[]{-1.0, -2.0, -3.0, 180.0 / (4.0 * 15)});
+        when(mockedObjectToRotate.getX()).thenReturn(1.0);
+        when(mockedObjectToRotate.getY()).thenReturn(2.0);
+        when(mockedObjectToRotate.getZ()).thenReturn(3.0);
 
-        //TODO: refactor rendering logic so that is it testable
+        Vector3 pos1 = new Vector3(DISTANCE_TO_DISPLAY, 0, 0);
+        Vector3 pos2 = new Vector3(0, 0, 0);
+        //Simulate a movement
+        Vector3[] pos3 = new Vector3[31];
+        for (int i = 0; i < pos3.length - 2; i++) {
+            pos3[i] = pos1;
+        }
+        pos3[pos3.length - 2] = pos2;
+        pos3[pos3.length - 1] = pos2;
+
+        when(mockedCamera.getPosition()).thenReturn(pos1, pos3);
+
+        inject(panoramaRenderer, mockedObjectToRotate, "objectToRotate");
+
+        panoramaRenderer.zoomOutAndRotate(0, mockedObjectToRotate);
+        new InjectedRendererBuilder(panoramaRenderer).withMockedCamera().withRotateObjectAndZoomOutRendering();
+
+        panoramaRenderer.resetTargetPos();
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, atLeastOnce()).setPosition(vectorCaptor.capture());
+
+        assertEquals(pos1.lerp(ORIGIN, LERP_FACTOR * 5), vectorCaptor.getValue());
+        verify(mockedObjectToRotate).rotate(doubleCaptor.capture(),
+                doubleCaptor.capture(),
+                doubleCaptor.capture(),
+                doubleCaptor.capture());
+        List<Double> vals = doubleCaptor.getAllValues();
+        verify(mockedObjectToRotate, atLeastOnce()).setColor(anyInt());
+        assertEquals(refVal1s, vals);
+
+        for (int i = 1; i < 15; i++) {
+            assertEquals(panoramaRenderer.getRotateObjectAndZoomOutRendering(), panoramaRenderer
+                    .getCurrentRenderingLogic());
+            panoramaRenderer.onRender(0, 0);
+        }
+        assertEquals(panoramaRenderer.getSlidingOutOfTextRendering(), panoramaRenderer.getCurrentRenderingLogic());
+
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, atLeastOnce()).getPosition();
+        verify(mockedCamera, atLeastOnce()).setCameraOrientation(any(Quaternion.class));
+
+        assertEquals(panoramaRenderer.getIdleRendering(), panoramaRenderer.getCurrentRenderingLogic());
+
+    }
+
+    @Test
+    public void rotateObjectAndZoomOutRenderingIsCorrectZoomFinishFirst() {
+        PanoramaInfoObject mockedObjectToRotate = Mockito.mock(PanoramaInfoObject.class);
+        List<Double> refVal1s = Arrays.asList(new Double[]{-1.0, -2.0, -3.0, 180.0 / (4.0 * 15)});
+        when(mockedObjectToRotate.getX()).thenReturn(1.0);
+        when(mockedObjectToRotate.getY()).thenReturn(2.0);
+        when(mockedObjectToRotate.getZ()).thenReturn(3.0);
+
+        Vector3 pos1 = new Vector3(DISTANCE_TO_DISPLAY, 0, 0);
+        Vector3 pos2 = new Vector3(0, 0, 0);
+        //Simulate a movement
+
+        when(mockedCamera.getPosition()).thenReturn(pos1, pos1, pos2, pos2);
+
+        inject(panoramaRenderer, mockedObjectToRotate, "objectToRotate");
+
+        panoramaRenderer.zoomOutAndRotate(0, mockedObjectToRotate);
+        new InjectedRendererBuilder(panoramaRenderer).withMockedCamera().withRotateObjectAndZoomOutRendering();
+
+        panoramaRenderer.resetTargetPos();
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, atLeastOnce()).setPosition(vectorCaptor.capture());
+
+        assertEquals(pos1.lerp(ORIGIN, LERP_FACTOR * 5), vectorCaptor.getValue());
+        verify(mockedObjectToRotate).rotate(doubleCaptor.capture(),
+                doubleCaptor.capture(),
+                doubleCaptor.capture(),
+                doubleCaptor.capture());
+        List<Double> vals = doubleCaptor.getAllValues();
+        verify(mockedObjectToRotate, atLeastOnce()).setColor(anyInt());
+        assertEquals(refVal1s, vals);
+        assertEquals(panoramaRenderer.getRotateObjectAndZoomOutRendering(), panoramaRenderer.getCurrentRenderingLogic());
+
+        panoramaRenderer.onRender(0, 0);
+        verify(mockedCamera, atLeastOnce()).getPosition();
+        verify(mockedCamera, atLeastOnce()).setCameraOrientation(any(Quaternion.class));
+        assertEquals(panoramaRenderer.getRotateObjectRendering(), panoramaRenderer.getCurrentRenderingLogic());
+
+        for (int i = 1; i < 14; i++) {
+            assertEquals(panoramaRenderer.getRotateObjectRendering(), panoramaRenderer
+                    .getCurrentRenderingLogic());
+            panoramaRenderer.onRender(0, 0);
+        }
+        assertEquals(panoramaRenderer.getIdleRendering(), panoramaRenderer.getCurrentRenderingLogic());
     }
 
     @Test

@@ -90,7 +90,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private float rotationPercent = 0;
     private int startingColor = TEXTURE_COLOR;
     private int finishColor = COLOR_CLOSE;
-    private boolean rotationTime = false;
 
     /**
      * Use this rendering when nothing special need to be done. In other words just allowing the camera to look
@@ -99,13 +98,11 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private RenderingLogic mIdleRendering = new RenderingLogic() {
         @Override
         public void render() {
-
             if (debugCounter == 60) {
                 debugCounter = 0;
                 DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
             }
             debugCounter++;
-
         }
     };
 
@@ -160,20 +157,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private RenderingLogic mSlidingOutOfTextRendering = new RenderingLogic() {
         @Override
         public void render() {
-            Log.i(TAG, "Zoom out in progress");
-            double travellingLength = mCamera.getPosition().length();
-            if (travellingLength > 0.01) {
-                Vector3 pos = new Vector3(mCamera.getPosition());
-                mCamera.setPosition(pos.lerp(ORIGIN, LERP_FACTOR * 5));
-            } else {
-                mRenderLogic = getIdleRendering();
-                LogHelper.log(TAG, "Movement Terminated");
-            }
-            Quaternion q = new Quaternion(mSensorRot);
-            q = q.multiply(mUserRot);
-
-            mHelperQuaternion = mHelperQuaternion.slerp(q, LERP_FACTOR * 5);
-            mCamera.setCameraOrientation(mHelperQuaternion);
+            slideOutOfText();
         }
     };
 
@@ -181,19 +165,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         @Override
         public void render() {
             Log.i(TAG, "Rotate Object in progress");
-            double rateOfRotation = 15.0;
-            double angle = 180 / (4.0 * rateOfRotation);
-            objectToRotate.rotate(-objectToRotate.getX(), -objectToRotate.getY(), -objectToRotate.getZ(), angle);
-            currentAngle += angle;
-            ArgbEvaluator argbEvaluator = new ArgbEvaluator();
-            rotationPercent += 1 / rateOfRotation;
-            objectToRotate.setColor((Integer) argbEvaluator.evaluate(rotationPercent, startingColor, finishColor));
-
-            if (currentAngle >= targetAngle) {
-                rotationPercent = 0;
-                mRenderLogic = mIdleRendering;
-                LogHelper.log(TAG, "Rotation finished");
-            }
+            rotateTarget();
         }
     };
 
@@ -201,20 +173,17 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         @Override
         public void render() {
             Log.i(TAG, "Rotate Object And Zoom Out");
-            if (rotationTime) {
-                mRotateObjectRendering.render();
-                if (mRenderLogic == mIdleRendering) {
-                    mRenderLogic = mSlidingOutOfTextRendering;
-                }
-                rotationTime = false;
-            } else {
-                mSlidingOutOfTextRendering.render();
-                if (mRenderLogic == mIdleRendering) {
-                    mRenderLogic = mRotateObjectRendering;
-                }
-                rotationTime = true;
+            rotateTarget();
+            if (mRenderLogic == mIdleRendering) {
+                mRenderLogic = mSlidingOutOfTextRendering;
             }
-        }
+
+            slideOutOfText();
+            if (mRenderLogic == mIdleRendering) {
+                mRenderLogic = mRotateObjectRendering;
+                }
+            }
+
     };
 
     public PanoramaRenderer(Context context, int displayRotation, HouseManager houseManager) {
@@ -275,6 +244,42 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mPicker.setOnObjectPickedListener(this);
 
         setFrameRate(60);
+    }
+
+    private void rotateTarget() {
+        double rateOfRotation = 15.0;
+        double angle = 180 / (4.0 * rateOfRotation);
+
+        //Take the Vector from the object to the origin (0 - ObjectCoordinates )
+        objectToRotate.rotate(-objectToRotate.getX(), -objectToRotate.getY(), -objectToRotate.getZ(), angle);
+        currentAngle += angle;
+        ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+        rotationPercent += 1 / rateOfRotation;
+        objectToRotate.setColor((Integer) argbEvaluator.evaluate(rotationPercent, startingColor, finishColor));
+
+        if (currentAngle >= targetAngle) {
+            rotationPercent = 0;
+            mRenderLogic = mIdleRendering;
+            LogHelper.log(TAG, "Rotation finished");
+        }
+
+    }
+
+    private void slideOutOfText() {
+        Log.i(TAG, "Zoom out in progress");
+        double travellingLength = mCamera.getPosition().length();
+        if (travellingLength > 0.01) {
+            Vector3 pos = new Vector3(mCamera.getPosition());
+            mCamera.setPosition(pos.lerp(ORIGIN, LERP_FACTOR * 5));
+        } else {
+            mRenderLogic = getIdleRendering();
+            LogHelper.log(TAG, "Movement Terminated");
+        }
+        Quaternion q = new Quaternion(mSensorRot);
+        q = q.multiply(mUserRot);
+
+        mHelperQuaternion = mHelperQuaternion.slerp(q, LERP_FACTOR * 5);
+        mCamera.setCameraOrientation(mHelperQuaternion);
     }
 
     //-------------------------------------------- ACTION METHODS ---------------------------------------------------//
