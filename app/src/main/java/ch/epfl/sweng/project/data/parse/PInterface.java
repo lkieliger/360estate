@@ -44,11 +44,11 @@ public enum PInterface {
 
 
     public void getItemList(final Collection<Item> itemList,
-                                   final ItemAdapter itemAdapter,
-                                   FilterValues filterValues,
-                                   Boolean favoriteToggled,
-                                   String idUser,
-                                   final Context context) {
+                            final ItemAdapter itemAdapter,
+                            FilterValues filterValues,
+                            Boolean favoriteToggled,
+                            String idUser,
+                            final Context context) {
 
         List<ParseQuery<Item>> queries = new ArrayList<>();
 
@@ -82,9 +82,9 @@ public enum PInterface {
 
 
     private void fetchItems(ParseQuery<Item> query,
-                                   final Collection<Item> itemList,
-                                   final ItemAdapter itemAdapter,
-                                   final Context context) {
+                            final Collection<Item> itemList,
+                            final ItemAdapter itemAdapter,
+                            final Context context) {
         if (query != null) {
 
             FindCallback<Item> callback = new FindCallback<Item>() {
@@ -119,9 +119,9 @@ public enum PInterface {
     }
 
     public void getDataForDescription(String id,
-                                             final Collection<String> urls,
-                                             StringBuilder description,
-                                             final Context context) {
+                                      final Collection<String> urls,
+                                      StringBuilder description,
+                                      final Context context) {
 
         List<Resources> resourcesList = getResourcesObject(id, context);
 
@@ -164,10 +164,13 @@ public enum PInterface {
         return listResource;
     }
 
-    public void overrideFavorites(String idUser, Collection<String> list) {
+    public void overrideFavorites(String idUser, Set<String> list) {
         Favorites f = getFavoriteFromId(idUser);
-        f.setFavorites((Set<String>) list);
-
+        try {
+            f.setFavorites(list);
+        } catch (ParseException e) {
+            LogHelper.log(TAG, "Error while setting Favorites!" + e.getMessage());
+        }
     }
 
     public Favorites getFavoriteFromId(String idUser) {

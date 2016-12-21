@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import ch.epfl.sweng.project.data.parse.PInterface;
-import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.util.LogHelper;
 
 
@@ -19,25 +18,25 @@ import ch.epfl.sweng.project.util.LogHelper;
 public class Favorites extends ParseObject {
 
     private static final String TAG = "Favorites";
-    private Set<String> favorites = new HashSet<>();
+    private Set<String> mFavoritesSet = new HashSet<>();
 
     public Favorites() {
 
     }
 
     public Favorites(Set<String> extFavorites, String idUser) {
-        setFavorites(extFavorites);
+        try {
+            setFavorites(extFavorites);
+        } catch (ParseException e) {
+            LogHelper.log(TAG, "Error while setting Favorites!" + e.getMessage());
+        }
         setIdUser(idUser);
     }
 
-    public void setFavorites(Set<String> favorites) {
-        JSONArray jsonFavorites = new JSONArray(favorites);
-        put("favorites", jsonFavorites);
-        try {
-            save();
-        } catch (ParseException e) {
-            LogHelper.log(TAG, e.getMessage());
-        }
+    public void setFavorites(Set<String> mFavoritesSet) throws ParseException {
+        JSONArray jsonFavorites = new JSONArray(mFavoritesSet);
+        put("mFavoritesSet", jsonFavorites);
+        save();
     }
 
     public String getIdUser() {
@@ -49,19 +48,19 @@ public class Favorites extends ParseObject {
     }
 
     public Set<String> getFavoritesFromLocal() {
-        return favorites;
+        return mFavoritesSet;
     }
 
     public boolean containsUrl(String url) {
-        return favorites.contains(url);
+        return mFavoritesSet.contains(url);
     }
 
     public void addUrlToLocal(String newUrl) {
-        favorites.add(newUrl);
+        mFavoritesSet.add(newUrl);
     }
 
     public void deleteUrlToLocal(String url) {
-        favorites.remove(url);
+        mFavoritesSet.remove(url);
     }
 
     public Set<String> getFavoritesFromServer() {
@@ -85,14 +84,14 @@ public class Favorites extends ParseObject {
 
     public void synchronizeFromServer() {
         if (PInterface.INST.getProxy().internetAvailable()) {
-            favorites = getFavoritesFromServer();
+            mFavoritesSet = getFavoritesFromServer();
         }
 
     }
 
     public void synchronizeServer() {
         if (PInterface.INST.getProxy().internetAvailable()) {
-            PInterface.INST.overrideFavorites(getIdUser(), favorites);
+            PInterface.INST.overrideFavorites(getIdUser(), mFavoritesSet);
         }
     }
 }
