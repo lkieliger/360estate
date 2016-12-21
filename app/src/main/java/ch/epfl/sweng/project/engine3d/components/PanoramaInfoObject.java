@@ -4,7 +4,6 @@ import org.rajawali3d.math.vector.Vector3;
 
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
-import ch.epfl.sweng.project.util.LogHelper;
 
 
 public class PanoramaInfoObject extends PanoramaObject {
@@ -40,7 +39,6 @@ public class PanoramaInfoObject extends PanoramaObject {
 
     @Override
     public void reactWith(PanoramaRenderer p) {
-        LogHelper.log("toto", "titi");
         if (!isDisplay) {
             p.displayText(textInfo, theta, this);
             p.rotateDisplayInfoObject(this);

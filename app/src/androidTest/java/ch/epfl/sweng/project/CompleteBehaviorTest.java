@@ -43,7 +43,6 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -100,7 +99,7 @@ public class CompleteBehaviorTest {
         return sb.toString();
     }
 
-    public static ViewAction clickXY(final int shiftX, final int shiftY) {
+    public static ViewAction clickShiftX() {
         return new GeneralClickAction(
                 Tap.SINGLE,
                 new CoordinatesProvider() {
@@ -111,8 +110,7 @@ public class CompleteBehaviorTest {
                         view.getLocationOnScreen(screenPos);
 
                         float[] coordinates = GeneralLocation.CENTER.calculateCoordinates(view);
-                        coordinates[0] += shiftX;
-                        coordinates[1] += shiftY;
+                        coordinates[1] -= view.getHeight() / 4;
 
                         return coordinates;
                     }
@@ -248,14 +246,9 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
         wait1s(TAG);
 
-        onView(withId(R.id.panorama_activity)).perform(clickXY(150, 0));
+        onView(withId(R.id.panorama_activity)).perform(clickShiftX());
         wait1s(TAG);
-        onView(withId(R.id.panorama_activity)).perform(clickXY(200, 0));
-        wait1s(TAG);
-        onView(withId(R.id.panorama_activity)).perform(clickXY(250, 0));
-        wait1s(TAG);
-        onView(withId(R.id.panorama_activity)).perform(clickXY(300, 0));
-        wait1s(TAG);
+
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
         wait1s(TAG);
 
