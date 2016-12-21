@@ -326,7 +326,7 @@ public class RendererTests {
         new InjectedRendererBuilder(panoramaRenderer)
                 .withMockedCamera()
                 .withSlidingRendering();
-        panoramaRenderer.handlePanoramaTransitionFailure();
+        panoramaRenderer.handleFailure();
         verify(mockedCamera).setPosition(vectorCaptor.capture());
         assertEquals(ORIGIN, vectorCaptor.getValue());
         assertEquals(panoramaRenderer.getIdleRendering(), panoramaRenderer.getCurrentRenderingLogic());
