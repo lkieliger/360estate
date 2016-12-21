@@ -69,47 +69,35 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private final RotSensorListener mRotListener;
     private final boolean mRotSensorAvailable;
     private final Sensor mRotSensor;
+    private final Quaternion mUserRot;
+    private final HouseManager mHouseManager;
+    private final ObjectColorPicker mPicker;
     private PanoramaSphere mPanoSphere;
-    private Quaternion mUserRot;
     private Quaternion mSensorRot;
     private Vector3 mTargetPos;
     private Quaternion mTargetQuaternion = new Quaternion();
     private Quaternion mHelperQuaternion = new Quaternion();
-    private double mYaw;
-    private FetchPhotoTask mImageLoadTask = null;
-    private HouseManager mHouseManager;
-    private RenderingLogic mRenderLogic;
-    private ObjectColorPicker mPicker;
-    private int debugCounter = 0;
-
-
-    // Variables used for the rotation.
-    private PanoramaInfoObject objectToRotate = null;
-    private double targetAngle = 0.0;
-    private double currentAngle = 0.0;
-    private float rotationPercent = 0;
-    private int startingColor = TEXTURE_COLOR;
-    private int finishColor = COLOR_CLOSE;
-
-    /**
-     * Use this rendering when nothing special need to be done. In other words just allowing the camera to look
-     * around and print some debug information.
-     */
-    private RenderingLogic mIdleRendering = new RenderingLogic() {
+    private final RenderingLogic mSlidingToTextRendering = new RenderingLogic() {
         @Override
         public void render() {
-            if (debugCounter == 60) {
-                debugCounter = 0;
-                DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
+            double travellingLength = mCamera.getPosition().length();
+
+            if (travellingLength < DISTANCE_TO_DISPLAY) {
+                Vector3 v = new Vector3(mTargetPos.x, mTargetPos.y, mTargetPos.z);
+                Vector3 pos = new Vector3(mCamera.getPosition());
+                mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
             }
-            debugCounter++;
+            mHelperQuaternion = mHelperQuaternion.slerp(mTargetQuaternion, LERP_FACTOR * 7);
+            mCamera.setCameraOrientation(mHelperQuaternion);
         }
     };
-
+    private double mYaw;
+    private FetchPhotoTask mImageLoadTask = null;
+    private RenderingLogic mRenderLogic;
     /**
      * Use this rendering logic to change the panorama photo after a scene transition
      */
-    private RenderingLogic mTransitioningRendering = new RenderingLogic() {
+    private final RenderingLogic mTransitioningRendering = new RenderingLogic() {
         @Override
         public void render() {
             updateScene();
@@ -118,11 +106,10 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             );
         }
     };
-
     /**
      * Use this rendering logic to gradually move the camera toward the TransitionObject target
      */
-    private RenderingLogic mSlidingRendering = new RenderingLogic() {
+    private final RenderingLogic mSlidingRendering = new RenderingLogic() {
         @Override
         public void render() {
             double travellingLength = mCamera.getPosition().length();
@@ -138,30 +125,35 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             }
         }
     };
-
-    private RenderingLogic mSlidingToTextRendering = new RenderingLogic() {
-        @Override
-        public void render() {
-            double travellingLength = mCamera.getPosition().length();
-
-            if (travellingLength < DISTANCE_TO_DISPLAY) {
-                Vector3 v = new Vector3(mTargetPos.x, mTargetPos.y, mTargetPos.z);
-                Vector3 pos = new Vector3(mCamera.getPosition());
-                mCamera.setPosition(pos.lerp(v, LERP_FACTOR));
-            }
-            mHelperQuaternion = mHelperQuaternion.slerp(mTargetQuaternion, LERP_FACTOR * 7);
-            mCamera.setCameraOrientation(mHelperQuaternion);
-        }
-    };
-
-    private RenderingLogic mSlidingOutOfTextRendering = new RenderingLogic() {
+    private final RenderingLogic mSlidingOutOfTextRendering = new RenderingLogic() {
         @Override
         public void render() {
             slideOutOfText();
         }
     };
-
-    private RenderingLogic mRotateObjectRendering = new RenderingLogic() {
+    private int debugCounter = 0;
+    /**
+     * Use this rendering when nothing special need to be done. In other words just allowing the camera to look
+     * around and print some debug information.
+     */
+    private final RenderingLogic mIdleRendering = new RenderingLogic() {
+        @Override
+        public void render() {
+            if (debugCounter == 60) {
+                debugCounter = 0;
+                DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
+            }
+            debugCounter++;
+        }
+    };
+    // Variables used for the rotation.
+    private PanoramaInfoObject objectToRotate = null;
+    private double targetAngle = 0.0;
+    private double currentAngle = 0.0;
+    private float rotationPercent = 0;
+    private int startingColor = TEXTURE_COLOR;
+    private int finishColor = COLOR_CLOSE;
+    private final RenderingLogic mRotateObjectRendering = new RenderingLogic() {
         @Override
         public void render() {
             Log.i(TAG, "Rotate Object in progress");
@@ -169,7 +161,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         }
     };
 
-    private RenderingLogic mRotateObjectAndZoomOutRendering = new RenderingLogic() {
+    private final RenderingLogic mRotateObjectAndZoomOutRendering = new RenderingLogic() {
         @Override
         public void render() {
             Log.i(TAG, "Rotate Object And Zoom Out");
@@ -303,7 +295,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     public void displayText(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
         LogHelper.log(TAG, "Call to display text information.");
-        //noinspection deprecation
         mPanoSphere.setTextToDisplay(textInfo, theta, panoramaInfoObject);
     }
 
@@ -350,15 +341,14 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
 
     /**
-     * This method is called by the asynchronous task that fetched the panorama picture
+     * Callback method that should be called by the asynchronous task fetching the panorama picture.
+     * It will save the bitmap inside the NextPanoramaBuilder class
      *
-     * @param b The panorama picture as a Bitmap
+     * @param b The panorama picture
      */
     public void prepareScene(Bitmap b) {
         if (b == null) {
-            Log.e(TAG, "There was a problem with the PhotoFetch task, returned bitmap was null");
-            NextPanoramaDataBuilder.resetData();
-            mRenderLogic = getIdleRendering();
+            handleFailure();
         } else {
             LogHelper.log(TAG, "Call to prepare scene, assigning next bitmap.");
             NextPanoramaDataBuilder.setNextPanoBitmap(b);
@@ -367,7 +357,9 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
 
     /**
-     * Actually updates the current scene by changing the panorama picture and loading the new PanoramaComponents
+     * Actually updates the current scene by changing the panorama picture and loading the new PanoramaComponents.
+     * This method should be called when we have gathered all the needed data the transition between two panoramas
+     * and that we want to update the scene or in other terms what the user actually sees.
      */
     public void updateScene() {
 
@@ -392,13 +384,20 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         mImageManager.warmCache(mContext, urls);
     }
 
+    /**
+     * A call to this method will ask the Picasso library to cancel the task of fetching the next photo sphere
+     * texture, be it on disk or over the network
+     */
     public void cancelPanoramaUpdate() {
         Picasso.with(mContext).cancelRequest(mImageLoadTask);
         NextPanoramaDataBuilder.resetData();
     }
 
-    public void handlePanoramaTransitionFailure() {
-        Log.e(TAG, "Call to handlePanoramaTransitionFailure");
+    /**
+     * In case something bad happened during a transition or some other action, a call to this method will reset user
+     * position as well as any stored data about the next requested panorama
+     */
+    public void handleFailure() {
         mCamera.setPosition(ORIGIN);
         mRenderLogic = getIdleRendering();
         NextPanoramaDataBuilder.resetData();
@@ -417,7 +416,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * Then, periodically the sensor listener updates the mSensorRot field with the latest values.
      * The camera rotation is then given by the sensor rotation additioned with the user input.
      * In quaternion notation this is equivalent to multiplying the sensor quaternion by the user
-     * quaterion. Note that a defensive copy is needed because quaternions are mutable objects.
+     * quaternion. Note that a defensive copy is needed because quaternions are mutable objects.
      * </p>
      */
     public void updateCamera() {
@@ -462,7 +461,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     }
 
     /**
-     * Updates the device yaw needed to compute the camera rotation for a user swipe
+     * Updates the device yaw information. Yaw represents how much the device is tilted to the left or the right when
+     * you position it in front of you, in a vertical orientation.
      *
      * @param y yaw
      */
@@ -593,7 +593,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     /**
      * This interface defines a behavior of the PanoramaRenderer. Change in behavior can happen due to user input for
-     * displaying a transition for example.
+     * displaying a transition for example. When computing a new frame, the 3D engine will call the onRender method
+     * of the PanoramaRenderer class. This method in turn uses a rendering logic to modify the state of the 3D scene
      */
 
     public interface RenderingLogic {
@@ -602,6 +603,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     /**
      * Builder for the data needed to transition between panoramas.
+     * The data consists of the ID of the next panorama (as tracked by the house manager) to load as well as the bitmap
+     * that represent the panorama texture to be applied to the panorama sphere
      */
     public static final class NextPanoramaDataBuilder {
         static final int INVALID_ID = -1;
@@ -609,6 +612,9 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         private static final String TAG = "NextPanoDataBuilder";
         private static Integer nextPanoId = INVALID_ID;
         private static Bitmap nextPanoBitmap = INVALID_BITMAP;
+
+        private NextPanoramaDataBuilder() {
+        }
 
         public static boolean isReady() {
             return (nextPanoId != INVALID_ID && nextPanoBitmap != INVALID_BITMAP);
@@ -653,7 +659,10 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         }
 
         /**
-         * @return the built PanoramaData
+         * Build data corresponding to the next panorama to load. Two consecutive calls to this method is invalid as
+         * the first one will have erased the data stored by the class.
+         *
+         * @return the built PanoramaData under the shape of a tuple
          * @throws IllegalStateException if the PanoramaData is incomplete
          */
         public static Tuple<Integer, Bitmap> build() {
@@ -677,12 +686,14 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         }
 
         private static void logStatus() {
-            Log.i(TAG, "ID: " + nextPanoId + ", Bitmap@" + nextPanoBitmap);
+            LogHelper.log(TAG, "ID: " + nextPanoId + ", Bitmap@" + nextPanoBitmap);
         }
     }
 
     /**
-     * Target for Picasso's asynchronous image loading
+     * Target for Picasso's asynchronous image loading. When asking the Picasso library to fetch images online or on
+     * the disk, this class is given as a "Target". This means that this class is used upon completion of the Picasso
+     * task.
      */
     private class FetchPhotoTask implements Target {
 
@@ -696,7 +707,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         @Override
         public void onBitmapFailed(Drawable errorDrawable) {
             LogHelper.log(TAG, "Picasso async bitmap load failed");
-            handlePanoramaTransitionFailure();
+            handleFailure();
         }
 
         @Override
