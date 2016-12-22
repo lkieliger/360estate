@@ -28,6 +28,13 @@ public class HouseManager {
         startingId = extStartingId;
     }
 
+    /**
+     * Return the data associated with a specific id passed in argument. It will return every SpatialData that can be
+     * reached from the id.
+     *
+     * @param id the Id to get the data.
+     * @return the list of all SpatialData reachable from the id.
+     */
     public List<SpatialData> getAttachedDataFromId(int id) {
         if(sparseArray != null && sparseArray.size() != 0) {
             return Collections.unmodifiableList(new ArrayList<>(sparseArray.get(id)));

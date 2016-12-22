@@ -473,7 +473,6 @@ public class RendererTests {
         panoramaRenderer.onObjectPicked(mockPanoObject2);
         verifyNoMoreInteractions(mockPanoObject2);
 
-        //TODO: complete with more rendering logics
     }
 
     @Test
