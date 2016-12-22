@@ -33,7 +33,6 @@ import ch.epfl.sweng.project.data.panorama.HouseManager;
 import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
 import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaComponentType;
-import ch.epfl.sweng.project.engine3d.components.PanoramaInfoDisplay;
 import ch.epfl.sweng.project.engine3d.components.PanoramaInfoObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.engine3d.components.PanoramaSphere;
@@ -77,7 +76,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private Quaternion mTargetQuaternion = new Quaternion();
     private Quaternion mHelperQuaternion = new Quaternion();
     /**
-     * Gradually move the camera toward the PanoramaInfoDisplay target.
+     * Gradually move the camera toward the text target.
      */
     private final RenderingLogic mSlidingToTextRendering = new RenderingLogic() {
         @Override
@@ -93,29 +92,12 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             mCamera.setCameraOrientation(mHelperQuaternion);
         }
     };
-    private int debugCounter = 0;
-    /**
-     * Nothing special need to be done. In other words this rendering logic just allows the camera to look
-     * around and the renderer to print some debug information.
-     */
-    private final RenderingLogic mIdleRendering = new RenderingLogic() {
-        @Override
-        public void render() {
-            if (debugCounter == 60) {
-                debugCounter = 0;
-                DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
-            }
-            debugCounter++;
-        }
-    };
-    // Variables used for the rotation.
-    //TODO: move this to corresponing class
     private PanoramaInfoObject objectToRotate = null;
-    private double targetAngle = 0.0;
-    private double currentAngle = 0.0;
-    private float rotationPercent = 0;
-    private int startingColor = TEXTURE_COLOR;
-    private int finishColor = COLOR_CLOSE;
+    private double targetAngle = 0.0;//TODO: move this to corresponing class
+    private double currentAngle = 0.0;//TODO: move this to corresponing class
+    private float rotationPercent = 0;//TODO: move this to corresponing class
+    private int startingColor = TEXTURE_COLOR;//TODO: move this to corresponing class
+    private int finishColor = COLOR_CLOSE;//TODO: move this to corresponing class
     private double mYaw;
     private FetchPhotoTask mImageLoadTask = null;
     private RenderingLogic mRenderLogic;
@@ -169,7 +151,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             rotateTarget();
         }
     };
-
     /**
      * Gradually rotate the PanoramaInfoObject target and gradually move
      * the camera towards the center. It combines mRotateObjectRendering and mSlidingOutOfTextRendering.
@@ -186,9 +167,24 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             slideOutOfText();
             if (mRenderLogic == mIdleRendering) {
                 mRenderLogic = mRotateObjectRendering;
-                }
             }
+        }
 
+    };
+    private int debugCounter = 0;
+    /**
+     * Nothing special need to be done. In other words this rendering logic just allows the camera to look
+     * around and the renderer to print some debug information.
+     */
+    private final RenderingLogic mIdleRendering = new RenderingLogic() {
+        @Override
+        public void render() {
+            if (debugCounter == 60) {
+                debugCounter = 0;
+                DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
+            }
+            debugCounter++;
+        }
     };
 
     /**
@@ -324,29 +320,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     }
 
     /**
-     * Display the text passed in argument, into a PanoramaInfoDisplay that will be displayed at the
-     * angle passed in argument. The object created will be linked to the PanoramaInfoObject.
-     *
-     * @param textInfo           The text to be displayed.
-     * @param theta              The angle of the PanoramaInfoDisplay.
-     * @param panoramaInfoObject The panoramaInfoObject that activated the display of the text.
-     */
-    public void displayText(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
-        LogHelper.log(TAG, "Call to display text information.");
-        mPanoSphere.createTextDisplay(textInfo, theta, panoramaInfoObject);
-    }
-
-    /**
-     * Delete the PanoramaInfoDisplay passed in argument from the scene.
-     *
-     * @param panoramaInfoDisplay The panoramaInfoDisplay to be deleted.
-     */
-    public void deleteInfo(PanoramaInfoDisplay panoramaInfoDisplay) {
-        LogHelper.log(TAG, "Call to delete text information.");
-        mPanoSphere.deleteTextToDisplay(panoramaInfoDisplay);
-    }
-
-    /**
      * Rotate the object passed in argument by 45° and change the color of the PanoramaInfoObject
      * passed in argument from Blue to Red or Red to Blue.
      *
@@ -355,7 +328,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public void rotatePanoramaInfoObject(PanoramaInfoObject panoramaInfoObject) {
         objectToRotate = panoramaInfoObject;
         targetAngle = currentAngle + 180 / 4.0;
-        if (panoramaInfoObject.isDisplay()) {
+        if (panoramaInfoObject.isDisplayed()) {
             startingColor = COLOR_CLOSE;
             finishColor = TEXTURE_COLOR;
         } else {
@@ -369,7 +342,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * Zoom out (move the camera to the center) and rotate the object and change the color of the
      * PanoramaInfoObject passed in argument.
      *
-     * @param theta the current angle to which the camera is looking at.
+     * @param theta              the current angle to which the camera is looking at.
      * @param panoramaInfoObject the PanoramaInfoObject to rotate
      */
     public void zoomOutAndRotate(double theta, PanoramaInfoObject panoramaInfoObject) {
@@ -382,8 +355,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * Zoom on (move the camera) to a certain position and with a certain orientation.
      *
      * @param angle The target orientation of the camera
-     * @param x The target X position.
-     * @param z The target Z position.
+     * @param x     The target X position.
+     * @param z     The target Z position.
      */
     public void zoomOnText(double angle, double x, double z) {
         mTargetPos = mTargetPos.setAll(x, 25, z);

@@ -91,7 +91,7 @@ public abstract class PanoramaObject extends Plane {
     /**
      * Detach this PanoramaObject from its parent and frees associated memory
      */
-    public final void detachFromParentAndDie() {
+    public void detachFromParentAndDie() {
         if (getParent() == null) {
             throw new IllegalStateException("Trying to detach PanoramaTransitionObject from a null " +
                     "parent !");

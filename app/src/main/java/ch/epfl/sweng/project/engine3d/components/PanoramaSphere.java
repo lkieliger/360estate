@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
-import ch.epfl.sweng.project.engine3d.StringAdapter;
 import ch.epfl.sweng.project.util.LogHelper;
 
 
@@ -145,59 +144,5 @@ public class PanoramaSphere extends Sphere {
         mComponentIndex++;
         addChild(panoramaObject);
         mComponentList.add(panoramaObject);
-    }
-
-    /**
-     * Creates and display text in the 3D scene
-     *
-     * @param message            the text to display
-     * @param theta              spherical coordinates of the displayed text
-     * @param panoramaInfoObject the object responsible for representing the possibility of showing up text in the 3D
-     *                           scene
-     */
-    public void createTextDisplay(String message, double theta, PanoramaInfoObject panoramaInfoObject) {
-
-        StringAdapter stringAdapter = new StringAdapter(message);
-        int contourSize = 10;
-        int marginSize = 10;
-        int textSize = 18;
-        int widthPixels = 512;
-        int heightLimit = 512;
-
-        Bitmap bitmap = stringAdapter.textToBitmap(textSize, widthPixels, contourSize, marginSize, heightLimit);
-
-        int heightInfoDisplay = getSizeFromPixels(bitmap.getHeight());
-        int widthInfoDisplay = 30;
-
-        PanoramaInfoDisplay panoramaInfoDisplay = new PanoramaInfoDisplay(theta, 1.57, widthInfoDisplay
-                , heightInfoDisplay, bitmap, null);
-
-        panoramaInfoDisplay.setY(panoramaInfoDisplay.getY() + 10);
-
-        panoramaInfoDisplay.setPanoramaInfoObject(panoramaInfoObject);
-        panoramaInfoObject.setPanoramaInfoDisplay(panoramaInfoDisplay);
-        attachPanoramaComponent(panoramaInfoDisplay);
-    }
-
-    /**
-     * Delete text related to the given info object
-     * @param panoramaInfoDisplay the object whose associated text is to remove from the 3D scene
-     */
-    public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay) {
-        detachPanoramaComponent(panoramaInfoDisplay);
-    }
-
-    /**
-     * A magic formula that maps pixels into the units used in rajawali.
-     *
-     * @param pixels
-     * @return
-     */
-    private int getSizeFromPixels(int pixels) {
-        int i = ((int) (Math.log(pixels) / Math.log(2)) - 7) * 15;
-        if (i <= 0) {
-            return 10;
-        }
-        return i;
     }
 }

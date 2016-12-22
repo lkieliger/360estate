@@ -18,9 +18,10 @@ public final class PanoramaTransitionObject extends PanoramaObject {
 
     /**
      * Creates an object representing a transition possibility in the panorama
-     *
-     * @param theta   The inclination angle at which to display the object
-     * @param phi     The azimuthal angle at which to display the object
+     * @param theta    azimuthal angle in spherical coordinates of the piece of information (from 0 which is along
+     *                 the x axis to 2
+     *                 pi which is again along the x axis)
+     * @param phi      inclination in spherical coordinates of the piece of information (0 is up, pi is down)
      * @param id      The unique identifier of this transition object, used to find it in the transition table
      * @param nextUrl The url of the panorama to show after the transition
      */
