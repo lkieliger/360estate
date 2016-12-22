@@ -19,8 +19,15 @@ import ch.epfl.sweng.project.engine3d.StringAdapter;
 import ch.epfl.sweng.project.util.LogHelper;
 
 
+
 /**
- * Represent the panoramic Sphere containing the image.
+ * A PanoramaSphere is a rajawali 3d object that stores a panorama image
+ * in the form of a texture. Additional UI components such as transition arrows and information icons can be attached as
+ * children of this object. Upon creation of a panorama sphere a unique texture is created and registered with the
+ * material manager. The texture contains a bitmap as well as ID which is used by the texture manager to keep track of
+ * all texture used by the application. The bitmap associated with a texture can change but the texture instance
+ * remains unique. Therefore subsequent panorama photo changes should call the texture setter as it will handle the
+ * bitmap replacement.
  */
 public class PanoramaSphere extends Sphere {
 
@@ -33,15 +40,6 @@ public class PanoramaSphere extends Sphere {
     private Texture mPhotoTexture;
     private int mComponentIndex = 0;
 
-    /**
-     * A PanoramaSphere is a rajawali 3d object that stores a panorama image
-     * in the form of a texture. Additional UI components should be attached as
-     * children of this object. Upon creation of a panorama sphere a unique texture is
-     * created and registered with the material. The texture contains a bitmap as well as
-     * an ID which is used by the texture manager to keep track of all texture used by the application. The
-     * bitmap associated with a texture can change but the texture instance remains unique. Therefore subsequent
-     * panorama photo changes should call the texture setter as it will handle the bitmap replacement
-     */
     public PanoramaSphere(ObjectColorPicker p) {
         super(100, 48, 48);
 
@@ -66,7 +64,9 @@ public class PanoramaSphere extends Sphere {
     }
 
     /**
-     * Call this method to dissociate all UI components that were previously defined as children of the panorama sphere
+     * Dissociate all UI components that were previously defined as children of this panorama
+     * sphere. Dissociated objects are destroyed as it does not make sens to have panorama related object instances
+     * with the associated spherical picture and data.
      */
     public void detachPanoramaComponents() {
         for (PanoramaObject pc : mComponentList) {
@@ -77,6 +77,11 @@ public class PanoramaSphere extends Sphere {
         mComponentList.clear();
     }
 
+    /**
+     * Detach and destroy a single panorama component
+     *
+     * @param panoramaObject the objects to detach and destroy
+     */
     public void detachPanoramaComponent(PanoramaObject panoramaObject) {
         LogHelper.log(TAG, "Call to detach component");
 
@@ -98,11 +103,11 @@ public class PanoramaSphere extends Sphere {
     }
 
     /**
-     * Call this method to replace the currently shown panorama. The
+     * Replace the currently shown panorama. The
      * method will then call the texture manager and update the bitmap
      * associated with its texture
      *
-     * @param b A bitmap file that contain the panorama photograph
+     * @param b A bitmap file that contain the panorama picture
      */
     public void setPhotoTexture(Bitmap b) {
         Bitmap old = mPhotoTexture.getBitmap();
@@ -114,6 +119,11 @@ public class PanoramaSphere extends Sphere {
         TextureManager.getInstance().replaceTexture(mPhotoTexture);
     }
 
+    /**
+     * Attach the given components as children of this sphere
+     *
+     * @param l a list of spatial data to attach to this panorama sphere
+     */
     public void attachPanoramaComponents(Iterable<SpatialData> l) {
         LogHelper.log(TAG, "Call to attach panorama");
         for (SpatialData am : l) {
@@ -122,6 +132,11 @@ public class PanoramaSphere extends Sphere {
         }
     }
 
+    /**
+     * Attach a single component as children of this sphere
+     *
+     * @param panoramaObject the object to attach
+     */
     public void attachPanoramaComponent(PanoramaObject panoramaObject) {
 
         LogHelper.log(TAG, "Call to attach component");
@@ -132,9 +147,17 @@ public class PanoramaSphere extends Sphere {
         mComponentList.add(panoramaObject);
     }
 
-    public void setTextToDisplay(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
+    /**
+     * Creates and display text in the 3D scene
+     *
+     * @param message            the text to display
+     * @param theta              spherical coordinates of the displayed text
+     * @param panoramaInfoObject the object responsible for representing the possibility of showing up text in the 3D
+     *                           scene
+     */
+    public void createTextDisplay(String message, double theta, PanoramaInfoObject panoramaInfoObject) {
 
-        StringAdapter stringAdapter = new StringAdapter(textInfo);
+        StringAdapter stringAdapter = new StringAdapter(message);
         int contourSize = 10;
         int marginSize = 10;
         int textSize = 18;
@@ -156,6 +179,10 @@ public class PanoramaSphere extends Sphere {
         attachPanoramaComponent(panoramaInfoDisplay);
     }
 
+    /**
+     * Delete text related to the given info object
+     * @param panoramaInfoDisplay the object whose associated text is to remove from the 3D scene
+     */
     public void deleteTextToDisplay(PanoramaInfoDisplay panoramaInfoDisplay) {
         detachPanoramaComponent(panoramaInfoDisplay);
     }

@@ -55,8 +55,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public static final int TEXTURE_COLOR = 0x0022c8ff;
     public static final double DISTANCE_TO_DISPLAY = 9;
     public static final double LERP_FACTOR = 0.03;
-    public static final double FOV_PORTRAIT = 80;
-    public static final double FOV_LANDSCAPE = 60;
+    public static final double FOV_PORTRAIT = 90;
+    public static final double FOV_LANDSCAPE = 65;
     private static final int COLOR_CLOSE = Color.rgb(255, 25, 25);
 
     private final String TAG = "Renderer";
@@ -97,6 +97,18 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private FetchPhotoTask mImageLoadTask = null;
     private RenderingLogic mRenderLogic;
     /**
+     * Use this rendering logic to change the panorama photo after a scene transition
+     */
+    private final RenderingLogic mTransitioningRendering = new RenderingLogic() {
+        @Override
+        public void render() {
+            updateScene();
+            mCamera.setPosition(ORIGIN);
+            mRenderLogic = getIdleRendering(
+            );
+        }
+    };
+    /**
      * Use this rendering logic to gradually move the camera toward the TransitionObject target
      */
     private final RenderingLogic mSlidingRendering = new RenderingLogic() {
@@ -115,6 +127,15 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             }
         }
     };
+    /**
+     * Use this rendering logic to gradually move the camera to the ORIGIN (the center of the scene)
+     */
+    private final RenderingLogic mSlidingOutOfTextRendering = new RenderingLogic() {
+        @Override
+        public void render() {
+            slideOutOfText();
+        }
+    };
     private int debugCounter = 0;
     /**
      * Use this rendering when nothing special need to be done. In other words just allowing the camera to look
@@ -128,27 +149,6 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
                 DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
             }
             debugCounter++;
-        }
-    };
-    /**
-     * Use this rendering logic to change the panorama photo after a scene transition
-     */
-    private final RenderingLogic mTransitioningRendering = new RenderingLogic() {
-        @Override
-        public void render() {
-            updateScene();
-            mCamera.setPosition(ORIGIN);
-            mRenderLogic = getIdleRendering(
-            );
-        }
-    };
-    /**
-     * Use this rendering logic to gradually move the camera to the ORIGIN (the center of the scene)
-     */
-    private final RenderingLogic mSlidingOutOfTextRendering = new RenderingLogic() {
-        @Override
-        public void render() {
-            slideOutOfText();
         }
     };
     // Variables used for the rotation.
@@ -322,7 +322,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      */
     public void displayText(String textInfo, double theta, PanoramaInfoObject panoramaInfoObject) {
         LogHelper.log(TAG, "Call to display text information.");
-        mPanoSphere.setTextToDisplay(textInfo, theta, panoramaInfoObject);
+        mPanoSphere.createTextDisplay(textInfo, theta, panoramaInfoObject);
     }
 
     /**
