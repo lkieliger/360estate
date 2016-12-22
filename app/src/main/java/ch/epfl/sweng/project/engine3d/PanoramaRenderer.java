@@ -45,7 +45,7 @@ import ch.epfl.sweng.project.util.Tuple;
 import static android.content.Context.SENSOR_SERVICE;
 
 /**
- * This class defines how the 3d engine should be used to render the scene.
+ * This class defines a customized Rajawali renderer for displaying panorama pictures and navigating through them
  */
 public class PanoramaRenderer extends Renderer implements OnObjectPickedListener {
 
@@ -77,7 +77,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private Quaternion mTargetQuaternion = new Quaternion();
     private Quaternion mHelperQuaternion = new Quaternion();
     /**
-     * Use this rendering logic to gradually move the camera toward the PanoramaInfoDisplay target.
+     * Gradually move the camera toward the PanoramaInfoDisplay target.
      */
     private final RenderingLogic mSlidingToTextRendering = new RenderingLogic() {
         @Override
@@ -93,11 +93,34 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             mCamera.setCameraOrientation(mHelperQuaternion);
         }
     };
+    private int debugCounter = 0;
+    /**
+     * Nothing special need to be done. In other words this rendering logic just allows the camera to look
+     * around and the renderer to print some debug information.
+     */
+    private final RenderingLogic mIdleRendering = new RenderingLogic() {
+        @Override
+        public void render() {
+            if (debugCounter == 60) {
+                debugCounter = 0;
+                DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
+            }
+            debugCounter++;
+        }
+    };
+    // Variables used for the rotation.
+    //TODO: move this to corresponing class
+    private PanoramaInfoObject objectToRotate = null;
+    private double targetAngle = 0.0;
+    private double currentAngle = 0.0;
+    private float rotationPercent = 0;
+    private int startingColor = TEXTURE_COLOR;
+    private int finishColor = COLOR_CLOSE;
     private double mYaw;
     private FetchPhotoTask mImageLoadTask = null;
     private RenderingLogic mRenderLogic;
     /**
-     * Use this rendering logic to change the panorama photo after a scene transition
+     * Change the panorama photo after a scene transition
      */
     private final RenderingLogic mTransitioningRendering = new RenderingLogic() {
         @Override
@@ -109,7 +132,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         }
     };
     /**
-     * Use this rendering logic to gradually move the camera toward the TransitionObject target
+     * Gradually move the camera toward the TransitionObject target
      */
     private final RenderingLogic mSlidingRendering = new RenderingLogic() {
         @Override
@@ -128,7 +151,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         }
     };
     /**
-     * Use this rendering logic to gradually move the camera to the ORIGIN (the center of the scene)
+     * Gradually move the camera to the ORIGIN (the center of the scene)
      */
     private final RenderingLogic mSlidingOutOfTextRendering = new RenderingLogic() {
         @Override
@@ -136,31 +159,8 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             slideOutOfText();
         }
     };
-    private int debugCounter = 0;
     /**
-     * Use this rendering when nothing special need to be done. In other words just allowing the camera to look
-     * around and print some debug information.
-     */
-    private final RenderingLogic mIdleRendering = new RenderingLogic() {
-        @Override
-        public void render() {
-            if (debugCounter == 60) {
-                debugCounter = 0;
-                DebugPrinter.printRendererDebug(TAG, PanoramaRenderer.this);
-            }
-            debugCounter++;
-        }
-    };
-    // Variables used for the rotation.
-    private PanoramaInfoObject objectToRotate = null;
-    private double targetAngle = 0.0;
-    private double currentAngle = 0.0;
-    private float rotationPercent = 0;
-    private int startingColor = TEXTURE_COLOR;
-    private int finishColor = COLOR_CLOSE;
-
-    /**
-     * Use this rendering logic to gradually rotate the PanoramaInfoObject target
+     * Gradually rotate the PanoramaInfoObject target
      */
     private final RenderingLogic mRotateObjectRendering = new RenderingLogic() {
         @Override
@@ -171,7 +171,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     };
 
     /**
-     * Use this rendering logic to gradually rotate the PanoramaInfoObject target and gradually move
+     * Gradually rotate the PanoramaInfoObject target and gradually move
      * the camera towards the center. It combines mRotateObjectRendering and mSlidingOutOfTextRendering.
      */
     private final RenderingLogic mRotateObjectAndZoomOutRendering = new RenderingLogic() {
@@ -191,6 +191,17 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
 
     };
 
+    /**
+     * Builds a renderer specialized in showing spherical panoramas
+     *
+     * @param context         the application context needed to initialize OpenGL stuff
+     * @param displayRotation the rotation of the user device at the moment where the PanoramaActivity was started.
+     *                        This parameter influence how the user input on screen effects the camera as well as how
+     *                        the gyroscopic data has to be interpreted
+     * @param houseManager    the class managing the panorama adjacency graph. Each node in this graph has as certain
+     *                        number of neighbors. Transition between two panorama can only occur if they are neighbors
+     *                        in this graph.
+     */
     public PanoramaRenderer(Context context, int displayRotation, HouseManager houseManager) {
         super(context);
 
@@ -483,7 +494,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     }
 
     /**
-     * Use this method to rotate the camera according to the user input.
+     * Rotates the camera according to the user input.
      * Its parameters represent over how much pixels the user has dragged its
      * fingers. Positive dx means gesture going to the right, positive dy means
      * gesture going down the screen.

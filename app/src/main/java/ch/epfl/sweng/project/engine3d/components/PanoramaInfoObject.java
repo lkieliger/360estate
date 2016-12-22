@@ -5,7 +5,12 @@ import org.rajawali3d.math.vector.Vector3;
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.engine3d.PanoramaRenderer;
 
-
+/**
+ * Represents information about an element in the panorama picture. This objects stores the informative text as well
+ * as the position in spherical coordinates of the location of the piece of information with respect to the panoramic
+ * picture
+ */
+//TODO: fusion this class with InfoDisplay
 public class PanoramaInfoObject extends PanoramaObject {
 
     private static final String TEXTURE_TAG = "PanoramaInfoObject";
@@ -18,6 +23,14 @@ public class PanoramaInfoObject extends PanoramaObject {
     private boolean isFocused;
     private PanoramaInfoDisplay panoramaInfoDisplay = null;
 
+    /**
+     * Builds a PanoramaInfo object with the given specifications:
+     *
+     * @param theta    azimuth in spherical coordinates of the piece of information (from 0 which is along the x axis to 2
+     *                 pi which is again along the x axis)
+     * @param phi      inclination in spherical coordinates of the piece of information (0 is up, pi is down)
+     * @param textInfo the message that should be stored by this object
+     */
     public PanoramaInfoObject(double theta, double phi, String textInfo) {
         super(theta, phi, width, height, 40);
         this.textInfo = textInfo;
@@ -29,6 +42,11 @@ public class PanoramaInfoObject extends PanoramaObject {
         isFocused = false;
     }
 
+    /**
+     * Associate a text plane with this object
+     *
+     * @param panoramaInfoDisplay the text plane to associate with this object
+     */
     public void setPanoramaInfoDisplay(PanoramaInfoDisplay panoramaInfoDisplay) {
         this.panoramaInfoDisplay = panoramaInfoDisplay;
     }
