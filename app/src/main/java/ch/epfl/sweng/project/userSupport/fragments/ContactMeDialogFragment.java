@@ -1,11 +1,7 @@
 package ch.epfl.sweng.project.userSupport.fragments;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +11,13 @@ import com.parse.ParseUser;
 
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
-import ch.epfl.sweng.project.features.propertyDescription.DescriptionActivity;
 
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
+/**
+ * Class used to display a pop-up that will offer the possibility to the user to contact the
+ * real estate developer.
+ */
 public final class ContactMeDialogFragment extends DialogFragment {
 
     public static final String TAG = "ContactRequestDialog";
@@ -37,10 +36,9 @@ public final class ContactMeDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.custom_dialog_fragment, container, false);
 
-
         // Watch for button clicks.
-        Button button = (Button)v.findViewById(R.id.contact_accept);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button acceptButton = (Button) v.findViewById(R.id.contact_accept);
+        acceptButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // When button is clicked, call up to owning activity.
                 ClientRequest request = new ClientRequest();
@@ -63,28 +61,5 @@ public final class ContactMeDialogFragment extends DialogFragment {
 
         return v;
     }
-   /* @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Use the Builder class for convenient dialog construction
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.dialog_contact_me_message);
-        builder.setTitle(R.string.dialog_contact_me_title);
-        builder.setPositiveButton(R.string.accept_contact_me, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Log.i(TAG, "User requested to be contacted");
-                ClientRequest request = new ClientRequest();
-                request.setUser(ParseUser.getCurrentUser());
-                request.setInterestedId(propertyId);
-                request.setPropertyDescription(propertyDescription);
-                request.saveInBackground();
-            }
-        });
-        builder.setNegativeButton(R.string.refuse_contact_me, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Log.i(TAG, "User does not want to be contacted");
-            }
-        });
-        return builder.create();
-    }*/
 }
 

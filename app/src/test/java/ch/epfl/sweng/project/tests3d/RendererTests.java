@@ -226,8 +226,6 @@ public class RendererTests {
 
     @Test
     public void initiatePanoramaTransitionIsCorrect() {
-
-
         panoramaRenderer.initiatePanoramaTransition("dummyUrl", 1);
         assertFalse(PanoramaRenderer.NextPanoramaDataBuilder.isReset());
         panoramaRenderer.cancelPanoramaUpdate();
@@ -250,8 +248,8 @@ public class RendererTests {
         PanoramaInfoObject mockedPanoramaInfo = Mockito.mock(PanoramaInfoObject.class);
         when(mockedPanoramaInfo.isDisplay()).thenReturn(true, false);
 
-        panoramaRenderer.rotateDisplayInfoObject(mockedPanoramaInfo);
-        panoramaRenderer.rotateDisplayInfoObject(mockedPanoramaInfo);
+        panoramaRenderer.rotatePanoramaInfoObject(mockedPanoramaInfo);
+        panoramaRenderer.rotatePanoramaInfoObject(mockedPanoramaInfo);
         assertEquals(panoramaRenderer.getRotateObjectRendering(), panoramaRenderer.getCurrentRenderingLogic());
     }
 
@@ -587,7 +585,7 @@ public class RendererTests {
         when(mockedObjectToRotate.getZ()).thenReturn(3.0);
         inject(panoramaRenderer, mockedObjectToRotate, "objectToRotate");
 
-        panoramaRenderer.rotateDisplayInfoObject(mockedObjectToRotate);
+        panoramaRenderer.rotatePanoramaInfoObject(mockedObjectToRotate);
 
         new InjectedRendererBuilder(panoramaRenderer).withRotateObjectRendering();
 

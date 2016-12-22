@@ -9,6 +9,9 @@ import ch.epfl.sweng.project.R;
 
 import static ch.epfl.sweng.project.util.Toaster.shortToast;
 
+/**
+ * This class helps to make sure the string is valid regarding a certain convention.
+ */
 public final class InputValidityChecker {
 
     private static final String TAG = "ValidityChecker";

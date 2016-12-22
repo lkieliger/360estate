@@ -28,7 +28,6 @@ import java.util.Objects;
 
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.parse.PInterface;
-import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
 import ch.epfl.sweng.project.data.parse.objects.Favorites;
 import ch.epfl.sweng.project.data.parse.objects.Item;
@@ -159,7 +158,6 @@ public final class ListActivity extends AppCompatActivity {
                         itemValue.getPrice() +
                         getString(R.string.text_currency);
                 intent.putExtra(ClientRequest.DESCRIPTION_TAG, descriptionBuilder);
-
                 startActivity(intent);
             }
         });

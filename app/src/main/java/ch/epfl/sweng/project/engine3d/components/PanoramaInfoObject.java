@@ -41,7 +41,7 @@ public class PanoramaInfoObject extends PanoramaObject {
     public void reactWith(PanoramaRenderer p) {
         if (!isDisplay) {
             p.displayText(textInfo, theta, this);
-            p.rotateDisplayInfoObject(this);
+            p.rotatePanoramaInfoObject(this);
             isDisplay = true;
         } else {
             if (isFocused) {
@@ -51,7 +51,7 @@ public class PanoramaInfoObject extends PanoramaObject {
                 panoramaInfoDisplay.setFocused(false);
             } else {
                 p.deleteInfo(panoramaInfoDisplay);
-                p.rotateDisplayInfoObject(this);
+                p.rotatePanoramaInfoObject(this);
             }
             isDisplay = false;
         }

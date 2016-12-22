@@ -11,18 +11,18 @@ import ch.epfl.sweng.project.R;
 
 import static ch.epfl.sweng.project.data.ImageMgmt.getImgFromUrlIntoView;
 
+/**
+ * The Fragment used to display a single image in the slider.
+ */
 public final class SlideFragment extends Fragment {
-    private String url;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup root = (ViewGroup) inflater.inflate(
                 R.layout.fragment_slide, container, false
         );
         Bundle b = getArguments();
-        url = b.getString("url");
+        String url = b.getString("url");
         ImageView imgV = (ImageView) root.findViewById(R.id.displayed_image);
-
-
         getImgFromUrlIntoView(getActivity(), url, imgV);
         return root;
     }

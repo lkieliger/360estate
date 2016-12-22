@@ -2,6 +2,12 @@ package ch.epfl.sweng.project.util;
 
 import java.util.Objects;
 
+/**
+ * This class represent a Tuple of two elements from distinct objects.
+ *
+ * @param <T>
+ * @param <U>
+ */
 public final class Tuple<T, U> {
 
     private final T x;

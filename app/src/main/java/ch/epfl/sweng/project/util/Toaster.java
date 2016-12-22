@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 
 /**
- * utility class that eases the Toast displaying process
+ * Utility class that eases the Toast displaying process
  */
 public final class Toaster {
 
