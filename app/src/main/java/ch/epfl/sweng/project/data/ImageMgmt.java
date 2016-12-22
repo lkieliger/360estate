@@ -23,6 +23,13 @@ public class ImageMgmt {
     public ImageMgmt() {
     }
 
+    /**
+     * Get an image from a URL that wll be directly loaded into the view passed in argument.
+     *
+     * @param context
+     * @param url the url of the image.
+     * @param imgV the view to load the image into.
+     */
     public static void getImgFromUrlIntoView(Context context, String url, ImageView imgV) {
         Picasso.with(context)
                 .load(url)
@@ -51,9 +58,11 @@ public class ImageMgmt {
     }
 
     /**
+     * Get an image from a URL that wll be directly loaded into the target passed in argument.
+     *
      * @param context
-     * @param url
-     * @param t
+     * @param url the url of the image.
+     * @param t the target to load the image
      */
     public void getBitmapFromUrl(final Context context, final String url, final Target t) {
 
@@ -72,6 +81,12 @@ public class ImageMgmt {
         mainHandler.post(r);
     }
 
+    /**
+     * Pre-load the images given with their Url's into the disk.
+     *
+     * @param context
+     * @param urls
+     */
     public void warmCache(final Context context, final List<String> urls) {
 
         for (String url : urls) {
