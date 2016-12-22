@@ -58,17 +58,11 @@ public final class RegisterActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 // If triggered by an enter key, this is the event; otherwise, this is null.
                 if (event != null) {
-                    // if shift key is down, then we want to insert the '\n' char in the TextView;
-                    // otherwise, the default action is to send the message.
-                    if (!event.isShiftPressed()) {
-                        attemptRegistration(v);
-                        return true;
-                    }
+                    attemptRegistration(v);
+                    return true;
+                } else {
                     return false;
                 }
-
-                attemptRegistration(v);
-                return true;
             }
         });
     }

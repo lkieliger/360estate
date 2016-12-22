@@ -5,12 +5,15 @@ import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.CoordinatesProvider;
+import android.support.test.espresso.action.EspressoKey;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.GeneralLocation;
+import android.support.test.espresso.action.KeyEventAction;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Tap;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -41,6 +44,7 @@ import static android.support.test.espresso.action.ViewActions.actionWithAsserti
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -212,7 +216,13 @@ public class CompleteBehaviorTest {
 
         LogHelper.log(TAG, "Testing description activity behavior");
         onView(withId(R.id.goto_login_button)).perform(click());
-        login("qwert@qwert.org", "12345");
+
+        waitForIdNms(R.id.activity_login, TimeUnit.SECONDS.toMillis(5));
+        onView(withId(R.id.activity_login)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.login_email)).perform(replaceText("qwert@qwert.org"), closeSoftKeyboard());
+        onView(withId(R.id.login_password)).perform(typeText("12345"));
+        onView(withId(R.id.login_password)).perform(enterViewAction());
 
         viewIdDisplayedAfterNattempts(R.id.activity_list, 3);
         onView(withId(R.id.FavoritesButton)).perform(click());
@@ -244,14 +254,13 @@ public class CompleteBehaviorTest {
         wait1s(TAG);
 
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
-        wait1s(TAG);
+        waitNms(TAG, TimeUnit.SECONDS.toMillis(4));
 
         onView(withId(R.id.panorama_activity)).perform(clickShiftX());
-        wait1s(TAG);
+        waitNms(TAG, TimeUnit.SECONDS.toMillis(3));
 
         onView(withId(R.id.panorama_activity)).perform(actionWithAssertions(generalClickAction));
-        wait1s(TAG);
-
+        waitNms(TAG, TimeUnit.SECONDS.toMillis(3));
         pressBack();
 
         //Makes sure the Parse initializer is called twice
@@ -328,9 +337,11 @@ public class CompleteBehaviorTest {
         onView(withId(R.id.registration_email)).perform(replaceText("test@astutus.org"), closeSoftKeyboard());
         onView(withId(R.id.registration_password)).perform(replaceText("abcdef"), closeSoftKeyboard());
         onView(withId(R.id.registration_password_bis)).perform(replaceText("abcdef"), closeSoftKeyboard());
-        onView(withId(R.id.register_button)).perform(click());
+        onView(withId(R.id.registration_phone)).perform(typeText("0789123142"));
+        onView(withId(R.id.registration_phone)).perform(enterViewAction());
         // Causes an error because the user is already registered
 
+        onView(withId(R.id.registration_phone)).perform(closeSoftKeyboard());
         pressBack();
     }
 
@@ -409,6 +420,11 @@ public class CompleteBehaviorTest {
             float[] precision = Press.PINPOINT.describePrecision();
             Tap.SINGLE.sendTap(uiController, coordinates, precision);
         }
+    }
+
+    public ViewAction enterViewAction() {
+        return new KeyEventAction(new EspressoKey.Builder()
+                .withKeyCode(KeyEvent.KEYCODE_ENTER).build());
     }
 
 }
