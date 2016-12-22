@@ -39,16 +39,12 @@ public final class PhotoSphereData {
      *
      * @return the JSON array encoded as the data representation requires
      */
-    private JSONArray getNeighborsJsonArray() {
+    private JSONArray getNeighborsJsonArray() throws JSONException {
         JSONArray neighborsJsonArray = new JSONArray();
-        try {
             for (SpatialData elem : getNeighborsList()) {
                 JSONObject angleMapping = elem.toJSONObject();
                 neighborsJsonArray.put(angleMapping);
             }
-        } catch (JSONException e) {
-            LogHelper.log(TAG, "JSONException:" + e.getMessage());
-        }
         return neighborsJsonArray;
     }
 
@@ -58,7 +54,6 @@ public final class PhotoSphereData {
      */
     public JSONObject getNeighborObject() {
         JSONObject neighborObject = new JSONObject();
-
         try {
             neighborObject.put(idTag, mId);
             neighborObject.put(neighborsListTag, getNeighborsJsonArray());

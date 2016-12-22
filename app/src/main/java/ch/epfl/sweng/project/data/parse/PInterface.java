@@ -42,7 +42,16 @@ public enum PInterface {
         proxy = new ParseProxy();
     }
 
-
+    /**
+     * General method to fill itemList with items fetched according to the various parameters
+     *
+     * @param itemList        the list in which items are pushed
+     * @param itemAdapter     an Android adapter that you can use to refresh onScreen information
+     * @param filterValues    contains the filter settings that the user has set
+     * @param favoriteToggled a boolean indicating whether to fetch Favorites item only or not
+     * @param idUser          the id of the User, in case we are fetching favorites
+     * @param context         the android context, used to display toasts in case of error
+     */
     public void getItemList(final Collection<Item> itemList,
                             final ItemAdapter itemAdapter,
                             FilterValues filterValues,
@@ -81,6 +90,14 @@ public enum PInterface {
     }
 
 
+    /**
+     * internal method that executes the query on the parse proxy
+     *
+     * @param query       the query defining criterion for fetching item's
+     * @param itemList    the list of item in which fetched item's are put
+     * @param itemAdapter an Android adapter that you can use to refresh onScreen information
+     * @param context     the android context, used to display toasts in case of error
+     */
     private void fetchItems(ParseQuery<Item> query,
                             final Collection<Item> itemList,
                             final ItemAdapter itemAdapter,
@@ -118,6 +135,14 @@ public enum PInterface {
         }
     }
 
+    /**
+     * Method gets information for the description activity
+     *
+     * @param id          the id of the house
+     * @param urls        the list of preview pictures
+     * @param description the description text
+     * @param context     the android context, used to display errors (with Toasts)
+     */
     public void getDataForDescription(String id,
                                       final Collection<String> urls,
                                       StringBuilder description,
@@ -138,6 +163,13 @@ public enum PInterface {
 
     }
 
+    /**
+     * Gets a list of Resources object
+     *
+     * @param id      the id of the house for which we want to fetch the Resources data
+     * @param context the android context, used to display Toasts in case of error
+     * @return the list of fetched Resources. it can be empty if there is a problem while fetching Resources
+     */
     private List<Resources> getResourcesObject(String id, final Context context) {
         ParseQuery<Resources> query = ParseQuery.getQuery(Resources.class);
         query.whereEqualTo(JSONTags.idHouseTag, id);
@@ -164,6 +196,10 @@ public enum PInterface {
         return listResource;
     }
 
+    /**
+     * @param idUser the id of the user for which to update favorites
+     * @param list   the new list of favorites
+     */
     public void overrideFavorites(String idUser, Set<String> list) {
         Favorites f = getFavoriteFromId(idUser);
         try {
@@ -173,6 +209,10 @@ public enum PInterface {
         }
     }
 
+    /**
+     * @param idUser the id of the user for which to fetch it's Favorites object
+     * @return the fetched Favorites object
+     */
     public Favorites getFavoriteFromId(String idUser) {
         ParseQuery<Favorites> query = ParseQuery.getQuery(Favorites.class);
         query.whereEqualTo("idUser", idUser);
@@ -201,6 +241,10 @@ public enum PInterface {
         return f;
     }
 
+    /**
+     * @param idUser the id of the user for which to save the favorites
+     * @return The saved Favorites object
+     */
     private static Favorites saveNewFavorites(String idUser) {
         Favorites f = new Favorites(new HashSet<String>(), idUser);
         f.saveEventually();
@@ -209,7 +253,9 @@ public enum PInterface {
     }
 
     /**
-     * this function should only be called if internet is available.
+     * @param id      the id of the house
+     * @param context the android context, used to display Toasts in case of error.
+     * @return a HouseManager object
      */
     public HouseManager getHouseManager(String id, final Context context) {
         Resources resources = getResourcesObject(id, context).get(0); //

@@ -27,32 +27,28 @@ public final class StringAdapter {
         paint.setTextSize(textSize);
         Rect rect = new Rect();
         String newLine = "\n";
-
         String[] words = text.split(" ");
-
-        //  int numberOfPixelPerLine = widthTemp/width;
 
         List<StringBuilder> stringArrayList = new ArrayList<>();
         stringArrayList.add(new StringBuilder());
 
         int indexOfLine = 0;
-        for (int i = 0; i < words.length; i++) {
-
-            paint.getTextBounds(stringArrayList.get(indexOfLine).toString() + " " + words[i], 0, words[i].length()
+        for (String word : words) {
+            paint.getTextBounds(stringArrayList.get(indexOfLine).toString() + " " + word, 0, word.length()
                     + stringArrayList.get(indexOfLine).length() + 1, rect);
             final int widthLine = rect.width();
 
-            if (words[i].equals(newLine)) {
+            if (word.equals(newLine)) {
                 indexOfLine++;
                 stringArrayList.add(new StringBuilder());
             } else {
                 if (widthLine >= widthBitmap - 2 * epsilon) {
                     indexOfLine++;
                     StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append(words[i]);
+                    stringBuilder.append(word);
                     stringArrayList.add(stringBuilder);
                 } else {
-                    stringArrayList.get(indexOfLine).append(" " + words[i]);
+                    stringArrayList.get(indexOfLine).append(" ").append(word);
                 }
             }
         }
@@ -78,14 +74,12 @@ public final class StringAdapter {
 
         int heightBitmap = (heightTemp) * list.size() + 2 * (contourSize + marginSize);
 
-
         int powerOfHeight = (int) (Math.log(heightBitmap) / Math.log(2)) + 1;
         heightBitmap = (int) Math.pow(2, powerOfHeight);
 
         if (heightBitmap > heightLimit) {
             heightBitmap = heightLimit;
         }
-
 
         Bitmap image = Bitmap.createBitmap(widthBitmap, heightBitmap, Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(image);

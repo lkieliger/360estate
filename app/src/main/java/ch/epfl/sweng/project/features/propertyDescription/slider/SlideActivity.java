@@ -18,8 +18,6 @@ public final class SlideActivity extends FragmentActivity {
     private static int NUM_PAGES;
     int urlIndex = 0;
     ArrayList<String> urls;
-    private ViewPager vPager;
-    private PagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,20 +26,21 @@ public final class SlideActivity extends FragmentActivity {
 
         Bundle bundle = getIntent().getExtras();
         urls = (ArrayList<String>) bundle.get("ArrayURL");
-        int first = urls.indexOf((String) bundle.getString("URL"));
+        int first = urls.indexOf(bundle.getString("URL"));
         NUM_PAGES = urls.size();
-        vPager = (ViewPager) findViewById(R.id.pager);
-        adapter = new SlidePagerAdapter(getSupportFragmentManager());
+        ViewPager vPager = (ViewPager) findViewById(R.id.pager);
+        PagerAdapter adapter = new SlidePagerAdapter(getSupportFragmentManager());
 
         vPager.setAdapter(adapter);
         vPager.setCurrentItem(first);
         vPager.setPageTransformer(true, new ZoomOutTransformer());
     }
+
     private class SlidePagerAdapter extends FragmentStatePagerAdapter {
 
         private List<Fragment> fragments;
 
-        public SlidePagerAdapter(FragmentManager fm) {
+        SlidePagerAdapter(FragmentManager fm) {
             super(fm);
             fragments = new ArrayList<>();
             for(int i= 0; i < NUM_PAGES; i++){

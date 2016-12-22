@@ -16,6 +16,9 @@ import ch.epfl.sweng.project.userSupport.activities.LoginActivity;
 import ch.epfl.sweng.project.userSupport.activities.RegisterActivity;
 import ch.epfl.sweng.project.util.LogHelper;
 
+/**
+ * Starting and First activity
+ */
 public final class SplashActivity extends AppCompatActivity {
     public static final String TAG = "SplashScreen";
 

@@ -53,8 +53,7 @@ public abstract class SpatialData {
         }
 
         SpatialData thatSpatialData = (SpatialData) obj;
-        return (Double.compare(getTheta(), thatSpatialData.getTheta()) == 0) &&
-                (Double.compare(getPhi(), thatSpatialData.getPhi()) == 0);
+        return thetaPhi.equals(thatSpatialData.getThetaPhi());
     }
 
     @Override

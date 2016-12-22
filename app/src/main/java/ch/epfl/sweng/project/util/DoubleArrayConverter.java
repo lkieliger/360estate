@@ -1,5 +1,8 @@
 package ch.epfl.sweng.project.util;
 
+/**
+ * Helper class to pass from a array from float to double and vice versa.
+ */
 public final class DoubleArrayConverter {
 
     public static double[] floatToDoubleArray(float[] a) {

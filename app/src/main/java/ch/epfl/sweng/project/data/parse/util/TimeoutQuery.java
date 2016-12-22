@@ -30,7 +30,12 @@ public class TimeoutQuery<T extends ParseObject> {
     private final Object mLock = new Object();
     private final Thread mThread;
 
-
+    /**
+     * Constructor for a ParseQuery with a timeout functionality
+     *
+     * @param query   the query to execute
+     * @param timeout the time to wait before halting the query
+     */
     public TimeoutQuery(ParseQuery<T> query, long timeout) {
         this(query, timeout, false);
     }
@@ -100,6 +105,9 @@ public class TimeoutQuery<T extends ParseObject> {
         }
     }
 
+    /**
+     * @param callback when the query is completed without timeout, the callback is executed
+     */
     public void findInBackground(final FindCallback<T> callback) {
         synchronized (mLock) {
             mCallback = callback;

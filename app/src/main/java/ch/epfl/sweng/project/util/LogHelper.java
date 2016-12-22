@@ -4,6 +4,9 @@ import android.util.Log;
 
 import ch.epfl.sweng.project.BuildConfig;
 
+/**
+ * Helper class to display debug information in the console.
+ */
 public final class LogHelper {
 
     private LogHelper() {

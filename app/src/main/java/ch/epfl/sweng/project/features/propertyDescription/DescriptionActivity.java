@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 import ch.epfl.sweng.project.R;
 import ch.epfl.sweng.project.data.parse.PInterface;
-import ch.epfl.sweng.project.data.parse.ParseProxy;
 import ch.epfl.sweng.project.data.parse.objects.ClientRequest;
 import ch.epfl.sweng.project.engine3d.PanoramaActivity;
 import ch.epfl.sweng.project.features.propertyDescription.slider.SlideActivity;
@@ -113,16 +112,17 @@ public final class DescriptionActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Display the pop-up that will ask the user if he want to contact the real estate developer.
+     */
     public void confirmContactRequest(View v) {
         DialogFragment contactDialog = new ContactMeDialogFragment();
         Bundle additionalInfo = new Bundle();
         additionalInfo.putString(ClientRequest.LOOKFOR_TAG, idItem);
-        additionalInfo.putString(
-                ClientRequest.DESCRIPTION_TAG,
+        additionalInfo.putString(ClientRequest.DESCRIPTION_TAG,
                 getIntent().getStringExtra(ClientRequest.DESCRIPTION_TAG));
 
         contactDialog.setArguments(additionalInfo);
-
         contactDialog.show(getFragmentManager(), ContactMeDialogFragment.TAG);
     }
 

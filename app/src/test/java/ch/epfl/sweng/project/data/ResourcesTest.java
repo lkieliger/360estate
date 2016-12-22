@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -24,7 +25,6 @@ import ch.epfl.sweng.project.data.panorama.adapters.SpatialData;
 import ch.epfl.sweng.project.data.panorama.adapters.TransitionObject;
 import ch.epfl.sweng.project.data.parse.objects.JSONTags;
 import ch.epfl.sweng.project.data.parse.objects.Resources;
-import ch.epfl.sweng.project.engine3d.components.PanoramaObject;
 import ch.epfl.sweng.project.util.LogHelper;
 import ch.epfl.sweng.project.util.Tuple;
 
@@ -35,6 +35,7 @@ import static ch.epfl.sweng.project.data.parse.objects.JSONTags.typeTag;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 23)
@@ -199,5 +200,17 @@ public class ResourcesTest {
         assertFalse(tuple1.equals(null));
         assertFalse(tuple1.equals(new Object()));
         assertEquals(tuple1.hashCode(), tuple2.hashCode());
+        assertTrue(tuple1.equals(tuple2));
+    }
+
+    @Test
+    public void getNeighborJsonArrayCatchesCorrectlyException() throws JSONException {
+        SpatialData informationObject = Mockito.mock(SpatialData.class);
+        when(informationObject.toJSONObject()).thenThrow(new JSONException("toto"));
+        ArrayList<SpatialData> list = new ArrayList<>();
+        list.add(informationObject);
+
+        PhotoSphereData photoSphereData = new PhotoSphereData(1, list);
+        photoSphereData.getNeighborObject();
     }
 }
