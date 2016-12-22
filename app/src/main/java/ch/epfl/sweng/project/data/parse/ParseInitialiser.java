@@ -12,15 +12,16 @@ import ch.epfl.sweng.project.data.parse.objects.Resources;
 
 
 /**
- * Singleton for initializing parse
+ * Singleton used to initialize Parse
  */
 public enum ParseInitialiser {
     INSTANCE;
+
     public static final String APP_ID = "360ESTATE";
-    private static boolean parseInitialized = false;
+    private boolean parseNotInitialized = true;
 
     public void initParse(Context c) {
-        if (!parseInitialized) {
+        if (parseNotInitialized) {
             //Initialize connection with the parse server
             Parse.initialize(new Parse.Configuration.Builder(c)
                     // The network interceptor is used to debug the communication between server/client
@@ -35,7 +36,7 @@ public enum ParseInitialiser {
             ParseObject.registerSubclass(Resources.class);
             ParseObject.registerSubclass(Favorites.class);
             ParseObject.registerSubclass(ClientRequest.class);
-            parseInitialized = true;
+            parseNotInitialized = false;
         }
     }
 }

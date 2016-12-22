@@ -29,16 +29,25 @@ public class ParseProxy {
 
     private long internetUnavailableTime = 0;
 
-
+    /**
+     * Method used to notify of an internet problem
+     */
     public void notifyInternetProblem() {
         internetUnavailableTime = System.currentTimeMillis();
     }
 
+    /**
+     * @return true if internet has not been notified unavailable for INTERNET_TIMEOUT ms, false otherwise
+     */
     public boolean internetAvailable() {
         return System.currentTimeMillis() - internetUnavailableTime > INTERNET_TIMEOUT;
     }
 
-
+    /**
+     * @param query    the parse query
+     * @param callback a FindCallback function that is executed when the query is completed
+     * @param <T>      the type of the ParseObject to fetch
+     */
     public <T extends ParseObject> void executeQuery(ParseQuery<T> query, FindCallback<T> callback) {
 
         // If we haven't had internet since INTERNET_TIMEOUT ms, we make the query locally
@@ -50,6 +59,13 @@ public class ParseProxy {
         timeoutQuery.findInBackground(callback);
     }
 
+    /**
+     *
+     * @param query the query to specify which objects to get
+     * @param <T>   the type of the objects to get
+     * @return      A list of objects that were fetched
+     * @throws ParseException
+     */
     public <T extends ParseObject> List<T> executeFindQuery(ParseQuery<T> query) throws ParseException {
         return executeFindQuery(query, false);
     }
