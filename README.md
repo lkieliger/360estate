@@ -42,7 +42,7 @@
 
 ### DB Access
 
-  1. User will be able to store in a local database the filter he used.
+  1. [✓] User will be able to store in a local database the filter he used.
   2. [✓] User will also be able to store his favorites houses.
 
 ### Panorama
