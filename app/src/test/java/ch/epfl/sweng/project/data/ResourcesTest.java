@@ -200,6 +200,7 @@ public class ResourcesTest {
         assertFalse(tuple1.equals(null));
         assertFalse(tuple1.equals(new Object()));
         assertEquals(tuple1.hashCode(), tuple2.hashCode());
+        assertTrue(tuple1.equals(tuple2));
     }
 
     @Test
