@@ -176,6 +176,7 @@ public class CompleteBehaviorTest {
         waitForIdNms(R.id.login_button, TimeUnit.SECONDS.toMillis(10));
         login(testUserMail, testUserPassword);
 
+        waitNms(TAG, TimeUnit.SECONDS.toMillis(6));
         viewIdDisplayedAfterNattempts(R.id.activity_list, 3);
         onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
 
