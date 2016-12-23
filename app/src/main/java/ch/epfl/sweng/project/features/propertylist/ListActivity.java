@@ -44,7 +44,7 @@ public final class ListActivity extends AppCompatActivity {
     private static List<Item> itemList = new ArrayList<>();
     private static Favorites f = null;
     private final String[] cities = new String[]{
-            "Geneve", "Renens", "Lausanne"
+            "Geneve", "Renens", "Lausanne VD", "Coeuve JU", "EPFL BC", "EPFL RLC", "EPFL SV", "Reconvilier JU"
     };
     private final String idUser = ParseUser.getCurrentUser().getObjectId();
     private Boolean isFavoriteToggle = false;
