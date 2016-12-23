@@ -21,6 +21,7 @@ import ch.epfl.sweng.project.engine3d.StringAdapter;
  */
 public class PanoramaInfoObject extends PanoramaObject {
 
+    public static final int ROTATION_RATE = 15;
     private static final String TEXTURE_TAG = "PanoramaInfoObject";
     private static final int ICON_INDEX = R.drawable.info_tex;
     private static final int WIDTH = 6;
@@ -33,7 +34,6 @@ public class PanoramaInfoObject extends PanoramaObject {
     private static final int WIDTH_INFO_DISPLAY = 30;
     private static final int CLOSE_COLOR = Color.rgb(255, 25, 25);
     private static final double VERTICAL_TEXT_POS = Math.PI / 2.0;
-    private static final double ROTATION_RATE = 15.0;
     private final double theta;
     private final StringAdapter stringAdapter;
     private final Bitmap textBitmap;
@@ -67,7 +67,6 @@ public class PanoramaInfoObject extends PanoramaObject {
         stringAdapter = new StringAdapter(textInfo);
         textBitmap = stringAdapter.textToBitmap(TEXT_SIZE, WIDTH_PIXELS, CONTOUR_SIZE, MARGIN_SIZE, HEIGHT_LIMIT);
         heightInfoDisplay = getSizeFromPixels(textBitmap.getHeight());
-
     }
 
     @Override
@@ -105,13 +104,13 @@ public class PanoramaInfoObject extends PanoramaObject {
     }
 
     public void rotateAndColor(){
-        double angle = 180 / (4.0 * ROTATION_RATE);
+        double angle = 180.0 / (4.0 * ROTATION_RATE);
 
         //Take the Vector from the object to the origin (0 - ObjectCoordinates )
         rotate(-getX(), -getY(), -getZ(), angle);
         currentAngle += angle;
         ArgbEvaluator argbEvaluator = new ArgbEvaluator();
-        rotationPercent += 1 / ROTATION_RATE;
+        rotationPercent += 1.0 / ROTATION_RATE;
         setColor((Integer) argbEvaluator.evaluate(rotationPercent, startingColor, finishColor));
     }
 
