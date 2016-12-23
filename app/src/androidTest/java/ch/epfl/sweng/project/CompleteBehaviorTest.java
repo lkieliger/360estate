@@ -177,8 +177,8 @@ public class CompleteBehaviorTest {
         login(testUserMail, testUserPassword);
 
         waitNms(TAG, TimeUnit.SECONDS.toMillis(6));
-        viewIdDisplayedAfterNattempts(R.id.activity_list, 3);
-        onView(withId(R.id.activity_list)).check(matches(isDisplayed()));
+        viewIdDisplayedAfterNattempts(R.id.houseList, 6);
+        onView(withId(R.id.houseList)).check(matches(isDisplayed()));
 
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
 
@@ -376,6 +376,7 @@ public class CompleteBehaviorTest {
     }
 
     private void addToFavorite() {
+        viewIdDisplayedAfterNattempts(R.id.houseList, 6);
         onData(anything()).inAdapterView(withId(R.id.houseList)).atPosition(0).perform(click());
         onView(withId(R.id.addToFavorites)).perform(click());
         pressBack();
