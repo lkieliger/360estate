@@ -36,14 +36,18 @@ public final class DescriptionActivity extends AppCompatActivity {
     private CheckBox checkBoxFavorite = null;
     private String idItem = null;
     private Context mContext = null;
+    private String descriptionTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_description);
 
+        descriptionTitle = getIntent().getStringExtra(ClientRequest.DESCRIPTION_TAG);
         mContext = getApplicationContext();
 
+        TextView textTitle = (TextView) findViewById(R.id.description_title);
+        textTitle.setText(descriptionTitle);
 
         idItem = getIntent().getStringExtra("idItem");
         final ArrayList<String> imagesURL = new ArrayList<>();
@@ -120,7 +124,7 @@ public final class DescriptionActivity extends AppCompatActivity {
         Bundle additionalInfo = new Bundle();
         additionalInfo.putString(ClientRequest.LOOKFOR_TAG, idItem);
         additionalInfo.putString(ClientRequest.DESCRIPTION_TAG,
-                getIntent().getStringExtra(ClientRequest.DESCRIPTION_TAG));
+                descriptionTitle);
 
         contactDialog.setArguments(additionalInfo);
         contactDialog.show(getFragmentManager(), ContactMeDialogFragment.TAG);
