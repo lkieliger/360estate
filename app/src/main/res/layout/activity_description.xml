@@ -29,8 +29,9 @@
             <TextView
                 android:id="@+id/description_title"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:lines="2"
                 android:textStyle="bold"
                 />
 
