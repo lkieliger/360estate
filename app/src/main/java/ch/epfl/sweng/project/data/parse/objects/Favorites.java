@@ -18,6 +18,7 @@ import ch.epfl.sweng.project.util.LogHelper;
 public class Favorites extends ParseObject {
 
     private static final String TAG = "Favorites";
+    private final String TAGFav = "mFavoritesSet";
     private Set<String> mFavoritesSet = new HashSet<>();
 
     public Favorites() {
@@ -35,7 +36,7 @@ public class Favorites extends ParseObject {
 
     public void setFavorites(Set<String> mFavoritesSet) throws ParseException {
         JSONArray jsonFavorites = new JSONArray(mFavoritesSet);
-        put("mFavoritesSet", jsonFavorites);
+        put(TAGFav, jsonFavorites);
         save();
     }
 
@@ -64,7 +65,7 @@ public class Favorites extends ParseObject {
     }
 
     public Set<String> getFavoritesFromServer() {
-        JSONArray urlArray = getJSONArray("favorites");
+        JSONArray urlArray = getJSONArray(TAGFav);
         Set<String> favoritesSet = new HashSet<>();
 
         if (urlArray == null) {

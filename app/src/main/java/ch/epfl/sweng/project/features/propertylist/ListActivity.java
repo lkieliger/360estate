@@ -103,9 +103,7 @@ public final class ListActivity extends AppCompatActivity {
 
         setFavorites(PInterface.INST.getFavoriteFromId(idUser));
 
-
         f.synchronizeFromServer();
-
 
         setItemAdapter(new ItemAdapter(this, itemList));
         listView = (ListView) findViewById(R.id.houseList);
@@ -121,12 +119,9 @@ public final class ListActivity extends AppCompatActivity {
 
         ImageButton logOutButton = (ImageButton) findViewById(R.id.logOutButton);
         logOutButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
-
                 ListActivity.synchronizeServer();
-
                 logOutUser();
             }
         });

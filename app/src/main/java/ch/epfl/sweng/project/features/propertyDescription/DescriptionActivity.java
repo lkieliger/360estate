@@ -134,7 +134,6 @@ public final class DescriptionActivity extends AppCompatActivity {
                 ListActivity.removeItem(idItem);
             }
         }
-
         ListActivity.notifyItemAdapter();
         super.onBackPressed();
     }
