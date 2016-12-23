@@ -1,10 +1,8 @@
 package ch.epfl.sweng.project.engine3d;
 
 
-import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -51,12 +49,10 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     public static final double SENSITIVITY = 50.0;
     public static final double CAM_TRAVEL_DISTANCE = 65.0;
     public static final Vector3 ORIGIN = new Vector3(0, 0, 0);
-    public static final int TEXTURE_COLOR = 0x0022c8ff;
     public static final double DISTANCE_TO_DISPLAY = 9;
     public static final double LERP_FACTOR = 0.03;
     public static final double FOV_PORTRAIT = 90;
     public static final double FOV_LANDSCAPE = 65;
-    private static final int COLOR_CLOSE = Color.rgb(255, 25, 25);
 
     private final String TAG = "Renderer";
     private final ImageMgmt mImageManager;
@@ -75,6 +71,15 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
     private Vector3 mTargetPos;
     private Quaternion mTargetQuaternion = new Quaternion();
     private Quaternion mHelperQuaternion = new Quaternion();
+
+    private PanoramaInfoObject objectToRotate = null;
+    private double mYaw;
+    private FetchPhotoTask mImageLoadTask = null;
+    private int debugCounter = 0;
+
+    private RenderingLogic mRenderLogic;
+
+    //--------------------------- RENDERING LOGICS ------------------------------//
     /**
      * Gradually move the camera toward the text target.
      */
@@ -92,15 +97,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             mCamera.setCameraOrientation(mHelperQuaternion);
         }
     };
-    private PanoramaInfoObject objectToRotate = null;
-    private double targetAngle = 0.0;//TODO: move this to corresponing class
-    private double currentAngle = 0.0;//TODO: move this to corresponing class
-    private float rotationPercent = 0;//TODO: move this to corresponing class
-    private int startingColor = TEXTURE_COLOR;//TODO: move this to corresponing class
-    private int finishColor = COLOR_CLOSE;//TODO: move this to corresponing class
-    private double mYaw;
-    private FetchPhotoTask mImageLoadTask = null;
-    private RenderingLogic mRenderLogic;
+
     /**
      * Change the panorama photo after a scene transition
      */
@@ -112,7 +109,9 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             mRenderLogic = getIdleRendering(
             );
         }
+
     };
+
     /**
      * Gradually move the camera toward the TransitionObject target
      */
@@ -132,6 +131,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             }
         }
     };
+
     /**
      * Gradually move the camera to the ORIGIN (the center of the scene)
      */
@@ -141,6 +141,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             slideOutOfText();
         }
     };
+
     /**
      * Gradually rotate the PanoramaInfoObject target
      */
@@ -151,6 +152,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
             rotateTarget();
         }
     };
+
     /**
      * Gradually rotate the PanoramaInfoObject target and gradually move
      * the camera towards the center. It combines mRotateObjectRendering and mSlidingOutOfTextRendering.
@@ -171,7 +173,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
         }
 
     };
-    private int debugCounter = 0;
+
     /**
      * Nothing special need to be done. In other words this rendering logic just allows the camera to look
      * around and the renderer to print some debug information.
@@ -262,22 +264,12 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      * Helper method to gradually rotate the target object by 45° and gradually change the color of it.
      */
     private void rotateTarget() {
-        double rateOfRotation = 15.0;
-        double angle = 180 / (4.0 * rateOfRotation);
+        objectToRotate.rotateAndColor();
 
-        //Take the Vector from the object to the origin (0 - ObjectCoordinates )
-        objectToRotate.rotate(-objectToRotate.getX(), -objectToRotate.getY(), -objectToRotate.getZ(), angle);
-        currentAngle += angle;
-        ArgbEvaluator argbEvaluator = new ArgbEvaluator();
-        rotationPercent += 1 / rateOfRotation;
-        objectToRotate.setColor((Integer) argbEvaluator.evaluate(rotationPercent, startingColor, finishColor));
-
-        if (currentAngle >= targetAngle) {
-            rotationPercent = 0;
+        if (objectToRotate.rotationIsFinished()) {
             mRenderLogic = mIdleRendering;
             LogHelper.log(TAG, "Rotation finished");
         }
-
     }
 
     /**
@@ -327,14 +319,7 @@ public class PanoramaRenderer extends Renderer implements OnObjectPickedListener
      */
     public void rotatePanoramaInfoObject(PanoramaInfoObject panoramaInfoObject) {
         objectToRotate = panoramaInfoObject;
-        targetAngle = currentAngle + 180 / 4.0;
-        if (panoramaInfoObject.isDisplayed()) {
-            startingColor = COLOR_CLOSE;
-            finishColor = TEXTURE_COLOR;
-        } else {
-            startingColor = TEXTURE_COLOR;
-            finishColor = COLOR_CLOSE;
-        }
+        objectToRotate.setRotationAndColorTarget();
         mRenderLogic = mRotateObjectRendering;
     }
 

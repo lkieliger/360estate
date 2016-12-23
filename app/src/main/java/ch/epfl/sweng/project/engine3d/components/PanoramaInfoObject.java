@@ -1,6 +1,8 @@
 package ch.epfl.sweng.project.engine3d.components;
 
+import android.animation.ArgbEvaluator;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.util.Log;
 
 import org.rajawali3d.materials.Material;
@@ -29,14 +31,21 @@ public class PanoramaInfoObject extends PanoramaObject {
     private static final int WIDTH_PIXELS = 512;
     private static final int HEIGHT_LIMIT = 512;
     private static final int WIDTH_INFO_DISPLAY = 30;
+    private static final int CLOSE_COLOR = Color.rgb(255, 25, 25);
     private static final double VERTICAL_TEXT_POS = Math.PI / 2.0;
+    private static final double ROTATION_RATE = 15.0;
     private final double theta;
     private final StringAdapter stringAdapter;
     private final Bitmap textBitmap;
     private final int heightInfoDisplay;
     private boolean isDisplayed;
-    private boolean isFocused;
+    private boolean isOpen;
     private PanoramaInfoDisplay panoramaInfoDisplay;
+    private double currentAngle;
+    private double targetAngle;
+    private int startingColor;
+    private int finishColor;
+    private float rotationPercent;
 
     /**
      * Builds a PanoramaInfo object with the given specifications:
@@ -54,16 +63,11 @@ public class PanoramaInfoObject extends PanoramaObject {
         setIcon(TEXTURE_TAG, ICON_INDEX);
         this.theta = theta;
         isDisplayed = false;
-        isFocused = false;
 
         stringAdapter = new StringAdapter(textInfo);
         textBitmap = stringAdapter.textToBitmap(TEXT_SIZE, WIDTH_PIXELS, CONTOUR_SIZE, MARGIN_SIZE, HEIGHT_LIMIT);
         heightInfoDisplay = getSizeFromPixels(textBitmap.getHeight());
 
-    }
-
-    public void setFocused(boolean focused) {
-        isFocused = focused;
     }
 
     @Override
@@ -84,6 +88,35 @@ public class PanoramaInfoObject extends PanoramaObject {
             p.getPanoramaSphere().detachPanoramaComponent(panoramaInfoDisplay);
             isDisplayed = false;
         }
+    }
+
+    public void setRotationAndColorTarget(){
+        if(!isOpen){
+            startingColor = TEXTURE_COLOR;
+            finishColor = CLOSE_COLOR;
+            isOpen = true;
+        } else {
+            startingColor = CLOSE_COLOR;
+            finishColor = TEXTURE_COLOR;
+            isOpen = false;
+        }
+        targetAngle = currentAngle + 180 / 4.0;
+        rotationPercent = 0;
+    }
+
+    public void rotateAndColor(){
+        double angle = 180 / (4.0 * ROTATION_RATE);
+
+        //Take the Vector from the object to the origin (0 - ObjectCoordinates )
+        rotate(-getX(), -getY(), -getZ(), angle);
+        currentAngle += angle;
+        ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+        rotationPercent += 1 / ROTATION_RATE;
+        setColor((Integer) argbEvaluator.evaluate(rotationPercent, startingColor, finishColor));
+    }
+
+    public boolean rotationIsFinished(){
+        return currentAngle >= targetAngle;
     }
 
     public boolean isDisplayed() {
