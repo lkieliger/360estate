@@ -28,10 +28,10 @@ public class PanoramaInfoObject extends PanoramaObject {
     private static final int HEIGHT = 6;
     private static final int CONTOUR_SIZE = 10;
     private static final int MARGIN_SIZE = 10;
-    private static final int TEXT_SIZE = 18;
+    private static final int TEXT_SIZE = 24;
     private static final int WIDTH_PIXELS = 512;
     private static final int HEIGHT_LIMIT = 512;
-    private static final int WIDTH_INFO_DISPLAY = 30;
+    private static final int WIDTH_INFO_DISPLAY = 35;
     private static final int CLOSE_COLOR = Color.rgb(255, 25, 25);
     private static final double VERTICAL_TEXT_POS = Math.PI / 2.0;
     private final double theta;
