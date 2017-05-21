@@ -3,6 +3,14 @@ The 360 Estate is a virtual reality Android app allowing users to visit real-est
 
 It is complemented by a web front-end allowing real-estate brokers to consult requests made by their clients from within the app.
 
-See the video presentation below !
+## Video presentation
 
 [![Video presentation](http://img.youtube.com/vi/SReVeFlCjTs/0.jpg)](http://www.youtube.com/watch?v=SReVeFlCjTs "The360Estate")
+
+## Screenshots
+
+![App splash screen and main menu](https://raw.githubusercontent.com/lkieliger/360estate/master/images/360estate_splash_main.png "App splash screen and main menu") 
+![Results filter and description](https://raw.githubusercontent.com/lkieliger/360estate/master/images/360estate_filter_description.png "Results filter and description") 
+![Visit kitchen and stairs](https://raw.githubusercontent.com/lkieliger/360estate/master/images/360estate_kitchen_stairs.png "Visit kitchen and stairs") 
+![Contact request](https://raw.githubusercontent.com/lkieliger/360estate/master/images/360estate_contact.png "Contect request") 
+![Web front-end](https://raw.githubusercontent.com/lkieliger/360estate/master/images/360estate_web.png "Web front-end") 
